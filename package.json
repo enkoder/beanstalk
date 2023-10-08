@@ -3,6 +3,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@cloudflare/itty-router-openapi": "^1.0.3",
     "drizzle-orm": "^0.28.6",
     "itty-router": "^4.0.23",
     "itty-router-extras": "^0.4.5"
@@ -10,6 +11,9 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231002.0",
     "@types/itty-router-extras": "^0.4.1",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.51.0",
     "typescript": "^5.2.2",
     "wrangler": "^3.11.0"
   }

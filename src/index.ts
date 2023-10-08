@@ -1,20 +1,21 @@
-import {error, Router} from 'itty-router';
+import {error} from 'itty-router';
 import {drizzle} from "drizzle-orm/d1";
-import {getUsers, getUser, createUser} from "./routes/users";
+import {GetUser, GetUsers, CreateUser} from "./routes/users";
 import {RequestWithDB, Env, CF} from "./types";
+import {OpenAPIRouter} from '@cloudflare/itty-router-openapi'
 
-function withDB(request: RequestWithDB, env: Env): void  {
-	request.db = drizzle(env.DB);
+function withDB(request: RequestWithDB, env: Env): void {
+    request.db = drizzle(env.DB);
 }
 
-const router = Router<RequestWithDB, CF>()
+const router = OpenAPIRouter()
 
 router.all('*', withDB)
-	  .get('/users', getUsers)
-	  .get('/users/:id', getUser)
-      .post('/users', createUser)
-	  .all('*', () => error(404));
+    .get('/users', GetUsers)
+    .get('/users/:userID', GetUser)
+    .post('/users', CreateUser)
+    .all('*', () => error(404));
 
 export default {
-	fetch: router.handle
+    fetch: router.handle
 }
