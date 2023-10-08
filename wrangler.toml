@@ -1,0 +1,10 @@
+name = "anrpc-api"
+main = "src/index.ts"
+node_compat = true
+
+[[ d1_databases ]]
+binding = "DB"
+database_name = "anrpc-api"
+database_id = "anrpc-api"
+migrations_table = "migrations"
+migrations_dir = "migrations"
