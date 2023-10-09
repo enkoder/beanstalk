@@ -1,8 +1,12 @@
-import { users } from "../schema";
 import { json } from "itty-router";
-import { eq } from "drizzle-orm";
 import { Env, RequestWithDB } from "../types";
-import { GetUserSchema, GetUsersSchema, MeSchema, User } from "../openapi";
+import {
+  GetUserSchema,
+  GetUsersSchema,
+  MeSchema,
+  GetUserResponse,
+  GetUserResponseType,
+} from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { errorResponse } from "../errors";
 
@@ -11,15 +15,15 @@ class GetUser extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const result = await req.db
-      .select()
-      .from(users)
-      .where(eq(users.id, Number(req.params!["userID"])))
-      .get();
+      .selectFrom("users")
+      .selectAll()
+      .where("id", "=", Number(req.params!["userID"]))
+      .executeTakeFirst();
 
     if (!result) {
       return errorResponse(400, "User does not exist");
     }
-    return json(User.parse(result));
+    return json(GetUserResponse.parse(result));
   }
 }
 
@@ -33,11 +37,13 @@ class GetUsers extends OpenAPIRoute {
     data: Record<string, any>,
   ) {
     // TODO: pagination
-    const result = await req.db.select().from(users).all();
+    const result = await req.db.selectFrom("users").selectAll().execute();
     if (!result) {
       return errorResponse(500, "No users in table??");
     }
-    return json(result.forEach((data) => User.parse(data)));
+    const retArr: GetUserResponseType[] = [];
+    result.forEach((data) => retArr.push(GetUserResponse.parse(data)));
+    return json(retArr);
   }
 }
 
@@ -46,12 +52,12 @@ class Me extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const result = await req.db
-      .select()
-      .from(users)
-      .where(eq(users.id, Number(req.user_id)))
-      .get();
+      .selectFrom("users")
+      .selectAll()
+      .where("id", "=", Number(req.user_id))
+      .executeTakeFirst();
 
-    return json(User.parse(result));
+    return json(GetUserResponse.parse(result));
   }
 }
 

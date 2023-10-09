@@ -1,13 +1,11 @@
 import { json } from "itty-router";
 import { Env, RequestWithDB } from "../types";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { users } from "../schema";
-import { eq } from "drizzle-orm";
 import {
   AuthLoginBody,
   AuthLoginSchema,
   AuthRegisterSchema,
-  User,
+  GetUserResponse,
 } from "../openapi";
 import { sign, JwtPayload } from "@tsndr/cloudflare-worker-jwt";
 import { signPassword, verifyPassword } from "../auth";
@@ -27,21 +25,13 @@ class AuthRegister extends OpenAPIRoute {
   ) {
     const body = data.body;
     const result = await req.db
-      .select()
-      .from(users)
-      .where(eq(users.email, String(body.email)))
-      .get();
+      .selectFrom("users")
+      .selectAll()
+      .where("email", "=", body.email)
+      .executeTakeFirst();
 
     if (result) {
-      return Response.json(
-        {
-          success: false,
-          errors: "Email is taken",
-        },
-        {
-          status: 400,
-        },
-      );
+      return errorResponse(400, "Email is taken");
     }
 
     const pw = await signPassword(
@@ -51,15 +41,16 @@ class AuthRegister extends OpenAPIRoute {
     );
 
     const res = await req.db
-      .insert(users)
+      .insertInto("users")
       .values({
         email: body.email,
         name: body.name,
         password: pw,
       })
-      .returning()
-      .get();
-    return json(User.parse(res));
+      .returningAll()
+      .executeTakeFirst();
+
+    return json(GetUserResponse.parse(res));
   }
 }
 
@@ -75,10 +66,10 @@ class AuthLogin extends OpenAPIRoute {
     const authLoginBody = AuthLoginBody.parse(data.body);
     console.log(authLoginBody);
     const result = await req.db
-      .select()
-      .from(users)
-      .where(eq(users.email, String(authLoginBody.email)))
-      .get();
+      .selectFrom("users")
+      .selectAll()
+      .where("email", "=", authLoginBody.email)
+      .executeTakeFirst();
 
     if (!result) {
       return errorResponse(400, "Email not found");

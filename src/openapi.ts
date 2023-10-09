@@ -1,12 +1,12 @@
 import { Int, Path, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 
-export const User = z.object({
+export const GetUserResponse = z.object({
   id: z.number({ description: "User ID" }),
   name: z.string({ description: "User name" }),
   email: z.string({ description: "User email" }),
 });
-export type UserType = z.infer<typeof User>;
+export type GetUserResponseType = z.infer<typeof GetUserResponse>;
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -20,7 +20,7 @@ export const GetUserSchema = {
     "200": {
       description: "User Object",
       schema: {
-        user: User,
+        user: GetUserResponse,
       },
     },
   },
@@ -33,7 +33,7 @@ export const GetUsersSchema = {
     "200": {
       description: "List of all users",
       schema: {
-        user: [User],
+        user: [GetUserResponse],
       },
     },
   },
@@ -46,7 +46,7 @@ export const MeSchema = {
     "200": {
       description: "Your own user profile",
       schema: {
-        user: [User],
+        user: [GetUserResponse],
       },
     },
   },
@@ -64,7 +64,7 @@ export const AuthRegisterSchema = {
   responses: {
     "200": {
       description: "User Object",
-      schema: { user: User },
+      schema: { user: GetUserResponse },
     },
   },
 };
@@ -83,6 +83,48 @@ export const AuthLoginSchema = {
     "200": {
       description: "User Object",
       schema: { token: new Str({ description: "JWT token" }) },
+    },
+  },
+};
+
+export const GetSeasonsResponse = z.object({
+  id: z.number(),
+  name: z.string(),
+  tier: z.string(),
+  started_at: z.string().datetime(),
+  ended_at: z.date().optional().nullable(),
+});
+export type GetSeasonsResponseType = z.infer<typeof GetSeasonsResponse>;
+
+export const GetSeasonsSchema = {
+  tags: ["Leaderboard"],
+  summary: "Gets a list of all existing and past Seasons.",
+  responses: {
+    "200": {
+      schema: z.array(GetSeasonsResponse),
+      description: "list of Seasons",
+    },
+  },
+};
+
+export const GetTournamentsResponse = z.object({
+  id: z.number(),
+  name: z.string(),
+  date: z.string().datetime().nullable(),
+  is_done: z.number(),
+  season_id: z.number(),
+  season_name: z.string(),
+  season_tier: z.string(),
+});
+export type GetTournamentsResponseType = z.infer<typeof GetSeasonsResponse>;
+
+export const GetTournamentsSchema = {
+  tags: ["Leaderboard"],
+  summary: "Gets a list of all Tournaments",
+  responses: {
+    "200": {
+      schema: z.array(GetTournamentsResponse),
+      description: "list of Tournaments",
     },
   },
 };

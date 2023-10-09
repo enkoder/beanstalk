@@ -1,14 +1,18 @@
-import { error } from "itty-router";
-import { drizzle } from "drizzle-orm/d1";
 import { GetUser, GetUsers, Me } from "./routes/users";
 import { AuthRegister, AuthLogin } from "./routes/login";
 import { RequestWithDB, Env } from "./types";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import { authenticatedUser } from "./auth";
 import { errorResponse } from "./errors";
+import { GetSeasons, GetTournaments } from "./routes/leaderboard";
+import { Kysely } from "kysely";
+import { D1Dialect } from "kysely-d1";
+import { Database } from "./schema";
 
 function withDB(request: RequestWithDB, env: Env): void {
-  request.db = drizzle(env.DB);
+  request.db = new Kysely<Database>({
+    dialect: new D1Dialect({ database: env.DB }),
+  });
 }
 
 const router = OpenAPIRouter();
@@ -22,6 +26,8 @@ router
   .get("/api/users", GetUsers)
   .get("/api/users/@me", Me)
   .get("/api/users/:userID", GetUser)
+  .get("/api/seasons", GetSeasons)
+  .get("/api/tournaments", GetTournaments)
   .all("*", () => errorResponse(404, "url route valid"));
 
 export default {

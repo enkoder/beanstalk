@@ -1,5 +1,6 @@
-import { DrizzleD1Database } from "drizzle-orm/d1";
 import { IRequest } from "itty-router";
+import { Kysely } from "kysely";
+import { Database } from "./schema";
 
 // declare what's available in our env
 export type Env = {
@@ -12,6 +13,6 @@ export type Env = {
 
 // define a custom RequestType to inject db into the request
 export type RequestWithDB = {
-  db: DrizzleD1Database;
+  db: Kysely<Database>;
   user_id: number | null;
 } & IRequest;

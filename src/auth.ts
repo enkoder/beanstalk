@@ -1,8 +1,6 @@
 import { verify, decode } from "@tsndr/cloudflare-worker-jwt";
 import { Env, RequestWithDB } from "./types";
 import { errorResponse } from "./errors";
-import { users } from "./schema";
-import { eq } from "drizzle-orm";
 
 export async function signPassword(
   key: string,
@@ -81,10 +79,10 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
     return errorResponse(401, "Authentication error");
   }
   const result = await request.db
-    .select()
-    .from(users)
-    .where(eq(users.id, Number(session.payload.sub)))
-    .get();
+    .selectFrom("users")
+    .selectAll()
+    .where("id", "=", Number(session.payload.sub))
+    .executeTakeFirst();
 
   if (!result) {
     return errorResponse(401, "Authentication error");
