@@ -37,7 +37,7 @@ class GetUsers extends OpenAPIRoute {
     if (!result) {
       return errorResponse(500, "No users in table??");
     }
-    return json(result.map(User.parse, result));
+    return json(result.forEach((data) => User.parse(data)));
   }
 }
 
