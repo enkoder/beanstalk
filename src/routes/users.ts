@@ -1,33 +1,13 @@
-import { users, UserSelect } from "../schema";
+import { users } from "../schema";
 import { json } from "itty-router";
 import { eq } from "drizzle-orm";
-import { RequestWithDB } from "../types";
-import { Int, OpenAPIRoute, Path, Str } from "@cloudflare/itty-router-openapi";
-
-const User = {
-  id: new Int({ required: true }),
-  name: new Str({ required: true }),
-  email: new Str({ required: true }),
-};
+import { Env, RequestWithDB } from "../types";
+import { GetUserSchema, GetUsersSchema, MeSchema, User } from "../openapi";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { errorResponse } from "../errors";
 
 class GetUser extends OpenAPIRoute {
-  static schema = {
-    tags: ["User"],
-    summary: "Gets a single user",
-    parameters: {
-      userID: Path(Int, {
-        description: "User ID (integer)",
-      }),
-    },
-    responses: {
-      "200": {
-        description: "User Object",
-        schema: {
-          user: User,
-        },
-      },
-    },
-  };
+  static schema = GetUserSchema;
 
   async handle(req: RequestWithDB) {
     const result = await req.db
@@ -35,60 +15,44 @@ class GetUser extends OpenAPIRoute {
       .from(users)
       .where(eq(users.id, Number(req.params!["userID"])))
       .get();
-    return json(result);
+
+    if (!result) {
+      return errorResponse(400, "User does not exist");
+    }
+    return json(User.parse(result));
   }
 }
 
 class GetUsers extends OpenAPIRoute {
-  static schema = {
-    tags: ["User"],
-    summary: "Gets a list of all users",
-    responses: {
-      "200": {
-        description: "List of all users",
-        schema: {
-          user: [User],
-        },
-      },
-    },
-  };
+  static schema = GetUsersSchema;
 
-  async handle(req: RequestWithDB) {
-    const query = req.db.select().from(users);
-    console.log(query.toSQL());
-    const result: UserSelect[] = await query.all();
-    return json(result);
+  async handle(
+    req: RequestWithDB,
+    env: Env,
+    context: ExecutionContext,
+    data: Record<string, any>,
+  ) {
+    // TODO: pagination
+    const result = await req.db.select().from(users).all();
+    if (!result) {
+      return errorResponse(500, "No users in table??");
+    }
+    return json(result.map(User.parse, result));
   }
 }
 
-type _createUserBody = {
-  name: string;
-  email: string;
-};
-
-class CreateUser extends OpenAPIRoute {
-  static schema = {
-    tags: ["User"],
-    summary: "Creates a user",
-    responses: {
-      "200": {
-        description: "List of User objects",
-        schema: {
-          user: [User],
-        },
-      },
-    },
-  };
+class Me extends OpenAPIRoute {
+  static schema = MeSchema;
 
   async handle(req: RequestWithDB) {
-    const body: _createUserBody = await req.json!();
-    const res = await req.db
-      .insert(users)
-      .values({ email: body.email, name: body.email })
-      .returning()
+    const result = await req.db
+      .select()
+      .from(users)
+      .where(eq(users.id, Number(req.user_id)))
       .get();
-    return json({ res });
+
+    return json(User.parse(result));
   }
 }
 
-export { CreateUser, GetUsers, GetUser };
+export { GetUsers, GetUser, Me };
