@@ -17,6 +17,12 @@ function withDB(request: RequestWithDB, env: Env): void {
 
 const router = OpenAPIRouter();
 
+router.registry.registerComponent("securitySchemes", "bearerAuth", {
+  type: "http",
+  scheme: "bearer",
+  bearerFormat: "JWT",
+});
+
 router
   // un-authed endpoints
   .all("/api/*", withDB)

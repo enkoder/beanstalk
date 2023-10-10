@@ -11,6 +11,7 @@ export type GetUserResponseType = z.infer<typeof GetUserResponse>;
 export const GetUserSchema = {
   tags: ["User"],
   summary: "Gets a single user",
+  security: [{ bearerAuth: [] }],
   parameters: {
     userID: Path(Int, {
       description: "User ID (integer)",
@@ -29,6 +30,7 @@ export const GetUserSchema = {
 export const GetUsersSchema = {
   tags: ["User"],
   summary: "Gets a list of all users",
+  security: [{ bearerAuth: [] }],
   responses: {
     "200": {
       description: "List of all users",
@@ -42,6 +44,7 @@ export const GetUsersSchema = {
 export const MeSchema = {
   tags: ["User"],
   summary: "Gets your own profile",
+  security: [{ bearerAuth: [] }],
   responses: {
     "200": {
       description: "Your own user profile",
@@ -99,6 +102,7 @@ export type GetSeasonsResponseType = z.infer<typeof GetSeasonsResponse>;
 export const GetSeasonsSchema = {
   tags: ["Leaderboard"],
   summary: "Gets a list of all existing and past Seasons.",
+  security: [{ bearerAuth: [] }],
   responses: {
     "200": {
       schema: z.array(GetSeasonsResponse),
@@ -121,6 +125,7 @@ export type GetTournamentsResponseType = z.infer<typeof GetSeasonsResponse>;
 export const GetTournamentsSchema = {
   tags: ["Leaderboard"],
   summary: "Gets a list of all Tournaments",
+  security: [{ bearerAuth: [] }],
   responses: {
     "200": {
       schema: z.array(GetTournamentsResponse),
