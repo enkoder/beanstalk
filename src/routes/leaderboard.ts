@@ -1,5 +1,7 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
+  GetLeaderboardRowType,
+  GetLeaderboardSchema,
   GetSeasonsResponse,
   GetSeasonsResponseType,
   GetSeasonsSchema,
@@ -51,8 +53,6 @@ class GetTournaments extends OpenAPIRoute {
 
     const retArr: GetTournamentsResponseType[] = [];
     results.forEach((row) => {
-      console.log(row);
-
       // @ts-ignore
       retArr.push(GetTournamentsResponse.parse(row));
     });
@@ -60,4 +60,36 @@ class GetTournaments extends OpenAPIRoute {
   }
 }
 
-export { GetSeasons, GetTournaments };
+class GetLeaderboard extends OpenAPIRoute {
+  static schema = GetLeaderboardSchema;
+
+  async handle(
+    req: RequestWithDB,
+    env: Env,
+    contet: ExecutionContext,
+    data: Record<string, any>,
+  ) {
+    const results = await req.db
+      .selectFrom("leaderboard")
+      .leftJoin(
+        "tournaments",
+        "leaderboard.most_recent_tournament_id",
+        "tournaments.id",
+      )
+      .select([
+        "leaderboard.user_id",
+        "leaderboard.points",
+        "leaderboard.rank",
+        "tournaments.id as most_recent_tournament_id",
+        "tournaments.name as most_recent_tournament_name",
+      ])
+      .execute();
+    const retArr: GetLeaderboardRowType[] = [];
+    results.forEach((row) => {
+      // @ts-ignore
+      retArr.push(GetLeaderboardRow.parse(row));
+    });
+    return json(retArr);
+  }
+}
+export { GetSeasons, GetTournaments, GetLeaderboard };

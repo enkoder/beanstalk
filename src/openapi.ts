@@ -133,3 +133,24 @@ export const GetTournamentsSchema = {
     },
   },
 };
+
+export const GetLeaderboardRow = z.object({
+  user_id: z.number(),
+  rank: z.number(),
+  points: z.number(),
+  most_recent_tournament_id: z.number().nullable(),
+});
+export type GetLeaderboardRowType = z.infer<typeof GetLeaderboardRow>;
+
+export const GetLeaderboardSchema = {
+  tags: ["Leaderboard"],
+  summary: "Gets the current season's leaderboard",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: z.array(GetLeaderboardRow),
+      description:
+        "Returns a array of rows compromising the full leaderboard for the given season",
+    },
+  },
+};
