@@ -10,3 +10,7 @@ database_name = "anrpc-api"
 database_id = "9b34e77c-6642-4c30-9167-77829dd1cdf2"
 migrations_table = "migrations"
 migrations_dir = "migrations"
+
+[[queues.producers]]
+ queue = "tournament-concluded"
+ binding = "tournamentConcluded"
