@@ -28,6 +28,7 @@ router.registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 router
+
   // un-authed endpoints
   .all("/api/*", withDB)
   .post("/api/auth/register", AuthRegister)

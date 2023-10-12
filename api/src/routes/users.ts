@@ -30,12 +30,7 @@ class GetUser extends OpenAPIRoute {
 class GetUsers extends OpenAPIRoute {
   static schema = GetUsersSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    context: ExecutionContext,
-    data: Record<string, any>,
-  ) {
+  async handle(req: RequestWithDB) {
     // TODO: pagination
     const result = await req.db.selectFrom("users").selectAll().execute();
     if (!result) {

@@ -1,0 +1,347 @@
+{
+  "openapi": "3.1.0",
+  "info": { "version": "1.0.0", "title": "OpenAPI" },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new a new user account",
+        "operationId": "post_AuthRegister",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" }
+                },
+                "required": ["password", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "description": "User ID" },
+                        "name": {
+                          "type": "string",
+                          "description": "User name"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "User email"
+                        }
+                      },
+                      "required": ["id", "name", "email"]
+                    }
+                  },
+                  "required": ["user"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Log in via your email and password",
+        "operationId": "post_AuthLogin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": { "type": "string" },
+                  "email": { "type": "string" }
+                },
+                "required": ["password", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string", "description": "JWT token" }
+                  },
+                  "required": ["token"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Gets a list of all users",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetUsers",
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number", "description": "User ID" },
+                          "name": {
+                            "type": "string",
+                            "description": "User name"
+                          },
+                          "email": {
+                            "type": "string",
+                            "description": "User email"
+                          }
+                        },
+                        "required": ["id", "name", "email"]
+                      }
+                    }
+                  },
+                  "required": ["user"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/@me": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Gets your own profile",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_Me",
+        "responses": {
+          "200": {
+            "description": "Your own user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "number", "description": "User ID" },
+                          "name": {
+                            "type": "string",
+                            "description": "User name"
+                          },
+                          "email": {
+                            "type": "string",
+                            "description": "User email"
+                          }
+                        },
+                        "required": ["id", "name", "email"]
+                      }
+                    }
+                  },
+                  "required": ["user"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{userID}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Gets a single user",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetUser",
+        "parameters": [
+          {
+            "schema": { "type": "integer", "description": "User ID (integer)" },
+            "required": true,
+            "name": "userID",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "number", "description": "User ID" },
+                        "name": {
+                          "type": "string",
+                          "description": "User name"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "User email"
+                        }
+                      },
+                      "required": ["id", "name", "email"]
+                    }
+                  },
+                  "required": ["user"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seasons": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Gets a list of all existing and past Seasons.",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetSeasons",
+        "responses": {
+          "200": {
+            "description": "list of Seasons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "number" },
+                      "name": { "type": "string" },
+                      "tier": { "type": "string" },
+                      "started_at": { "type": "string", "format": "date-time" },
+                      "ended_at": { "type": ["string", "null"] }
+                    },
+                    "required": ["id", "name", "tier", "started_at"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Gets a list of all Tournaments",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetTournaments",
+        "responses": {
+          "200": {
+            "description": "list of Tournaments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "number" },
+                      "name": { "type": "string" },
+                      "date": {
+                        "type": ["string", "null"],
+                        "format": "date-time"
+                      },
+                      "is_done": { "type": "number" },
+                      "season_id": { "type": "number" },
+                      "season_name": { "type": "string" },
+                      "season_tier": { "type": "string" }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "date",
+                      "is_done",
+                      "season_id",
+                      "season_name",
+                      "season_tier"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/leaderboard": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Gets the current season's leaderboard",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetLeaderboard",
+        "responses": {
+          "200": {
+            "description": "Returns a array of rows compromising the full leaderboard for the given season",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user_id": { "type": "number" },
+                      "rank": { "type": "number" },
+                      "points": { "type": "number" },
+                      "most_recent_tournament_id": {
+                        "type": ["number", "null"]
+                      }
+                    },
+                    "required": [
+                      "user_id",
+                      "rank",
+                      "points",
+                      "most_recent_tournament_id"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}

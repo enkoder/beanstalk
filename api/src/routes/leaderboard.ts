@@ -9,18 +9,13 @@ import {
   GetTournamentsResponseType,
   GetTournamentsSchema,
 } from "../openapi";
-import { Env, RequestWithDB } from "../types";
+import { RequestWithDB } from "../types";
 import { json } from "itty-router";
 
 class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    contet: ExecutionContext,
-    data: Record<string, any>,
-  ) {
+  async handle(req: RequestWithDB) {
     const result = await req.db.selectFrom("seasons").selectAll().execute();
     const retArr: GetSeasonsResponseType[] = [];
     result.forEach((row) => retArr.push(GetSeasonsResponse.parse(row)));
@@ -31,12 +26,7 @@ class GetSeasons extends OpenAPIRoute {
 class GetTournaments extends OpenAPIRoute {
   static schema = GetTournamentsSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    contet: ExecutionContext,
-    data: Record<string, any>,
-  ) {
+  async handle(req: RequestWithDB) {
     const results = await req.db
       .selectFrom("tournaments")
       .leftJoin("seasons", "tournaments.id", "seasons.id")
@@ -63,12 +53,7 @@ class GetTournaments extends OpenAPIRoute {
 class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    contet: ExecutionContext,
-    data: Record<string, any>,
-  ) {
+  async handle(req: RequestWithDB) {
     const results = await req.db
       .selectFrom("leaderboard")
       .leftJoin(

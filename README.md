@@ -1,5 +1,13 @@
 # anrpc
 
+## Running the applications
+
+```shell
+# Install pnpm however you'd like, then
+pnpm install
+pnpm --stream run start
+```
+
 ## Linting
 
 This repo has some pre-commits installed to help ensure the repo stays looking fresh. To install and

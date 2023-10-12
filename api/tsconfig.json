@@ -1,0 +1,10 @@
+{
+  "include": ["src/*"],
+  "exclude": ["**/node_modules/*"],
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "types": ["@cloudflare/workers-types"],
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  }
+}

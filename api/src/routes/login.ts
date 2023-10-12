@@ -17,12 +17,7 @@ import { errorResponse } from "../errors";
 class AuthRegister extends OpenAPIRoute {
   static schema = AuthRegisterSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    context: ExecutionContext,
-    data: any,
-  ) {
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
     const body = data.body;
     const result = await req.db
       .selectFrom("users")
@@ -60,7 +55,7 @@ class AuthLogin extends OpenAPIRoute {
   async handle(
     req: RequestWithDB,
     env: Env,
-    context: ExecutionContext,
+    _: ExecutionContext,
     data: Record<string, any>,
   ) {
     const authLoginBody = AuthLoginBody.parse(data.body);

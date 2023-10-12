@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "consumers",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,20 +9,12 @@
     "start": "wrangler dev",
     "lint": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@cloudflare/itty-router-openapi": "^1.0.3",
-    "@tsndr/cloudflare-worker-jwt": "^2.2.5",
-    "itty-router": "^4.0.23",
-    "kysely": "^0.26.3",
-    "kysely-d1": "^0.3.0",
-    "zod": "^3.22.4"
-  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231010.0",
     "typescript": "^5.2.2",
     "wrangler": "^3.12.0"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
