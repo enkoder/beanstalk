@@ -1,80 +1,59 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
-  GetLeaderboardRowType,
+  GetLeaderboardRow,
   GetLeaderboardSchema,
   GetSeasonsResponse,
-  GetSeasonsResponseType,
   GetSeasonsSchema,
   GetTournamentsResponse,
-  GetTournamentsResponseType,
   GetTournamentsSchema,
 } from "../openapi";
 import { RequestWithDB } from "../types";
 import { json } from "itty-router";
+import { Seasons } from "../models/season";
+import { TournamentType, Tournaments } from "../models/tournament";
+import { Leaderboard } from "../models/leaderboard";
+import { Results } from "../models/results";
 
 class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;
 
-  async handle(req: RequestWithDB) {
-    const result = await req.db.selectFrom("seasons").selectAll().execute();
-    const retArr: GetSeasonsResponseType[] = [];
-    result.forEach((row) => retArr.push(GetSeasonsResponse.parse(row)));
-    return json(retArr);
+  async handle(_: RequestWithDB) {
+    const seasons = await Seasons.getAll();
+    return json(seasons.map((season) => GetSeasonsResponse.parse(season)));
   }
 }
 
 class GetTournaments extends OpenAPIRoute {
   static schema = GetTournamentsSchema;
 
-  async handle(req: RequestWithDB) {
-    const results = await req.db
-      .selectFrom("tournaments")
-      .leftJoin("seasons", "tournaments.id", "seasons.id")
-      .select([
-        "tournaments.id",
-        "tournaments.name",
-        "tournaments.date",
-        "tournaments.is_done",
-        "tournaments.season_id",
-        "seasons.name as season_name",
-        "seasons.tier as season_tier",
-      ])
-      .execute();
+  async handle(_: RequestWithDB) {
+    const tournaments = await Tournaments.getAllExpanded();
 
-    const retArr: GetTournamentsResponseType[] = [];
-    results.forEach((row) => {
-      // @ts-ignore
-      retArr.push(GetTournamentsResponse.parse(row));
-    });
-    return json(retArr);
+    return json(
+      tournaments.map((tournament) => {
+        GetTournamentsResponse.parse(tournament);
+      }),
+    );
   }
 }
 
 class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
-  async handle(req: RequestWithDB) {
-    const results = await req.db
-      .selectFrom("leaderboard")
-      .leftJoin(
-        "tournaments",
-        "leaderboard.most_recent_tournament_id",
-        "tournaments.id",
-      )
-      .select([
-        "leaderboard.user_id",
-        "leaderboard.points",
-        "leaderboard.rank",
-        "tournaments.id as most_recent_tournament_id",
-        "tournaments.name as most_recent_tournament_name",
-      ])
-      .execute();
-    const retArr: GetLeaderboardRowType[] = [];
-    results.forEach((row) => {
-      // @ts-ignore
-      retArr.push(GetLeaderboardRow.parse(row));
-    });
-    return json(retArr);
+  async handle(_: RequestWithDB) {
+    const leaderboard = await Leaderboard.getExpanded();
+
+    const results = await Results.getByTournamentType(
+      TournamentType.Continental,
+    );
+    for (const result of results) {
+      console.log(JSON.stringify(result));
+    }
+    return json(
+      leaderboard.map((row) => {
+        GetLeaderboardRow.parse(row);
+      }),
+    );
   }
 }
 export { GetSeasons, GetTournaments, GetLeaderboard };

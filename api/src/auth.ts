@@ -1,6 +1,7 @@
-import { verify, decode } from "@tsndr/cloudflare-worker-jwt";
+import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
 import { Env, RequestWithDB } from "./types";
 import { errorResponse } from "./errors";
+import { Users } from "./models/user";
 
 export async function signPassword(
   key: string,
@@ -32,6 +33,7 @@ export function getBearer(request: Request): null | string {
   }
   return authHeader.substring(6).trim();
 }
+
 export async function verifyPassword(
   key: string,
   email: string,
@@ -78,15 +80,11 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
   if (!token || !session) {
     return errorResponse(401, "Authentication error");
   }
-  const result = await request.db
-    .selectFrom("users")
-    .selectAll()
-    .where("id", "=", Number(session.payload.sub))
-    .executeTakeFirst();
+  const user = await Users.getFromId(Number(session.payload.sub));
 
-  if (!result) {
+  if (!user) {
     return errorResponse(401, "Authentication error");
   }
   // user_id not null implies user is logged in
-  request.user_id = result.id;
+  request.user_id = user.id;
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "wrangler build",
-    "start": "wrangler dev",
+    "start": "wrangler dev --test-scheduled",
     "lint": "tsc"
   },
   "keywords": [],
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231010.0",
+    "eslint-plugin-import": "^2.28.1",
     "typescript": "^5.2.2",
     "wrangler": "^3.12.0"
   }

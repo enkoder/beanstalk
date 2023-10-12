@@ -1,44 +1,39 @@
 import { json } from "itty-router";
-import { Env, RequestWithDB } from "../types";
+import { RequestWithDB } from "../types";
 import {
+  GetUserResponse,
   GetUserSchema,
   GetUsersSchema,
   MeSchema,
-  GetUserResponse,
-  GetUserResponseType,
 } from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { errorResponse } from "../errors";
+import { Users } from "../models/user";
 
 class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;
 
   async handle(req: RequestWithDB) {
-    const result = await req.db
-      .selectFrom("users")
-      .selectAll()
-      .where("id", "=", Number(req.params!["userID"]))
-      .executeTakeFirst();
+    const user = await Users.getFromId(Number(req.params!["userID"]));
 
-    if (!result) {
+    if (!user) {
       return errorResponse(400, "User does not exist");
     }
-    return json(GetUserResponse.parse(result));
+    return json(GetUserResponse.parse(user));
   }
 }
 
 class GetUsers extends OpenAPIRoute {
   static schema = GetUsersSchema;
 
-  async handle(req: RequestWithDB) {
+  async handle(_: RequestWithDB) {
     // TODO: pagination
-    const result = await req.db.selectFrom("users").selectAll().execute();
-    if (!result) {
+    const users = await Users.get();
+    if (!users) {
       return errorResponse(500, "No users in table??");
     }
-    const retArr: GetUserResponseType[] = [];
-    result.forEach((data) => retArr.push(GetUserResponse.parse(data)));
-    return json(retArr);
+
+    return json(users.map((user) => GetUserResponse.parse(user)));
   }
 }
 
@@ -46,13 +41,8 @@ class Me extends OpenAPIRoute {
   static schema = MeSchema;
 
   async handle(req: RequestWithDB) {
-    const result = await req.db
-      .selectFrom("users")
-      .selectAll()
-      .where("id", "=", Number(req.user_id))
-      .executeTakeFirst();
-
-    return json(GetUserResponse.parse(result));
+    const user = await Users.getFromId(Number(req.user_id));
+    return json(GetUserResponse.parse(user));
   }
 }
 

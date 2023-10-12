@@ -3,6 +3,8 @@ main = "src/index.ts"
 node_compat = true
 compatibility_date = "2023-10-08"
 
+[env.dev.triggers]
+crons = ["* * * * *"]
 
 [[ d1_databases ]]
 binding = "DB"

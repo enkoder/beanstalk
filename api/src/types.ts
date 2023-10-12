@@ -1,6 +1,6 @@
 import { IRequest } from "itty-router";
 import { Kysely } from "kysely";
-import { Database } from "./schema";
+import { Database } from "./models";
 
 // declare what's available in our env
 export type Env = {

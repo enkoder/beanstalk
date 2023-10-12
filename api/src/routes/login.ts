@@ -7,9 +7,10 @@ import {
   AuthRegisterSchema,
   GetUserResponse,
 } from "../openapi";
-import { sign, JwtPayload } from "@tsndr/cloudflare-worker-jwt";
+import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { signPassword, verifyPassword } from "../auth";
 import { errorResponse } from "../errors";
+import { Users } from "../models/user";
 
 // Minimum 8 characters, letters, numbers, and special chars
 // const PASSWORD_REGEX = RegExp("^[A-Za-zd!@#$&*]{8,}$");
@@ -19,13 +20,9 @@ class AuthRegister extends OpenAPIRoute {
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
     const body = data.body;
-    const result = await req.db
-      .selectFrom("users")
-      .selectAll()
-      .where("email", "=", body.email)
-      .executeTakeFirst();
+    let user = await Users.getFromEmail(body.email);
 
-    if (result) {
+    if (user) {
       return errorResponse(400, "Email is taken");
     }
 
@@ -35,17 +32,13 @@ class AuthRegister extends OpenAPIRoute {
       body.password,
     );
 
-    const res = await req.db
-      .insertInto("users")
-      .values({
-        email: body.email,
-        name: body.name,
-        password: pw,
-      })
-      .returningAll()
-      .executeTakeFirst();
+    user = await Users.insert({
+      email: body.email,
+      name: body.name,
+      password: pw,
+    });
 
-    return json(GetUserResponse.parse(res));
+    return json(GetUserResponse.parse(user));
   }
 }
 
@@ -60,13 +53,9 @@ class AuthLogin extends OpenAPIRoute {
   ) {
     const authLoginBody = AuthLoginBody.parse(data.body);
     console.log(authLoginBody);
-    const result = await req.db
-      .selectFrom("users")
-      .selectAll()
-      .where("email", "=", authLoginBody.email)
-      .executeTakeFirst();
+    const user = await Users.getFromEmail(authLoginBody.email);
 
-    if (!result) {
+    if (!user) {
       return errorResponse(400, "Email not found");
     }
     if (
@@ -74,7 +63,7 @@ class AuthLogin extends OpenAPIRoute {
         env.PASSWORD_SECRET_KEY,
         authLoginBody.email,
         authLoginBody.password,
-        result.password,
+        user.password,
       ))
     ) {
       return errorResponse(400, "Invalid password");
@@ -82,7 +71,7 @@ class AuthLogin extends OpenAPIRoute {
 
     const payload: JwtPayload = {
       iss: "anrpc-api",
-      sub: String(result.id),
+      sub: String(user.id),
       iat: Date.now(),
       //exp: Math.floor(Date.now() / 1000) + (60 * 60)
     };
