@@ -4,11 +4,12 @@ import {
   abrToTournament,
   getEntries,
   getTournaments,
-} from "./abr";
+} from "./lib/abr";
 import { initDB } from "./models";
 import { Formats, Tournaments } from "./models/tournament";
 import { Results } from "./models/results";
 import { Users } from "./models/user";
+import * as NRDB from "./lib/nrdb";
 
 const CUTOFF_DATE = new Date("2022-01-01");
 
@@ -41,14 +42,21 @@ export async function handleScheduled(event: ScheduledEvent, env: Env) {
       console.log(tournament);
       const entries = await getEntries(tournament.id);
       for (const entry of entries) {
-        const user = await Users.get(entry.user_id);
-        if (!user) {
-          await Users.insert({ id: entry.user_id });
+        let name = "null";
+        if (entry.user_id) {
+          name = await NRDB.getNameFromId(entry.user_id);
         }
+        const user = await Users.insert(
+          { id: entry.user_id, name: name },
+          true,
+        );
 
         // this is a partial, be sure to add the extra stuff that isn't coming from abr
         const result = await Results.insert(
-          abrToResult(entry, { tournament_id: tournament.id }),
+          abrToResult(entry, {
+            tournament_id: tournament.id,
+            user_id: user.id,
+          }),
           true,
         );
         console.log(

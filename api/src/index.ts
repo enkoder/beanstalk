@@ -1,9 +1,10 @@
 import { GetUser, GetUsers, Me } from "./routes/users";
 import { AuthLogin, AuthRegister } from "./routes/login";
+import { Rerank, UpdateUsers } from "./routes/admin";
 import { Env, RequestWithDB } from "./types";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
-import { authenticatedUser } from "./auth";
-import { errorResponse } from "./errors";
+import { adminOnly, authenticatedUser } from "./lib/auth";
+import { errorResponse } from "./lib/errors";
 import {
   GetLeaderboard,
   GetSeasons,
@@ -42,8 +43,12 @@ router
   .get("/api/tournaments", GetTournaments)
   .get("/api/leaderboard", GetLeaderboard)
 
+  // Admin only endpoints
+  .get("/api/admin/updateNRDBNames", adminOnly, UpdateUsers)
+  .get("/api/admin/rerank", adminOnly, Rerank)
+
   // fallthrough
-  .all("*", () => errorResponse(404, "url route valid"));
+  .all("*", () => errorResponse(404, "url route invalid"));
 
 export default {
   scheduled: handleScheduled,

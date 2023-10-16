@@ -1,5 +1,5 @@
 import { getDB } from "./index";
-import { Insertable, Selectable, Updateable } from "kysely";
+import { Expression, Insertable, Selectable, Updateable } from "kysely";
 import { Tournament, UpdateTournament } from "./tournament";
 
 export interface UsersTable {
@@ -7,6 +7,7 @@ export interface UsersTable {
   name: string | null;
   email: string | null;
   password: string | null;
+  is_admin: boolean;
 }
 
 type User = Selectable<UsersTable>;
@@ -14,8 +15,32 @@ type UpdateUser = Updateable<UsersTable>;
 type InsertUser = Insertable<UsersTable>;
 
 export class Users {
-  public static async getAll(): Promise<User[]> {
-    return await getDB().selectFrom("users").selectAll().execute();
+  public static async getAll(offset?: number, limit?: number): Promise<User[]> {
+    let q = getDB().selectFrom("users").selectAll();
+    if (offset) {
+      q = q.offset(offset);
+    }
+    if (limit) {
+      q = q.limit(limit);
+    }
+    return await q.execute();
+  }
+  public static async count(): Promise<number> {
+    const { count } = await getDB()
+      .selectFrom("users")
+      .select((eb) => {
+        return eb.fn.countAll<number>().as("count");
+      })
+      .executeTakeFirst();
+    return count;
+  }
+
+  public static async getAllWithoutName(): Promise<User[]> {
+    return await getDB()
+      .selectFrom("users")
+      .selectAll()
+      .where("name", "is", null)
+      .execute();
   }
 
   public static async get(id: number): Promise<User> {
@@ -58,10 +83,11 @@ export class Users {
       .returningAll()
       .executeTakeFirst();
   }
-  public static async update(user: UpdateUser): Promise<User> {
+  public static async update(id: number, user: UpdateUser): Promise<User> {
     return await getDB()
       .updateTable("users")
       .set(user)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirst();
   }

@@ -1,10 +1,10 @@
-import { Int, Path, Str } from "@cloudflare/itty-router-openapi";
+import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 
 export const GetUserResponse = z.object({
   id: z.number({ description: "User ID" }),
-  name: z.string({ description: "User name" }),
-  email: z.string({ description: "User email" }),
+  name: z.string({ description: "User name" }).nullable(),
+  email: z.string({ description: "User email" }).nullable(),
 });
 export type GetUserResponseType = z.infer<typeof GetUserResponse>;
 
@@ -135,10 +135,11 @@ export const GetTournamentsSchema = {
 };
 
 export const GetLeaderboardRow = z.object({
-  user_id: z.number(),
   rank: z.number(),
+  id: z.number(),
+  name: z.coerce.string(),
   points: z.number(),
-  most_recent_tournament_id: z.number().nullable(),
+  attended: z.number(),
 });
 export type GetLeaderboardRowType = z.infer<typeof GetLeaderboardRow>;
 
@@ -146,11 +147,47 @@ export const GetLeaderboardSchema = {
   tags: ["Leaderboard"],
   summary: "Gets the current season's leaderboard",
   security: [{ bearerAuth: [] }],
+  parameters: {
+    size: Query(z.coerce.number().optional()),
+    page: Query(z.coerce.number().optional()),
+  },
   responses: {
     "200": {
-      schema: z.array(GetLeaderboardRow),
+      schema: {
+        users: z.array(GetLeaderboardRow),
+        total: z.number(),
+        pages: z.number(),
+        current_page: z.number(),
+      },
       description:
         "Returns a array of rows compromising the full leaderboard for the given season",
+    },
+  },
+};
+
+export const RerankSummary = z.object({
+  numberUsersUpdate: z.number(),
+});
+export const RerankSchema = {
+  tags: ["Admin"],
+  summary: "Triggers a re-rank on all User rows. Limited to admin users",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: RerankSummary,
+      description: "Summary of what was changed during the re-ranking",
+    },
+  },
+};
+
+export const UpdateUsersSchema = {
+  tags: ["Admin"],
+  summary: "Triggers updating all users names from nrdb",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Updates all user accounts to pull from NRDB",
     },
   },
 };

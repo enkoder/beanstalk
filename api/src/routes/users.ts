@@ -7,7 +7,7 @@ import {
   MeSchema,
 } from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { errorResponse } from "../errors";
+import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
 
 class GetUser extends OpenAPIRoute {
@@ -28,7 +28,7 @@ class GetUsers extends OpenAPIRoute {
 
   async handle(_: RequestWithDB) {
     // TODO: pagination
-    const users = await Users.get();
+    const users = await Users.getAll();
     if (!users) {
       return errorResponse(500, "No users in table??");
     }

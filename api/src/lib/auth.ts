@@ -1,7 +1,7 @@
 import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
-import { Env, RequestWithDB } from "./types";
+import { Env, RequestWithDB } from "../types";
 import { errorResponse } from "./errors";
-import { Users } from "./models/user";
+import { Users } from "../models/user";
 
 export async function signPassword(
   key: string,
@@ -87,4 +87,11 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
   }
   // user_id not null implies user is logged in
   request.user_id = user.id;
+  request.is_admin = user.is_admin;
+}
+
+export async function adminOnly(request: RequestWithDB, _: Env) {
+  if (!request.user_is_admin) {
+    return errorResponse(401, "Authentication error");
+  }
 }

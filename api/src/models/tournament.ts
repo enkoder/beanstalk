@@ -67,13 +67,13 @@ export class Tournaments {
       .selectFrom("tournaments")
       .innerJoin("seasons", "seasons.id", "tournaments.season_id")
       .selectAll("tournaments")
-      .selectAll("tournaments")
+      .selectAll("seasons")
       .select(["seasons.id as season_id", "seasons.name as season_name"])
       .execute();
   }
 
   public static async update(
-    tournament: InsertTournament,
+    tournament: UpdateTournament,
   ): Promise<Tournament> {
     return await getDB()
       .updateTable("tournaments")

@@ -12,6 +12,8 @@ export interface ResultsTable {
   corp_deck_url: string;
   rank_swiss: number;
   rank_cut: number;
+  season_id: number;
+  points_earned: number;
 }
 export type UpdateResult = Updateable<ResultsTable>;
 export type Result = Selectable<ResultsTable>;
@@ -57,15 +59,28 @@ export class Results {
       .returningAll()
       .executeTakeFirst();
   }
-  public static async update(result: UpdateResult) {
+  public static async update(
+    tournament_id: number,
+    user_id: number,
+    result: UpdateResult,
+  ) {
     return await getDB()
       .updateTable("results")
       .set(result)
-      .where("tournament_id", "=", result.tournament_id)
+      .where("tournament_id", "=", tournament_id)
+      .where("user_id", "=", user_id)
       .returningAll()
       .executeTakeFirst();
   }
 
+  public static async getBySeasonId(season_id: number) {
+    return getDB()
+      .selectFrom("results")
+      .innerJoin("tournaments", "results.tournament_id", "tournaments.id")
+      .selectAll("results")
+      .where("tournaments.season_id", "=", season_id)
+      .execute();
+  }
   public static async getByTournamentType(type: TournamentType) {
     return getDB()
       .selectFrom("results")

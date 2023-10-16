@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { Formats, Tournament } from "./models/tournament";
-import { Result } from "./models/results";
-import { Generated } from "kysely";
+import { Formats, Tournament, TournamentType } from "../models/tournament";
+import { Result } from "../models/results";
 
 async function gatherResponse(response: Response) {
   const { headers } = response;
@@ -9,7 +8,7 @@ async function gatherResponse(response: Response) {
   if (contentType.includes("application/json")) {
     return JSON.stringify(await response.json());
   }
-  return response.text();
+  return await response.text();
 }
 
 export const ABRTournament = z.object({
@@ -31,7 +30,7 @@ export const ABRTournament = z.object({
   // TODO: parse
   date: z.coerce.date(),
   // TODO: check enum
-  type: z.string(),
+  type: z.nativeEnum(TournamentType),
   // TODO: check enum
   format: z.string(),
   mwl: z.string(),

@@ -8,8 +8,8 @@ import {
   GetUserResponse,
 } from "../openapi";
 import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
-import { signPassword, verifyPassword } from "../auth";
-import { errorResponse } from "../errors";
+import { signPassword, verifyPassword } from "../lib/auth";
+import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
 
 // Minimum 8 characters, letters, numbers, and special chars
@@ -52,7 +52,6 @@ class AuthLogin extends OpenAPIRoute {
     data: Record<string, any>,
   ) {
     const authLoginBody = AuthLoginBody.parse(data.body);
-    console.log(authLoginBody);
     const user = await Users.getFromEmail(authLoginBody.email);
 
     if (!user) {
