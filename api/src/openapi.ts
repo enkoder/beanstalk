@@ -191,3 +191,36 @@ export const UpdateUsersSchema = {
     },
   },
 };
+
+export const GetResultsResponse = z.object({
+  user_name: z.string(),
+  user_id: z.number(),
+  results: z.array(
+    z.object({
+      runner_deck_identity_id: z.number(),
+      runner_deck_url: z.string().nullable(),
+      corp_deck_identity_id: z.number(),
+      corp_deck_url: z.string().nullable(),
+      rank_swiss: z.number(),
+      rank_cut: z.number().nullable().optional(),
+      season_id: z.number(),
+      points_earned: z.number(),
+      tournament_id: z.number(),
+      tournament_name: z.string(),
+      num_players: z.number(),
+    }),
+  ),
+});
+export const GetResultsSchema = {
+  tags: ["Results"],
+  summary: "Gets the results for the given user",
+  parameters: { user: Path(Str, { description: "Name or ID of the user" }) },
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: GetResultsResponse,
+      description:
+        "Gets a list of all results for the given user and supplied filters",
+    },
+  },
+};

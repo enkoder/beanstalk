@@ -12,6 +12,8 @@ import {
 } from "./routes/leaderboard";
 import { handleScheduled } from "./scheduled";
 import { getDB, initDB } from "./models";
+import { createCors, error, json } from "itty-router";
+import { GetResults } from "./routes/results";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -26,9 +28,16 @@ router.registry.registerComponent("securitySchemes", "bearerAuth", {
   bearerFormat: "JWT",
 });
 
+const { preflight, corsify } = createCors({
+  origins: ["*"],
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+});
+
 router
   // un-authed endpoints
+  .all("*", preflight)
   .all("/api/*", withDB)
+
   .post("/api/auth/register", AuthRegister)
   .post("/api/auth/login", AuthLogin)
 
@@ -43,6 +52,9 @@ router
   .get("/api/tournaments", GetTournaments)
   .get("/api/leaderboard", GetLeaderboard)
 
+  // Results endpoints
+  .get("/api/results/:user", GetResults)
+
   // Admin only endpoints
   .get("/api/admin/updateNRDBNames", adminOnly, UpdateUsers)
   .get("/api/admin/rerank", adminOnly, Rerank)
@@ -52,5 +64,12 @@ router
 
 export default {
   scheduled: handleScheduled,
-  fetch: router.handle,
+  fetch: (...args) =>
+    router
+      .handle(...args)
+      .then(json)
+
+      // embed corsify downstream to attach CORS headers
+      .then(corsify)
+      .catch(error),
 };

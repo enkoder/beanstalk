@@ -9,6 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "pnpm --stream -r run build",
+    "start": "pnpm --stream -r run start",
     "api-start": "pnpm --filter api run start"
   },
   "keywords": [],

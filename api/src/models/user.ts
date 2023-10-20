@@ -1,6 +1,7 @@
 import { getDB } from "./index";
 import { Expression, Insertable, Selectable, Updateable } from "kysely";
 import { Tournament, UpdateTournament } from "./tournament";
+import { Result } from "./results";
 
 export interface UsersTable {
   id: number;
@@ -41,6 +42,16 @@ export class Users {
       .selectAll()
       .where("name", "is", null)
       .execute();
+  }
+
+  public static async getByIdOrName(user: string): Promise<User> {
+    return await getDB()
+      .selectFrom("users")
+      .selectAll()
+      .where((eb) =>
+        eb.or([eb("id", "=", Number(user)), eb("name", "=", user)]),
+      )
+      .executeTakeFirst();
   }
 
   public static async get(id: number): Promise<User> {

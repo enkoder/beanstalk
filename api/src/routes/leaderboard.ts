@@ -11,11 +11,11 @@ import {
 import { Env, RequestWithDB } from "../types";
 import { json } from "itty-router";
 import { Seasons } from "../models/season";
-import { TournamentType, Tournaments } from "../models/tournament";
-import { Leaderboard } from "../models/leaderboard";
-import { Results } from "../models/results";
+import { Tournaments } from "../models/tournament";
 import { getDB } from "../models";
 import { Users } from "../models/user";
+
+const DEFAULT_PAGE_SIZE = 0;
 
 class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;
@@ -44,7 +44,9 @@ class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
-    const { page, size } = data.query;
+    console.log(req.url);
+    const { page, sizeFromQuery } = data.query;
+    const size = sizeFromQuery ? sizeFromQuery : DEFAULT_PAGE_SIZE;
     const offset = page > 0 ? (page - 1) * size : 0;
 
     const totalUsers = await Users.count();
@@ -74,10 +76,10 @@ class GetLeaderboard extends OpenAPIRoute {
           .as("rank"),
       );
 
-    if (offset !== null) {
+    if (offset !== null && offset > 0) {
       q = q.offset(offset);
     }
-    if (size !== null) {
+    if (size !== null && size > 0) {
       q = q.limit(size);
     }
     const rows: GetLeaderboardRowType[] = [];

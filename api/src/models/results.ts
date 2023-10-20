@@ -33,14 +33,19 @@ export class Results {
   public static async getAll() {
     return await getDB().selectFrom("results").selectAll().execute();
   }
-  public static async getManyByUserIdExpanded(
-    user_id: number,
-  ): Promise<Result[]> {
-    return await getDB()
+  public static async getManyByUserIdExpanded(id: number): Promise<Result[]> {
+    const q = getDB()
       .selectFrom("results")
       .selectAll()
-      .where("user_id", "=", user_id)
-      .execute();
+      .innerJoin("users", "users.id", "results.user_id")
+      .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
+      .select([
+        "users.name as user_name",
+        "tournaments.name as tournament_name",
+      ])
+      .where("user_id", "=", id);
+
+    return await q.execute();
   }
   public static async insert(
     result: UpdateResult,

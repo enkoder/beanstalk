@@ -46,11 +46,11 @@
                       "properties": {
                         "id": { "type": "number", "description": "User ID" },
                         "name": {
-                          "type": "string",
+                          "type": ["string", "null"],
                           "description": "User name"
                         },
                         "email": {
-                          "type": "string",
+                          "type": ["string", "null"],
                           "description": "User email"
                         }
                       },
@@ -123,11 +123,11 @@
                         "properties": {
                           "id": { "type": "number", "description": "User ID" },
                           "name": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "User name"
                           },
                           "email": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "User email"
                           }
                         },
@@ -164,11 +164,11 @@
                         "properties": {
                           "id": { "type": "number", "description": "User ID" },
                           "name": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "User name"
                           },
                           "email": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "User email"
                           }
                         },
@@ -211,11 +211,11 @@
                       "properties": {
                         "id": { "type": "number", "description": "User ID" },
                         "name": {
-                          "type": "string",
+                          "type": ["string", "null"],
                           "description": "User name"
                         },
                         "email": {
-                          "type": "string",
+                          "type": ["string", "null"],
                           "description": "User email"
                         }
                       },
@@ -311,30 +311,152 @@
         "summary": "Gets the current season's leaderboard",
         "security": [{ "bearerAuth": [] }],
         "operationId": "get_GetLeaderboard",
+        "parameters": [
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Returns a array of rows compromising the full leaderboard for the given season",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "user_id": { "type": "number" },
-                      "rank": { "type": "number" },
-                      "points": { "type": "number" },
-                      "most_recent_tournament_id": {
-                        "type": ["number", "null"]
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "rank": { "type": "number" },
+                          "id": { "type": "number" },
+                          "name": { "type": ["string", "null"] },
+                          "points": { "type": "number" },
+                          "attended": { "type": "number" }
+                        },
+                        "required": ["rank", "id", "points", "attended"]
                       }
                     },
-                    "required": [
-                      "user_id",
-                      "rank",
-                      "points",
-                      "most_recent_tournament_id"
-                    ]
-                  }
+                    "total": { "type": "number" },
+                    "pages": { "type": "number" },
+                    "current_page": { "type": "number" }
+                  },
+                  "required": ["users", "total", "pages", "current_page"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/results/{user}": {
+      "get": {
+        "tags": ["Results"],
+        "summary": "Gets the results for the given user",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_GetResults",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Name or ID of the user"
+            },
+            "required": true,
+            "name": "user",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gets a list of all results for the given user and supplied filters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_name": { "type": "string" },
+                    "user_id": { "type": "number" },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "runner_deck_identity_id": { "type": "number" },
+                          "runner_deck_url": { "type": ["string", "null"] },
+                          "corp_deck_identity_id": { "type": "number" },
+                          "corp_deck_url": { "type": ["string", "null"] },
+                          "rank_swiss": { "type": "number" },
+                          "rank_cut": { "type": ["number", "null"] },
+                          "season_id": { "type": "number" },
+                          "points_earned": { "type": "number" },
+                          "tournament_id": { "type": "number" },
+                          "tournament_name": { "type": "string" }
+                        },
+                        "required": [
+                          "runner_deck_identity_id",
+                          "runner_deck_url",
+                          "corp_deck_identity_id",
+                          "corp_deck_url",
+                          "rank_swiss",
+                          "season_id",
+                          "points_earned",
+                          "tournament_id",
+                          "tournament_name"
+                        ]
+                      }
+                    }
+                  },
+                  "required": ["user_name", "user_id", "results"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/updateNRDBNames": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Triggers updating all users names from nrdb",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_UpdateUsers",
+        "responses": {
+          "200": {
+            "description": "Updates all user accounts to pull from NRDB",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/rerank": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Triggers a re-rank on all User rows. Limited to admin users",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_Rerank",
+        "responses": {
+          "200": {
+            "description": "Summary of what was changed during the re-ranking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "numberUsersUpdate": { "type": "number" } },
+                  "required": ["numberUsersUpdate"]
                 }
               }
             }

@@ -1,0 +1,9 @@
+.searchBar {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.table a {
+  display: block;
+  text-decoration: none;
+}

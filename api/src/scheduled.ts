@@ -56,6 +56,7 @@ export async function handleScheduled(event: ScheduledEvent, env: Env) {
           abrToResult(entry, {
             tournament_id: tournament.id,
             user_id: user.id,
+            num_players: entries.length,
           }),
           true,
         );

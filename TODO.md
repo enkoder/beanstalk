@@ -5,7 +5,7 @@
 - [ ] Add displayname to user profile
 - [ ] User member since field
 - [ ] NRDB & ABR links
-- [ ] Add is_admin
+- [x] Add is_admin
 - [ ] Look into NRDB OAuth
 
 ## Leader
@@ -17,7 +17,7 @@
 - [ ] tournaments PATCH (Admin & owner)
 - [ ] tournaments PUT (Admin & owner)
 - [ ] leaderboard GET query params
-- [ ] Pagination
+- [x] Pagination
 - [ ] tournaments/conclude POST
 
 ## Queue Consumer
@@ -35,7 +35,7 @@
 - [ ] Look into http://www.aesopstables.net/about codebase to see how this fits into anrpc
 - [ ] Update code to use new name
 
-## App
+## Root
 
 - [ ] Figure out why pages isn't deploying to prod
 - [ ] Develop plan for frontend
