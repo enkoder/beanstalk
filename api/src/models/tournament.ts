@@ -22,6 +22,7 @@ export enum TournamentType {
   StoreChamp = "store championship",
   Team = "team tournament",
   Worlds = "worlds championship",
+  Regionals = "regional championship",
 }
 
 export interface TournamentsTable {
@@ -33,6 +34,7 @@ export interface TournamentsTable {
   format: Formats;
   type: TournamentType;
   season_id: number;
+  registration_count: number;
 }
 
 export const TournamentsTableKeys: Array<keyof TournamentsTable> = [
@@ -70,6 +72,14 @@ export class Tournaments {
       .selectAll("seasons")
       .select(["seasons.id as season_id", "seasons.name as season_name"])
       .execute();
+  }
+
+  public static async getAllIds(): Promise<number[]> {
+    const results = await getDB()
+      .selectFrom("tournaments")
+      .select("id")
+      .execute();
+    return results.map((row) => row.id);
   }
 
   public static async update(

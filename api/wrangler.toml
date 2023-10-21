@@ -3,6 +3,9 @@ main = "src/index.ts"
 node_compat = true
 compatibility_date = "2023-10-08"
 
+[env.triggers]
+crons = ["0 0 * * *"]
+
 [env.dev.triggers]
 crons = ["* * * * *"]
 
@@ -14,5 +17,16 @@ migrations_table = "migrations"
 migrations_dir = "migrations"
 
 [[queues.producers]]
- queue = "tournament-concluded"
- binding = "tournamentConcluded"
+queue = "ingest-tournament"
+binding = "INGEST_TOURNAMENT_Q"
+
+[[queues.consumers]]
+queue = "ingest-tournament"
+dead_letter_queue = "ingest-tournament-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[queues.consumers]]
+queue = "ingest-tournament-dlq"
+max_batch_size = 5
+max_batch_timeout = 30

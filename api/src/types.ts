@@ -1,10 +1,12 @@
 import { IRequest } from "itty-router";
 import { Kysely } from "kysely";
 import { Database } from "./models";
+import { ABRTournamentType } from "./lib/abr";
 
 // declare what's available in our env
 export type Env = {
   DB: D1Database;
+  INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
   JWT_SIGNER_SECRET_KEY: string;
   PASSWORD_SECRET_KEY: string;
 };
@@ -15,4 +17,5 @@ export type Env = {
 export type RequestWithDB = {
   db: Kysely<Database>;
   user_id: number | null;
+  is_admin: boolean | null;
 } & IRequest;

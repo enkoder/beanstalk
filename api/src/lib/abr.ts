@@ -11,6 +11,23 @@ async function gatherResponse(response: Response) {
   return await response.text();
 }
 
+export enum ABRTournamentTypeFilter {
+  GNK = 1,
+  StoreChampionship,
+  RegionalChampionship,
+  NationalChampionship,
+  WorldsChampionship,
+  Community,
+  OnlineEvent,
+  NonTournamentEvent,
+  ContinentalChampionship,
+  TeamTournament,
+  CircuitOpener,
+  Asynchronous,
+  CircuitBreaker,
+  IntercontinentalChampionship,
+}
+
 export const ABRTournament = z.object({
   id: z.coerce.number(),
   title: z.string(),
@@ -52,6 +69,7 @@ export function abrToTournament(abr: ABRTournamentType): Tournament {
     type: abr.type,
     format: abr.format as Formats,
     concluded: abr.concluded ? 1 : 0,
+    registration_count: abr.registration_count,
   };
 }
 export type ABRTournamentType = z.infer<typeof ABRTournament>;
@@ -89,20 +107,8 @@ export function abrToResult(abr: ABREntryType, { ...args }): Partial<Result> {
 }
 const ABR_BASE_URL = "https://alwaysberunning.net/api";
 
-export async function getTournaments(
-  offset: number | null,
-  limit: number | null,
-): Promise<ABRTournamentType[]> {
+async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
   const retArr: ABRTournamentType[] = [];
-
-  const url = new URL(`${ABR_BASE_URL}/tournaments/results`);
-  if (offset) {
-    url.searchParams.append("offset", String(offset));
-  }
-  if (limit) {
-    url.searchParams.append("limit", String(limit));
-  }
-
   const resp = await fetch(url.toString());
   if (!resp.ok) {
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
@@ -120,8 +126,38 @@ export async function getTournaments(
       }
     });
   }
+
   return retArr;
 }
+
+export async function getTournamentsByType(type: ABRTournamentTypeFilter) {
+  const url = new URL(`${ABR_BASE_URL}/tournaments`);
+  url.searchParams.append("type", String(type));
+  url.searchParams.append("concluded", "1");
+  return _getTournaments(url);
+}
+
+export async function getTournamentsByUserId(id: number) {
+  const url = new URL(`${ABR_BASE_URL}/tournaments`);
+  url.searchParams.append("foruser", String(id));
+  url.searchParams.append("concluded", "1");
+  return await _getTournaments(url);
+}
+
+export async function getTournaments(
+  offset: number | null,
+  limit: number | null,
+): Promise<ABRTournamentType[]> {
+  const url = new URL(`${ABR_BASE_URL}/tournaments/results`);
+  if (offset) {
+    url.searchParams.append("offset", String(offset));
+  }
+  if (limit) {
+    url.searchParams.append("limit", String(limit));
+  }
+  return _getTournaments(url);
+}
+
 export async function getEntries(
   tournament_id: number,
 ): Promise<ABREntryType[]> {

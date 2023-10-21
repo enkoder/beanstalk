@@ -20,7 +20,7 @@ class AuthRegister extends OpenAPIRoute {
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
     const body = data.body;
-    let user = await Users.getFromEmail(body.email);
+    let user = await Users.getByEmail(body.email);
 
     if (user) {
       return errorResponse(400, "Email is taken");
@@ -52,7 +52,7 @@ class AuthLogin extends OpenAPIRoute {
     data: Record<string, any>,
   ) {
     const authLoginBody = AuthLoginBody.parse(data.body);
-    const user = await Users.getFromEmail(authLoginBody.email);
+    const user = await Users.getByEmail(authLoginBody.email);
 
     if (!user) {
       return errorResponse(400, "Email not found");

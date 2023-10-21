@@ -3,12 +3,12 @@ import { TournamentType } from "../models/tournament";
 export function getSeason0Points(
   type: TournamentType,
   numberPlayers: number,
-  rank_swiss: number,
-  rank_cut: number | null,
+  rankSwiss: number,
+  rankCut: number | null,
 ) {
   let points = 0;
   // For now don't do anything with cut vs swiss
-  const placement = rank_cut !== null ? rank_cut : rank_swiss;
+  const placement = rankCut !== null ? rankCut : rankSwiss;
   switch (type) {
     case TournamentType.Nationals: {
       if (numberPlayers > 16 && placement <= 8) {

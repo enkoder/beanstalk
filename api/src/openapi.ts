@@ -1,5 +1,6 @@
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
+import { ABRTournamentTypeFilter } from "./lib/abr";
 
 export const GetUserResponse = z.object({
   id: z.number({ description: "User ID" }),
@@ -188,6 +189,23 @@ export const UpdateUsersSchema = {
     "200": {
       schema: z.object({}),
       description: "Updates all user accounts to pull from NRDB",
+    },
+  },
+};
+
+const IngestTournamentBody = z.object({
+  userId: z.number().optional(),
+  tournamentType: z.nativeEnum(ABRTournamentTypeFilter).optional(),
+});
+export const IngestTournamentSchema = {
+  tags: ["Admin"],
+  summary: "Triggers a background job to ingest tournament data from ABR.",
+  security: [{ bearerAuth: [] }],
+  requestBody: IngestTournamentBody,
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates success on triggering ingestion.",
     },
   },
 };

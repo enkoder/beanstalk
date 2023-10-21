@@ -14,7 +14,7 @@ class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;
 
   async handle(req: RequestWithDB) {
-    const user = await Users.getFromId(Number(req.params!["userID"]));
+    const user = await Users.getById(Number(req.params!["userID"]));
 
     if (!user) {
       return errorResponse(400, "User does not exist");
@@ -41,7 +41,7 @@ class Me extends OpenAPIRoute {
   static schema = MeSchema;
 
   async handle(req: RequestWithDB) {
-    const user = await Users.getFromId(Number(req.user_id));
+    const user = await Users.getById(Number(req.user_id));
     return json(GetUserResponse.parse(user));
   }
 }

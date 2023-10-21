@@ -80,7 +80,7 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
   if (!token || !session) {
     return errorResponse(401, "Authentication error");
   }
-  const user = await Users.getFromId(Number(session.payload.sub));
+  const user = await Users.getById(Number(session.payload.sub));
 
   if (!user) {
     return errorResponse(401, "Authentication error");
@@ -91,7 +91,7 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
 }
 
 export async function adminOnly(request: RequestWithDB, _: Env) {
-  if (!request.user_is_admin) {
+  if (!request.is_admin) {
     return errorResponse(401, "Authentication error");
   }
 }

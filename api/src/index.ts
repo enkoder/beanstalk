@@ -1,6 +1,6 @@
 import { GetUser, GetUsers, Me } from "./routes/users";
 import { AuthLogin, AuthRegister } from "./routes/login";
-import { Rerank, UpdateUsers } from "./routes/admin";
+import { IngestTournaments, Rerank, UpdateUsers } from "./routes/admin";
 import { Env, RequestWithDB } from "./types";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import { adminOnly, authenticatedUser } from "./lib/auth";
@@ -10,7 +10,7 @@ import {
   GetSeasons,
   GetTournaments,
 } from "./routes/leaderboard";
-import { handleScheduled } from "./scheduled";
+import { handleQueue, handleScheduled } from "./background";
 import { getDB, initDB } from "./models";
 import { createCors, error, json } from "itty-router";
 import { GetResults } from "./routes/results";
@@ -56,13 +56,16 @@ router
   .get("/api/results/:user", GetResults)
 
   // Admin only endpoints
-  .get("/api/admin/updateNRDBNames", adminOnly, UpdateUsers)
-  .get("/api/admin/rerank", adminOnly, Rerank)
+  .all("/api/admin/*", authenticatedUser, adminOnly)
+  .get("/api/admin/updateNRDBNames", UpdateUsers)
+  .get("/api/admin/rerank", Rerank)
+  .post("/api/admin/ingestTournaments", IngestTournaments)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));
 
 export default {
+  queue: handleQueue,
   scheduled: handleScheduled,
   fetch: (...args) =>
     router

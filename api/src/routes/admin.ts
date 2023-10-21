@@ -1,6 +1,11 @@
 import { json } from "itty-router";
-import { RequestWithDB } from "../types";
-import { RerankSchema, RerankSummary, UpdateUsersSchema } from "../openapi";
+import { Env, RequestWithDB } from "../types";
+import {
+  IngestTournamentSchema,
+  RerankSchema,
+  RerankSummary,
+  UpdateUsersSchema,
+} from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { Results } from "../models/results";
 import { Seasons } from "../models/season";
@@ -8,13 +13,12 @@ import { getSeason0Points } from "../lib/ranking";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import { getNameFromId } from "../lib/nrdb";
-
-const LIMIT = 100;
+import { abrIngest } from "../background";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
 
-  async handle(req: RequestWithDB) {
+  async handle(_: RequestWithDB) {
     const count: number = 0;
 
     for (const season of await Seasons.getAll()) {
@@ -40,7 +44,7 @@ export class Rerank extends OpenAPIRoute {
 export class UpdateUsers extends OpenAPIRoute {
   static schema = UpdateUsersSchema;
 
-  async handle(req: RequestWithDB) {
+  async handle(_: RequestWithDB) {
     const users = await Users.getAllWithoutName();
     console.log(JSON.stringify(users));
     for (let i = 0; i < users.length; i++) {
@@ -50,6 +54,16 @@ export class UpdateUsers extends OpenAPIRoute {
       });
       console.log(JSON.stringify(user));
     }
+    return json({});
+  }
+}
+
+export class IngestTournaments extends OpenAPIRoute {
+  static schema = IngestTournamentSchema;
+
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
+    const body = IngestTournamentSchema.requestBody.parse(data.body);
+    await abrIngest(env, body.userId, body.tournamentType);
     return json({});
   }
 }

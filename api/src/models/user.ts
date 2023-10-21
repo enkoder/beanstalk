@@ -1,7 +1,5 @@
 import { getDB } from "./index";
-import { Expression, Insertable, Selectable, Updateable } from "kysely";
-import { Tournament, UpdateTournament } from "./tournament";
-import { Result } from "./results";
+import { Insertable, Selectable, Updateable } from "kysely";
 
 export interface UsersTable {
   id: number;
@@ -11,7 +9,7 @@ export interface UsersTable {
   is_admin: boolean;
 }
 
-type User = Selectable<UsersTable>;
+export type User = Selectable<UsersTable>;
 type UpdateUser = Updateable<UsersTable>;
 type InsertUser = Insertable<UsersTable>;
 
@@ -61,7 +59,14 @@ export class Users {
       .where("id", "=", id)
       .executeTakeFirst();
   }
-  public static async getFromEmail(email: string): Promise<User> {
+  public static async getByName(name: string): Promise<User> {
+    return await getDB()
+      .selectFrom("users")
+      .selectAll()
+      .where("name", "=", name)
+      .executeTakeFirst();
+  }
+  public static async getByEmail(email: string): Promise<User> {
     return await getDB()
       .selectFrom("users")
       .selectAll()
@@ -69,7 +74,7 @@ export class Users {
       .executeTakeFirst();
   }
 
-  public static async getFromId(id: number): Promise<User> {
+  public static async getById(id: number): Promise<User> {
     return await getDB()
       .selectFrom("users")
       .selectAll()
