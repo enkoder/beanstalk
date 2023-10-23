@@ -13,13 +13,12 @@ export class GetResults extends OpenAPIRoute {
     const user = await Users.getByIdOrName(userIdOrName);
     const results = await Results.getManyByUserIdExpanded(user.id);
 
-    console.log(JSON.stringify(results));
-    return json(
-      GetResultsResponse.parse({
-        user_id: user.id,
-        user_name: user.name,
-        results: results,
-      }),
-    );
+    const result = GetResultsResponse.parse({
+      user_id: user.id,
+      user_name: user.name,
+      results: results,
+    });
+
+    return json(result);
   }
 }

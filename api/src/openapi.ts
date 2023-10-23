@@ -225,7 +225,7 @@ export const GetResultsResponse = z.object({
       points_earned: z.number(),
       tournament_id: z.number(),
       tournament_name: z.string(),
-      num_players: z.number(),
+      registration_count: z.number(),
     }),
   ),
 });

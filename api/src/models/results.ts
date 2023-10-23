@@ -42,6 +42,7 @@ export class Results {
       .select([
         "users.name as user_name",
         "tournaments.name as tournament_name",
+        "tournaments.registration_count as registration_count",
       ])
       .where("user_id", "=", id);
 
