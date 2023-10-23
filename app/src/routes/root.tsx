@@ -4,8 +4,8 @@ import "./root.css";
 import { Outlet } from "react-router-dom";
 
 OpenAPI.BASE = process.env.IS_LOCAL_MODE
-  ? "https://anrpc-api.enkoder.workers.dev"
-  : "http://0.0.0.0:8787";
+  ? "http://0.0.0.0:8787"
+  : "https://anrpc-api.enkoder.workers.dev";
 
 export default function Root() {
   return (
