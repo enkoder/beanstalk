@@ -55,7 +55,7 @@ export function Results() {
                         {result.tournament_name}
                       </a>{" "}
                     </td>
-                    <td>Soon :tm:</td>
+                    <td>{result.registration_count}</td>
                     <td>{result.rank_swiss}</td>
                     <td>{result.rank_cut}</td>
                     <td>
