@@ -60,7 +60,7 @@ export async function verifyPassword(
 }
 
 async function validateToken(token: string, env: Env) {
-  const isValid = await verify(token, env.PASSWORD_SECRET_KEY);
+  const isValid = await verify(token, env.JWT_SIGNER_SECRET_KEY);
 
   // Check for validity
   if (!isValid) return;
@@ -78,12 +78,12 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
   }
 
   if (!token || !session) {
-    return errorResponse(401, "Authentication error");
+    return errorResponse(401, "Authentication error. Invalid token");
   }
   const user = await Users.getById(Number(session.payload.sub));
 
   if (!user) {
-    return errorResponse(401, "Authentication error");
+    return errorResponse(401, "Authentication error. Invalid user.");
   }
   // user_id not null implies user is logged in
   request.user_id = user.id;

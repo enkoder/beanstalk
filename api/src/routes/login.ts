@@ -74,7 +74,7 @@ class AuthLogin extends OpenAPIRoute {
       iat: Date.now(),
       //exp: Math.floor(Date.now() / 1000) + (60 * 60)
     };
-    const token = await sign(payload, "secret");
+    const token = await sign(payload, env.JWT_SIGNER_SECRET_KEY);
     return json(token);
   }
 }
