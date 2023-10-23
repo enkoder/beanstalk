@@ -1,4 +1,4 @@
-import { Env } from "./types";
+import { Env, IngestResultQueueMessage } from "./types";
 import {
   ABREntryType,
   ABRTournamentType,
@@ -17,8 +17,10 @@ import * as NRDB from "./lib/nrdb";
 import { getSeason0Points } from "./lib/ranking";
 
 enum Queues {
-  TournamentIngest = "ingest-tournament",
-  TournamentIngestDLQ = "ingest-tournament-dlq",
+  IngestTournament = "ingest-tournament",
+  IngestTournamentDLQ = "ingest-tournament-dlq",
+  IngestResult = "ingest-result",
+  IngestResultDLQ = "ingest-result-dlq",
 }
 
 async function ingestEntry(
@@ -64,7 +66,58 @@ async function ingestEntry(
   );
 }
 
-async function handleTournamentIngest(abrTournament: ABRTournamentType) {
+async function handleResultIngest(
+  abrTournament: ABRTournamentType,
+  abrEntry: ABREntryType,
+) {
+  const tournament = abrToTournament(abrTournament);
+
+  // Calculate the number of points for this result
+  const points = getSeason0Points(
+    tournament.type,
+    tournament.registration_count,
+    abrEntry.rank_swiss,
+    abrEntry.rank_top,
+  );
+
+  //console.log(JSON.stringify(entry, null, 4));
+  try {
+    const result = await ingestEntry(abrEntry, tournament.id, points);
+    if (!result) {
+      console.log(
+        [
+          `${Queues} | `,
+          "FAIL | ",
+          `user_id: ${abrEntry.user_id} | `,
+          `user_name: ${abrEntry.user_name} | `,
+          `user_import_name: ${abrEntry.user_import_name} | `,
+          `tournament_id: ${tournament.id} | `,
+          `tournament_name: ${tournament.name}`,
+        ].join(" "),
+      );
+    } else {
+      console.log(
+        [
+          `${Queues.IngestTournament} | `,
+          "SUCCESS | ",
+          `user_id: ${result.user_id} | `,
+          `user_name: ${abrEntry.user_name} | `,
+          `user_import_name: ${abrEntry.user_import_name} | `,
+          `tournament_id: ${tournament.id} | `,
+          `tournament_name: ${tournament.name}`,
+        ].join(" "),
+      );
+    }
+  } catch (e) {
+    console.log(`Error in handleTournamentIngest ${e}`);
+    throw e;
+  }
+}
+
+async function handleTournamentIngest(
+  env: Env,
+  abrTournament: ABRTournamentType,
+) {
   const tournament = await Tournaments.insert(
     abrToTournament(abrTournament),
     true,
@@ -72,45 +125,7 @@ async function handleTournamentIngest(abrTournament: ABRTournamentType) {
 
   const entries = await getEntries(tournament.id);
   for (const entry of entries) {
-    const points = getSeason0Points(
-      tournament.type,
-      tournament.registration_count,
-      entry.rank_swiss,
-      entry.rank_top,
-    );
-
-    //console.log(JSON.stringify(entry, null, 4));
-    try {
-      const result = await ingestEntry(entry, tournament.id, points);
-      if (!result) {
-        console.log(
-          [
-            `${Queues.TournamentIngest} | `,
-            "FAIL | ",
-            `user_id: ${entry.user_id} | `,
-            `user_name: ${entry.user_name} | `,
-            `user_import_name: ${entry.user_import_name} | `,
-            `tournament_id: ${tournament.id} | `,
-            `tournament_name: ${tournament.name}`,
-          ].join(" "),
-        );
-      } else {
-        console.log(
-          [
-            `${Queues.TournamentIngest} | `,
-            "SUCCESS | ",
-            `user_id: ${result.user_id} | `,
-            `user_name: ${entry.user_name} | `,
-            `user_import_name: ${entry.user_import_name} | `,
-            `tournament_id: ${tournament.id} | `,
-            `tournament_name: ${tournament.name}`,
-          ].join(" "),
-        );
-      }
-    } catch (e) {
-      console.log(`Error in handleTournamentIngest ${e}`);
-      throw e;
-    }
+    await env.INGEST_RESULT_Q.send({ tournament: abrTournament, entry: entry });
   }
 }
 
@@ -118,6 +133,18 @@ async function handleTournamentIngestDLQ(tournament: ABRTournamentType) {
   // TODO: actually do something here on ingest fail
   const str = JSON.stringify(tournament, null, 4);
   console.log(`handleTournamentIngestDLQ | ${str}`);
+}
+
+async function handleResultIngestDLQ(
+  tournament: ABRTournamentType,
+  entry: ABREntryType,
+) {
+  // TODO: actually do something here on ingest fail
+  const tournamentStr = JSON.stringify(tournament, null, 4);
+  const entryStr = JSON.stringify(entry, null, 4);
+  console.log(
+    `handleResultIngestDLQ | tournament=${tournamentStr} | entry=${entryStr}`,
+  );
 }
 
 export async function abrIngest(
@@ -140,23 +167,35 @@ export async function abrIngest(
   }
 
   for (const abrTournament of abrTournaments) {
-    await env.INGEST_TOURNAMENT_Q.send(abrTournament);
+    await env.INGEST_TOURNAMENT_Q.send(abrTournament, { contentType: "json" });
   }
 }
 
 export async function handleQueue(
-  batch: MessageBatch<ABRTournamentType>,
+  batch: MessageBatch<ABRTournamentType | ABREntryType>,
   env: Env,
 ): Promise<void> {
   initDB(env.DB);
   for (const message of batch.messages) {
-    console.log(`${batch.queue} | ${JSON.stringify(message)}`);
+    //console.log(`${batch.queue} | ${JSON.stringify(message)}`);
     switch (batch.queue) {
-      case Queues.TournamentIngest:
-        await handleTournamentIngest(message.body);
+      case Queues.IngestTournament:
+        await handleTournamentIngest(env, message.body as ABRTournamentType);
         break;
-      case Queues.TournamentIngestDLQ:
-        await handleTournamentIngestDLQ(message.body);
+      case Queues.IngestTournamentDLQ:
+        await handleTournamentIngestDLQ(message.body as ABRTournamentType);
+        break;
+      case Queues.IngestResult: {
+        const { tournament, entry } = message.body as IngestResultQueueMessage;
+        await handleResultIngest(tournament, entry);
+        break;
+      }
+      case Queues.IngestResultDLQ:
+        {
+          const { tournament, entry } =
+            message.body as IngestResultQueueMessage;
+          await handleResultIngestDLQ(tournament, entry);
+        }
         break;
     }
   }
