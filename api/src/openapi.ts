@@ -10,7 +10,7 @@ export const GetUserResponse = z.object({
 export type GetUserResponseType = z.infer<typeof GetUserResponse>;
 
 export const GetUserSchema = {
-  tags: ["User"],
+  tags: ["User", "Admin"],
   summary: "Gets a single user",
   security: [{ bearerAuth: [] }],
   parameters: {
@@ -29,8 +29,8 @@ export const GetUserSchema = {
 };
 
 export const GetUsersSchema = {
-  tags: ["User"],
-  summary: "Gets a list of all users",
+  tags: ["User", "Admin"],
+  summary: "Gets a list of all users.",
   security: [{ bearerAuth: [] }],
   responses: {
     "200": {

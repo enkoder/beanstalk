@@ -43,9 +43,9 @@ router
 
   // Users
   .all("/api/users/*", authenticatedUser)
-  .get("/api/users", GetUsers)
   .get("/api/users/@me", Me)
-  .get("/api/users/:userID", GetUser)
+  .get("/api/users", adminOnly, GetUsers)
+  .get("/api/users/:userID", adminOnly, GetUser)
 
   // Leaderboard
   .get("/api/seasons", GetSeasons)
