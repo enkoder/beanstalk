@@ -19,21 +19,26 @@ export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
 
   async handle(_: RequestWithDB) {
-    const count: number = 0;
+    let count: number = 0;
 
     for (const season of await Seasons.getAll()) {
       const results = await Results.getBySeasonId(season.id);
       for (const result of results) {
         console.log(JSON.stringify(result));
         const tournament = await Tournaments.get(result.tournament_id);
-        await Results.update(result.tournament_id, result.user_id, {
-          points_earned: getSeason0Points(
-            tournament.type,
-            results.length,
-            result.rank_swiss,
-            result.rank_cut,
-          ),
-        });
+
+        const points = getSeason0Points(
+          tournament.type,
+          tournament.registration_count,
+          result.rank_swiss,
+          result.rank_cut,
+        );
+        if (result.points_earned != points) {
+          await Results.update(result.tournament_id, result.user_id, {
+            points_earned: points,
+          });
+          count += 1;
+        }
       }
     }
 

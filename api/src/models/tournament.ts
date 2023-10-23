@@ -56,6 +56,7 @@ export class Tournaments {
       .where("id", "=", id)
       .executeTakeFirst();
   }
+
   public static async getCountFromIds(ids: number[]): Promise<number> {
     const sql = getDB()
       .selectFrom("tournaments")

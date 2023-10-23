@@ -11,10 +11,35 @@ export function getSeason0Points(
   const placement = rankCut !== null ? rankCut : rankSwiss;
   switch (type) {
     case TournamentType.Nationals: {
-      if (numberPlayers > 16 && placement <= 8) {
-        points = 10 + 8 - placement + 1;
-      } else if (numberPlayers > 16 && placement <= 16) {
+      if (placement <= 8) {
+        points = 10;
+      } else if (placement <= 16) {
         points = 5;
+      }
+      break;
+    }
+    case TournamentType.Continental: {
+      if (placement <= 8) {
+        points = 20;
+      } else if (placement <= 16) {
+        points = 10;
+      }
+      break;
+    }
+    case TournamentType.Intercontinental: {
+      if (placement == 1) {
+        points = 30;
+      }
+      if (placement == 2) {
+        points = 15;
+      }
+      break;
+    }
+    case TournamentType.Worlds: {
+      if (placement <= 8) {
+        points = 50;
+      } else if (placement <= 16) {
+        points = 20;
       }
       break;
     }
