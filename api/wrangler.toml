@@ -4,11 +4,12 @@ node_compat = true
 compatibility_date = "2023-10-08"
 logpush = true
 
-[env.triggers]
-crons = ["0 0 * * *"]
+kv_namespaces = [
+{ binding = "CARDS_KV", id = "21945a1fb6484e168c025920c571e21d" }
+]
 
-[env.dev.triggers]
-crons = ["* * * * *"]
+[triggers]
+crons = ["0 0 * * *"]
 
 [[ d1_databases ]]
 binding = "DB"

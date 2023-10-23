@@ -9,7 +9,119 @@
         "bearerFormat": "JWT"
       }
     },
-    "schemas": {},
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "description": "User ID" },
+          "name": { "type": ["string", "null"], "description": "User name" },
+          "email": { "type": ["string", "null"], "description": "User email" }
+        },
+        "required": ["id", "name", "email"]
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "rank_swiss": { "type": "number" },
+          "rank_cut": { "type": ["number", "null"] },
+          "season_id": { "type": "number" },
+          "points_earned": { "type": "number" },
+          "tournament_id": { "type": "number" },
+          "tournament_name": { "type": "string" },
+          "registration_count": { "type": "number" },
+          "corp_deck_identity_id": { "type": "number" },
+          "corp_deck_identity_name": { "type": ["string", "null"] },
+          "corp_deck_faction": { "type": ["string", "null"] },
+          "corp_deck_url": { "type": ["string", "null"] },
+          "runner_deck_identity_id": { "type": "number" },
+          "runner_deck_identity_name": { "type": ["string", "null"] },
+          "runner_deck_faction": { "type": ["string", "null"] },
+          "runner_deck_url": { "type": ["string", "null"] }
+        },
+        "required": [
+          "rank_swiss",
+          "season_id",
+          "points_earned",
+          "tournament_id",
+          "tournament_name",
+          "registration_count",
+          "corp_deck_identity_id",
+          "runner_deck_identity_id"
+        ]
+      },
+      "UserResultsResponse": {
+        "type": "object",
+        "properties": {
+          "user_name": { "type": "string" },
+          "user_id": { "type": "number" },
+          "results": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Result" }
+          }
+        },
+        "required": ["user_name", "user_id", "results"]
+      },
+      "LeaderboardResponse": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": { "type": "number" },
+                "id": { "type": "number" },
+                "name": { "type": ["string", "null"] },
+                "points": { "type": "number" },
+                "attended": { "type": "number" }
+              },
+              "required": ["rank", "id", "points", "attended"]
+            }
+          },
+          "total": { "type": "number" },
+          "pages": { "type": "number" },
+          "current_page": { "type": "number" }
+        },
+        "required": ["users", "total", "pages", "current_page"]
+      },
+      "Season": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "tier": { "type": "string" },
+          "started_at": { "type": "string", "format": "date-time" },
+          "ended_at": { "type": ["string", "null"] }
+        },
+        "required": ["id", "name", "tier", "started_at"]
+      },
+      "Tournament": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "date": { "type": ["string", "null"], "format": "date-time" },
+          "registration_count": { "type": "number" },
+          "location": { "type": "string" },
+          "concluded": { "type": ["boolean", "null"] },
+          "format": { "type": "string" },
+          "type": { "type": "string" },
+          "season_id": { "type": "number" },
+          "season_name": { "type": "string" },
+          "season_tier": { "type": "string" }
+        },
+        "required": [
+          "id",
+          "name",
+          "date",
+          "registration_count",
+          "location",
+          "format",
+          "type",
+          "season_id"
+        ]
+      }
+    },
     "parameters": {}
   },
   "paths": {
@@ -38,27 +150,7 @@
             "description": "User Object",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "type": "object",
-                      "properties": {
-                        "id": { "type": "number", "description": "User ID" },
-                        "name": {
-                          "type": ["string", "null"],
-                          "description": "User name"
-                        },
-                        "email": {
-                          "type": ["string", "null"],
-                          "description": "User email"
-                        }
-                      },
-                      "required": ["id", "name", "email"]
-                    }
-                  },
-                  "required": ["user"]
-                }
+                "schema": { "$ref": "#/components/schemas/User" }
               }
             }
           }
@@ -102,47 +194,6 @@
         }
       }
     },
-    "/api/users": {
-      "get": {
-        "tags": ["User"],
-        "summary": "Gets a list of all users",
-        "security": [{ "bearerAuth": [] }],
-        "operationId": "get_GetUsers",
-        "responses": {
-          "200": {
-            "description": "List of all users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": { "type": "number", "description": "User ID" },
-                          "name": {
-                            "type": ["string", "null"],
-                            "description": "User name"
-                          },
-                          "email": {
-                            "type": ["string", "null"],
-                            "description": "User email"
-                          }
-                        },
-                        "required": ["id", "name", "email"]
-                      }
-                    }
-                  },
-                  "required": ["user"]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/users/@me": {
       "get": {
         "tags": ["User"],
@@ -157,23 +208,32 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "user": { "$ref": "#/components/schemas/User" }
+                  },
+                  "required": ["user"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Gets a list of all users.",
+        "operationId": "get_GetUsers",
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
                     "user": {
                       "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": { "type": "number", "description": "User ID" },
-                          "name": {
-                            "type": ["string", "null"],
-                            "description": "User name"
-                          },
-                          "email": {
-                            "type": ["string", "null"],
-                            "description": "User email"
-                          }
-                        },
-                        "required": ["id", "name", "email"]
-                      }
+                      "items": { "$ref": "#/components/schemas/User" }
                     }
                   },
                   "required": ["user"]
@@ -188,7 +248,6 @@
       "get": {
         "tags": ["User"],
         "summary": "Gets a single user",
-        "security": [{ "bearerAuth": [] }],
         "operationId": "get_GetUser",
         "parameters": [
           {
@@ -206,21 +265,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "user": {
-                      "type": "object",
-                      "properties": {
-                        "id": { "type": "number", "description": "User ID" },
-                        "name": {
-                          "type": ["string", "null"],
-                          "description": "User name"
-                        },
-                        "email": {
-                          "type": ["string", "null"],
-                          "description": "User email"
-                        }
-                      },
-                      "required": ["id", "name", "email"]
-                    }
+                    "user": { "$ref": "#/components/schemas/User" }
                   },
                   "required": ["user"]
                 }
@@ -230,75 +275,28 @@
         }
       }
     },
-    "/api/seasons": {
+    "/api/users/{user}/results": {
       "get": {
-        "tags": ["Leaderboard"],
-        "summary": "Gets a list of all existing and past Seasons.",
-        "security": [{ "bearerAuth": [] }],
-        "operationId": "get_GetSeasons",
-        "responses": {
-          "200": {
-            "description": "list of Seasons",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "number" },
-                      "name": { "type": "string" },
-                      "tier": { "type": "string" },
-                      "started_at": { "type": "string", "format": "date-time" },
-                      "ended_at": { "type": ["string", "null"] }
-                    },
-                    "required": ["id", "name", "tier", "started_at"]
-                  }
-                }
-              }
-            }
+        "tags": ["Results"],
+        "summary": "Gets the results for the given user",
+        "operationId": "get_GetUserResults",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Name or ID of the user"
+            },
+            "required": true,
+            "name": "user",
+            "in": "path"
           }
-        }
-      }
-    },
-    "/api/tournaments": {
-      "get": {
-        "tags": ["Leaderboard"],
-        "summary": "Gets a list of all Tournaments",
-        "security": [{ "bearerAuth": [] }],
-        "operationId": "get_GetTournaments",
+        ],
         "responses": {
           "200": {
-            "description": "list of Tournaments",
+            "description": "Gets a list of all results for the given user and supplied filters",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "number" },
-                      "name": { "type": "string" },
-                      "date": {
-                        "type": ["string", "null"],
-                        "format": "date-time"
-                      },
-                      "is_done": { "type": "number" },
-                      "season_id": { "type": "number" },
-                      "season_name": { "type": "string" },
-                      "season_tier": { "type": "string" }
-                    },
-                    "required": [
-                      "id",
-                      "name",
-                      "date",
-                      "is_done",
-                      "season_id",
-                      "season_name",
-                      "season_tier"
-                    ]
-                  }
-                }
+                "schema": { "$ref": "#/components/schemas/UserResultsResponse" }
               }
             }
           }
@@ -309,7 +307,6 @@
       "get": {
         "tags": ["Leaderboard"],
         "summary": "Gets the current season's leaderboard",
-        "security": [{ "bearerAuth": [] }],
         "operationId": "get_GetLeaderboard",
         "parameters": [
           {
@@ -330,28 +327,26 @@
             "description": "Returns a array of rows compromising the full leaderboard for the given season",
             "content": {
               "application/json": {
+                "schema": { "$ref": "#/components/schemas/LeaderboardResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/seasons": {
+      "get": {
+        "tags": ["Seasons"],
+        "summary": "Gets a list of all existing and past Seasons.",
+        "operationId": "get_GetSeasons",
+        "responses": {
+          "200": {
+            "description": "list of Seasons",
+            "content": {
+              "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "users": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "rank": { "type": "number" },
-                          "id": { "type": "number" },
-                          "name": { "type": ["string", "null"] },
-                          "points": { "type": "number" },
-                          "attended": { "type": "number" }
-                        },
-                        "required": ["rank", "id", "points", "attended"]
-                      }
-                    },
-                    "total": { "type": "number" },
-                    "pages": { "type": "number" },
-                    "current_page": { "type": "number" }
-                  },
-                  "required": ["users", "total", "pages", "current_page"]
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Season" }
                 }
               }
             }
@@ -359,65 +354,98 @@
         }
       }
     },
-    "/api/results/{user}": {
+    "/api/seasons/{seasonId}/tournaments": {
       "get": {
-        "tags": ["Results"],
-        "summary": "Gets the results for the given user",
-        "security": [{ "bearerAuth": [] }],
-        "operationId": "get_GetResults",
+        "tags": ["Seasons"],
+        "summary": "Gets a list of all existing and past Seasons.",
+        "operationId": "get_GetSeasonTournaments",
         "parameters": [
           {
-            "schema": {
-              "type": "string",
-              "description": "Name or ID of the user"
-            },
+            "schema": { "type": "number", "description": "Season ID" },
             "required": true,
-            "name": "user",
+            "name": "seasonId",
             "in": "path"
           }
         ],
         "responses": {
           "200": {
-            "description": "Gets a list of all results for the given user and supplied filters",
+            "description": "list of Tournaments for the given season",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user_name": { "type": "string" },
-                    "user_id": { "type": "number" },
-                    "results": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "runner_deck_identity_id": { "type": "number" },
-                          "runner_deck_url": { "type": ["string", "null"] },
-                          "corp_deck_identity_id": { "type": "number" },
-                          "corp_deck_url": { "type": ["string", "null"] },
-                          "rank_swiss": { "type": "number" },
-                          "rank_cut": { "type": ["number", "null"] },
-                          "season_id": { "type": "number" },
-                          "points_earned": { "type": "number" },
-                          "tournament_id": { "type": "number" },
-                          "tournament_name": { "type": "string" }
-                        },
-                        "required": [
-                          "runner_deck_identity_id",
-                          "runner_deck_url",
-                          "corp_deck_identity_id",
-                          "corp_deck_url",
-                          "rank_swiss",
-                          "season_id",
-                          "points_earned",
-                          "tournament_id",
-                          "tournament_name"
-                        ]
-                      }
-                    }
-                  },
-                  "required": ["user_name", "user_id", "results"]
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Tournament" }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments": {
+      "get": {
+        "tags": ["Tournament"],
+        "summary": "Gets a list of all Tournaments",
+        "operationId": "get_GetTournaments",
+        "responses": {
+          "200": {
+            "description": "list of Tournaments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Tournament" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{tournamentId}": {
+      "get": {
+        "tags": ["Tournament"],
+        "summary": "Gets a single tournament",
+        "operationId": "get_GetTournament",
+        "parameters": [
+          {
+            "schema": { "type": "number", "description": "Tournament ID" },
+            "required": true,
+            "name": "tournamentId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Tournament object",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Tournament" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/{tournamentId}/results": {
+      "get": {
+        "tags": ["Tournament"],
+        "summary": "Gets a single tournament",
+        "operationId": "get_GetTournamentResults",
+        "parameters": [
+          {
+            "schema": { "type": "number", "description": "Tournament ID" },
+            "required": true,
+            "name": "tournamentId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full Tournament object",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Tournament" }
               }
             }
           }
@@ -458,6 +486,58 @@
                   "properties": { "numberUsersUpdate": { "type": "number" } },
                   "required": ["numberUsersUpdate"]
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/ingestTournaments": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Triggers a background job to ingest tournament data from ABR.",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "post_IngestTournaments",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": { "type": "number" },
+                  "tournamentType": {
+                    "type": "integer",
+                    "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empty object indicates success on triggering ingestion.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/updateCards": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Fetches and updates the KV that stores the NRDB cards",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "post_UpdateCards",
+        "responses": {
+          "200": {
+            "description": "Empty object indicates success on updating nrdb cards.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
               }
             }
           }

@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { User } from "../models/User";
+
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
@@ -10,29 +12,14 @@ export class AuthService {
   /**
    * Register a new a new user account
    * @param requestBody
-   * @returns any User Object
+   * @returns User User Object
    * @throws ApiError
    */
   public static postAuthRegister(requestBody?: {
     password: string;
     email: string;
     name: string;
-  }): CancelablePromise<{
-    user: {
-      /**
-       * User ID
-       */
-      id: number;
-      /**
-       * User name
-       */
-      name: string | null;
-      /**
-       * User email
-       */
-      email: string | null;
-    };
-  }> {
+  }): CancelablePromise<User> {
     return __request(OpenAPI, {
       method: "POST",
       url: "/api/auth/register",

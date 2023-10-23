@@ -10,7 +10,7 @@ export function Results() {
 
   useEffect(() => {
     setLoading(true);
-    ResultsService.getGetResults(user).then((results) => {
+    ResultsService.getGetUserResults(user).then((results) => {
       setResults(results);
       setLoading(false);
     });
@@ -62,20 +62,20 @@ export function Results() {
                       {result.runner_deck_url ? (
                         <a href={result.runner_deck_url}>
                           {/* TODO: replace the runner ID with the picture of the faction and the name of the ID */}
-                          {result.runner_deck_identity_id}
+                          {result.runner_deck_identity_name}
                         </a>
                       ) : (
-                        <text>{result.runner_deck_identity_id}</text>
+                        <text>{result.runner_deck_identity_name}</text>
                       )}
                     </td>
                     <td>
                       {result.runner_deck_url ? (
                         <a href={result.corp_deck_url}>
                           {/* TODO: replace the corp ID with the picture of the faction and the name of the ID */}
-                          {result.runner_deck_identity_id}
+                          {result.corp_deck_identity_name}
                         </a>
                       ) : (
-                        <text>{result.corp_deck_identity_id}</text>
+                        <text>{result.corp_deck_identity_name}</text>
                       )}
                     </td>
                     <td>{result.points_earned}</td>

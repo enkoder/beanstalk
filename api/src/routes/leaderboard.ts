@@ -1,51 +1,24 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
-  GetLeaderboardRow,
-  GetLeaderboardRowType,
   GetLeaderboardSchema,
-  GetSeasonsResponse,
-  GetSeasonsSchema,
-  GetTournamentsResponse,
-  GetTournamentsSchema,
+  LeaderboardResponseComponent,
+  LeaderboardRowComponent,
+  LeaderboardRowComponentType,
 } from "../openapi";
 import { Env, RequestWithDB } from "../types";
 import { json } from "itty-router";
-import { Seasons } from "../models/season";
-import { Tournaments } from "../models/tournament";
 import { getDB } from "../models";
 import { Users } from "../models/user";
 
 const DEFAULT_PAGE_SIZE = 0;
 
-class GetSeasons extends OpenAPIRoute {
-  static schema = GetSeasonsSchema;
-
-  async handle(_: RequestWithDB) {
-    const seasons = await Seasons.getAll();
-    return json(seasons.map((season) => GetSeasonsResponse.parse(season)));
-  }
-}
-
-class GetTournaments extends OpenAPIRoute {
-  static schema = GetTournamentsSchema;
-
-  async handle(_: RequestWithDB) {
-    const tournaments = await Tournaments.getAllExpanded();
-
-    return json(
-      tournaments.map((tournament) => {
-        GetTournamentsResponse.parse(tournament);
-      }),
-    );
-  }
-}
-
-class GetLeaderboard extends OpenAPIRoute {
+export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
     console.log(req.url);
-    const { page, sizeFromQuery } = data.query;
+    const { pageFromQuery, sizeFromQuery } = data.query;
+    const page = pageFromQuery ? pageFromQuery : 0;
     const size = sizeFromQuery ? sizeFromQuery : DEFAULT_PAGE_SIZE;
     const offset = page > 0 ? (page - 1) * size : 0;
 
@@ -82,17 +55,18 @@ class GetLeaderboard extends OpenAPIRoute {
     if (size !== null && size > 0) {
       q = q.limit(size);
     }
-    const rows: GetLeaderboardRowType[] = [];
+    const rows: LeaderboardRowComponentType[] = [];
     for (const result of await q.execute()) {
-      rows.push(GetLeaderboardRow.parse(result));
+      rows.push(LeaderboardRowComponent.parse(result));
     }
 
-    return json({
-      users: rows,
-      total: totalUsers,
-      pages: pages,
-      current_page: page,
-    });
+    return json(
+      LeaderboardResponseComponent.parse({
+        users: rows,
+        total: totalUsers,
+        pages: pages,
+        current_page: page,
+      }),
+    );
   }
 }
-export { GetSeasons, GetTournaments, GetLeaderboard };

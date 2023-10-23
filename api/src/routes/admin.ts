@@ -3,7 +3,7 @@ import { Env, RequestWithDB } from "../types";
 import {
   IngestTournamentSchema,
   RerankSchema,
-  RerankSummary,
+  UpdateCardsSchema,
   UpdateUsersSchema,
 } from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
@@ -42,7 +42,7 @@ export class Rerank extends OpenAPIRoute {
       }
     }
 
-    return json(RerankSummary.parse({ numberUsersUpdate: count }));
+    return json({ numberUsersUpdate: count });
   }
 }
 
@@ -69,6 +69,30 @@ export class IngestTournaments extends OpenAPIRoute {
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
     const body = IngestTournamentSchema.requestBody.parse(data.body);
     await abrIngest(env, body.userId, body.tournamentType);
+    return json({});
+  }
+}
+
+export class UpdateCards extends OpenAPIRoute {
+  static schema = UpdateCardsSchema;
+
+  async handle(req: RequestWithDB, env: Env) {
+    const url = new URL("https://netrunnerdb.com/api/2.0/public/cards");
+    const resp = await fetch(url.toString());
+    if (!resp.ok) {
+      throw new Error(`Error (${resp.status}): ${await resp.text()}`);
+    }
+    const cards = await resp.json();
+    // TODO: figure out types here
+    for (const card of cards.data) {
+      if (Number.isNaN(card.code)) {
+        throw Error(
+          `Card code is an invalid number ${JSON.stringify(card, null, 4)}`,
+        );
+      }
+      // convert to number and back since we store the runner id's as numbers
+      await env.CARDS_KV.put(String(Number(card.code)), JSON.stringify(card));
+    }
     return json({});
   }
 }

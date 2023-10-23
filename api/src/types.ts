@@ -13,6 +13,8 @@ export type Env = {
   DB: D1Database;
   INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
   INGEST_RESULT_Q: Queue<IngestResultQueueMessage>;
+  LEADERBOARD_KV: KVNamespace;
+  CARDS_KV: KVNamespace;
   JWT_SIGNER_SECRET_KEY: string;
   PASSWORD_SECRET_KEY: string;
 };

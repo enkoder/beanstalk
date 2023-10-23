@@ -32,4 +32,34 @@ export class AdminService {
       url: "/api/admin/rerank",
     });
   }
+
+  /**
+   * Triggers a background job to ingest tournament data from ABR.
+   * @param requestBody
+   * @returns any Empty object indicates success on triggering ingestion.
+   * @throws ApiError
+   */
+  public static postIngestTournaments(requestBody?: {
+    userId?: number;
+    tournamentType?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
+  }): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/ingestTournaments",
+      body: requestBody,
+      mediaType: "application/json",
+    });
+  }
+
+  /**
+   * Fetches and updates the KV that stores the NRDB cards
+   * @returns any Empty object indicates success on updating nrdb cards.
+   * @throws ApiError
+   */
+  public static postUpdateCards(): CancelablePromise<any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/updateCards",
+    });
+  }
 }

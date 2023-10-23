@@ -41,6 +41,7 @@ export const ABRTournament = z.object({
   location_state: z.string().nullable(),
   approved: z.number().nullable(),
   registration_count: z.number(),
+  players_count: z.number(),
   url: z.string().url(),
   // TODO: check enum
   cardpool: z.string(),
@@ -52,7 +53,6 @@ export const ABRTournament = z.object({
   format: z.string(),
   mwl: z.string(),
   concluded: z.coerce.boolean(),
-  players_count: z.number(),
   matchdata: z.boolean(),
   winner_runner_identity: z.string().optional(),
   winner_corp_identity: z.string().optional(),
@@ -69,7 +69,9 @@ export function abrToTournament(abr: ABRTournamentType): Tournament {
     type: abr.type,
     format: abr.format as Formats,
     concluded: abr.concluded ? 1 : 0,
-    registration_count: abr.registration_count,
+    // Damn, didn't realize that players_count is the value of
+    // TODO: rename column to players_count
+    registration_count: abr.players_count,
   };
 }
 export type ABRTournamentType = z.infer<typeof ABRTournament>;

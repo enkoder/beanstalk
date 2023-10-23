@@ -5,7 +5,7 @@ import {
   AuthLoginBody,
   AuthLoginSchema,
   AuthRegisterSchema,
-  GetUserResponse,
+  UserComponent,
 } from "../openapi";
 import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { signPassword, verifyPassword } from "../lib/auth";
@@ -38,7 +38,7 @@ class AuthRegister extends OpenAPIRoute {
       password: pw,
     });
 
-    return json(GetUserResponse.parse(user));
+    return json(UserComponent.parse(user));
   }
 }
 

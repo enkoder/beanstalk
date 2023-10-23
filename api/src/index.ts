@@ -1,19 +1,26 @@
-import { GetUser, GetUsers, Me } from "./routes/users";
+import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
 import { AuthLogin, AuthRegister } from "./routes/login";
-import { IngestTournaments, Rerank, UpdateUsers } from "./routes/admin";
+import {
+  IngestTournaments,
+  Rerank,
+  UpdateCards,
+  UpdateUsers,
+} from "./routes/admin";
 import { Env, RequestWithDB } from "./types";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
-import {
-  GetLeaderboard,
-  GetSeasons,
-  GetTournaments,
-} from "./routes/leaderboard";
+import { GetLeaderboard } from "./routes/leaderboard";
+import { GetSeasonTournaments, GetSeasons } from "./routes/seasons";
 import { handleQueue, handleScheduled } from "./background";
 import { getDB, initDB } from "./models";
 import { createCors, error, json } from "itty-router";
-import { GetResults } from "./routes/results";
+import {
+  GetTournament,
+  GetTournamentResults,
+  GetTournaments,
+} from "./routes/tournament";
+import { UpdateCardsSchema } from "./openapi";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -42,24 +49,29 @@ router
   .post("/api/auth/login", AuthLogin)
 
   // Users
-  .all("/api/users/*", authenticatedUser)
-  .get("/api/users/@me", Me)
-  .get("/api/users", adminOnly, GetUsers)
-  .get("/api/users/:userID", adminOnly, GetUser)
+  .get("/api/users/@me", authenticatedUser, Me)
+  .get("/api/users", GetUsers)
+  .get("/api/users/:userID", GetUser)
+  .get("/api/users/:user/results", GetUserResults)
 
   // Leaderboard
-  .get("/api/seasons", GetSeasons)
-  .get("/api/tournaments", GetTournaments)
   .get("/api/leaderboard", GetLeaderboard)
 
-  // Results endpoints
-  .get("/api/results/:user", GetResults)
+  // Seasons
+  .get("/api/seasons", GetSeasons)
+  .get("/api/seasons/:seasonId/tournaments", GetSeasonTournaments)
+
+  // Tournament
+  .get("/api/tournaments", GetTournaments)
+  .get("/api/tournaments/:tournamentId", GetTournament)
+  .get("/api/tournaments/:tournamentId/results", GetTournamentResults)
 
   // Admin only endpoints
   .all("/api/admin/*", authenticatedUser, adminOnly)
   .get("/api/admin/updateNRDBNames", UpdateUsers)
   .get("/api/admin/rerank", Rerank)
   .post("/api/admin/ingestTournaments", IngestTournaments)
+  .post("/api/admin/updateCards", UpdateCards)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

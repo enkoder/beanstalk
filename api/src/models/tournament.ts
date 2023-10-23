@@ -69,9 +69,20 @@ export class Tournaments {
     return await getDB()
       .selectFrom("tournaments")
       .innerJoin("seasons", "seasons.id", "tournaments.season_id")
-      .selectAll("tournaments")
-      .selectAll("seasons")
+      .selectAll()
       .select(["seasons.id as season_id", "seasons.name as season_name"])
+      .execute();
+  }
+
+  public static async getAllExpandedFromSeasonId(
+    seasonId: number,
+  ): Promise<Tournament[]> {
+    return await getDB()
+      .selectFrom("tournaments")
+      .innerJoin("seasons", "seasons.id", "tournaments.season_id")
+      .selectAll("tournaments")
+      .select(["seasons.name as season_name"])
+      .where("season_id", "=", seasonId)
       .execute();
   }
 

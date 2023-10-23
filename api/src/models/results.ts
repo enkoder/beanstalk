@@ -14,6 +14,8 @@ export interface ResultsTable {
   rank_cut: number;
   season_id: number;
   points_earned: number;
+  runner_deck_identity_name: string;
+  corp_deck_identity_name: string;
 }
 export type UpdateResult = Updateable<ResultsTable>;
 export type Result = Selectable<ResultsTable>;
@@ -33,7 +35,27 @@ export class Results {
   public static async getAll() {
     return await getDB().selectFrom("results").selectAll().execute();
   }
+  public static async getManyExpandedByTournamentId(
+    tournamentId: number,
+  ): Promise<Result[]> {
+    // TODO: make generic
+    const q = getDB()
+      .selectFrom("results")
+      .selectAll()
+      .innerJoin("users", "users.id", "results.user_id")
+      .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
+      .select([
+        "users.name as user_name",
+        "tournaments.name as tournament_name",
+        "tournaments.registration_count as registration_count",
+      ])
+      .where("tournament_id", "=", tournamentId);
+
+    return await q.execute();
+  }
+
   public static async getManyByUserIdExpanded(id: number): Promise<Result[]> {
+    // TODO: make generic
     const q = getDB()
       .selectFrom("results")
       .selectAll()

@@ -1,16 +1,19 @@
 import { json } from "itty-router";
 import { RequestWithDB } from "../types";
 import {
-  GetUserResponse,
+  GetUserResultsSchema,
   GetUserSchema,
   GetUsersSchema,
   MeSchema,
+  ResultComponent,
+  UserComponent,
 } from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
+import { Results } from "../models/results";
 
-class GetUser extends OpenAPIRoute {
+export class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;
 
   async handle(req: RequestWithDB) {
@@ -19,11 +22,11 @@ class GetUser extends OpenAPIRoute {
     if (!user) {
       return errorResponse(400, "User does not exist");
     }
-    return json(GetUserResponse.parse(user));
+    return json(UserComponent.parse(user));
   }
 }
 
-class GetUsers extends OpenAPIRoute {
+export class GetUsers extends OpenAPIRoute {
   static schema = GetUsersSchema;
 
   async handle(_: RequestWithDB) {
@@ -33,17 +36,37 @@ class GetUsers extends OpenAPIRoute {
       return errorResponse(500, "No users in table??");
     }
 
-    return json(users.map((user) => GetUserResponse.parse(user)));
+    return json(users.map((user) => UserComponent.parse(user)));
   }
 }
 
-class Me extends OpenAPIRoute {
+export class Me extends OpenAPIRoute {
   static schema = MeSchema;
 
   async handle(req: RequestWithDB) {
     const user = await Users.getById(Number(req.user_id));
-    return json(GetUserResponse.parse(user));
+    return json(UserComponent.parse(user));
   }
 }
 
-export { GetUsers, GetUser, Me };
+export class GetUserResults extends OpenAPIRoute {
+  static schema = GetUserResultsSchema;
+
+  async handle(req: RequestWithDB) {
+    const userIdOrName = req.params!["user"];
+    const user = await Users.getByIdOrName(userIdOrName);
+    const results = await Results.getManyByUserIdExpanded(user.id);
+
+    return json({
+      user_id: user.id,
+      user_name: user.name,
+      results: results.map((result) => {
+        try {
+          return ResultComponent.parse(result);
+        } catch (e) {
+          console.log(e);
+        }
+      }),
+    });
+  }
+}

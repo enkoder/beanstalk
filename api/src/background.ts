@@ -24,6 +24,7 @@ enum Queues {
 }
 
 async function ingestEntry(
+  env: Env,
   entry: ABREntryType,
   tournamentId: number,
   points: number,
@@ -55,18 +56,37 @@ async function ingestEntry(
     return null;
   }
 
+  // TODO: types
+  const runner_card = JSON.parse(
+    await env.CARDS_KV.get(String(entry.runner_deck_identity_id)),
+  );
+  const corp_card = JSON.parse(
+    await env.CARDS_KV.get(String(entry.corp_deck_identity_id)),
+  );
+
+  const runner_deck_identity_name = runner_card["title"];
+  const runner_deck_faction = runner_card["faction_code"];
+
+  const corp_deck_identity_name = corp_card["title"];
+  const corp_deck_faction = corp_card["faction_code"];
+
   // this is a partial, be sure to add the extra stuff that isn't coming from abr
   return await Results.insert(
     abrToResult(entry, {
       tournament_id: tournamentId,
       user_id: user.id,
       points_earned: points,
+      runner_deck_identity_name: runner_deck_identity_name,
+      runner_deck_faction: runner_deck_faction,
+      corp_deck_identity_name: corp_deck_identity_name,
+      corp_deck_faction: corp_deck_faction,
     }),
     true,
   );
 }
 
 async function handleResultIngest(
+  env: Env,
   abrTournament: ABRTournamentType,
   abrEntry: ABREntryType,
 ) {
@@ -82,7 +102,7 @@ async function handleResultIngest(
 
   //console.log(JSON.stringify(entry, null, 4));
   try {
-    const result = await ingestEntry(abrEntry, tournament.id, points);
+    const result = await ingestEntry(env, abrEntry, tournament.id, points);
     if (!result) {
       console.log(
         [
@@ -187,7 +207,7 @@ export async function handleQueue(
         break;
       case Queues.IngestResult: {
         const { tournament, entry } = message.body as IngestResultQueueMessage;
-        await handleResultIngest(tournament, entry);
+        await handleResultIngest(env, tournament, entry);
         break;
       }
       case Queues.IngestResultDLQ:
