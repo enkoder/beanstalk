@@ -69,7 +69,7 @@ class AuthLogin extends OpenAPIRoute {
     }
 
     const payload: JwtPayload = {
-      iss: "anrpc-api",
+      iss: "beanstalk-api",
       sub: String(user.id),
       iat: Date.now(),
       //exp: Math.floor(Date.now() / 1000) + (60 * 60)

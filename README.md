@@ -1,4 +1,4 @@
-# anrpc
+# beanstalk
 
 ## Running the applications
 

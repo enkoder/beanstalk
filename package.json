@@ -1,7 +1,7 @@
 {
-  "name": "anrpc",
+  "name": "beanstalk",
   "version": "1.0.0",
-  "description": "Leaderboard",
+  "description": "https://netrunner-beanstalk.net",
   "main": "index.js",
   "workspaces": [
     "packages/*"

@@ -1,4 +1,4 @@
-name = "anrpc-api"
+name = "beanstalk-api"
 main = "src/index.ts"
 node_compat = true
 compatibility_date = "2023-10-08"
@@ -13,7 +13,7 @@ crons = ["0 0 * * *"]
 
 [[ d1_databases ]]
 binding = "DB"
-database_name = "anrpc-api"
+database_name = "beanstalk-api"
 database_id = "9b34e77c-6642-4c30-9167-77829dd1cdf2"
 migrations_table = "migrations"
 migrations_dir = "migrations"

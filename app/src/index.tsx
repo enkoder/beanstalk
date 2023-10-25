@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 
 OpenAPI.BASE =
   process.env.REACT_APP_IS_LOCAL_MODE !== "1"
-    ? "https://anrpc-api.enkoder.workers.dev"
+    ? "https://beanstalk-api.enkoder.workers.dev"
     : "http://0.0.0.0:8787";
 
 root.render(

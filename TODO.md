@@ -34,7 +34,7 @@
 ## Misc
 
 - [ ] Write up RFC and vision statement
-- [ ] Look into http://www.aesopstables.net/about codebase to see how this fits into anrpc
+- [ ] Look into http://www.aesopstables.net/about codebase to see how this fits into beanstalk
 - [ ] Update code to use new name
 - [ ] Explore Sentry integration, maybe there's a free tier that won't get too expensive
 - [ ] Ensure the app unfurls properly w/ og tags
