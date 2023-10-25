@@ -14,6 +14,7 @@ import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import { getNameFromId } from "../lib/nrdb";
 import { abrIngest } from "../background";
+import pLimit from "p-limit";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
@@ -83,16 +84,31 @@ export class UpdateCards extends OpenAPIRoute {
       throw new Error(`Error (${resp.status}): ${await resp.text()}`);
     }
     const cards = await resp.json();
-    // TODO: figure out types here
-    for (const card of cards.data) {
-      if (Number.isNaN(card.code)) {
-        throw Error(
-          `Card code is an invalid number ${JSON.stringify(card, null, 4)}`,
-        );
-      }
-      // convert to number and back since we store the runner id's as numbers
-      await env.CARDS_KV.put(String(Number(card.code)), JSON.stringify(card));
+
+    const limit = pLimit(5);
+
+    const chunkedCards = [];
+    let index = 0;
+    while (index < cards.data.length) {
+      chunkedCards.push(cards.data.slice(index, 100 + index));
+      index += 100;
     }
+
+    console.log(chunkedCards.length);
+    await Promise.all(
+      chunkedCards.map((chunk) =>
+        limit(() =>
+          env.INGEST_CARD_Q.sendBatch(
+            chunk.map((card) => ({ body: card, contentType: "json" })),
+          ),
+        ),
+      ),
+    );
+
     return json({});
+    //await env.INGEST_CARD_Q.sendBatch(
+    //  cards.data.map((card) => ({ body: card, contentType: "json" })),
+    //);
+    //return json({});
   }
 }

@@ -47,3 +47,12 @@ max_batch_timeout = 30
 queue = "ingest-result-dlq"
 max_batch_size = 5
 max_batch_timeout = 30
+
+[[queues.producers]]
+queue = "ingest-card"
+binding = "INGEST_CARD_Q"
+
+[[queues.consumers]]
+queue = "ingest-card"
+max_batch_size = 5
+max_batch_timeout = 30

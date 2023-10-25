@@ -21,6 +21,7 @@ enum Queues {
   IngestTournamentDLQ = "ingest-tournament-dlq",
   IngestResult = "ingest-result",
   IngestResultDLQ = "ingest-result-dlq",
+  IngestCard = "ingest-card",
 }
 
 async function ingestEntry(
@@ -191,6 +192,10 @@ export async function abrIngest(
   }
 }
 
+async function handleCardIngest(env: Env, card: any) {
+  await env.CARDS_KV.put(String(Number(card["code"])), JSON.stringify(card));
+}
+
 export async function handleQueue(
   batch: MessageBatch<ABRTournamentType | ABREntryType>,
   env: Env,
@@ -217,6 +222,10 @@ export async function handleQueue(
           await handleResultIngestDLQ(tournament, entry);
         }
         break;
+      case Queues.IngestCard: {
+        await handleCardIngest(env, message.body);
+        break;
+      }
     }
   }
 }
