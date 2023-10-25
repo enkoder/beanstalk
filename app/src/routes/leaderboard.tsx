@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { LeaderboardService } from "../client";
-import { Link } from "react-router-dom";
+import { Link } from "wouter";
 
 export function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<any | null>(null);
@@ -37,12 +37,7 @@ export function Leaderboard() {
                 <tr>
                   <td>{user.rank}</td>
                   <td align={"center"}>
-                    <Link
-                      to={`results/${user.name}`}
-                      state={{ user: user.name }}
-                    >
-                      {user.name}
-                    </Link>
+                    <Link href={`results/${user.name}`}>{user.name}</Link>
                   </td>
                   <td>{user.points}</td>
                 </tr>

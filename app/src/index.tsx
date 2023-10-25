@@ -1,29 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Root from "./routes/root";
 import Error from "./routes/error";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <Error />,
-    children: [
-      { path: "", element: <Leaderboard /> },
-      { path: "/results/:user", element: <Results /> },
-    ],
-  },
-]);
+import { Route, Switch } from "wouter";
+import { OpenAPI } from "./client";
+import "./index.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
+OpenAPI.BASE =
+  process.env.REACT_APP_IS_LOCAL_MODE !== "1"
+    ? "https://anrpc-api.enkoder.workers.dev"
+    : "http://0.0.0.0:8787";
+
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <body>
+      <main className="container">
+        <Switch>
+          <Route path="/" component={Leaderboard} />
+          <Route path="/results/:user" component={Results} />
+          <Route component={Error}></Route>
+        </Switch>
+      </main>
+    </body>
+    ;
   </React.StrictMode>,
 );

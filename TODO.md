@@ -29,7 +29,7 @@
 
 ## Netrunner
 
-- [ ] Fetch and cache cards
+- [x] Fetch and cache cards
 
 ## Misc
 
@@ -37,6 +37,7 @@
 - [ ] Look into http://www.aesopstables.net/about codebase to see how this fits into anrpc
 - [ ] Update code to use new name
 - [ ] Explore Sentry integration, maybe there's a free tier that won't get too expensive
+- [ ] Ensure the app unfurls properly w/ og tags
 
 ## Root
 
@@ -61,3 +62,4 @@
 - [ ] Write tests if others start developing on it
 - [ ] Add license
 - [ ] Add VSCode editor configs to make it easier for people to edit
+- [ ] Get off of create-react-app

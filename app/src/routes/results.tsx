@@ -1,23 +1,29 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { ResultsService } from "../client";
-import { useLocation } from "react-router-dom";
+import { useParams } from "wouter";
+
+type ResultsParams = {
+  user: string;
+};
 
 export function Results() {
-  const { user } = useLocation().state;
+  const params = useParams<ResultsParams>();
+
   const [results, setResults] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    ResultsService.getGetUserResults(user).then((results) => {
+    console.log(params);
+    ResultsService.getGetUserResults(params.user).then((results) => {
       setResults(results);
       setLoading(false);
     });
     return () => {
       setLoading(false);
     };
-  }, []);
+  }, [params]);
 
   return (
     <div className={"container"}>
