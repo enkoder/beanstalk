@@ -41,7 +41,7 @@ export const SeasonComponent = z
     name: z.string(),
     tier: z.string(),
     started_at: z.string().datetime(),
-    ended_at: z.date().optional().nullable(),
+    ended_at: z.coerce.date().optional().nullable(),
   })
   .openapi("Season");
 export type SeasonComponentType = z.infer<typeof SeasonComponent>;
@@ -192,6 +192,7 @@ export const GetLeaderboardSchema = {
   parameters: {
     size: Query(z.coerce.number().optional()),
     page: Query(z.coerce.number().optional()),
+    seasonId: Query(z.coerce.number().optional()),
   },
   responses: {
     "200": {

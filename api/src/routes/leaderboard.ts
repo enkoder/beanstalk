@@ -16,8 +16,11 @@ export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
-    console.log(req.url);
-    const { pageFromQuery, sizeFromQuery } = data.query;
+    const pageFromQuery = Number(req.query!["page"]);
+    const sizeFromQuery = Number(req.query!["size"]);
+    const seasonIdFromQuery = Number(req.query!["seasonId"]);
+    console.log(seasonIdFromQuery);
+
     const page = pageFromQuery ? pageFromQuery : 0;
     const size = sizeFromQuery ? sizeFromQuery : DEFAULT_PAGE_SIZE;
     const offset = page > 0 ? (page - 1) * size : 0;
@@ -26,21 +29,28 @@ export class GetLeaderboard extends OpenAPIRoute {
     const pages = Math.floor(totalUsers / size);
 
     let q = getDB()
-      .selectFrom((innerEb) =>
-        innerEb
+      .selectFrom((innerEb) => {
+        let q = innerEb
           .selectFrom("results")
           .select((eb) => [
             "users.id as id",
             "users.name as name",
             eb.fn.sum<number>("results.points_earned").as("points"),
             eb.fn.countAll<number>().as("attended"),
+            "tournaments.season_id as season_id",
           ])
           .innerJoin("users", "results.user_id", "users.id")
+          .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
           .where("user_id", "!=", 0)
           .groupBy("user_id")
-          .orderBy(["points desc", "attended desc"])
-          .as("inner"),
-      )
+          .orderBy(["points desc", "attended desc"]);
+
+        if (seasonIdFromQuery) {
+          q = q.where("tournaments.season_id", "=", seasonIdFromQuery);
+        }
+
+        return q.as("inner");
+      })
       .selectAll()
       .select((eb) =>
         eb.fn
