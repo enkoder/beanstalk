@@ -4,6 +4,7 @@ import {
   IngestTournaments,
   Rerank,
   UpdateCards,
+  UpdateTournamentSeasons,
   UpdateUsers,
 } from "./routes/admin";
 import { Env, RequestWithDB } from "./types";
@@ -20,7 +21,7 @@ import {
   GetTournamentResults,
   GetTournaments,
 } from "./routes/tournament";
-import { UpdateCardsSchema } from "./openapi";
+import { UpdateTournamentSeasonSchema } from "./openapi";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -72,6 +73,7 @@ router
   .get("/api/admin/rerank", Rerank)
   .post("/api/admin/ingestTournaments", IngestTournaments)
   .post("/api/admin/updateCards", UpdateCards)
+  .post("/api/admin/updateTournamentsSeason", UpdateTournamentSeasons)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

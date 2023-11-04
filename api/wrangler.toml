@@ -5,16 +5,16 @@ compatibility_date = "2023-10-08"
 logpush = true
 
 kv_namespaces = [
-{ binding = "CARDS_KV", id = "21945a1fb6484e168c025920c571e21d" }
+{ binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" }
 ]
 
 [triggers]
 crons = ["0 0 * * *"]
 
-[[ d1_databases ]]
-binding = "DB"
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "beanstalk-api"
-database_id = "9b34e77c-6642-4c30-9167-77829dd1cdf2"
+database_id = "c2f0d824-a702-42b0-a708-70a50760461c"
 migrations_table = "migrations"
 migrations_dir = "migrations"
 

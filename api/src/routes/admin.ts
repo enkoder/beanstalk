@@ -4,6 +4,7 @@ import {
   IngestTournamentSchema,
   RerankSchema,
   UpdateCardsSchema,
+  UpdateTournamentSeasonSchema,
   UpdateUsersSchema,
 } from "../openapi";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
@@ -15,6 +16,7 @@ import { Users } from "../models/user";
 import { getNameFromId } from "../lib/nrdb";
 import { abrIngest } from "../background";
 import pLimit from "p-limit";
+import { parse, parseISO } from "date-fns";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
@@ -106,9 +108,37 @@ export class UpdateCards extends OpenAPIRoute {
     );
 
     return json({});
-    //await env.INGEST_CARD_Q.sendBatch(
-    //  cards.data.map((card) => ({ body: card, contentType: "json" })),
-    //);
-    //return json({});
+  }
+}
+
+export class UpdateTournamentSeasons extends OpenAPIRoute {
+  static schema = UpdateTournamentSeasonSchema;
+
+  async handle(_: RequestWithDB) {
+    let count: number = 0;
+
+    const seasons = await Seasons.getAll();
+
+    for (const tournament of await Tournaments.getAll()) {
+      // ensure the tournament is done and has a valid date, should always have a valid date though
+      if (!(tournament.concluded && tournament.date)) {
+        continue;
+      }
+
+      const tournamentDate = parseISO(tournament.date);
+      for (const season of seasons) {
+        if (
+          tournamentDate >= parseISO(season.started_at) &&
+          tournamentDate <= parseISO(season.ended_at)
+        ) {
+          tournament.season_id = season.id;
+          await Tournaments.update(tournament);
+          count += 1;
+          break;
+        }
+      }
+    }
+
+    return json({ tournamentsUpdated: count });
   }
 }

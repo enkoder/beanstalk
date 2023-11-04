@@ -41,6 +41,9 @@ importers:
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.2.5
         version: 2.2.5
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
       itty-router:
         specifier: ^4.0.23
         version: 4.0.23
@@ -5137,6 +5140,13 @@ packages:
       abab: 2.0.6
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
+    dev: false
+
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.23.2
     dev: false
 
   /debug@2.6.9:

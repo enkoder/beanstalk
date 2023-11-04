@@ -7,6 +7,9 @@ export const UserComponent = z
     id: z.number({ description: "User ID" }),
     name: z.string({ description: "User name" }).nullable(),
     email: z.string({ description: "User email" }).nullable(),
+    is_admin: z.coerce.boolean({
+      description: "Flag indicating that the user is an Admin user",
+    }),
   })
   .openapi("User");
 export type UserComponentType = z.infer<typeof UserComponent>;
@@ -209,6 +212,20 @@ export const RerankSchema = {
         numberUsersUpdate: z.number(),
       }),
       description: "Summary of what was changed during the re-ranking",
+    },
+  },
+};
+
+export const UpdateTournamentSeasonSchema = {
+  tags: ["Admin"],
+  summary: "Triggers a Season start & end date update across all tournaments.",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: z.object({
+        tournamentsUpdated: z.number(),
+      }),
+      description: "How many tournaments were updated",
     },
   },
 };
