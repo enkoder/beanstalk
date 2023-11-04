@@ -2,6 +2,8 @@ import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
 import { Env, RequestWithDB } from "../types";
 import { errorResponse } from "./errors";
 import { Users } from "../models/user";
+import { getPrivateAccountInfo } from "./nrdb";
+import { PrivateAccountInfoType } from "../openapi";
 
 export async function signPassword(
   key: string,
@@ -68,23 +70,44 @@ async function validateToken(token: string, env: Env) {
   return decode(token);
 }
 
-export async function authenticatedUser(request: RequestWithDB, env: Env) {
-  const token = getBearer(request);
-  let session;
+export async function authenticatedUser(request: RequestWithDB, _: Env) {
+  const access_token = getBearer(request);
 
-  if (token) {
-    // Implement your own token validation here
-    session = await validateToken(token, env);
+  let accountInfo: PrivateAccountInfoType;
+  try {
+    accountInfo = await getPrivateAccountInfo(access_token);
+  } catch (e) {
+    if (e.statusCode == 401) {
+      return errorResponse(401, "Authentication error");
+    }
   }
 
-  if (!token || !session) {
-    return errorResponse(401, "Authentication error. Invalid token");
-  }
-  const user = await Users.getById(Number(session.payload.sub));
+  console.log(JSON.stringify(accountInfo));
 
+  let user = await Users.getById(accountInfo.id);
   if (!user) {
-    return errorResponse(401, "Authentication error. Invalid user.");
+    user = await Users.insert({
+      name: accountInfo.username,
+      id: accountInfo.id,
+      email: accountInfo.email,
+    });
   }
+  //const user = await Users.getById(Number(session.payload.sub));
+  //let session;
+
+  //if (token) {
+  //  // Implement your own token validation here
+  //  session = await validateToken(token, env);
+  //}
+
+  //if (!token || !session) {
+  //  return errorResponse(401, "Authentication error. Invalid token");
+  //}
+  //const user = await Users.getById(Number(session.payload.sub));
+
+  //if (!user) {
+  //  return errorResponse(401, "Authentication error. Invalid user.");
+  //}
   // user_id not null implies user is logged in
   request.user_id = user.id;
   request.is_admin = user.is_admin;

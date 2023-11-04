@@ -12,8 +12,8 @@ import { signPassword, verifyPassword } from "../lib/auth";
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
 
-// Minimum 8 characters, letters, numbers, and special chars
-// const PASSWORD_REGEX = RegExp("^[A-Za-zd!@#$&*]{8,}$");
+// Currently these views are unused as we are preferring NRDB auth only right now
+// We may want to eventually add a username & password auth flow again
 
 class AuthRegister extends OpenAPIRoute {
   static schema = AuthRegisterSchema;

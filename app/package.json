@@ -16,6 +16,8 @@
     "@cloudflare/workers-types": "^4.20231010.0",
     "@types/react": "18.2.0 ",
     "@types/react-dom": "18.2.0 ",
+    "axios": "^1.6.0",
+    "form-data": "^4.0.0",
     "typescript": "^4",
     "wrangler": "^3.12.0"
   },
@@ -31,10 +33,11 @@
     "@types/node": "^20.8.7",
     "install": "^0.13.0",
     "react": "^18.2.0",
+    "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
     "react-scripts": "^5.0.1",
-    "web-vitals": "^2.1.4",
-    "wouter": "^2.12.1"
+    "web-vitals": "^2.1.4"
   },
   "browserslist": {
     "production": [

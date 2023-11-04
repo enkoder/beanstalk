@@ -10,12 +10,31 @@
       }
     },
     "schemas": {
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "refresh_token": { "type": "string" },
+          "expires_in": { "type": "number" },
+          "token_type": { "type": "string" }
+        },
+        "required": [
+          "access_token",
+          "refresh_token",
+          "expires_in",
+          "token_type"
+        ]
+      },
       "User": {
         "type": "object",
         "properties": {
           "id": { "type": "number", "description": "User ID" },
           "name": { "type": ["string", "null"], "description": "User name" },
-          "email": { "type": ["string", "null"], "description": "User email" }
+          "email": { "type": ["string", "null"], "description": "User email" },
+          "is_admin": {
+            "type": ["boolean", "null"],
+            "description": "Flag indicating that the user is an Admin user"
+          }
         },
         "required": ["id", "name", "email"]
       },
@@ -61,22 +80,23 @@
         },
         "required": ["user_name", "user_id", "results"]
       },
+      "LeaderboardRow": {
+        "type": "object",
+        "properties": {
+          "rank": { "type": "number" },
+          "id": { "type": "number" },
+          "name": { "type": ["string", "null"] },
+          "points": { "type": "number" },
+          "attended": { "type": "number" }
+        },
+        "required": ["rank", "id", "points", "attended"]
+      },
       "LeaderboardResponse": {
         "type": "object",
         "properties": {
           "users": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "rank": { "type": "number" },
-                "id": { "type": "number" },
-                "name": { "type": ["string", "null"] },
-                "points": { "type": "number" },
-                "attended": { "type": "number" }
-              },
-              "required": ["rank", "id", "points", "attended"]
-            }
+            "items": { "$ref": "#/components/schemas/LeaderboardRow" }
           },
           "total": { "type": "number" },
           "pages": { "type": "number" },
@@ -125,69 +145,71 @@
     "parameters": {}
   },
   "paths": {
-    "/api/auth/register": {
-      "post": {
+    "/api/auth/login_url": {
+      "get": {
         "tags": ["Auth"],
-        "summary": "Register a new a new user account",
-        "operationId": "post_AuthRegister",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "password": { "type": "string" },
-                  "email": { "type": "string" },
-                  "name": { "type": "string" }
-                },
-                "required": ["password", "email", "name"]
-              }
-            }
-          }
-        },
+        "summary": "Fetches the NRDB login url",
+        "operationId": "get_GetLoginUrl",
         "responses": {
           "200": {
-            "description": "User Object",
+            "description": "Object containing the auth_url",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/User" }
+                "schema": {
+                  "type": "object",
+                  "properties": { "auth_url": { "type": "string" } },
+                  "required": ["auth_url"]
+                }
               }
             }
           }
         }
       }
     },
-    "/api/auth/login": {
-      "post": {
+    "/api/auth/token": {
+      "get": {
         "tags": ["Auth"],
-        "summary": "Log in via your email and password",
-        "operationId": "post_AuthLogin",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "password": { "type": "string" },
-                  "email": { "type": "string" }
-                },
-                "required": ["password", "email"]
+        "summary": "From the code supplied during the OAuth redirect, perform the secret exchange and create a token",
+        "operationId": "get_GetTokenFromCode",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "required": true,
+            "name": "code",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blob containing the token and refresh_token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenResponse" }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/api/auth/refresh_token": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Attempts to create a new token from the given refresh_token",
+        "operationId": "get_RefreshToken",
+        "parameters": [
+          {
+            "schema": { "type": "string" },
+            "required": true,
+            "name": "refresh_token",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "User Object",
+            "description": "Blob containing the token and refresh_token",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": { "type": "string", "description": "JWT token" }
-                  },
-                  "required": ["token"]
-                }
+                "schema": { "$ref": "#/components/schemas/TokenResponse" }
               }
             }
           }
@@ -205,13 +227,7 @@
             "description": "Your own user profile",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": { "$ref": "#/components/schemas/User" }
-                  },
-                  "required": ["user"]
-                }
+                "schema": { "$ref": "#/components/schemas/User" }
               }
             }
           }
@@ -229,14 +245,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "type": "array",
-                      "items": { "$ref": "#/components/schemas/User" }
-                    }
-                  },
-                  "required": ["user"]
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
                 }
               }
             }
@@ -262,13 +272,7 @@
             "description": "User Object",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": { "$ref": "#/components/schemas/User" }
-                  },
-                  "required": ["user"]
-                }
+                "schema": { "$ref": "#/components/schemas/User" }
               }
             }
           }
@@ -319,6 +323,12 @@
             "schema": { "type": ["number", "null"] },
             "required": false,
             "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "seasonId",
             "in": "query"
           }
         ],
@@ -538,6 +548,28 @@
             "content": {
               "application/json": {
                 "schema": { "type": "object", "properties": {} }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/updateTournamentsSeason": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Triggers a Season start & end date update across all tournaments.",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "post_UpdateTournamentSeasons",
+        "responses": {
+          "200": {
+            "description": "How many tournaments were updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "tournamentsUpdated": { "type": "number" } },
+                  "required": ["tournamentsUpdated"]
+                }
               }
             }
           }

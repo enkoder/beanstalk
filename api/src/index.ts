@@ -1,5 +1,4 @@
 import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
-import { AuthLogin, AuthRegister } from "./routes/login";
 import {
   IngestTournaments,
   Rerank,
@@ -21,7 +20,7 @@ import {
   GetTournamentResults,
   GetTournaments,
 } from "./routes/tournament";
-import { UpdateTournamentSeasonSchema } from "./openapi";
+import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -39,6 +38,7 @@ router.registry.registerComponent("securitySchemes", "bearerAuth", {
 const { preflight, corsify } = createCors({
   origins: ["*"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
+  headers: { "Access-Control-Allow-Credentials": true },
 });
 
 router
@@ -46,8 +46,9 @@ router
   .all("*", preflight)
   .all("/api/*", withDB)
 
-  .post("/api/auth/register", AuthRegister)
-  .post("/api/auth/login", AuthLogin)
+  .get("/api/auth/login_url", GetLoginUrl)
+  .get("/api/auth/token", GetTokenFromCode)
+  .get("/api/auth/refresh_token", RefreshToken)
 
   // Users
   .get("/api/users/@me", authenticatedUser, Me)

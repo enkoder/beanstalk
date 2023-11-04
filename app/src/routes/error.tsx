@@ -1,4 +1,4 @@
-export default function ErrorPage() {
+export function ErrorPage() {
   return (
     <body>
       <main className="container">

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { ResultsService } from "../client";
-import { useParams } from "wouter";
+import { ResultsService, UserResultsResponse } from "../client";
+import { useParams } from "react-router-dom";
 
 type ResultsParams = {
   user: string;
@@ -10,16 +10,18 @@ type ResultsParams = {
 export function Results() {
   const params = useParams<ResultsParams>();
 
-  const [results, setResults] = useState<any | null>(null);
+  const [results, setResults] = useState<UserResultsResponse>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     console.log(params);
-    ResultsService.getGetUserResults(params.user).then((results) => {
-      setResults(results);
-      setLoading(false);
-    });
+    if (params.user) {
+      ResultsService.getGetUserResults(params.user).then((results) => {
+        setResults(results);
+        setLoading(false);
+      });
+    }
     return () => {
       setLoading(false);
     };
@@ -50,7 +52,7 @@ export function Results() {
               </thead>
               <tbody>
                 {results.results.map((result) => (
-                  <tr key={result.user_id + "/" + result.tournament_id}>
+                  <tr key={results.user_id + "/" + result.tournament_id}>
                     <td>
                       <a
                         href={
@@ -75,7 +77,7 @@ export function Results() {
                       )}
                     </td>
                     <td>
-                      {result.runner_deck_url ? (
+                      {result.corp_deck_url ? (
                         <a href={result.corp_deck_url}>
                           {/* TODO: replace the corp ID with the picture of the faction and the name of the ID */}
                           {result.corp_deck_identity_name}

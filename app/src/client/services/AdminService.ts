@@ -62,4 +62,18 @@ export class AdminService {
       url: "/api/admin/updateCards",
     });
   }
+
+  /**
+   * Triggers a Season start & end date update across all tournaments.
+   * @returns any How many tournaments were updated
+   * @throws ApiError
+   */
+  public static postUpdateTournamentSeasons(): CancelablePromise<{
+    tournamentsUpdated: number;
+  }> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/updateTournamentsSeason",
+    });
+  }
 }

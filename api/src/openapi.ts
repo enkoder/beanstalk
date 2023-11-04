@@ -63,16 +63,37 @@ export const TournamentComponent = z
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 
-export const LeaderboardRowComponent = z.object({
-  rank: z.number(),
-  id: z.number(),
-  name: z.coerce.string(),
-  points: z.number(),
-  attended: z.number(),
-});
+export const LeaderboardRowComponent = z
+  .object({
+    rank: z.number(),
+    id: z.number(),
+    name: z.coerce.string(),
+    points: z.number(),
+    attended: z.number(),
+  })
+  .openapi("LeaderboardRow");
 export type LeaderboardRowComponentType = z.infer<
   typeof LeaderboardRowComponent
 >;
+
+export const TokenResponseComponent = z
+  .object({
+    access_token: z.string(),
+    refresh_token: z.string(),
+    expires_in: z.number(),
+    token_type: z.string(),
+  })
+  .openapi("TokenResponse");
+export type GetTokenResponseComponent = z.infer<typeof TokenResponseComponent>;
+
+export const PrivateAccountInfo = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string(),
+  reputation: z.number(),
+  sharing: z.coerce.boolean(),
+});
+export type PrivateAccountInfoType = z.infer<typeof PrivateAccountInfo>;
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -85,9 +106,7 @@ export const GetUserSchema = {
   responses: {
     "200": {
       description: "User Object",
-      schema: {
-        user: UserComponent,
-      },
+      schema: UserComponent,
     },
   },
 };
@@ -98,9 +117,7 @@ export const GetUsersSchema = {
   responses: {
     "200": {
       description: "List of all users",
-      schema: {
-        user: z.array(UserComponent),
-      },
+      schema: z.array(UserComponent),
     },
   },
 };
@@ -112,9 +129,56 @@ export const MeSchema = {
   responses: {
     "200": {
       description: "Your own user profile",
-      schema: {
-        user: UserComponent,
-      },
+      schema: UserComponent,
+    },
+  },
+};
+
+export const GetOAuthLoginURLSchema = {
+  tags: ["Auth"],
+  summary: "Fetches the NRDB login url",
+  responses: {
+    "200": {
+      description: "Object containing the auth_url",
+      schema: z.object({ auth_url: z.string() }),
+    },
+  },
+};
+
+export const OAuthGetTokenFromCodeSchema = {
+  tags: ["Auth"],
+  summary:
+    "From the code supplied during the OAuth redirect, perform the secret exchange and create a token",
+  parameters: {
+    code: Query(z.string()),
+  },
+  responses: {
+    "200": {
+      description: "Blob containing the token and refresh_token",
+      schema: TokenResponseComponent,
+    },
+  },
+};
+
+export const LoginSchema = {
+  tags: ["Auth"],
+  summary: "Fetch user information from token passed in via cookie.",
+  responses: {
+    "200": {
+      description: "Logged in User",
+      schema: UserComponent,
+    },
+  },
+};
+
+export const RefreshTokenSchema = {
+  tags: ["Auth"],
+  summary: "Attempts to create a new token from the given refresh_token",
+  parameters: { refresh_token: Query(z.string()) },
+  responses: {
+    "200": {
+      description: "Blob containing the token and refresh_token",
+      schema: TokenResponseComponent,
     },
   },
 };

@@ -16,4 +16,8 @@ export type User = {
    * User email
    */
   email: string | null;
+  /**
+   * Flag indicating that the user is an Admin user
+   */
+  is_admin?: boolean | null;
 };

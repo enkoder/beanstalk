@@ -8,8 +8,10 @@ export { OpenAPI } from "./core/OpenAPI";
 export type { OpenAPIConfig } from "./core/OpenAPI";
 
 export type { LeaderboardResponse } from "./models/LeaderboardResponse";
+export type { LeaderboardRow } from "./models/LeaderboardRow";
 export type { Result } from "./models/Result";
 export type { Season } from "./models/Season";
+export type { TokenResponse } from "./models/TokenResponse";
 export type { Tournament } from "./models/Tournament";
 export type { User } from "./models/User";
 export type { UserResultsResponse } from "./models/UserResultsResponse";
