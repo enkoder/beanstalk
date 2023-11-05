@@ -64,7 +64,9 @@ export function Header() {
     <nav>
       <ul>
         <li>
-          <strong>Beanstalk</strong>
+          <Link to={"/"}>
+            <strong>Beanstalk</strong>
+          </Link>
         </li>
       </ul>
       {user ? (
@@ -94,6 +96,7 @@ function Layout() {
     <AuthProvider>
       <div className={"container"}>
         <Header></Header>
+        <hr />
         <Outlet />
       </div>
     </AuthProvider>

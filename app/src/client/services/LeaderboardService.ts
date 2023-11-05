@@ -39,6 +39,7 @@ export class LeaderboardService {
      * Tool to show distribution of points from various given parameters
      * @param totalPoints
      * @param numPlayers
+     * @param percentReceivingPoints
      * @param targetTopPercentage
      * @param targetPointPercentageForTop
      * @returns GetPointDistributionResponse Returns a array of numbers representing the point distribution of the simulated tournament
@@ -47,6 +48,7 @@ export class LeaderboardService {
     public static getGetPointDistribution(
         totalPoints?: number | null,
         numPlayers?: number | null,
+        percentReceivingPoints?: number | null,
         targetTopPercentage?: number | null,
         targetPointPercentageForTop?: number | null,
     ): CancelablePromise<GetPointDistributionResponse> {
@@ -56,6 +58,7 @@ export class LeaderboardService {
             query: {
                 'totalPoints': totalPoints,
                 'numPlayers': numPlayers,
+                'percentReceivingPoints': percentReceivingPoints,
                 'targetTopPercentage': targetTopPercentage,
                 'targetPointPercentageForTop': targetPointPercentageForTop,
             },

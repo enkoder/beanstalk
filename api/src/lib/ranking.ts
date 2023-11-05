@@ -2,24 +2,33 @@ import { TournamentType } from "../models/tournament";
 
 export const TARGET_TOP_PERCENTAGE = 20.0;
 export const TARGET_POINT_PERCENTAGE_FOR_TOP = 80.0;
+export const PERCENT_RECEIVING_POINTS = 50.0;
 
 export function calculateTournamentPointDistribution(
   totalPoints: number,
   numPlayers: number,
+  percentReceivingPoints: number,
   alpha: number,
 ) {
   const payouts: number[] = [];
 
+  const numPlayersGettingPoints = Math.round(
+    numPlayers * (percentReceivingPoints / 100),
+  );
   // Calculate the proportionality constant to ensure the sum of payouts equals totalPoints.
   const proportionalityConstant =
     totalPoints /
-    Array.from({ length: numPlayers }, (_, i) =>
+    Array.from({ length: numPlayersGettingPoints }, (_, i) =>
       Math.pow(1 / (i + 1), alpha),
     ).reduce((a, b) => a + b, 0);
 
   // Distribute the points according to the power law.
   for (let i = 1; i <= numPlayers; i++) {
-    payouts.push(proportionalityConstant * Math.pow(1 / i, alpha));
+    if (i <= numPlayersGettingPoints) {
+      payouts.push(proportionalityConstant * Math.pow(1 / i, alpha));
+    } else {
+      payouts.push(0);
+    }
   }
 
   return payouts;
@@ -27,6 +36,7 @@ export function calculateTournamentPointDistribution(
 
 export function findAlphaForDesiredDistribution(
   numPlayers: number,
+  percentReceivingPoints: number,
   targetTopPercentage: number,
   targetTopPointsPercentage: number,
 ) {
@@ -41,6 +51,7 @@ export function findAlphaForDesiredDistribution(
     const payouts = calculateTournamentPointDistribution(
       totalPoints,
       numPlayers,
+      percentReceivingPoints,
       alpha,
     );
 

@@ -291,6 +291,7 @@ export const GetPointDistributionSchema = {
   parameters: {
     totalPoints: Query(z.coerce.number()),
     numPlayers: Query(z.coerce.number()),
+    percentReceivingPoints: Query(z.coerce.number()),
     targetTopPercentage: Query(z.coerce.number().optional()),
     targetPointPercentageForTop: Query(z.coerce.number().optional()),
   },

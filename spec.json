@@ -389,6 +389,12 @@
           {
             "schema": { "type": ["number", "null"] },
             "required": false,
+            "name": "percentReceivingPoints",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
             "name": "targetTopPercentage",
             "in": "query"
           },

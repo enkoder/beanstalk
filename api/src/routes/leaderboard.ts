@@ -11,8 +11,8 @@ import { Env, RequestWithDB } from "../types";
 import { json } from "itty-router";
 import { getDB } from "../models";
 import { Users } from "../models/user";
-import { z } from "zod";
 import {
+  PERCENT_RECEIVING_POINTS,
   TARGET_POINT_PERCENTAGE_FOR_TOP,
   TARGET_TOP_PERCENTAGE,
   calculateTournamentPointDistribution,
@@ -93,7 +93,7 @@ export class GetLeaderboard extends OpenAPIRoute {
 export class GetPointDistribution extends OpenAPIRoute {
   static schema = GetPointDistributionSchema;
 
-  async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
+  async handle(req: RequestWithDB) {
     const totalPoints = Number(req.query["totalPoints"]);
     const numPlayers = Number(req.query["numPlayers"]);
 
@@ -107,8 +107,13 @@ export class GetPointDistribution extends OpenAPIRoute {
       ? Number(req.query["targetPointPercentageForTop"])
       : TARGET_POINT_PERCENTAGE_FOR_TOP;
 
+    const percentReceivingPoints = req.query!["percentReceivingPoints"]
+      ? Number(req.query["percentReceivingPoints"])
+      : PERCENT_RECEIVING_POINTS;
+
     const alpha = findAlphaForDesiredDistribution(
       numPlayers,
+      percentReceivingPoints,
       targetTopPercentage,
       targetPointPercentageForTop,
     );
@@ -116,6 +121,7 @@ export class GetPointDistribution extends OpenAPIRoute {
     const distribution = calculateTournamentPointDistribution(
       totalPoints,
       numPlayers,
+      percentReceivingPoints,
       alpha,
     );
 

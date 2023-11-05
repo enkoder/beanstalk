@@ -7,3 +7,7 @@
   display: block;
   text-decoration: none;
 }
+
+main .grid {
+  grid-template-columns: auto;
+}
