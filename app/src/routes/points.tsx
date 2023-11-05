@@ -1,6 +1,6 @@
 import * as React from "react";
 import { GetPointDistributionResponse, LeaderboardService } from "../client";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const DEFAULT_TOTAL_POINTS = 500;
@@ -24,7 +24,7 @@ interface PointsFormData {
 }
 
 export function PointDistributionTable() {
-  const [searchParams, setSearch] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const location = useLocation();
 
   const [formChanged, setFormChanged] = useState(true);

@@ -13,7 +13,7 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import { PointDistributionTable, getPointDistribution } from "./routes/points";
+import { PointDistributionTable } from "./routes/points";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
