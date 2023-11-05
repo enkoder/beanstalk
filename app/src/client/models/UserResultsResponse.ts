@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Result } from "./Result";
+import type { Result } from './Result';
 
 export type UserResultsResponse = {
-  user_name: string;
-  user_id: number;
-  results: Array<Result>;
+    user_name: string;
+    user_id: number;
+    results: Array<Result>;
 };
+

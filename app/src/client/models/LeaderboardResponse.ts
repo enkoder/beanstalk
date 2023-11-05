@@ -3,11 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { LeaderboardRow } from "./LeaderboardRow";
+import type { LeaderboardRow } from './LeaderboardRow';
 
 export type LeaderboardResponse = {
-  users: Array<LeaderboardRow>;
-  total: number;
-  pages: number;
-  current_page: number;
+    users: Array<LeaderboardRow>;
+    total: number;
+    pages: number;
+    current_page: number;
 };
+

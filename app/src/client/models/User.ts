@@ -4,20 +4,21 @@
 /* eslint-disable */
 
 export type User = {
-  /**
-   * User ID
-   */
-  id: number;
-  /**
-   * User name
-   */
-  name: string | null;
-  /**
-   * User email
-   */
-  email: string | null;
-  /**
-   * Flag indicating that the user is an Admin user
-   */
-  is_admin?: boolean | null;
+    /**
+     * User ID
+     */
+    id: number;
+    /**
+     * User name
+     */
+    name: string | null;
+    /**
+     * User email
+     */
+    email: string | null;
+    /**
+     * Flag indicating that the user is an Admin user
+     */
+    is_admin?: boolean | null;
 };
+

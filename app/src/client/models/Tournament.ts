@@ -4,15 +4,16 @@
 /* eslint-disable */
 
 export type Tournament = {
-  id: number;
-  name: string;
-  date: string | null;
-  registration_count: number;
-  location: string;
-  concluded?: boolean | null;
-  format: string;
-  type: string;
-  season_id: number;
-  season_name?: string;
-  season_tier?: string;
+    id: number;
+    name: string;
+    date: string | null;
+    registration_count: number;
+    location: string;
+    concluded?: boolean | null;
+    format: string;
+    type: string;
+    season_id: number;
+    season_name?: string;
+    season_tier?: string;
 };
+
