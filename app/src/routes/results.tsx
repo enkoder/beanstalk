@@ -86,7 +86,7 @@ export function Results() {
                         <text>{result.corp_deck_identity_name}</text>
                       )}
                     </td>
-                    <td>{result.points_earned}</td>
+                    <td>{result.points_earned.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -75,6 +75,7 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
 
   let accountInfo: PrivateAccountInfoType;
   try {
+    console.log(access_token);
     accountInfo = await getPrivateAccountInfo(access_token);
   } catch (e) {
     if (e.statusCode == 401) {

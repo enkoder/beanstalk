@@ -49,6 +49,7 @@ export class Results {
         "tournaments.name as tournament_name",
         "tournaments.registration_count as registration_count",
       ])
+      .orderBy(["results.rank_cut", "results.rank_swiss"])
       .where("tournament_id", "=", tournamentId);
 
     return await q.execute();

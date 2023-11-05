@@ -14,7 +14,11 @@ import { Tournaments } from "./models/tournament";
 import { Result, Results } from "./models/results";
 import { User, Users } from "./models/user";
 import * as NRDB from "./lib/nrdb";
-import { getSeason0Points } from "./lib/ranking";
+import {
+  TOURNAMENT_POINTS,
+  calculateTournamentPointDistribution,
+  findAlphaForDesiredDistribution,
+} from "./lib/ranking";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -93,17 +97,23 @@ async function handleResultIngest(
 ) {
   const tournament = abrToTournament(abrTournament);
 
-  // Calculate the number of points for this result
-  const points = getSeason0Points(
-    tournament.type,
+  // Being explicit, even though defaults are supplied
+  const alpha = findAlphaForDesiredDistribution(tournament.registration_count);
+  const points = calculateTournamentPointDistribution(
+    TOURNAMENT_POINTS[tournament.type],
     tournament.registration_count,
-    abrEntry.rank_swiss,
-    abrEntry.rank_top,
+    alpha,
   );
+  const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
   //console.log(JSON.stringify(entry, null, 4));
   try {
-    const result = await ingestEntry(env, abrEntry, tournament.id, points);
+    const result = await ingestEntry(
+      env,
+      abrEntry,
+      tournament.id,
+      points[placement],
+    );
     if (!result) {
       console.log(
         [

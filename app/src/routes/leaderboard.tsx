@@ -27,7 +27,7 @@ export function Leaderboard() {
                 <td align={"center"}>
                   <Link to={`results/${user.name}`}>{user.name}</Link>
                 </td>
-                <td>{user.points}</td>
+                <td>{user.points.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

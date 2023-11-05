@@ -4,11 +4,18 @@ export const TARGET_TOP_PERCENTAGE = 20.0;
 export const TARGET_POINT_PERCENTAGE_FOR_TOP = 80.0;
 export const PERCENT_RECEIVING_POINTS = 50.0;
 
+export const TOURNAMENT_POINTS = {
+  [TournamentType.Worlds]: 1000,
+  [TournamentType.Continental]: 750,
+  [TournamentType.Nationals]: 500,
+  [TournamentType.Intercontinental]: 200,
+};
+
 export function calculateTournamentPointDistribution(
   totalPoints: number,
   numPlayers: number,
-  percentReceivingPoints: number,
   alpha: number,
+  percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
 ) {
   const payouts: number[] = [];
 
@@ -36,9 +43,9 @@ export function calculateTournamentPointDistribution(
 
 export function findAlphaForDesiredDistribution(
   numPlayers: number,
-  percentReceivingPoints: number,
-  targetTopPercentage: number,
-  targetTopPointsPercentage: number,
+  percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
+  targetTopPercentage: number = TARGET_TOP_PERCENTAGE,
+  targetTopPointsPercentage: number = TARGET_POINT_PERCENTAGE_FOR_TOP,
 ) {
   const totalPoints = 100;
   const lowerBound = 0.1;
@@ -51,8 +58,8 @@ export function findAlphaForDesiredDistribution(
     const payouts = calculateTournamentPointDistribution(
       totalPoints,
       numPlayers,
-      percentReceivingPoints,
       alpha,
+      percentReceivingPoints,
     );
 
     // Sort the payouts in descending order, highest first
@@ -76,51 +83,3 @@ export function findAlphaForDesiredDistribution(
 
   return 0;
 }
-
-export function getSeason0Points(
-  type: TournamentType,
-  numberPlayers: number,
-  rankSwiss: number,
-  rankCut: number | null,
-) {
-  let points = 0;
-  // For now don't do anything with cut vs swiss
-  const placement = rankCut !== null ? rankCut : rankSwiss;
-  switch (type) {
-    case TournamentType.Nationals: {
-      if (placement <= 8) {
-        points = 10;
-      } else if (placement <= 16) {
-        points = 5;
-      }
-      break;
-    }
-    case TournamentType.Continental: {
-      if (placement <= 8) {
-        points = 20;
-      } else if (placement <= 16) {
-        points = 10;
-      }
-      break;
-    }
-    case TournamentType.Intercontinental: {
-      if (placement == 1) {
-        points = 30;
-      }
-      if (placement == 2) {
-        points = 15;
-      }
-      break;
-    }
-    case TournamentType.Worlds: {
-      if (placement <= 8) {
-        points = 50;
-      } else if (placement <= 16) {
-        points = 20;
-      }
-      break;
-    }
-  }
-  return points;
-}
-//export const POINTS_BY_SEASON = [season0Points];

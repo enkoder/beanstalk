@@ -61,6 +61,14 @@ export class Tournaments {
     return await getDB().selectFrom("tournaments").selectAll().execute();
   }
 
+  public static async getBySeasonId(season_id: number): Promise<Tournament[]> {
+    return getDB()
+      .selectFrom("tournaments")
+      .selectAll()
+      .where("tournaments.season_id", "=", season_id)
+      .execute();
+  }
+
   public static async getCountFromIds(ids: number[]): Promise<number> {
     const sql = getDB()
       .selectFrom("tournaments")

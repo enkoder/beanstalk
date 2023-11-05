@@ -1,4 +1,4 @@
-import { OpenAPIRoute, Query } from "@cloudflare/itty-router-openapi";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
@@ -121,8 +121,8 @@ export class GetPointDistribution extends OpenAPIRoute {
     const distribution = calculateTournamentPointDistribution(
       totalPoints,
       numPlayers,
-      percentReceivingPoints,
       alpha,
+      percentReceivingPoints,
     );
 
     const cumulative: number[] = [];

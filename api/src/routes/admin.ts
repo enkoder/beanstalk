@@ -10,13 +10,17 @@ import {
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { Results } from "../models/results";
 import { Seasons } from "../models/season";
-import { getSeason0Points } from "../lib/ranking";
+import {
+  TOURNAMENT_POINTS,
+  calculateTournamentPointDistribution,
+  findAlphaForDesiredDistribution,
+} from "../lib/ranking";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import { getNameFromId } from "../lib/nrdb";
 import { abrIngest } from "../background";
 import pLimit from "p-limit";
-import { parse, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
@@ -25,22 +29,34 @@ export class Rerank extends OpenAPIRoute {
     let count: number = 0;
 
     for (const season of await Seasons.getAll()) {
-      const results = await Results.getBySeasonId(season.id);
-      for (const result of results) {
-        console.log(JSON.stringify(result));
-        const tournament = await Tournaments.get(result.tournament_id);
-
-        const points = getSeason0Points(
-          tournament.type,
-          tournament.registration_count,
-          result.rank_swiss,
-          result.rank_cut,
+      const tournaments = await Tournaments.getBySeasonId(season.id);
+      for (const tournament of tournaments) {
+        const results = await Results.getManyExpandedByTournamentId(
+          tournament.id,
         );
-        if (result.points_earned != points) {
-          await Results.update(result.tournament_id, result.user_id, {
-            points_earned: points,
-          });
-          count += 1;
+
+        // Totally arbitrary
+        if (results.length <= 6) {
+          continue;
+        }
+
+        const alpha = findAlphaForDesiredDistribution(results.length);
+        const points = calculateTournamentPointDistribution(
+          TOURNAMENT_POINTS[tournament.type],
+          results.length,
+          alpha,
+        );
+
+        for (let i = 0; i < results.length; i++) {
+          const result = results[i];
+
+          console.log(i, result.rank_swiss, points[i]);
+          if (result.points_earned != points[i]) {
+            await Results.update(result.tournament_id, result.user_id, {
+              points_earned: points[i],
+            });
+            count += 1;
+          }
         }
       }
     }
