@@ -67,7 +67,13 @@ export function findAlphaForDesiredDistribution(
 
     // calculate cumulative points for top % of players
     const sumTopPoints = payouts
-      .slice(0, Math.round(payouts.length * (targetTopPercentage / 100.0)))
+      .slice(
+        0,
+        Math.round(
+          payouts.filter((val) => val > 0).length *
+            (targetTopPercentage / 100.0),
+        ),
+      )
       .reduce((a, b) => a + b, 0);
 
     //console.log(sumTopPoints);
