@@ -112,7 +112,6 @@ export class GetPointDistribution extends OpenAPIRoute {
       targetTopPercentage,
       targetPointPercentageForTop,
     );
-    console.log(alpha);
 
     const distribution = calculateTournamentPointDistribution(
       totalPoints,
@@ -120,11 +119,23 @@ export class GetPointDistribution extends OpenAPIRoute {
       alpha,
     );
 
+    const cumulative: number[] = [];
+    distribution.reduce((accum, value) => {
+      cumulative.push(((accum + value) / totalPoints) * 100.0);
+      return accum + value;
+    }, 0);
+
     return json(
       GetPointDistributionResponseComponent.parse({
         currentTargetTopPercentage: 20,
         currentTargetPointPercentageForTop: 80,
-        pointDistribution: distribution,
+        pointDistribution: distribution.map((value, index) => {
+          return {
+            placement: index + 1,
+            points: Number(value.toFixed(2)),
+            cumulative: Number(cumulative[index].toFixed(2)),
+          };
+        }),
       }),
     );
   }

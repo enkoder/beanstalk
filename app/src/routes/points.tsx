@@ -1,78 +1,144 @@
 import * as React from "react";
 import { GetPointDistributionResponse, LeaderboardService } from "../client";
-import { useLoaderData } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const DEFAULT_TOTAL_POINTS = 500;
 const DEFAULT_NUM_PLAYERS = 32;
 
-export async function getPointDistribution() {
-  const searchParams = new URL(location.href).searchParams;
+const numPlayersParam = "numPlayers";
+const totalPointsParam = "totalPoints";
+const targetTopPercentageParam = "targetTopPercentage";
+const targetPointsPercentageForTopParam = "targetPointsPercentageForTop";
 
-  function getSearchParam(
-    sp: URLSearchParams,
-    name: string,
-    defaultVal: number | null,
-  ) {
-    return sp.get(name) && typeof sp.get(name)
-      ? Number(sp.get(name))
-      : defaultVal;
-  }
-
-  const totalPoints = getSearchParam(
-    searchParams,
-    "totalPoints",
-    DEFAULT_TOTAL_POINTS,
-  );
-  const numPlayers = getSearchParam(
-    searchParams,
-    "numPlayers",
-    DEFAULT_NUM_PLAYERS,
-  );
-  const targetTopPercentage = getSearchParam(
-    searchParams,
-    "targetTopPercentage",
-    null,
-  );
-  const targetPointPercentageForTop = getSearchParam(
-    searchParams,
-    "targetTopPercentage",
-    null,
-  );
-
-  return LeaderboardService.getGetPointDistribution(
-    totalPoints,
-    numPlayers,
-    targetTopPercentage,
-    targetPointPercentageForTop,
-  );
+interface PointsFormData {
+  totalPoints: number;
+  numPlayers: number;
+  targetTopPercentage: number;
+  targetPointsPercentageForTop: number;
 }
 
 export function PointDistributionTable() {
-  const pointsDistributionResponse =
-    useLoaderData() as GetPointDistributionResponse;
+  const [searchParams, setSearch] = useSearchParams();
+  const location = useLocation();
+
+  const [formChanged, setFormChanged] = useState(true);
+  const [formData, setFormData] = useState<PointsFormData>({
+    totalPoints: 0,
+    numPlayers: 0,
+    targetTopPercentage: 0,
+    targetPointsPercentageForTop: 0,
+  });
+  const [pointsDistributionResponse, setPointsDistributionResponse] =
+    useState<GetPointDistributionResponse>();
+
+  // Parse and update form values from search parameters in the URL
+  useEffect(() => {
+    // when the query string changes, update the form values on load
+    setFormData({
+      totalPoints:
+        Number(searchParams.get(totalPointsParam)) || DEFAULT_TOTAL_POINTS,
+      numPlayers:
+        Number(searchParams.get(numPlayersParam)) || DEFAULT_NUM_PLAYERS,
+      targetTopPercentage:
+        Number(searchParams.get(targetTopPercentageParam)) || 0,
+      targetPointsPercentageForTop:
+        Number(searchParams.get(targetPointsPercentageForTopParam)) || 0,
+    });
+  }, [location.search]);
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (formChanged) {
+      LeaderboardService.getGetPointDistribution(
+        formData.totalPoints,
+        formData.numPlayers,
+        formData.targetTopPercentage,
+        formData.targetPointsPercentageForTop,
+      )
+        .then((response) => {
+          setPointsDistributionResponse(response);
+
+          setSearch({
+            [totalPointsParam]: formData.totalPoints.toString(),
+            [numPlayersParam]: formData.numPlayers.toString(),
+            [targetTopPercentageParam]: formData.targetTopPercentage.toString(),
+            [targetPointsPercentageForTopParam]:
+              formData.targetPointsPercentageForTop.toString(),
+          });
+        })
+        .finally(() => setFormChanged(false));
+    }
+  };
+
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+    setFormChanged(true);
+  };
 
   return (
-    <>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Placement</th>
-              <th scope="col">Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pointsDistributionResponse.pointDistribution.map(
-              (value, index) => (
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>{value}</td>
-                </tr>
-              ),
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
+    <div className={"container"}>
+      <form onSubmit={handleSubmit}>
+        <div className="grid">
+          <label>
+            Total Points
+            <input
+              type="number"
+              name={totalPointsParam}
+              onChange={handleInput}
+              value={formData.totalPoints}
+            />
+          </label>
+          <label>
+            Num Players
+            <input
+              type="number"
+              name={numPlayersParam}
+              onChange={handleInput}
+              value={formData.numPlayers}
+            />
+          </label>
+          <label>
+            Top %
+            <input
+              type="number"
+              name={targetTopPercentageParam}
+              onChange={handleInput}
+              value={formData.targetTopPercentage}
+            />
+          </label>
+          <label>
+            Target Points % for Top
+            <input
+              type="number"
+              name={targetPointsPercentageForTopParam}
+              onChange={handleInput}
+              value={formData.targetPointsPercentageForTop}
+            />
+          </label>
+          <button disabled={!formChanged}>Submit</button>
+        </div>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Placement</th>
+            <th scope="col">Points</th>
+            <th scope="col">Cumulative</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pointsDistributionResponse &&
+            pointsDistributionResponse.pointDistribution.map((row) => (
+              <tr key={row.placement}>
+                <td>{row.placement}</td>
+                <td>{row.points}</td>
+                <td>{row.cumulative}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

@@ -111,7 +111,15 @@
           "currentTargetPointPercentageForTop": { "type": "number" },
           "pointDistribution": {
             "type": "array",
-            "items": { "type": "number" }
+            "items": {
+              "type": "object",
+              "properties": {
+                "placement": { "type": "number" },
+                "points": { "type": "number" },
+                "cumulative": { "type": "number" }
+              },
+              "required": ["placement", "points", "cumulative"]
+            }
           }
         },
         "required": [

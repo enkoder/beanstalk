@@ -6,6 +6,10 @@
 export type GetPointDistributionResponse = {
     currentTargetTopPercentage: number;
     currentTargetPointPercentageForTop: number;
-    pointDistribution: Array<number>;
+    pointDistribution: Array<{
+        placement: number;
+        points: number;
+        cumulative: number;
+    }>;
 };
 

@@ -100,7 +100,13 @@ export const GetPointDistributionResponseComponent = z
   .object({
     currentTargetTopPercentage: z.number(),
     currentTargetPointPercentageForTop: z.number(),
-    pointDistribution: z.array(z.number()),
+    pointDistribution: z.array(
+      z.object({
+        placement: z.number(),
+        points: z.number(),
+        cumulative: z.number(),
+      }),
+    ),
   })
   .openapi("GetPointDistributionResponse");
 export type GetPointDistributionResponseComponentType = z.infer<

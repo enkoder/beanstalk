@@ -60,7 +60,6 @@ export function findAlphaForDesiredDistribution(
     }
 
     // Increment alpha and try again until we get the right value
-
     alpha += increment;
   }
 

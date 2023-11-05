@@ -92,8 +92,10 @@ export function Header() {
 function Layout() {
   return (
     <AuthProvider>
-      <Header></Header>
-      <Outlet />
+      <div className={"container"}>
+        <Header></Header>
+        <Outlet />
+      </div>
     </AuthProvider>
   );
 }
@@ -110,7 +112,6 @@ const router = createBrowserRouter([
       {
         path: "/points",
         element: <PointDistributionTable />,
-        loader: getPointDistribution,
       },
     ],
   },
@@ -123,7 +124,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <body>
-      <main className="container">
+      <main>
         <RouterProvider router={router} />
       </main>
     </body>
