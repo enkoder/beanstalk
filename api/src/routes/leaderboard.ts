@@ -1,6 +1,8 @@
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { OpenAPIRoute, Query } from "@cloudflare/itty-router-openapi";
 import {
   GetLeaderboardSchema,
+  GetPointDistributionResponseComponent,
+  GetPointDistributionSchema,
   LeaderboardResponseComponent,
   LeaderboardRowComponent,
   LeaderboardRowComponentType,
@@ -9,6 +11,13 @@ import { Env, RequestWithDB } from "../types";
 import { json } from "itty-router";
 import { getDB } from "../models";
 import { Users } from "../models/user";
+import { z } from "zod";
+import {
+  TARGET_POINT_PERCENTAGE_FOR_TOP,
+  TARGET_TOP_PERCENTAGE,
+  calculateTournamentPointDistribution,
+  findAlphaForDesiredDistribution,
+} from "../lib/ranking";
 
 const DEFAULT_PAGE_SIZE = 0;
 
@@ -76,6 +85,46 @@ export class GetLeaderboard extends OpenAPIRoute {
         total: totalUsers,
         pages: pages,
         current_page: page,
+      }),
+    );
+  }
+}
+
+export class GetPointDistribution extends OpenAPIRoute {
+  static schema = GetPointDistributionSchema;
+
+  async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
+    const totalPoints = Number(req.query["totalPoints"]);
+    const numPlayers = Number(req.query["numPlayers"]);
+
+    const targetTopPercentage = req.query!["topTargetPercentage"]
+      ? Number(req.query["topTargetPercentage"])
+      : TARGET_TOP_PERCENTAGE;
+
+    const targetPointPercentageForTop = req.query![
+      "targetPointPercentageForTop"
+    ]
+      ? Number(req.query["targetPointPercentageForTop"])
+      : TARGET_POINT_PERCENTAGE_FOR_TOP;
+
+    const alpha = findAlphaForDesiredDistribution(
+      numPlayers,
+      targetTopPercentage,
+      targetPointPercentageForTop,
+    );
+    console.log(alpha);
+
+    const distribution = calculateTournamentPointDistribution(
+      totalPoints,
+      numPlayers,
+      alpha,
+    );
+
+    return json(
+      GetPointDistributionResponseComponent.parse({
+        currentTargetTopPercentage: 20,
+        currentTargetPointPercentageForTop: 80,
+        pointDistribution: distribution,
       }),
     );
   }

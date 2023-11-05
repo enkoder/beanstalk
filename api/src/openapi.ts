@@ -1,6 +1,7 @@
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 import { ABRTournamentTypeFilter } from "./lib/abr";
+import { GetPointDistribution } from "./routes/leaderboard";
 
 export const UserComponent = z
   .object({
@@ -94,6 +95,17 @@ export const PrivateAccountInfo = z.object({
   sharing: z.coerce.boolean(),
 });
 export type PrivateAccountInfoType = z.infer<typeof PrivateAccountInfo>;
+
+export const GetPointDistributionResponseComponent = z
+  .object({
+    currentTargetTopPercentage: z.number(),
+    currentTargetPointPercentageForTop: z.number(),
+    pointDistribution: z.array(z.number()),
+  })
+  .openapi("GetPointDistributionResponse");
+export type GetPointDistributionResponseComponentType = z.infer<
+  typeof GetPointDistributionResponseComponent
+>;
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -263,6 +275,24 @@ export const GetLeaderboardSchema = {
       schema: LeaderboardResponseComponent,
       description:
         "Returns a array of rows compromising the full leaderboard for the given season",
+    },
+  },
+};
+
+export const GetPointDistributionSchema = {
+  tags: ["Leaderboard"],
+  summary: "Tool to show distribution of points from various given parameters",
+  parameters: {
+    totalPoints: Query(z.coerce.number()),
+    numPlayers: Query(z.coerce.number()),
+    targetTopPercentage: Query(z.coerce.number().optional()),
+    targetPointPercentageForTop: Query(z.coerce.number().optional()),
+  },
+  responses: {
+    "200": {
+      schema: GetPointDistributionResponseComponent,
+      description:
+        "Returns a array of numbers representing the point distribution of the simulated tournament",
     },
   },
 };

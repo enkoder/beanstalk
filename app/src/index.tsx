@@ -13,6 +13,7 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
+import { PointDistributionTable, getPointDistribution } from "./routes/points";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -106,6 +107,11 @@ const router = createBrowserRouter([
       { index: true, element: <Leaderboard />, loader: LeaderboardLoader },
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
+      {
+        path: "/points",
+        element: <PointDistributionTable />,
+        loader: getPointDistribution,
+      },
     ],
   },
 ]);

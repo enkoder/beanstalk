@@ -10,7 +10,7 @@ import { Env, RequestWithDB } from "./types";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
-import { GetLeaderboard } from "./routes/leaderboard";
+import { GetLeaderboard, GetPointDistribution } from "./routes/leaderboard";
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons";
 import { handleQueue, handleScheduled } from "./background";
 import { getDB, initDB } from "./models";
@@ -58,6 +58,7 @@ router
 
   // Leaderboard
   .get("/api/leaderboard", GetLeaderboard)
+  .get("/api/point-distribution", GetPointDistribution)
 
   // Seasons
   .get("/api/seasons", GetSeasons)

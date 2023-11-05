@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { GetPointDistributionResponse } from "../models/GetPointDistributionResponse";
 import type { LeaderboardResponse } from "../models/LeaderboardResponse";
 
 import type { CancelablePromise } from "../core/CancelablePromise";
@@ -29,6 +30,33 @@ export class LeaderboardService {
         size: size,
         page: page,
         seasonId: seasonId,
+      },
+    });
+  }
+
+  /**
+   * Tool to show distribution of points from various given parameters
+   * @param totalPoints
+   * @param numPlayers
+   * @param targetTopPercentage
+   * @param targetPointPercentageForTop
+   * @returns GetPointDistributionResponse Returns a array of numbers representing the point distribution of the simulated tournament
+   * @throws ApiError
+   */
+  public static getGetPointDistribution(
+    totalPoints?: number | null,
+    numPlayers?: number | null,
+    targetTopPercentage?: number | null,
+    targetPointPercentageForTop?: number | null,
+  ): CancelablePromise<GetPointDistributionResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/point-distribution",
+      query: {
+        totalPoints: totalPoints,
+        numPlayers: numPlayers,
+        targetTopPercentage: targetTopPercentage,
+        targetPointPercentageForTop: targetPointPercentageForTop,
       },
     });
   }

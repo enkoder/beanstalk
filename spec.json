@@ -104,6 +104,22 @@
         },
         "required": ["users", "total", "pages", "current_page"]
       },
+      "GetPointDistributionResponse": {
+        "type": "object",
+        "properties": {
+          "currentTargetTopPercentage": { "type": "number" },
+          "currentTargetPointPercentageForTop": { "type": "number" },
+          "pointDistribution": {
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        },
+        "required": [
+          "currentTargetTopPercentage",
+          "currentTargetPointPercentageForTop",
+          "pointDistribution"
+        ]
+      },
       "Season": {
         "type": "object",
         "properties": {
@@ -338,6 +354,51 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/LeaderboardResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/point-distribution": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Tool to show distribution of points from various given parameters",
+        "operationId": "get_GetPointDistribution",
+        "parameters": [
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "totalPoints",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "numPlayers",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "targetTopPercentage",
+            "in": "query"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "targetPointPercentageForTop",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a array of numbers representing the point distribution of the simulated tournament",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPointDistributionResponse"
+                }
               }
             }
           }

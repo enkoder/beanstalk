@@ -108,6 +108,9 @@ importers:
       install:
         specifier: ^0.13.0
         version: 0.13.0
+      mathjs:
+        specifier: ^12.0.0
+        version: 12.0.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -4797,6 +4800,10 @@ packages:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: false
 
+  /complex.js@2.1.1:
+    resolution: {integrity: sha512-8njCHOTtFFLtegk6zQo0kkVX1rngygb/KQI6z1qZxlFI3scluC+LVTCFbrkWjBv4vvLlbQ9t88IPMC6k95VTTg==}
+    dev: false
+
   /compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
@@ -5724,6 +5731,10 @@ packages:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
     dev: false
 
+  /escape-latex@1.2.0:
+    resolution: {integrity: sha512-nV5aVWW1K0wEiUIEdZ4erkGGH8mDxGyxSeqPzRNtWP7ataw+/olFObw7hujFWlVjNsaDFw5VZ5NzVSIqRgfTiw==}
+    dev: false
+
   /escape-string-regexp@1.0.5:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
     engines: {node: '>=0.8.0'}
@@ -6577,6 +6588,10 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /fraction.js@4.3.4:
+    resolution: {integrity: sha512-pwiTgt0Q7t+GHZA4yaLjObx4vXmmdcS0iSJ19o8d/goUGgItX9UZWKWNnLHehxviD8wU2IWRsnR8cD5+yOJP2Q==}
+    dev: false
+
   /fraction.js@4.3.6:
     resolution: {integrity: sha512-n2aZ9tNfYDwaHhvFTkhFErqOMIb8uyzSQ+vGJBjZyanAKZVbGUQ1sngfk9FdkBw7G26O7AgNjLcecLffD1c7eg==}
     dev: false
@@ -7424,6 +7439,10 @@ packages:
       chalk: 4.1.2
       filelist: 1.0.4
       minimatch: 3.1.2
+    dev: false
+
+  /javascript-natural-sort@0.7.1:
+    resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
     dev: false
 
   /jest-changed-files@27.5.1:
@@ -8366,6 +8385,22 @@ packages:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
     dependencies:
       tmpl: 1.0.5
+    dev: false
+
+  /mathjs@12.0.0:
+    resolution: {integrity: sha512-Oz3swPplNPe7taoP6WrkKhQzhDE2SwvOgLzu8H3EN+hEadw2GjEJUm6Xl+hrioHoB8g2BYb3gfw1glSzhdBKYw==}
+    engines: {node: '>= 18'}
+    hasBin: true
+    dependencies:
+      '@babel/runtime': 7.23.2
+      complex.js: 2.1.1
+      decimal.js: 10.4.3
+      escape-latex: 1.2.0
+      fraction.js: 4.3.4
+      javascript-natural-sort: 0.7.1
+      seedrandom: 3.0.5
+      tiny-emitter: 2.1.0
+      typed-function: 4.1.1
     dev: false
 
   /mdn-data@2.0.14:
@@ -10546,6 +10581,10 @@ packages:
       ajv-keywords: 5.1.0(ajv@8.12.0)
     dev: false
 
+  /seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+    dev: false
+
   /select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
     dev: false
@@ -11208,6 +11247,10 @@ packages:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
     dev: false
 
+  /tiny-emitter@2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
+    dev: false
+
   /titleize@3.0.0:
     resolution: {integrity: sha512-KxVu8EYHDPBdUYdKZdKtU2aj2XfEx9AfjXxE/Aj0vT06w2icA09Vus1rh6eSu1y01akYg6BjIK/hxyLJINoMLQ==}
     engines: {node: '>=12'}
@@ -11371,6 +11414,11 @@ packages:
       call-bind: 1.0.2
       for-each: 0.3.3
       is-typed-array: 1.1.12
+
+  /typed-function@4.1.1:
+    resolution: {integrity: sha512-Pq1DVubcvibmm8bYcMowjVnnMwPVMeh0DIdA8ad8NZY2sJgapANJmiigSUwlt+EgXxpfIv8MWrQXTIzkfYZLYQ==}
+    engines: {node: '>= 14'}
+    dev: false
 
   /typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}

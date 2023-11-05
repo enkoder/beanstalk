@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from "./core/CancelablePromise";
 export { OpenAPI } from "./core/OpenAPI";
 export type { OpenAPIConfig } from "./core/OpenAPI";
 
+export type { GetPointDistributionResponse } from "./models/GetPointDistributionResponse";
 export type { LeaderboardResponse } from "./models/LeaderboardResponse";
 export type { LeaderboardRow } from "./models/LeaderboardRow";
 export type { Result } from "./models/Result";
