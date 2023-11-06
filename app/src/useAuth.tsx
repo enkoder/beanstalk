@@ -63,7 +63,7 @@ export function AuthProvider({
   useEffect(() => {
     setLoading(true);
     fetchUser().catch((e) => {
-      console.log(e);
+      setError(e);
     });
     return () => {
       setLoading(false);
@@ -87,6 +87,9 @@ export function AuthProvider({
       .then((tokenResponse) => {
         _storeTokens(tokenResponse);
         navigate("/");
+        fetchUser().catch((e) => {
+          setError(e);
+        });
       })
       .catch((error) => {
         setError(error);
