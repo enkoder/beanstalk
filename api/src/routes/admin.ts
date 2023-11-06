@@ -17,7 +17,7 @@ import {
 } from "../lib/ranking";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
-import { getNameFromId } from "../lib/nrdb";
+import { getCards, getNameFromId } from "../lib/nrdb";
 import { abrIngest } from "../background";
 import pLimit from "p-limit";
 import { parseISO } from "date-fns";
@@ -96,19 +96,13 @@ export class UpdateCards extends OpenAPIRoute {
   static schema = UpdateCardsSchema;
 
   async handle(req: RequestWithDB, env: Env) {
-    const url = new URL("https://netrunnerdb.com/api/2.0/public/cards");
-    const resp = await fetch(url.toString());
-    if (!resp.ok) {
-      throw new Error(`Error (${resp.status}): ${await resp.text()}`);
-    }
-    const cards = await resp.json();
-
     const limit = pLimit(5);
 
+    const cards = await getCards();
     const chunkedCards = [];
     let index = 0;
-    while (index < cards.data.length) {
-      chunkedCards.push(cards.data.slice(index, 100 + index));
+    while (index < cards.length) {
+      chunkedCards.push(cards.slice(index, 100 + index));
       index += 100;
     }
 

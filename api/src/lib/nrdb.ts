@@ -9,6 +9,16 @@ export const NRDBUser = z.object({
 });
 export type NRDBUserType = z.infer<typeof NRDBUser>;
 
+export const NRDBResponse = z.object({
+  data: z.any(),
+  total: z.number(),
+  success: z.boolean(),
+  version_number: z.number(),
+  last_updated: z.coerce.date(),
+  imageUrlTemplate: z.string(),
+});
+export type NRDBResponseType = z.infer<typeof NRDBResponse>;
+
 const NRDB_BASE_URL = "https://netrunnerdb.com";
 
 export async function getNameFromId(id: number): Promise<string> {
@@ -31,12 +41,28 @@ export async function getPrivateAccountInfo(
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!resp.ok) {
+    // TODO: actually use the NRDB error
     throw new HttpError(
       401,
       `Could not fetch private info from nrdb api - ${await resp.text()}`,
     );
   }
 
-  const respJson = await resp.json();
-  return PrivateAccountInfo.parse(respJson.data[0]);
+  const nrdbResponse = NRDBResponse.parse(await resp.json());
+  return PrivateAccountInfo.parse(nrdbResponse.data[0]);
+}
+
+export const NRDBCardsResponse = z.array(z.any());
+export type NRDBCardsResponseType = z.infer<typeof NRDBCardsResponse>;
+
+export async function getCards(): Promise<NRDBCardsResponseType> {
+  const url = new URL(`${NRDB_BASE_URL}/api/2.0/public/cards`);
+  const resp = await fetch(url.toString());
+  if (!resp.ok) {
+    // TODO: actually use the NRDB error
+    throw new Error(`Error (${resp.status}): ${await resp.text()}`);
+  }
+
+  const nrdbResponse = NRDBResponse.parse(await resp.json());
+  return NRDBCardsResponse.parse(nrdbResponse.data);
 }

@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthService, TokenResponse, User, UserService } from "./client";
+import { AxiosError } from "axios";
 
 interface AuthContextType {
   user?: User | null;
@@ -43,8 +44,9 @@ export function AuthProvider({
       const user = await UserService.getMe();
       setUser(user);
     } catch (e) {
+      const error = e as AxiosError;
       // Token is expired, let's try to refresh the token
-      if (e.status == 401) {
+      if (error.status == 401) {
         const refresh_token = localStorage.getItem("refresh_token");
         if (refresh_token) {
           const tokenResponse =

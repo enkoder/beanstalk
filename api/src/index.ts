@@ -21,6 +21,10 @@ import {
   GetTournaments,
 } from "./routes/tournament";
 import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth";
+import type {
+  ExecutionContext,
+  Request as WorkerRequest,
+} from "@cloudflare/workers-types/experimental";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -83,12 +87,6 @@ router
 export default {
   queue: handleQueue,
   scheduled: handleScheduled,
-  fetch: (...args) =>
-    router
-      .handle(...args)
-      .then(json)
-
-      // embed corsify downstream to attach CORS headers
-      .then(corsify)
-      .catch(error),
+  fetch: (request: WorkerRequest, env: Env, ctx: ExecutionContext) =>
+    router.handle(request, env, ctx).then(json).then(corsify).catch(error),
 };

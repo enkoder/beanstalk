@@ -1,28 +1,28 @@
 {
   "name": "beanstalk",
-  "version": "1.0.0",
   "description": "https://netrunner-beanstalk.net",
-  "main": "index.js",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "pnpm --stream -r run build",
     "start": "pnpm --stream -r run start",
-    "api-start": "pnpm --filter api run start"
+    "api-start": "pnpm --filter api run start",
+    "app-start": "pnpm --filter app run start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
-    "eslint": "^8.51.0",
+    "@rspack/cli": "0.3.10",
+    "@rspack/core": "0.3.10",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "openapi-typescript-codegen": "^0.25.0",
     "prettier": "^3.0.3",
-    "wrangler": "^3.12.0"
+    "wrangler": "^3.15.0"
   }
 }

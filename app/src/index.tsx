@@ -23,7 +23,7 @@ const getToken = async (): Promise<string> => {
 OpenAPI.TOKEN = getToken;
 OpenAPI.WITH_CREDENTIALS = true;
 OpenAPI.BASE =
-  process.env.REACT_APP_IS_LOCAL_MODE !== "1"
+  process.env.NODE_ENV !== "development"
     ? "https://beanstalk-api.enkoder.workers.dev"
     : "http://0.0.0.0:8787";
 
