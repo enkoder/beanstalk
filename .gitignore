@@ -4,3 +4,4 @@ node_modules/
 .wrangler
 dist
 build
+api/.dev.vars
