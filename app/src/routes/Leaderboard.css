@@ -1,0 +1,28 @@
+.parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "filters leaderboard leaderboard"
+    "filters leaderboard leaderboard"
+    "filters leaderboard leaderboard";
+}
+
+.filters {
+  grid-area: filters;
+}
+.leaderboard {
+  grid-area: leaderboard;
+  height: 85vh;
+  overflow: auto;
+  max-height: fit-content;
+  white-space: nowrap;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: var(--pico-table-row-stripped-background-color);
+}

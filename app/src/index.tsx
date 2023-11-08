@@ -4,7 +4,6 @@ import { Leaderboard, LeaderboardLoader } from "./routes/leaderboard";
 import { Results } from "./routes/results";
 import { ErrorPage } from "./routes/error";
 import { AuthService, OpenAPI } from "./client";
-import "./index.css";
 import useAuth, { AuthProvider } from "./useAuth";
 import {
   Link,
@@ -14,6 +13,9 @@ import {
   redirect,
 } from "react-router-dom";
 import { PointDistributionTable } from "./routes/points";
+import "@picocss/pico/css/pico.css";
+import "./index.css";
+import "./theme.css";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -56,7 +58,7 @@ export function Header() {
     return () => {};
   }
 
-  function handlelLogout() {
+  function handleLogout() {
     logout();
   }
 
@@ -77,7 +79,7 @@ export function Header() {
             </Link>
           </li>
           <li>
-            <a onClick={handlelLogout}>Logout</a>
+            <a onClick={handleLogout}>Logout</a>
           </li>
         </ul>
       ) : (
@@ -127,9 +129,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <body>
-      <main>
-        <RouterProvider router={router} />
-      </main>
+      <RouterProvider router={router} />
     </body>
   </React.StrictMode>,
 );
