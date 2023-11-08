@@ -10,6 +10,14 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
   },
+  module: {
+    rules: [
+      {
+        test: /\.png$/,
+        type: "asset/resource",
+      },
+    ],
+  },
   plugins: [
     new rspack.HtmlRspackPlugin({
       template: "./public/index.html",

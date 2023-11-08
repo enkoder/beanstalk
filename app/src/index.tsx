@@ -16,6 +16,7 @@ import { PointDistributionTable } from "./routes/points";
 import "@picocss/pico/css/pico.css";
 import "./index.css";
 import "./theme.css";
+import greenBeans from "../images/beanstalk_royalties.png";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -67,6 +68,11 @@ export function Header() {
       <ul>
         <li>
           <Link to={"/"}>
+            <img
+              src={greenBeans}
+              alt="logo"
+              style={{ height: 50, padding: 5 }}
+            />
             <strong>Beanstalk</strong>
           </Link>
         </li>
@@ -98,7 +104,6 @@ function Layout() {
     <AuthProvider>
       <div className={"container"}>
         <Header></Header>
-        <hr />
         <Outlet />
       </div>
     </AuthProvider>
