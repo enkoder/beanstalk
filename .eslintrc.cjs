@@ -6,7 +6,7 @@ module.exports = {
     "plugin:prettier/recommended",
   ],
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "import"],
   root: true,
   rules: {
     "@typescript-eslint/ban-ts-comment": "off",
@@ -22,11 +22,26 @@ module.exports = {
     "sort-imports": [
       "error",
       {
-        ignoreCase: false,
-        ignoreDeclarationSort: true, // don"t want to sort import lines, use eslint-plugin-import instead
+        ignoreCase: true,
+        ignoreDeclarationSort: true,
         ignoreMemberSort: false,
         memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
         allowSeparatedGroups: true,
+      },
+    ],
+    "import/order": [
+      "error",
+      {
+        groups: [
+          "index",
+          "sibling",
+          "parent",
+          "internal",
+          "external",
+          "builtin",
+          "object",
+          "type",
+        ],
       },
     ],
   },

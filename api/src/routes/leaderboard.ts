@@ -1,4 +1,3 @@
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
@@ -7,24 +6,25 @@ import {
   LeaderboardRowComponent,
   LeaderboardRowComponentType,
 } from "../openapi";
-import { Env, RequestWithDB } from "../types";
-import { json } from "itty-router";
+import { RequestWithDB } from "../types";
 import { getDB } from "../models";
 import { Users } from "../models/user";
 import {
+  calculateTournamentPointDistribution,
+  findAlphaForDesiredDistribution,
   PERCENT_RECEIVING_POINTS,
   TARGET_POINT_PERCENTAGE_FOR_TOP,
   TARGET_TOP_PERCENTAGE,
-  calculateTournamentPointDistribution,
-  findAlphaForDesiredDistribution,
 } from "../lib/ranking";
+import { json } from "itty-router";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 
 const DEFAULT_PAGE_SIZE = 0;
 
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
-  async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
+  async handle(req: RequestWithDB) {
     const pageFromQuery = Number(req.query!["page"]);
     const sizeFromQuery = Number(req.query!["size"]);
     const seasonIdFromQuery = Number(req.query!["seasonId"]);

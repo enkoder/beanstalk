@@ -1,12 +1,12 @@
-import { Kysely } from "kysely";
-import { D1Dialect } from "kysely-d1";
-import type { D1Database } from "@cloudflare/workers-types";
-import { error } from "itty-router";
 import { UsersTable } from "./user";
 import { SeasonsTable } from "./season";
 import { TournamentsTable } from "./tournament";
 import { LeaderboardTable } from "./leaderboard";
 import { ResultsTable } from "./results";
+import { error } from "itty-router";
+import { D1Dialect } from "kysely-d1";
+import { Kysely } from "kysely";
+import type { D1Database } from "@cloudflare/workers-types";
 
 let _db: Kysely<Database> | null = null;
 

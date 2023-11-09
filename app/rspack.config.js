@@ -9,6 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "build"),
+    publicPath: "/",
   },
   module: {
     rules: [
@@ -25,5 +26,9 @@ module.exports = {
     }),
   ],
   mode: isProduction ? "production" : "development",
-  devServer: { port: 8080 },
+  devServer: {
+    hot: false,
+    port: 8080,
+    historyApiFallback: true,
+  },
 };

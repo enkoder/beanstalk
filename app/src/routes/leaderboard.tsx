@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   LeaderboardResponse,
   LeaderboardService,
@@ -15,6 +14,7 @@ import {
   useState,
 } from "react";
 
+const DEFAULT_SEASON = 1;
 const seasonParam = "season";
 interface LeaderboardFormData {
   season: number;
@@ -33,7 +33,7 @@ export function Leaderboard() {
   const location = useLocation();
 
   const [formData, setFormData] = useState<LeaderboardFormData>({
-    season: 0,
+    season: Number(searchParams.get(seasonParam) || DEFAULT_SEASON),
   });
 
   const [leaderboard, setLeaderboard] = useState<LeaderboardResponse>();
@@ -113,7 +113,12 @@ export function Leaderboard() {
             >
               {seasons &&
                 seasons.map((season) => (
-                  <option value={season.id}> {season.name}</option>
+                  <option
+                    value={season.id}
+                    selected={seasons && season.id == formData.season}
+                  >
+                    S{season.id} - {season.name}
+                  </option>
                 ))}
             </select>
             <label>Faction</label>

@@ -1,5 +1,5 @@
-import * as React from "react";
 import { GetPointDistributionResponse, LeaderboardService } from "../client";
+import * as React from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 

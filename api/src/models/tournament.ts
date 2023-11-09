@@ -1,5 +1,5 @@
-import { Insertable, Selectable, Updateable } from "kysely";
 import { getDB } from "./index";
+import { Insertable, Selectable, Updateable } from "kysely";
 
 export enum Formats {
   Standard = "standard",

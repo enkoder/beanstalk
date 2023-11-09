@@ -1,6 +1,5 @@
-import * as React from "react";
-import { useEffect, useState } from "react";
 import { ResultsService, UserResultsResponse } from "../client";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 type ResultsParams = {

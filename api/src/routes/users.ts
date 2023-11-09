@@ -1,4 +1,3 @@
-import { json } from "itty-router";
 import { RequestWithDB } from "../types";
 import {
   GetUserResultsSchema,
@@ -8,10 +7,11 @@ import {
   ResultComponent,
   UserComponent,
 } from "../openapi";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
 import { Results } from "../models/results";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
 
 export class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;

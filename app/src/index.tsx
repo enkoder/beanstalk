@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom/client";
-import { Leaderboard, LeaderboardLoader } from "./routes/leaderboard";
+import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
 import { ErrorPage } from "./routes/error";
 import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
-import {
-  Link,
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-  redirect,
-} from "react-router-dom";
 import { PointDistributionTable } from "./routes/points";
+import greenBeans from "../images/beanstalk_royalties.png";
+import ReactDOM from "react-dom/client";
+import React, { useEffect } from "react";
 import "@picocss/pico/css/pico.css";
 import "./index.css";
 import "./theme.css";
-import greenBeans from "../images/beanstalk_royalties.png";
+import {
+  createBrowserRouter,
+  Link,
+  Outlet,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -48,6 +48,7 @@ export function OAuth2Callback() {
 export function Header() {
   const { logout } = useAuth();
   const { user } = useAuth();
+
   function handleLogin() {
     AuthService.getGetLoginUrl()
       .then(({ auth_url }) => {
@@ -116,7 +117,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Leaderboard />, loader: LeaderboardLoader },
+      { index: true, element: <Leaderboard /> },
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
       {

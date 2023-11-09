@@ -1,20 +1,11 @@
 .parent {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 10px 10px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "filters leaderboard leaderboard"
-    "filters leaderboard leaderboard"
-    "filters leaderboard leaderboard";
+  grid-template-columns: 40% 60%;
+  grid-template-rows: 1fr;
+  column-gap: 20px;
 }
 
-.filters {
-  grid-area: filters;
-}
 .leaderboard {
-  grid-area: leaderboard;
   height: 85vh;
   overflow: auto;
   max-height: fit-content;
@@ -25,4 +16,10 @@ th {
   position: sticky;
   top: 0;
   background: var(--pico-table-row-stripped-background-color);
+}
+
+@media screen and (max-width: 768px) {
+  .parent {
+    grid-template-columns: 1fr;
+  }
 }

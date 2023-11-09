@@ -7,20 +7,20 @@ import {
   UpdateUsers,
 } from "./routes/admin";
 import { Env, RequestWithDB } from "./types";
-import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
 import { GetLeaderboard, GetPointDistribution } from "./routes/leaderboard";
-import { GetSeasonTournaments, GetSeasons } from "./routes/seasons";
+import { GetSeasons, GetSeasonTournaments } from "./routes/seasons";
 import { handleQueue, handleScheduled } from "./background";
 import { getDB, initDB } from "./models";
-import { createCors, error, json } from "itty-router";
 import {
   GetTournament,
   GetTournamentResults,
   GetTournaments,
 } from "./routes/tournament";
 import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth";
+import { createCors, error, json } from "itty-router";
+import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import type {
   ExecutionContext,
   Request as WorkerRequest,

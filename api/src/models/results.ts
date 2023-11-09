@@ -1,6 +1,6 @@
-import { Selectable, Updateable } from "kysely";
 import { getDB } from "./index";
 import { TournamentType } from "./tournament";
+import { Selectable, Updateable } from "kysely";
 export interface ResultsTable {
   tournament_id: number;
   tournament_name?: string;

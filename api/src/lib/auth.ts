@@ -1,9 +1,9 @@
-import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
-import { Env, RequestWithDB } from "../types";
 import { errorResponse } from "./errors";
-import { Users } from "../models/user";
 import { getPrivateAccountInfo } from "./nrdb";
+import { Env, RequestWithDB } from "../types";
+import { Users } from "../models/user";
 import { PrivateAccountInfoType } from "../openapi";
+//import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
 
 export async function signPassword(
   key: string,
@@ -61,21 +61,20 @@ export async function verifyPassword(
   );
 }
 
-async function validateToken(token: string, env: Env) {
-  const isValid = await verify(token, env.JWT_SIGNER_SECRET_KEY);
-
-  // Check for validity
-  if (!isValid) return;
-
-  return decode(token);
-}
+//async function validateToken(token: string, env: Env) {
+//  const isValid = await verify(token, env.JWT_SIGNER_SECRET_KEY);
+//
+//  // Check for validity
+//  if (!isValid) return;
+//
+//  return decode(token);
+//}
 
 export async function authenticatedUser(request: RequestWithDB, _: Env) {
   const access_token = getBearer(request);
 
   let accountInfo: PrivateAccountInfoType;
   try {
-    console.log(access_token);
     accountInfo = await getPrivateAccountInfo(access_token);
   } catch (e) {
     if (e.statusCode == 401) {

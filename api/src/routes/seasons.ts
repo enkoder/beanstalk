@@ -1,14 +1,14 @@
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
-  GetSeasonTournamentsSchema,
   GetSeasonsSchema,
+  GetSeasonTournamentsSchema,
   SeasonComponent,
   TournamentComponent,
 } from "../openapi";
 import { RequestWithDB } from "../types";
 import { Seasons } from "../models/season";
-import { json } from "itty-router";
 import { Tournaments } from "../models/tournament";
+import { json } from "itty-router";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 
 export class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;

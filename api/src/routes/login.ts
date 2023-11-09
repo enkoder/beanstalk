@@ -1,16 +1,16 @@
-import { json } from "itty-router";
 import { Env, RequestWithDB } from "../types";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
   AuthLoginBody,
   AuthLoginSchema,
   AuthRegisterSchema,
   UserComponent,
 } from "../openapi";
-import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { signPassword, verifyPassword } from "../lib/auth";
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
+import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
 
 // Currently these views are unused as we are preferring NRDB auth only right now
 // We may want to eventually add a username & password auth flow again

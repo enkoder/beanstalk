@@ -1,12 +1,11 @@
 import { Env, RequestWithDB } from "../types";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
   GetOAuthLoginURLSchema,
   OAuthGetTokenFromCodeSchema,
   RefreshTokenSchema,
   TokenResponseComponent,
-  UserComponent,
 } from "../openapi";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { error, json } from "itty-router";
 
 const NRDB_BASE_URL = "https://netrunnerdb.com";

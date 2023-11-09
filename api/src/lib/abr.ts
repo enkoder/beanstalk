@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { Formats, Tournament, TournamentType } from "../models/tournament";
 import { Result } from "../models/results";
+import { z } from "zod";
 
 async function gatherResponse(response: Response) {
   const { headers } = response;
@@ -58,11 +58,13 @@ export const ABRTournament = z.object({
   winner_corp_identity: z.string().optional(),
 });
 
-export function abrToTournament(abr: ABRTournamentType): Tournament {
+export function abrToTournament(
+  abr: ABRTournamentType,
+  seasonId: number,
+): Tournament {
   return {
     id: abr.id,
-    // TODO: set real season here
-    season_id: 0,
+    season_id: seasonId,
     name: abr.title,
     date: abr.date.toString(),
     location: abr.location,

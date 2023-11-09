@@ -1,10 +1,10 @@
 import { Env, IngestResultQueueMessage } from "./types";
 import {
   ABREntryType,
-  ABRTournamentType,
-  ABRTournamentTypeFilter,
   abrToResult,
   abrToTournament,
+  ABRTournamentType,
+  ABRTournamentTypeFilter,
   getEntries,
   getTournamentsByType,
   getTournamentsByUserId,
@@ -15,10 +15,11 @@ import { Result, Results } from "./models/results";
 import { User, Users } from "./models/user";
 import * as NRDB from "./lib/nrdb";
 import {
-  TOURNAMENT_POINTS,
   calculateTournamentPointDistribution,
   findAlphaForDesiredDistribution,
+  TOURNAMENT_POINTS,
 } from "./lib/ranking";
+import { Seasons } from "./models/season";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -149,8 +150,10 @@ async function handleTournamentIngest(
   env: Env,
   abrTournament: ABRTournamentType,
 ) {
+  const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
+
   const tournament = await Tournaments.insert(
-    abrToTournament(abrTournament),
+    abrToTournament(abrTournament, seasons[0].id),
     true,
   );
 
@@ -240,7 +243,7 @@ export async function handleQueue(
   }
 }
 
-export async function handleScheduled(event: ScheduledEvent, env: Env) {
+export async function handleScheduled(_: ScheduledEvent, env: Env) {
   initDB(env.DB);
   await abrIngest(
     env,

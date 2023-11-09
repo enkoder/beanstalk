@@ -1,8 +1,8 @@
+import { HttpError } from "./errors";
+import { PrivateAccountInfo, PrivateAccountInfoType } from "../openapi";
 import { parse } from "node-html-parser";
 import { z } from "zod";
 import { error } from "itty-router";
-import { HttpError } from "./errors";
-import { PrivateAccountInfo, PrivateAccountInfoType } from "../openapi";
 
 export const NRDBUser = z.object({
   name: z.string(),
@@ -10,12 +10,12 @@ export const NRDBUser = z.object({
 export type NRDBUserType = z.infer<typeof NRDBUser>;
 
 export const NRDBResponse = z.object({
-  data: z.any(),
+  data: z.array(z.any()),
   total: z.number(),
   success: z.boolean(),
-  version_number: z.number(),
-  last_updated: z.coerce.date(),
-  imageUrlTemplate: z.string(),
+  version_number: z.string(),
+  last_updated: z.coerce.date().optional(),
+  imageUrlTemplate: z.string().optional(),
 });
 export type NRDBResponseType = z.infer<typeof NRDBResponse>;
 
@@ -47,8 +47,8 @@ export async function getPrivateAccountInfo(
       `Could not fetch private info from nrdb api - ${await resp.text()}`,
     );
   }
-
-  const nrdbResponse = NRDBResponse.parse(await resp.json());
+  const respBody = await resp.json();
+  const nrdbResponse = NRDBResponse.parse(respBody);
   return PrivateAccountInfo.parse(nrdbResponse.data[0]);
 }
 

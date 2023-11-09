@@ -1,7 +1,7 @@
-import { IRequest } from "itty-router";
-import { Kysely } from "kysely";
 import { Database } from "./models";
 import { ABREntryType, ABRTournamentType } from "./lib/abr";
+import { IRequest } from "itty-router";
+import { Kysely } from "kysely";
 
 export type IngestResultQueueMessage = {
   tournament: ABRTournamentType;
