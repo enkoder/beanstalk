@@ -1,5 +1,5 @@
 import { AuthService, TokenResponse, User, UserService } from "./client";
-import React, {
+import {
   createContext,
   ReactNode,
   useCallback,
