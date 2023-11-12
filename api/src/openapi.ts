@@ -99,6 +99,7 @@ export const GetPointDistributionResponseComponent = z
   .object({
     currentTargetTopPercentage: z.number(),
     currentTargetPointPercentageForTop: z.number(),
+    adjustedTotalPoints: z.number(),
     pointDistribution: z.array(
       z.object({
         placement: z.number(),

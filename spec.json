@@ -109,6 +109,7 @@
         "properties": {
           "currentTargetTopPercentage": { "type": "number" },
           "currentTargetPointPercentageForTop": { "type": "number" },
+          "adjustedTotalPoints": { "type": "number" },
           "pointDistribution": {
             "type": "array",
             "items": {
@@ -125,6 +126,7 @@
         "required": [
           "currentTargetTopPercentage",
           "currentTargetPointPercentageForTop",
+          "adjustedTotalPoints",
           "pointDistribution"
         ]
       },

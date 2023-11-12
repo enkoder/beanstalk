@@ -1,7 +1,10 @@
 import { TournamentType } from "../models/tournament";
 
+// Percentage of people in the top of the tournament who should receive the target amount, defined below
 export const TARGET_TOP_PERCENTAGE = 20.0;
+// Target point percentage defines how much of the total points the top percentage of players receives
 export const TARGET_POINT_PERCENTAGE_FOR_TOP = 80.0;
+// Sets the number of players who will be receiving any points. Defined as a percentage of total players
 export const PERCENT_RECEIVING_POINTS = 50.0;
 
 export const TOURNAMENT_POINTS = {
@@ -17,28 +20,37 @@ export function calculateTournamentPointDistribution(
   alpha: number,
   percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
 ) {
-  const payouts: number[] = [];
+  const points: number[] = [];
 
+  // Adjust the total points based upon the number of players.
+  // 8 players => .73
+  // 100 players => 1.52
+  // 256 players => 1.71
+  const adjustedTotalPoints = totalPoints * Math.log(Math.log(numPlayers));
+
+  console.log(adjustedTotalPoints);
+  // Filter numPlayers by percentage given
   const numPlayersGettingPoints = Math.round(
     numPlayers * (percentReceivingPoints / 100),
   );
-  // Calculate the proportionality constant to ensure the sum of payouts equals totalPoints.
+
+  // Calculate the proportionality constant to ensure the sum of points equals adjustedPoints
   const proportionalityConstant =
-    totalPoints /
+    adjustedTotalPoints /
     Array.from({ length: numPlayersGettingPoints }, (_, i) =>
       Math.pow(1 / (i + 1), alpha),
     ).reduce((a, b) => a + b, 0);
 
-  // Distribute the points according to the power law.
+  // Distribute the points according to the power law
   for (let i = 1; i <= numPlayers; i++) {
     if (i <= numPlayersGettingPoints) {
-      payouts.push(proportionalityConstant * Math.pow(1 / i, alpha));
+      points.push(proportionalityConstant * Math.pow(1 / i, alpha));
     } else {
-      payouts.push(0);
+      points.push(0);
     }
   }
 
-  return payouts;
+  return { points, adjustedTotalPoints };
 }
 
 export function findAlphaForDesiredDistribution(
@@ -54,29 +66,28 @@ export function findAlphaForDesiredDistribution(
   let alpha = lowerBound; // Initialize alpha as the lower bound
 
   while (alpha < upperBound) {
-    // Calculate the payouts using the current alpha
-    const payouts = calculateTournamentPointDistribution(
+    // Calculate the points using the current alpha
+    const { points } = calculateTournamentPointDistribution(
       totalPoints,
       numPlayers,
       alpha,
       percentReceivingPoints,
+      0,
     );
 
-    // Sort the payouts in descending order, highest first
-    payouts.sort((a, b) => b - a);
+    // Sort the points in descending order, highest first
+    points.sort((a, b) => b - a);
 
     // calculate cumulative points for top % of players
-    const sumTopPoints = payouts
+    const sumTopPoints = points
       .slice(
         0,
         Math.round(
-          payouts.filter((val) => val > 0).length *
+          points.filter((val) => val > 0).length *
             (targetTopPercentage / 100.0),
         ),
       )
       .reduce((a, b) => a + b, 0);
-
-    //console.log(sumTopPoints);
 
     // Check if we've found a value for alpha where the top % of points hits the target
     if ((sumTopPoints / totalPoints) * 100 >= targetTopPointsPercentage) {

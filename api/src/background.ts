@@ -96,7 +96,8 @@ async function handleResultIngest(
   abrTournament: ABRTournamentType,
   abrEntry: ABREntryType,
 ) {
-  const tournament = abrToTournament(abrTournament);
+  const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
+  const tournament = abrToTournament(abrTournament, seasons[0].id);
 
   // Being explicit, even though defaults are supplied
   const alpha = findAlphaForDesiredDistribution(tournament.registration_count);

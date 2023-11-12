@@ -41,7 +41,7 @@ export class Rerank extends OpenAPIRoute {
         }
 
         const alpha = findAlphaForDesiredDistribution(results.length);
-        const points = calculateTournamentPointDistribution(
+        const { points } = calculateTournamentPointDistribution(
           TOURNAMENT_POINTS[tournament.type],
           results.length,
           alpha,
