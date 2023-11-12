@@ -1,4 +1,4 @@
-.parent {
+.leaderboard-container {
   display: grid;
   grid-template-columns: 40% 60%;
   grid-template-rows: 1fr;
@@ -12,14 +12,14 @@
   white-space: nowrap;
 }
 
-th {
+.leaderboard > th {
   position: sticky;
   top: 0;
   background: var(--pico-table-row-stripped-background-color);
 }
 
 @media screen and (max-width: 768px) {
-  .parent {
+  .leaderboard-container {
     grid-template-columns: 1fr;
   }
 }

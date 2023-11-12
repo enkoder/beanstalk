@@ -93,7 +93,7 @@ export function Leaderboard() {
   };
 
   return (
-    <div className={"parent"}>
+    <div className={"leaderboard-container"}>
       <div className={"filters"}>
         <form onSubmit={handleSubmit}>
           <fieldset>
@@ -137,7 +137,7 @@ export function Leaderboard() {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Points</th>
+              <th scope="col">Beans</th>
             </tr>
           </thead>
           <tbody>
