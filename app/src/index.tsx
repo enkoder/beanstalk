@@ -4,6 +4,7 @@ import { ErrorPage } from "./routes/Error";
 import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
 import { PointDistributionTable } from "./routes/Points";
+import { Faq } from "./routes/Faq";
 import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
 import React, { useEffect } from "react";
@@ -143,6 +144,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Leaderboard /> },
+      { path: "/faq", element: <Faq /> },
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
       {
