@@ -72,6 +72,9 @@ export async function verifyPassword(
 
 export async function authenticatedUser(request: RequestWithDB, _: Env) {
   const access_token = getBearer(request);
+  if (!access_token) {
+    return errorResponse(401, "No token");
+  }
 
   let accountInfo: PrivateAccountInfoType;
   try {

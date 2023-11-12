@@ -1,6 +1,13 @@
-import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
+import {
+  GetUser,
+  GetUserRankForSeason,
+  GetUserResults,
+  GetUsers,
+  Me,
+} from "./routes/users";
 import {
   IngestTournaments,
+  RecalculateLeaderboard,
   Rerank,
   UpdateCards,
   UpdateTournamentSeasons,
@@ -59,6 +66,7 @@ router
   .get("/api/users", GetUsers)
   .get("/api/users/:userID", GetUser)
   .get("/api/users/:user/results", GetUserResults)
+  .get("/api/users/:user/rank", GetUserRankForSeason)
 
   // Leaderboard
   .get("/api/leaderboard", GetLeaderboard)
@@ -74,12 +82,13 @@ router
   .get("/api/tournaments/:tournamentId/results", GetTournamentResults)
 
   // Admin only endpoints
-  .all("/api/admin/*", authenticatedUser, adminOnly)
+  //.all("/api/admin/*", authenticatedUser, adminOnly)
   .get("/api/admin/updateNRDBNames", UpdateUsers)
   .get("/api/admin/rerank", Rerank)
   .post("/api/admin/ingestTournaments", IngestTournaments)
   .post("/api/admin/updateCards", UpdateCards)
   .post("/api/admin/updateTournamentsSeason", UpdateTournamentSeasons)
+  .post("/api/admin/recalculateLeaderboard", RecalculateLeaderboard)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

@@ -113,6 +113,17 @@ export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
 
+export const GetUserRankingComponent = z
+  .object({
+    rank: z.number(),
+    seasonId: z.number(),
+    seasonName: z.string(),
+  })
+  .openapi("GetUserRankingResponse");
+export type GetUserRankingComponentComponentType = z.infer<
+  typeof GetUserRankingComponent
+>;
+
 export const GetUserSchema = {
   tags: ["User"],
   summary: "Gets a single user",
@@ -148,6 +159,22 @@ export const MeSchema = {
     "200": {
       description: "Your own user profile",
       schema: UserComponent,
+    },
+  },
+};
+
+export const GetUserRankingSchema = {
+  tags: ["User"],
+  summary: "Returns the current seasonal ranking of the given user",
+  parameters: {
+    season: Query(z.coerce.number()),
+    user: Path(Str, { description: "User name or id" }),
+  },
+  responses: {
+    "200": {
+      schema: GetUserRankingComponent,
+      description:
+        "Blob containing the seasonal ranking of user supplied via the URL path and season param",
     },
   },
 };
@@ -370,6 +397,22 @@ export const UpdateCardsSchema = {
     "200": {
       schema: z.object({}),
       description: "Empty object indicates success on updating nrdb cards.",
+    },
+  },
+};
+
+export const RecalculateLeaderboardSchema = {
+  tags: ["Admin"],
+  summary: "Triggers a recalculation of the leaderboard table",
+  security: [{ bearerAuth: [] }],
+  parameters: {
+    season: Query(z.coerce.number()),
+  },
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description:
+        "Empty object indicates success on triggering recalculation.",
     },
   },
 };

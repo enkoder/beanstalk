@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { GetUserRankingResponse } from '../models/GetUserRankingResponse';
 import type { User } from '../models/User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -48,6 +49,29 @@ export class UserService {
             url: '/api/users/{userID}',
             path: {
                 'userID': userId,
+            },
+        });
+    }
+
+    /**
+     * Returns the current seasonal ranking of the given user
+     * @param user
+     * @param season
+     * @returns GetUserRankingResponse Blob containing the seasonal ranking of user supplied via the URL path and season param
+     * @throws ApiError
+     */
+    public static getGetUserRankForSeason(
+        user: string,
+        season?: number | null,
+    ): CancelablePromise<GetUserRankingResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/users/{user}/rank',
+            path: {
+                'user': user,
+            },
+            query: {
+                'season': season,
             },
         });
     }

@@ -1,4 +1,9 @@
-import { ResultsService, UserResultsResponse } from "../client";
+import {
+  GetUserRankingResponse,
+  ResultsService,
+  UserResultsResponse,
+  UserService,
+} from "../client";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -9,6 +14,8 @@ type ResultsParams = {
 export function Results() {
   const params = useParams<ResultsParams>();
 
+  const [userRankResponse, setUserRankResponse] =
+    useState<GetUserRankingResponse>();
   const [results, setResults] = useState<UserResultsResponse>();
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +27,10 @@ export function Results() {
         setResults(results);
         setLoading(false);
       });
+      // TODO: Make this UsersService
+      UserService.getGetUserRankForSeason(params.user, 1).then((resp) => {
+        setUserRankResponse(resp);
+      });
     }
     return () => {
       setLoading(false);
@@ -28,13 +39,16 @@ export function Results() {
 
   return (
     <div className={"container"}>
-      {loading || !results ? (
+      {loading || !results || !userRankResponse ? (
         <article aria-busy="true"></article>
       ) : (
         <>
           <hgroup>
             <h1>{results.user_name}</h1>
-            <h3>Ranked X for Season Y</h3>
+            <h2>
+              Ranked #{userRankResponse.rank} for Season{" "}
+              {userRankResponse.seasonId} - {userRankResponse.seasonName}
+            </h2>
           </hgroup>
           <div>
             <table>

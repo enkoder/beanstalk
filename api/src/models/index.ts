@@ -34,6 +34,6 @@ export interface Database {
   users: UsersTable;
   seasons: SeasonsTable;
   tournaments: TournamentsTable;
-  leaderboard: LeaderboardTable;
+  leaderboards: LeaderboardTable;
   results: ResultsTable;
 }

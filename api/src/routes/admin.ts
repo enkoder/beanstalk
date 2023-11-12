@@ -1,6 +1,7 @@
 import { Env, RequestWithDB } from "../types";
 import {
   IngestTournamentSchema,
+  RecalculateLeaderboardSchema,
   RerankSchema,
   UpdateCardsSchema,
   UpdateTournamentSeasonSchema,
@@ -17,6 +18,7 @@ import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import { getCards, getNameFromId } from "../lib/nrdb";
 import { abrIngest } from "../background";
+import { Leaderboards } from "../models/leaderboard";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 import pLimit from "p-limit";
@@ -150,5 +152,15 @@ export class UpdateTournamentSeasons extends OpenAPIRoute {
     }
 
     return json({ tournamentsUpdated: count });
+  }
+}
+
+export class RecalculateLeaderboard extends OpenAPIRoute {
+  static schema = RecalculateLeaderboardSchema;
+
+  async handle(req: RequestWithDB) {
+    const seasonId = Number(req.query["season"]);
+    await Leaderboards.recalculateLeaderboard(seasonId);
+    return json({});
   }
 }

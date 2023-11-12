@@ -17,6 +17,14 @@ export class Seasons {
     return await getDB().selectFrom("seasons").selectAll().execute();
   }
 
+  public static async getFromId(id: number) {
+    return await getDB()
+      .selectFrom("seasons")
+      .selectAll()
+      .where("id", "=", id)
+      .executeTakeFirst();
+  }
+
   public static async getFromTimestamp(timestamp: string): Promise<Season[]> {
     const sql = getDB()
       .selectFrom("seasons")

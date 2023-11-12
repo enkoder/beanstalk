@@ -80,6 +80,15 @@
         },
         "required": ["user_name", "user_id", "results"]
       },
+      "GetUserRankingResponse": {
+        "type": "object",
+        "properties": {
+          "rank": { "type": "number" },
+          "seasonId": { "type": "number" },
+          "seasonName": { "type": "string" }
+        },
+        "required": ["rank", "seasonId", "seasonName"]
+      },
       "LeaderboardRow": {
         "type": "object",
         "properties": {
@@ -327,6 +336,39 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/UserResultsResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{user}/rank": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Returns the current seasonal ranking of the given user",
+        "operationId": "get_GetUserRankForSeason",
+        "parameters": [
+          {
+            "schema": { "type": "string", "description": "User name or id" },
+            "required": true,
+            "name": "user",
+            "in": "path"
+          },
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "season",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blob containing the seasonal ranking of user supplied via the URL path and season param",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserRankingResponse"
+                }
               }
             }
           }
@@ -647,6 +689,32 @@
                   "properties": { "tournamentsUpdated": { "type": "number" } },
                   "required": ["tournamentsUpdated"]
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/recalculateLeaderboard": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Triggers a recalculation of the leaderboard table",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "post_RecalculateLeaderboard",
+        "parameters": [
+          {
+            "schema": { "type": ["number", "null"] },
+            "required": false,
+            "name": "season",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty object indicates success on triggering recalculation.",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": {} }
               }
             }
           }

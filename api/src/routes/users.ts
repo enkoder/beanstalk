@@ -1,5 +1,7 @@
 import { RequestWithDB } from "../types";
 import {
+  GetUserRankingComponent,
+  GetUserRankingSchema,
   GetUserResultsSchema,
   GetUserSchema,
   GetUsersSchema,
@@ -10,6 +12,8 @@ import {
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user";
 import { Results } from "../models/results";
+import { Seasons } from "../models/season";
+import { Leaderboards } from "../models/leaderboard";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 
@@ -55,6 +59,10 @@ export class GetUserResults extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const userIdOrName = req.params!["user"];
     const user = await Users.getByIdOrName(userIdOrName);
+    if (!user) {
+      return errorResponse(400, "User does not exist");
+    }
+
     const results = await Results.getManyByUserIdExpanded(user.id);
 
     return json({
@@ -68,5 +76,33 @@ export class GetUserResults extends OpenAPIRoute {
         }
       }),
     });
+  }
+}
+
+export class GetUserRankForSeason extends OpenAPIRoute {
+  static schema = GetUserRankingSchema;
+
+  async handle(req: RequestWithDB) {
+    const userIdOrName = req.params!["user"];
+    const user = await Users.getByIdOrName(userIdOrName);
+    if (!user) {
+      return errorResponse(400, "User does not exist");
+    }
+
+    const seasonId = Number(req.query["season"]);
+    const season = await Seasons.getFromId(seasonId);
+
+    const currentRank = await Leaderboards.getUserRankForSeason(
+      season.id,
+      user.id,
+    );
+
+    return json(
+      GetUserRankingComponent.parse({
+        seasonId: season.id,
+        seasonName: season.name,
+        rank: currentRank,
+      }),
+    );
   }
 }
