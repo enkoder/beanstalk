@@ -1,0 +1,46 @@
+/* Layout CSS Grid */
+.results-container {
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr 1fr;
+  grid-auto-flow: row;
+  margin: 10px;
+
+  height: 85vh;
+  overflow: auto;
+  max-height: fit-content;
+  white-space: nowrap;
+  /*
+    grid-template-areas:
+        "results-header-container results-header-container results-header-container"
+        "results-rows-container results-rows-container results-rows-container";
+     */
+}
+
+.results-header-container {
+  /*
+    grid-template: "results-header-container";
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+     */
+
+  display: flex;
+  flex-direction: row;
+}
+
+.results-header-item {
+  align-items: flex-start;
+  padding-bottom: 20px;
+}
+
+/*
+.results-rows-container {
+    grid-template: "results-rows-container";
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+ */
