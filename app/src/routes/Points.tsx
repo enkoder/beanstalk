@@ -1,7 +1,7 @@
 import { GetPointDistributionResponse, LeaderboardService } from "../client";
-import * as React from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import "./Points.css";
 
 const DEFAULT_TOTAL_POINTS = 500;
 const DEFAULT_NUM_PLAYERS = 32;
@@ -103,11 +103,11 @@ export function PointDistributionTable() {
   };
 
   return (
-    <div className={"container"}>
+    <div className={"points-container"}>
       <form onSubmit={handleSubmit}>
-        <div className="grid">
+        <div className="filters">
           <label>
-            Total Points
+            Total Beans
             <input
               type="number"
               name={totalPointsParam}
@@ -125,7 +125,7 @@ export function PointDistributionTable() {
             />
           </label>
           <label>
-            Percent Receiving Points
+            Percent Receiving Beans
             <input
               type="number"
               name={percentReceivingPointsParam}
@@ -143,7 +143,7 @@ export function PointDistributionTable() {
             />
           </label>
           <label>
-            Target Points % for Top
+            Target Beans % for Top
             <input
               type="number"
               name={targetPointsPercentageForTopParam}
@@ -154,25 +154,32 @@ export function PointDistributionTable() {
           <button disabled={!formChanged}>Submit</button>
         </div>
       </form>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Placement</th>
-            <th scope="col">Points</th>
-            <th scope="col">Cumulative</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pointsDistributionResponse &&
-            pointsDistributionResponse.pointDistribution.map((row) => (
-              <tr key={row.placement}>
-                <td>{row.placement}</td>
-                <td>{row.points}</td>
-                <td>{row.cumulative}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div className={"leaderboard"}>
+        <table className={"striped"}>
+          <thead>
+            <tr>
+              <th scope="col">Placement</th>
+              <th scope="col">Beans</th>
+              <th scope="col">
+                Cumulative (
+                {pointsDistributionResponse &&
+                  pointsDistributionResponse.adjustedTotalPoints}
+                )
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {pointsDistributionResponse &&
+              pointsDistributionResponse.pointDistribution.map((row) => (
+                <tr key={row.placement}>
+                  <td>{row.placement}</td>
+                  <td>{row.points}</td>
+                  <td>{row.cumulative}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
