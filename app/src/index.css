@@ -1,0 +1,74 @@
+/* Global CSS variables */
+:root {
+  --spacing-company: 3rem;
+  --font-weight: 400;
+  --border-radius: 0;
+}
+
+/* Typography */
+h2,
+h3,
+hgroup > :last-child {
+  font-weight: 200;
+}
+
+small {
+  color: var(--muted-color);
+}
+
+/* Layout CSS Grid */
+.layout {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 1fr 10fr 1fr;
+  grid-template-rows: 1fr 10fr 1fr;
+  grid-template-areas:
+    "left-spacer header right-spacer"
+    "left-spacer content right-spacer"
+    "left-spacer footer right-space";
+}
+
+.header {
+  grid-template: "header";
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+.left-spacer {
+  grid-template: "left-spacer";
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 4;
+}
+.content {
+  grid-template: "content";
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+.right-spacer {
+  grid-template: "right-spacer";
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 4;
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  grid-template: "footer";
+  justify-items: center;
+  place-items: center;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+
+.footer-text {
+  padding-bottom: 5px;
+}

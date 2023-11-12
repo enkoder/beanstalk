@@ -1,9 +1,9 @@
-import { Leaderboard } from "./routes/leaderboard";
-import { Results } from "./routes/results";
-import { ErrorPage } from "./routes/error";
+import { Leaderboard } from "./routes/Leaderboard";
+import { Results } from "./routes/Results";
+import { ErrorPage } from "./routes/Error";
 import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
-import { PointDistributionTable } from "./routes/points";
+import { PointDistributionTable } from "./routes/Points";
 import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
 import React, { useEffect } from "react";
@@ -78,34 +78,59 @@ export function Header() {
           </Link>
         </li>
       </ul>
-      {user ? (
-        <ul>
-          <li>
-            <Link to={`/results/${user.name}`}>
-              <a>{user.name}</a>
-            </Link>
-          </li>
-          <li>
-            <a onClick={handleLogout}>Logout</a>
-          </li>
-        </ul>
-      ) : (
-        <ul>
+      <ul>
+        <li>
+          <Link to={"/faq"}>
+            <a>FAQ</a>
+          </Link>
+        </li>
+        {user ? (
+          <>
+            <li>
+              <Link to={`/results/${user.name}`}>
+                <a>{user.name}</a>
+              </Link>
+            </li>
+            <li>
+              <a onClick={handleLogout}>Logout</a>
+            </li>
+          </>
+        ) : (
           <li>
             <a onClick={handleLogin}>Login</a>
           </li>
-        </ul>
-      )}
+        )}
+      </ul>
     </nav>
+  );
+}
+
+export function Footer() {
+  return (
+    <span className={"footer-text"}>
+      <small>
+        Built by <a href={"https://gitub.com/enkoder"}>enkoder</a> •
+        <a href="https://github.com/enkoder/beanstalk"> Source Code</a>
+      </small>
+    </span>
   );
 }
 
 function Layout() {
   return (
     <AuthProvider>
-      <div className={"container"}>
-        <Header></Header>
-        <Outlet />
+      <div className={"layout"}>
+        <div className={"header"}>
+          <Header />
+        </div>
+        <div className={"left-spacer"}></div>
+        <div className={"content"}>
+          <Outlet />
+        </div>
+        <div className={"right-spacer"}></div>
+        <div className={"footer"}>
+          <Footer />
+        </div>
       </div>
     </AuthProvider>
   );
