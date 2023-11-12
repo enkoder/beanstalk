@@ -4,21 +4,12 @@ import {
   Season,
   SeasonsService,
 } from "../client";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./Leaderboard.css";
-import {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 const DEFAULT_SEASON = 1;
 const seasonParam = "season";
-interface LeaderboardFormData {
-  season: number;
-}
 
 export async function LeaderboardLoader() {
   const [leaderboard, seasons] = await Promise.all([
@@ -30,20 +21,16 @@ export async function LeaderboardLoader() {
 
 export function Leaderboard() {
   const [searchParams] = useSearchParams();
-  const location = useLocation();
 
-  const [formData, setFormData] = useState<LeaderboardFormData>({
-    season: Number(searchParams.get(seasonParam) || DEFAULT_SEASON),
-  });
-
+  const initialSeason = Number(searchParams.get(seasonParam) || DEFAULT_SEASON);
   const [leaderboard, setLeaderboard] = useState<LeaderboardResponse>();
   const [seasons, setSeasons] = useState<Season[]>();
   const [searchString, setSearchString] = useState<string>("");
+  const [selectedSeason, setSelectedSeason] = useState<number>(initialSeason);
 
   const fetchLeaderboard = useCallback(async (seasonId: number | null) => {
     LeaderboardService.getGetLeaderboard(null, null, seasonId).then(
       (leaderboard) => {
-        console.log("heyy");
         setLeaderboard(leaderboard);
       },
     );
@@ -51,43 +38,29 @@ export function Leaderboard() {
 
   const fetchSeasons = useCallback(async () => {
     SeasonsService.getGetSeasons().then((seasons) => {
-      console.log("heyy");
       setSeasons(seasons);
     });
   }, []);
 
   // fetches initial resources
   useEffect(() => {
-    fetchLeaderboard(formData.season).catch((e) => console.log(e));
     fetchSeasons().catch((e) => console.log(e));
+    fetchLeaderboard(selectedSeason).catch((e) => console.log(e));
     return () => {};
   }, []);
 
-  // Parse and update form values from search parameters in the URL
-  useEffect(() => {
-    // when the query string changes, update the form values on load
-    setFormData({
-      season: Number(searchParams.get(seasonParam)) || 0,
-    });
-  }, [location.search]);
-
   const handleSeasonChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: Number(value) });
-  };
+    const { value } = event.target;
+    setSelectedSeason(Number(value));
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    LeaderboardService.getGetLeaderboard(null, null, formData.season).then(
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set(seasonParam, value);
+    const newURL = `${window.location.pathname}?${newSearchParams.toString()}`;
+    window.history.pushState({ path: newURL }, "", newURL);
+
+    LeaderboardService.getGetLeaderboard(null, null, Number(value)).then(
       (leaderboard: LeaderboardResponse) => {
         setLeaderboard(leaderboard);
-
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set(seasonParam, formData.season.toString());
-        const newURL = `${
-          window.location.pathname
-        }?${newSearchParams.toString()}`;
-        window.history.pushState({ path: newURL }, "", newURL);
       },
     );
   };
@@ -95,7 +68,7 @@ export function Leaderboard() {
   return (
     <div className={"leaderboard-container"}>
       <div className={"filters"}>
-        <form onSubmit={handleSubmit}>
+        <form>
           <fieldset>
             <label>Username</label>
             <input
@@ -115,20 +88,13 @@ export function Leaderboard() {
                 seasons.map((season) => (
                   <option
                     value={season.id}
-                    selected={seasons && season.id == formData.season}
+                    selected={seasons && season.id == selectedSeason}
                   >
                     S{season.id} - {season.name}
                   </option>
                 ))}
             </select>
-            <label>Faction</label>
-            <select id="season" disabled={true}>
-              <option value={0} selected>
-                Coming Soon!
-              </option>
-            </select>
           </fieldset>
-          <input type={"submit"} onSubmit={handleSubmit} value={"Submit"} />
         </form>
       </div>
       <div className={"leaderboard"}>
