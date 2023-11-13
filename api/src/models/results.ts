@@ -67,6 +67,7 @@ export class Results {
         "tournaments.name as tournament_name",
         "tournaments.registration_count as registration_count",
       ])
+      .orderBy("tournaments.date", "desc")
       .where("user_id", "=", id);
 
     return await q.execute();
