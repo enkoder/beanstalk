@@ -1,6 +1,5 @@
-import { Leaderboard } from "./routes/Leaderboard";
+import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
-import { ErrorPage } from "./routes/Error";
 import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
 import { PointDistributionTable } from "./routes/Points";
@@ -44,6 +43,17 @@ export function OAuth2Callback() {
   }, [location.search]);
 
   return <></>;
+}
+
+function ErrorPage() {
+  return (
+    <main className="container">
+      <hgroup>
+        <h1>404!</h1>
+        <h6>Do something cool with a 404 page</h6>
+      </hgroup>
+    </main>
+  );
 }
 
 export function Header() {
