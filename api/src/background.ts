@@ -10,7 +10,7 @@ import {
   getTournamentsByUserId,
 } from "./lib/abr";
 import { initDB } from "./models";
-import { Tournaments } from "./models/tournament";
+import { Tournament, Tournaments } from "./models/tournament";
 import { Result, Results } from "./models/results";
 import { User, Users } from "./models/user";
 import * as NRDB from "./lib/nrdb";
@@ -93,15 +93,12 @@ async function ingestEntry(
 
 async function handleResultIngest(
   env: Env,
-  abrTournament: ABRTournamentType,
+  tournament: Tournament,
   abrEntry: ABREntryType,
 ) {
-  const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
-  const tournament = abrToTournament(abrTournament, seasons[0].id);
-
   // Being explicit, even though defaults are supplied
   const alpha = findAlphaForDesiredDistribution(tournament.registration_count);
-  const points = calculateTournamentPointDistribution(
+  const { points } = calculateTournamentPointDistribution(
     TOURNAMENT_POINTS[tournament.type],
     tournament.registration_count,
     alpha,
@@ -160,7 +157,7 @@ async function handleTournamentIngest(
 
   const entries = await getEntries(tournament.id);
   for (const entry of entries) {
-    await env.INGEST_RESULT_Q.send({ tournament: abrTournament, entry: entry });
+    await env.INGEST_RESULT_Q.send({ tournament: tournament, entry: entry });
   }
 }
 
@@ -171,7 +168,7 @@ async function handleTournamentIngestDLQ(tournament: ABRTournamentType) {
 }
 
 async function handleResultIngestDLQ(
-  tournament: ABRTournamentType,
+  tournament: Tournament,
   entry: ABREntryType,
 ) {
   // TODO: actually do something here on ingest fail
