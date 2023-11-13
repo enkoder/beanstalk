@@ -28,7 +28,6 @@ export function calculateTournamentPointDistribution(
   // 256 players => 1.71
   const adjustedTotalPoints = totalPoints * Math.log(Math.log(numPlayers));
 
-  console.log(adjustedTotalPoints);
   // Filter numPlayers by percentage given
   const numPlayersGettingPoints = Math.round(
     numPlayers * (percentReceivingPoints / 100),
@@ -67,13 +66,13 @@ export function findAlphaForDesiredDistribution(
 
   while (alpha < upperBound) {
     // Calculate the points using the current alpha
-    const { points } = calculateTournamentPointDistribution(
-      totalPoints,
-      numPlayers,
-      alpha,
-      percentReceivingPoints,
-      0,
-    );
+    const { points, adjustedTotalPoints } =
+      calculateTournamentPointDistribution(
+        totalPoints,
+        numPlayers,
+        alpha,
+        percentReceivingPoints,
+      );
 
     // Sort the points in descending order, highest first
     points.sort((a, b) => b - a);
@@ -90,7 +89,10 @@ export function findAlphaForDesiredDistribution(
       .reduce((a, b) => a + b, 0);
 
     // Check if we've found a value for alpha where the top % of points hits the target
-    if ((sumTopPoints / totalPoints) * 100 >= targetTopPointsPercentage) {
+    if (
+      (sumTopPoints / adjustedTotalPoints) * 100 >=
+      targetTopPointsPercentage
+    ) {
       return alpha;
     }
 
