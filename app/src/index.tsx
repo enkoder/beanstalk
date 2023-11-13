@@ -1,5 +1,5 @@
 import { Leaderboard } from "./routes/Leaderboard";
-import { Results } from "./routes/Results";
+import { Results } from "./routes/results";
 import { ErrorPage } from "./routes/Error";
 import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
