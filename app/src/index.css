@@ -1,8 +1,13 @@
 /* Global CSS variables */
 :root {
-  --spacing-company: 3rem;
-  --font-weight: 400;
   --border-radius: 0;
+  --pico-spacing: 0.5rem;
+  --pico-font-weight: 300;
+  --header-height: 7vh;
+  --footer-height: 4vh;
+  --spacer-width: 7vw;
+  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
+  --content-width: calc(100vw - var(--spacer-width) * 2);
 }
 
 /* Typography */
@@ -30,7 +35,7 @@ small {
 
 .header {
   grid-template: "header";
-  height: 5vh;
+  height: var(--header-height);
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 1;
@@ -45,7 +50,7 @@ small {
 .left-spacer {
   grid-template: "left-spacer";
   height: 100vh;
-  width: 5vw;
+  width: var(--spacer-width);
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
@@ -54,8 +59,8 @@ small {
 
 .content {
   grid-template: "content";
-  height: 90vh;
-  width: 90vw;
+  height: var(--content-height);
+  width: var(--content-width);
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -67,7 +72,7 @@ small {
 .right-spacer {
   grid-template: "right-spacer";
   height: 100vh;
-  width: 5vw;
+  width: var(--spacer-width);
   grid-column-start: 3;
   grid-column-end: 4;
   grid-row-start: 1;
@@ -75,7 +80,7 @@ small {
 }
 
 .footer {
-  height: 5vh;
+  height: var(--footer-height);
   grid-template: "footer";
   grid-column-start: 2;
   grid-column-end: 3;

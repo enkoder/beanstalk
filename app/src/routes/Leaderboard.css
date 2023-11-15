@@ -1,30 +1,51 @@
 .leaderboard-container {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  grid-template-rows: 1fr;
-}
-
-.leaderboard {
-  height: 90vh;
-  overflow: auto;
-  max-height: fit-content;
-  white-space: nowrap;
-  padding-left: 20px;
-  padding-top: 25px;
+  display: flex;
+  flex-direction: column;
+  --filters-container-height: 10vh;
+  --season-select-text-container-width: 15vw;
 }
 
 .filters {
-  padding-top: 25px;
+  display: flex;
+  flex-direction: row;
+
+  gap: 50px;
+  padding-top: 20px;
+  height: var(--filters-container-height);
+  justify-content: center;
+  align-items: center;
+}
+
+.filters-item > select {
+  border-radius: 5rem;
+}
+
+.season-select-container {
+  width: var(--season-select-text-container-width);
+}
+
+.filters-item {
+  width: calc(
+    (var(--content-width) - var(--season-select-text-container-width)) / 2
+  );
+}
+
+.filters > input:not([type="checkbox"], [type="radio"]),
+select,
+textarea {
+  /* Necessary to not auto-stretch out the search input */
+  width: auto;
+}
+
+.leaderboard {
+  height: calc(var(--content-height) - var(--filters-container-height));
+  overflow: auto;
+  max-height: fit-content;
+  white-space: nowrap;
 }
 
 thead {
   position: sticky;
   top: 0;
   background: var(--pico-table-row-stripped-background-color);
-}
-
-@media screen and (max-width: 768px) {
-  .leaderboard-container {
-    grid-template-columns: 1fr;
-  }
 }

@@ -68,34 +68,33 @@ export function Leaderboard() {
   return (
     <div className={"leaderboard-container"}>
       <div className={"filters"}>
-        <form>
-          <fieldset>
-            <label>Username</label>
-            <input
-              type="search"
-              id="search"
-              name="search"
-              placeholder="Search"
-              onChange={(e) => setSearchString(e.target.value)}
-            />
-            <label>Season</label>
-            <select
-              id="season"
-              name={seasonParam}
-              onChange={handleSeasonChange}
-            >
-              {seasons &&
-                seasons.map((season) => (
-                  <option
-                    value={season.id}
-                    selected={seasons && season.id == selectedSeason}
-                  >
-                    S{season.id} - {season.name}
-                  </option>
-                ))}
-            </select>
-          </fieldset>
-        </form>
+        <div className={"season-select-container"}>
+          <h6>
+            <Link to={"/seasons"}>Season Select</Link>
+          </h6>
+        </div>
+        <div className={"filters-item"}>
+          <select id="season" name={seasonParam} onChange={handleSeasonChange}>
+            {seasons &&
+              seasons.map((season) => (
+                <option
+                  value={season.id}
+                  selected={seasons && season.id == selectedSeason}
+                >
+                  S{season.id} - {season.name}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className={"filters-item"}>
+          <input
+            type="search"
+            id="search"
+            name="search"
+            placeholder="Search"
+            onChange={(e) => setSearchString(e.target.value)}
+          />
+        </div>
       </div>
       <div className={"leaderboard"}>
         <table className={"striped"}>
