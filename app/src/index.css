@@ -62,7 +62,6 @@ small {
   grid-row-end: 3;
 
   overflow: scroll;
-  padding-top: 25px;
 }
 
 .right-spacer {
