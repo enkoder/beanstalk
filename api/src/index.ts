@@ -82,7 +82,7 @@ router
   .get("/api/tournaments/:tournamentId/results", GetTournamentResults)
 
   // Admin only endpoints
-  //.all("/api/admin/*", authenticatedUser, adminOnly)
+  .all("/api/admin/*", authenticatedUser, adminOnly)
   .get("/api/admin/updateNRDBNames", UpdateUsers)
   .get("/api/admin/rerank", Rerank)
   .post("/api/admin/ingestTournaments", IngestTournaments)
