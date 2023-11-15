@@ -2,17 +2,17 @@
   display: grid;
   grid-template-columns: 40% 60%;
   grid-template-rows: 1fr;
-  column-gap: 20px;
 }
 
 .leaderboard {
-  height: 85vh;
+  height: 90vh;
   overflow: auto;
   max-height: fit-content;
   white-space: nowrap;
+  padding-left: 20px;
 }
 
-.leaderboard > th {
+thead {
   position: sticky;
   top: 0;
   background: var(--pico-table-row-stripped-background-color);

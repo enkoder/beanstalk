@@ -30,14 +30,17 @@ export class Leaderboards {
   }
 
   public static async getUserRankForSeason(seasonId: number, userId: number) {
-    const { rank } = await getDB()
+    const result = await getDB()
       .selectFrom("leaderboards")
       .leftJoin("seasons", "leaderboards.season_id", "seasons.id")
       .select("rank")
       .where("season_id", "=", seasonId)
       .where("user_id", "=", userId)
       .executeTakeFirst();
-    return rank;
+    if (!result) {
+      return 0;
+    }
+    return result.rank;
   }
 
   public static async recalculateLeaderboard(seasonId?: number) {

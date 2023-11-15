@@ -4,6 +4,7 @@ import { AuthService, OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
 import { PointDistributionTable } from "./routes/Points";
 import { Faq } from "./routes/Faq";
+import { Beans } from "./routes/Beans";
 import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
 import React, { useEffect } from "react";
@@ -118,12 +119,12 @@ export function Header() {
 
 export function Footer() {
   return (
-    <span className={"footer-text"}>
-      <small>
+    <div className={"footer-text-container"}>
+      <small style={{ paddingBottom: "10px" }}>
         Built by <a href={"https://gitub.com/enkoder"}>enkoder</a> •
         <a href="https://github.com/enkoder/beanstalk"> Source Code</a>
       </small>
-    </span>
+    </div>
   );
 }
 
@@ -157,6 +158,7 @@ const router = createBrowserRouter([
       { path: "/faq", element: <Faq /> },
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
+      { path: "/beans", element: <Beans /> },
       {
         path: "/points",
         element: <PointDistributionTable />,

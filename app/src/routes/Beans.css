@@ -1,0 +1,13 @@
+.beans-container {
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+
+.editor {
+  height: 60vh;
+  flex: 1;
+  margin-bottom: auto;
+}

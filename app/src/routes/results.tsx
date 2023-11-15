@@ -38,17 +38,21 @@ export function Results() {
   }, [params]);
 
   return (
-    <div className={"container"}>
+    <div>
       {loading || !results || !userRankResponse ? (
         <article aria-busy="true"></article>
       ) : (
         <>
           <hgroup>
             <h1>{results.user_name}</h1>
-            <h2>
-              Ranked #{userRankResponse.rank} for Season{" "}
-              {userRankResponse.seasonId} - {userRankResponse.seasonName}
-            </h2>
+            {userRankResponse.rank ? (
+              <h2>
+                Ranked #{userRankResponse.rank} for Season{" "}
+                {userRankResponse.seasonId} - {userRankResponse.seasonName}
+              </h2>
+            ) : (
+              <></>
+            )}
           </hgroup>
           <div>
             <table>

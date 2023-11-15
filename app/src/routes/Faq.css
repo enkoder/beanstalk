@@ -1,6 +1,7 @@
 .faq-container {
   display: flex;
   flex-direction: column;
+  padding: 50px;
 }
 
 .faq-item {

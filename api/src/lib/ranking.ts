@@ -1,3 +1,5 @@
+// You can see this code on Github
+// https://github.com/enkoder/beanstalk/api/src/lib/ranking.ts
 import { TournamentType } from "../models/tournament";
 
 // Percentage of people in the top of the tournament who should receive the target amount, defined below
