@@ -3,9 +3,9 @@
 import { TournamentType } from "../models/tournament";
 
 // Percentage of people in the top of the tournament who should receive the target amount, defined below
-export const TARGET_TOP_PERCENTAGE = 20.0;
+export const TARGET_TOP_PERCENTAGE = 33.3;
 // Target point percentage defines how much of the total points the top percentage of players receives
-export const TARGET_POINT_PERCENTAGE_FOR_TOP = 80.0;
+export const TARGET_POINT_PERCENTAGE_FOR_TOP = 66.6;
 // Sets the number of players who will be receiving any points. Defined as a percentage of total players
 export const PERCENT_RECEIVING_POINTS = 50.0;
 
