@@ -13,6 +13,10 @@
   padding-top: 25px;
 }
 
+.filters {
+  padding-top: 25px;
+}
+
 thead {
   position: sticky;
   top: 0;
