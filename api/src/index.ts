@@ -16,7 +16,11 @@ import {
 import { Env, RequestWithDB } from "./types";
 import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
-import { GetLeaderboard, GetPointDistribution } from "./routes/leaderboard";
+import {
+  GetLeaderboard,
+  GetPointDistribution,
+  GetTiers,
+} from "./routes/leaderboard";
 import { GetSeasons, GetSeasonTournaments } from "./routes/seasons";
 import { handleQueue, handleScheduled } from "./background";
 import { getDB, initDB } from "./models";
@@ -78,6 +82,7 @@ router
 
   // Tournament
   .get("/api/tournaments", GetTournaments)
+  .get("/api/tournaments/tiers", GetTiers)
   .get("/api/tournaments/:tournamentId", GetTournament)
   .get("/api/tournaments/:tournamentId/results", GetTournamentResults)
 

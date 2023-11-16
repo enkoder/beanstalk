@@ -13,6 +13,7 @@ export type { LeaderboardResponse } from './models/LeaderboardResponse';
 export type { LeaderboardRow } from './models/LeaderboardRow';
 export type { Result } from './models/Result';
 export type { Season } from './models/Season';
+export type { Tier } from './models/Tier';
 export type { TokenResponse } from './models/TokenResponse';
 export type { Tournament } from './models/Tournament';
 export type { User } from './models/User';

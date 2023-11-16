@@ -1,10 +1,97 @@
 import "./Beans.css";
 // @ts-ignore
 import rankings from "./../../../api/src/lib/ranking.ts";
+import {
+  GetPointDistributionResponse,
+  LeaderboardService,
+  Tier,
+} from "../client";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { FormEvent, useEffect, useState } from "react";
+
+function PointsSimulation() {
+  const [selectedTier, setSelectedTier] = useState<number>(0);
+  const [tiers, setTiers] = useState<Tier[]>([]);
+  const [numPlayers, setNumPlayers] = useState<number>(32);
+  const [pointsDistributionResponse, setPointsDistributionResponse] =
+    useState<GetPointDistributionResponse>();
+
+  useEffect(() => {
+    LeaderboardService.getGetTiers().then((tiers) => {
+      setTiers(tiers);
+      console.log(tiers);
+    });
+  }, []);
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (tiers) {
+      LeaderboardService.getGetPointDistribution(
+        tiers[selectedTier].points,
+        numPlayers,
+      ).then((response) => {
+        setPointsDistributionResponse(response);
+      });
+    }
+  };
+
+  return (
+    <div className={"points-container"}>
+      <div className="filters">
+        <form onSubmit={handleSubmit} role={"group"}>
+          <select onChange={(e) => setSelectedTier(Number(e.target.value))}>
+            {tiers &&
+              tiers.map((tier, index) => (
+                <option value={index}>{tier.name}</option>
+              ))}
+          </select>
+
+          <input
+            type="number"
+            disabled
+            value={tiers.length ? tiers[selectedTier].points : 0}
+          />
+          <input
+            type="number"
+            placeholder={"Num Players"}
+            value={numPlayers}
+            onChange={(e) => setNumPlayers(Number(e.target.value))}
+          />
+          <input type="submit" value="Run" />
+        </form>
+      </div>
+      <div className={"leaderboard"}>
+        <table className={"striped"}>
+          <thead>
+            <tr>
+              <th scope="col">Placement</th>
+              <th scope="col">Beans</th>
+              <th scope="col">
+                Cumulative (
+                {pointsDistributionResponse &&
+                  pointsDistributionResponse.adjustedTotalPoints}
+                )
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {pointsDistributionResponse &&
+              pointsDistributionResponse.pointDistribution.map((row) => (
+                <tr key={row.placement}>
+                  <td>{row.placement}</td>
+                  <td>{row.points}</td>
+                  <td>{row.cumulative}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
 
 export function Beans() {
   return (
@@ -19,7 +106,7 @@ export function Beans() {
           </header>
 
           <details>
-            <summary role={"button"} class={"outline"}>
+            <summary role={"button"} className={"outline"}>
               Exponential decaying distribution
             </summary>
             The{" "}
@@ -50,7 +137,7 @@ export function Beans() {
           </details>
 
           <details>
-            <summary role={"button"} class={"outline"}>
+            <summary role={"button"} className={"outline"}>
               Points for the top %
             </summary>
             Of course, everyone want's to win the tournament, but for many,
@@ -69,19 +156,19 @@ export function Beans() {
           </details>
 
           <details>
-            <summary role={"button"} class={"outline"}>
+            <summary role={"button"} className={"outline"}>
               Tiered tournament point values{" "}
             </summary>
             Clearly, the winner of the Worlds tournament (read: Sokka) should
             receive more points than someone who won a Nationals tournament. We
             can achieve this by implementing a tiered point system where the
             baseline points correspond to the various tournament types. Expand
-            the section below to view the code demonstrating points per
-            tournament type.
+            the Coder section below to view the tiered point configuration per
+            tournament type
           </details>
 
           <details>
-            <summary role={"button"} class={"outline"}>
+            <summary role={"button"} className={"outline"}>
               Points scale by tournament size
             </summary>
             Winning a Nationals tournament with 100 players should award more
@@ -98,6 +185,13 @@ export function Beans() {
               <li>100 players ={">"} 1.52</li>
               <li>256 players ={">"} 1.71</li>
             </ul>
+          </details>
+
+          <details>
+            <summary role={"button"} className={"outline"}>
+              Expand to run a simulation
+            </summary>
+            <PointsSimulation />
           </details>
 
           <details>

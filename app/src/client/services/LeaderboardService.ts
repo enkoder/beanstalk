@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { GetPointDistributionResponse } from '../models/GetPointDistributionResponse';
 import type { LeaderboardResponse } from '../models/LeaderboardResponse';
+import type { Tier } from '../models/Tier';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -62,6 +63,18 @@ export class LeaderboardService {
                 'targetTopPercentage': targetTopPercentage,
                 'targetPointPercentageForTop': targetPointPercentageForTop,
             },
+        });
+    }
+
+    /**
+     * Returns a list of supported tournament tiers and their point values
+     * @returns Tier Returns an array Tiers
+     * @throws ApiError
+     */
+    public static getGetTiers(): CancelablePromise<Array<Tier>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/tournaments/tiers',
         });
     }
 

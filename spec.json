@@ -175,6 +175,16 @@
           "type",
           "season_id"
         ]
+      },
+      "Tier": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "name": { "type": "string" },
+          "points": { "type": "number" },
+          "season": { "type": "number" }
+        },
+        "required": ["id", "name", "points"]
       }
     },
     "parameters": {}
@@ -524,6 +534,26 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/Tournament" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tournaments/tiers": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Returns a list of supported tournament tiers and their point values",
+        "operationId": "get_GetTiers",
+        "responses": {
+          "200": {
+            "description": "Returns an array Tiers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Tier" }
                 }
               }
             }

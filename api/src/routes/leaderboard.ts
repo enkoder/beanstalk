@@ -2,9 +2,11 @@ import {
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
   GetPointDistributionSchema,
+  GetTiersSchema,
   LeaderboardResponseComponent,
   LeaderboardRowComponent,
   LeaderboardRowComponentType,
+  TierComponent,
 } from "../openapi";
 import { RequestWithDB } from "../types";
 import { getDB } from "../models";
@@ -16,6 +18,7 @@ import {
   TARGET_POINT_PERCENTAGE_FOR_TOP,
   TARGET_TOP_PERCENTAGE,
 } from "../lib/ranking";
+import { Tiers } from "../models/tournament";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 
@@ -145,5 +148,13 @@ export class GetPointDistribution extends OpenAPIRoute {
         }),
       }),
     );
+  }
+}
+
+export class GetTiers extends OpenAPIRoute {
+  static schema = GetTiersSchema;
+
+  async handle() {
+    return json(Tiers.map((tier) => TierComponent.parse(tier)));
   }
 }

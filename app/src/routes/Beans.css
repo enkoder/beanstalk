@@ -11,3 +11,20 @@
   flex: 1;
   margin-bottom: auto;
 }
+
+.points-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.points {
+  overflow: auto;
+  max-height: fit-content;
+  white-space: nowrap;
+}
+
+.points > th {
+  position: sticky;
+  top: 0;
+  background: var(--pico-table-row-stripped-background-color);
+}

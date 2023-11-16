@@ -63,6 +63,16 @@ export const TournamentComponent = z
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 
+export const TierComponent = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    points: z.number(),
+    season: z.number().optional(),
+  })
+  .openapi("Tier");
+export type TierComponentType = z.infer<typeof TierComponent>;
+
 export const LeaderboardRowComponent = z
   .object({
     rank: z.number(),
@@ -312,13 +322,25 @@ export const GetLeaderboardSchema = {
   },
 };
 
+export const GetTiersSchema = {
+  tags: ["Leaderboard"],
+  summary:
+    "Returns a list of supported tournament tiers and their point values",
+  responses: {
+    "200": {
+      schema: z.array(TierComponent),
+      description: "Returns an array Tiers",
+    },
+  },
+};
+
 export const GetPointDistributionSchema = {
   tags: ["Leaderboard"],
   summary: "Tool to show distribution of points from various given parameters",
   parameters: {
     totalPoints: Query(z.coerce.number()),
     numPlayers: Query(z.coerce.number()),
-    percentReceivingPoints: Query(z.coerce.number()),
+    percentReceivingPoints: Query(z.coerce.number().optional()),
     targetTopPercentage: Query(z.coerce.number().optional()),
     targetPointPercentageForTop: Query(z.coerce.number().optional()),
   },
