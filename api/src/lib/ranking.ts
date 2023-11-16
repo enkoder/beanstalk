@@ -10,10 +10,10 @@ export const TARGET_POINT_PERCENTAGE_FOR_TOP = 66.6;
 export const PERCENT_RECEIVING_POINTS = 50.0;
 
 export const TOURNAMENT_POINTS = {
-  [TournamentType.Worlds]: 1000,
-  [TournamentType.Continental]: 750,
-  [TournamentType.Nationals]: 500,
-  [TournamentType.Intercontinental]: 200,
+  [TournamentType.Worlds]: 5000,
+  [TournamentType.Continental]: 2000,
+  [TournamentType.Nationals]: 1000,
+  [TournamentType.Intercontinental]: 1000,
 };
 
 export function calculateTournamentPointDistribution(
