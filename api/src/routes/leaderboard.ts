@@ -28,7 +28,6 @@ export class GetLeaderboard extends OpenAPIRoute {
     const pageFromQuery = Number(req.query!["page"]);
     const sizeFromQuery = Number(req.query!["size"]);
     const seasonIdFromQuery = Number(req.query!["seasonId"]);
-    console.log(seasonIdFromQuery);
 
     const page = pageFromQuery ? pageFromQuery : 0;
     const size = sizeFromQuery ? sizeFromQuery : DEFAULT_PAGE_SIZE;

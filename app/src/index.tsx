@@ -5,6 +5,7 @@ import useAuth, { AuthProvider } from "./useAuth";
 import { PointDistributionTable } from "./routes/Points";
 import { Faq } from "./routes/Faq";
 import { Beans } from "./routes/Beans";
+import { Seasons, SeasonsLoader } from "./routes/Seasons";
 import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
 import React, { useEffect } from "react";
@@ -159,6 +160,7 @@ const router = createBrowserRouter([
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
       { path: "/beans", element: <Beans /> },
+      { path: "/seasons", element: <Seasons />, loader: SeasonsLoader },
       {
         path: "/points",
         element: <PointDistributionTable />,

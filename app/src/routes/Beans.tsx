@@ -12,11 +12,16 @@ export function Beans() {
       <div>
         <article>
           <header>
-            <h5>Ah, Beans.</h5>
+            <hgroup>
+              <h2>How are beans calculated?</h2>
+              <small> expand each section below to find out</small>
+            </hgroup>
           </header>
 
           <details>
-            <summary>Exponential decaying distribution</summary>
+            <summary role={"button"} class={"outline"}>
+              Exponential decaying distribution
+            </summary>
             The{" "}
             <a href={"https://en.wikipedia.org/wiki/Pareto_principle"}>
               Pareto Principle
@@ -43,10 +48,11 @@ export function Beans() {
             on top 33% receiving 66% of the points. 80/20 ended up being too top
             heavy and lowering the curve felt right.
           </details>
-          <hr />
 
           <details>
-            <summary>Points for the top %</summary>
+            <summary role={"button"} class={"outline"}>
+              Points for the top %
+            </summary>
             Of course, everyone want's to win the tournament, but for many,
             making the cut is their goal for the tournament the tournament. It's
             exciting to make the cut and I wanted to create a similar experience
@@ -61,10 +67,11 @@ export function Beans() {
             will receive some amount of points. Everyone else will receive 0
             points.
           </details>
-          <hr />
 
           <details>
-            <summary>Tiered tournament point values </summary>
+            <summary role={"button"} class={"outline"}>
+              Tiered tournament point values{" "}
+            </summary>
             Clearly, the winner of the Worlds tournament (read: Sokka) should
             receive more points than someone who won a Nationals tournament. We
             can achieve this by implementing a tiered point system where the
@@ -72,10 +79,11 @@ export function Beans() {
             the section below to view the code demonstrating points per
             tournament type.
           </details>
-          <hr />
 
           <details>
-            <summary>Large tournaments should have higher stakes</summary>
+            <summary role={"button"} class={"outline"}>
+              Points scale by tournament size
+            </summary>
             Winning a Nationals tournament with 100 players should award more
             points than a 16-person Nationals. The algorithm should scale
             automatically based on the number of players. It should also
@@ -91,10 +99,11 @@ export function Beans() {
               <li>256 players ={">"} 1.71</li>
             </ul>
           </details>
-          <hr />
 
           <details>
-            <summary>Expand to see the code!</summary>
+            <summary role={"button"} class={"outline"}>
+              Expand to see the code!
+            </summary>
             <SyntaxHighlighter
               language="typescript"
               style={oneDark}

@@ -44,7 +44,9 @@ export function Faq() {
       {QUESTIONS.map((question) => (
         <div className={"faq-item"}>
           <details>
-            <summary>{question.title}</summary>
+            <summary role={"button"} class={"outline"}>
+              {question.title}
+            </summary>
             <article> {question.content}</article>
           </details>
         </div>
