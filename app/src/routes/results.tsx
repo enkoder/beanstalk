@@ -1,9 +1,11 @@
 import {
   GetUserRankingResponse,
+  Result,
   ResultsService,
   UserResultsResponse,
   UserService,
 } from "../client";
+import { getOrdinal } from "../../../api/src/lib/util";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./Results.css";
@@ -13,38 +15,42 @@ type ResultsParams = {
 };
 
 export function ResultRow(result: Result) {
+  const formatPlacement = (r: Result) => {
+    let retStr = `${r.rank_swiss}${getOrdinal(r.rank_swiss)} S`;
+    if (r.rank_cut) {
+      retStr += ` / ${r.rank_cut}${getOrdinal(r.rank_cut)} C`;
+    }
+    return `${retStr} / ${r.registration_count} T`;
+  };
+
   return (
-    <>
-      <div style={{ height: "100px" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          <Link to={`tournaments/${result.tournament_id}`}>
-            {result.tournament_name}
-          </Link>
-          <span>
-            <small style={{ paddingLeft: "25px" }}>
-              {result.registration_count} Players
-            </small>
-            <small style={{ paddingLeft: "10px" }}>
-              <a
-                href={
-                  "https://alwaysberunning.net/tournaments/" +
-                  result.tournament_id
-                }
-              >
-                ABR
-              </a>
-            </small>
-          </span>
-        </div>
+    <div className={"results-row"}>
+      <div className={"results-row-tournament"}>
+        <span>
+          <text className={"results-row-tournament-name"}>
+            <Link to={`tournaments/${result.tournament_id}`}>
+              {result.tournament_name}
+            </Link>
+          </text>
+          <small style={{ paddingLeft: "10px" }}>
+            <a
+              href={
+                "https://alwaysberunning.net/tournaments/" +
+                result.tournament_id
+              }
+            >
+              ABR
+            </a>
+          </small>
+        </span>
+        <span>
+          <small style={{ paddingLeft: "25px" }}>
+            {formatPlacement(result)}
+          </small>
+        </span>
       </div>
-      <div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+      <div className={"results-row-player"}>
+        <div className={"results-row-ids"}>
           {result.corp_deck_url ? (
             <small>
               <a href={result.corp_deck_url}>
@@ -66,15 +72,18 @@ export function ResultRow(result: Result) {
             <small>{result.runner_deck_identity_name}</small>
           )}
         </div>
+        <span
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            gap: "10px",
+          }}
+        >
+          <small>{result.points_earned.toFixed(2)} Points</small>
+        </span>
       </div>
-      <div>
-        {result.rank_swiss}
-        {result.rank_cut ? " -> " + result.rank_cut : ""}
-      </div>
-      <div>
-        <span>{result.points_earned.toFixed(2)}</span>
-      </div>
-    </>
+    </div>
   );
 }
 export function Results() {
@@ -104,33 +113,33 @@ export function Results() {
   }, [params]);
 
   return (
-    <div>
+    <>
       {loading || !results || !userRankResponse ? (
-        <article aria-busy="true"></article>
+        <div className={"results-container"}>
+          <article aria-busy="true"></article>
+        </div>
       ) : (
-        <>
-          <hgroup>
-            <h1>{results.user_name}</h1>
-            {userRankResponse.rank ? (
-              <h2>
-                Ranked #{userRankResponse.rank} for Season{" "}
-                {userRankResponse.seasonId} - {userRankResponse.seasonName}
-              </h2>
-            ) : (
-              <></>
-            )}
-          </hgroup>
-          <div className={"results-container"}>
-            <div className={"results-header-item"}>Tournament</div>
-            <div className={"results-header-item"}>Decks</div>
-            <div className={"results-header-item"}>Placement</div>
-            <div className={"results-header-item"}>Beans</div>
+        <div className={"results-container"}>
+          <div>
+            <hgroup>
+              <h1>{results.user_name}</h1>
+              {userRankResponse.rank ? (
+                <h2>
+                  Ranked #{userRankResponse.rank} for Season{" "}
+                  {userRankResponse.seasonId} - {userRankResponse.seasonName}
+                </h2>
+              ) : (
+                <></>
+              )}
+            </hgroup>
+          </div>
+          <div className={"results-scroller"}>
             {results.results.map((result) => (
               <ResultRow {...result} />
             ))}
           </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }

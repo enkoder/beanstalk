@@ -3,11 +3,11 @@
   --border-radius: 0;
   --pico-spacing: 0.5rem;
   --pico-font-weight: 300;
-  --header-height: 5vh;
-  --footer-height: 4vh;
-  --spacer-width: 7vw;
-  --content-height: calc(100vh - var(--header-height) - var(--footer-height));
-  --content-width: calc(100vw - var(--spacer-width) * 2);
+  --header-height: 5svh;
+  --footer-height: 4svh;
+  --spacer-width: 7svw;
+  --content-height: calc(100svh - var(--header-height) - var(--footer-height));
+  --content-width: calc(100svw - var(--spacer-width) * 2);
 }
 
 /* Typography */

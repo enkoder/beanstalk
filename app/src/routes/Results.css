@@ -1,46 +1,47 @@
-/* Layout CSS Grid */
 .results-container {
-  display: grid;
-  grid-template-columns: 3fr 3fr 1fr 1fr;
-  grid-auto-flow: row;
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
 
-  height: 85vh;
+  height: var(--content-height);
+  width: var(--content-width);
+}
+
+.results-scroller {
+  display: flex;
+  flex-direction: column;
+
   overflow: auto;
   max-height: fit-content;
-  white-space: nowrap;
-  /*
-    grid-template-areas:
-        "results-header-container results-header-container results-header-container"
-        "results-rows-container results-rows-container results-rows-container";
-     */
+  width: var(--content-width);
 }
 
-.results-header-container {
-  /*
-    grid-template: "results-header-container";
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 2;
+.results-row {
+  display: flex;
+  flex-direction: column;
 
-     */
+  border-bottom: 2px solid var(--pico-muted-border-color);
+  margin-bottom: 10px;
+  padding: 10px;
+}
 
+.results-row-tournament {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
-.results-header-item {
-  align-items: flex-start;
-  padding-bottom: 20px;
+.results-row-tournament-name {
+  font-size: 2vh;
+  font-weight: 400;
 }
 
-/*
-.results-rows-container {
-    grid-template: "results-rows-container";
-    grid-column-start: 1;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
+.results-row-player {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
- */
+
+.results-row-ids {
+  display: flex;
+  flex-direction: column;
+}
