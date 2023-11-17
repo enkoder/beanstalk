@@ -1,4 +1,4 @@
-# beanstalk
+# Beanstalk
 
 ## Running the applications
 
