@@ -2,7 +2,7 @@
 
 ## User
 
-- [ ] Add displayname to user profile
+- [x] Add displayname to user profile
 - [ ] User member since field
 - [ ] NRDB & ABR links
 - [x] Add is_admin
@@ -45,9 +45,9 @@
 - [x] Develop plan for frontend
 - [x] Initial Leaderboard page
 - [x] Initial user page
-- [ ] Leaderboard filterable by season & faction
-- [ ] Logged out view
-- [ ] Logged in view
+- [x] Leaderboard filterable by season
+- [x] Logged out view
+- [x] Logged in view
 - [ ] Admin views
 - [ ] Profile editor
 - [ ] Add tournament page
