@@ -11,13 +11,7 @@ import {
 import { RequestWithDB } from "../types";
 import { getDB } from "../models";
 import { Users } from "../models/user";
-import {
-  calculateTournamentPointDistribution,
-  findAlphaForDesiredDistribution,
-  PERCENT_RECEIVING_POINTS,
-  TARGET_POINT_PERCENTAGE_FOR_TOP,
-  TARGET_TOP_PERCENTAGE,
-} from "../lib/ranking";
+import { calculateTournamentPointDistribution } from "../lib/ranking";
 import { Tiers } from "../models/tournament";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
@@ -99,34 +93,8 @@ export class GetPointDistribution extends OpenAPIRoute {
     const totalPoints = Number(req.query["totalPoints"]);
     const numPlayers = Number(req.query["numPlayers"]);
 
-    const targetTopPercentage = req.query!["topTargetPercentage"]
-      ? Number(req.query["topTargetPercentage"])
-      : TARGET_TOP_PERCENTAGE;
-
-    const targetPointPercentageForTop = req.query![
-      "targetPointPercentageForTop"
-    ]
-      ? Number(req.query["targetPointPercentageForTop"])
-      : TARGET_POINT_PERCENTAGE_FOR_TOP;
-
-    const percentReceivingPoints = req.query!["percentReceivingPoints"]
-      ? Number(req.query["percentReceivingPoints"])
-      : PERCENT_RECEIVING_POINTS;
-
-    const alpha = findAlphaForDesiredDistribution(
-      numPlayers,
-      percentReceivingPoints,
-      targetTopPercentage,
-      targetPointPercentageForTop,
-    );
-
     const { points, adjustedTotalPoints } =
-      calculateTournamentPointDistribution(
-        totalPoints,
-        numPlayers,
-        alpha,
-        percentReceivingPoints,
-      );
+      calculateTournamentPointDistribution(totalPoints, numPlayers);
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {

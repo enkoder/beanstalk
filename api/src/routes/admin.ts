@@ -11,7 +11,6 @@ import { Results } from "../models/results";
 import { Seasons } from "../models/season";
 import {
   calculateTournamentPointDistribution,
-  findAlphaForDesiredDistribution,
   TOURNAMENT_POINTS,
 } from "../lib/ranking";
 import { Tournaments } from "../models/tournament";
@@ -42,11 +41,9 @@ export class Rerank extends OpenAPIRoute {
           continue;
         }
 
-        const alpha = findAlphaForDesiredDistribution(results.length);
         const { points } = calculateTournamentPointDistribution(
           TOURNAMENT_POINTS[tournament.type],
           results.length,
-          alpha,
         );
 
         for (let i = 0; i < results.length; i++) {

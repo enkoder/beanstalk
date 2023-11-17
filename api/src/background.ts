@@ -16,7 +16,6 @@ import { User, Users } from "./models/user";
 import * as NRDB from "./lib/nrdb";
 import {
   calculateTournamentPointDistribution,
-  findAlphaForDesiredDistribution,
   TOURNAMENT_POINTS,
 } from "./lib/ranking";
 import { Seasons } from "./models/season";
@@ -97,11 +96,9 @@ async function handleResultIngest(
   abrEntry: ABREntryType,
 ) {
   // Being explicit, even though defaults are supplied
-  const alpha = findAlphaForDesiredDistribution(tournament.registration_count);
   const { points } = calculateTournamentPointDistribution(
     TOURNAMENT_POINTS[tournament.type],
     tournament.registration_count,
-    alpha,
   );
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
