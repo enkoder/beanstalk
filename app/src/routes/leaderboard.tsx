@@ -119,7 +119,11 @@ export function Leaderboard() {
                   <tr>
                     <td>{user.rank}</td>{" "}
                     <td align={"center"}>
-                      <Link to={`results/${user.name}`}>{user.name}</Link>
+                      <Link
+                        to={`results/${user.name}?season=${selectedSeason}`}
+                      >
+                        {user.name}
+                      </Link>
                     </td>
                     <td>{user.points.toFixed(2)}</td>
                   </tr>

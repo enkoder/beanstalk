@@ -1,10 +1,4 @@
-import {
-  GetUser,
-  GetUserRankForSeason,
-  GetUserResults,
-  GetUsers,
-  Me,
-} from "./routes/users";
+import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
 import {
   IngestTournaments,
   RecalculateLeaderboard,
@@ -70,7 +64,6 @@ router
   .get("/api/users", GetUsers)
   .get("/api/users/:userID", GetUser)
   .get("/api/users/:user/results", GetUserResults)
-  .get("/api/users/:user/rank", GetUserRankForSeason)
 
   // Leaderboard
   .get("/api/leaderboard", GetLeaderboard)

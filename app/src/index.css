@@ -41,10 +41,12 @@ small {
   grid-row-start: 1;
   grid-row-end: 1;
   border-bottom: 2px solid var(--pico-primary);
+  padding-top: 2px;
 }
 
 .header > nav {
   height: 100%;
+  padding-bottom: 2px;
 }
 
 .left-spacer {

@@ -6,6 +6,13 @@
   width: var(--content-width);
 }
 
+.results-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
 .results-scroller {
   display: flex;
   flex-direction: column;

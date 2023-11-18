@@ -123,17 +123,6 @@ export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
 
-export const GetUserRankingComponent = z
-  .object({
-    rank: z.number(),
-    seasonId: z.number(),
-    seasonName: z.string(),
-  })
-  .openapi("GetUserRankingResponse");
-export type GetUserRankingComponentComponentType = z.infer<
-  typeof GetUserRankingComponent
->;
-
 export const GetUserSchema = {
   tags: ["User"],
   summary: "Gets a single user",
@@ -169,22 +158,6 @@ export const MeSchema = {
     "200": {
       description: "Your own user profile",
       schema: UserComponent,
-    },
-  },
-};
-
-export const GetUserRankingSchema = {
-  tags: ["User"],
-  summary: "Returns the current seasonal ranking of the given user",
-  parameters: {
-    season: Query(z.coerce.number()),
-    user: Path(Str, { description: "User name or id" }),
-  },
-  responses: {
-    "200": {
-      schema: GetUserRankingComponent,
-      description:
-        "Blob containing the seasonal ranking of user supplied via the URL path and season param",
     },
   },
 };
@@ -443,6 +416,9 @@ export const UserResultsResponseComponent = z
   .object({
     user_name: z.string(),
     user_id: z.number(),
+    rank: z.number(),
+    seasonId: z.number(),
+    seasonName: z.string(),
     results: z.array(ResultComponent),
   })
   .openapi("UserResultsResponse");
@@ -450,7 +426,10 @@ export const UserResultsResponseComponent = z
 export const GetUserResultsSchema = {
   tags: ["Results"],
   summary: "Gets the results for the given user",
-  parameters: { user: Path(Str, { description: "Name or ID of the user" }) },
+  parameters: {
+    user: Path(Str, { description: "Name or ID of the user" }),
+    season: Query(z.coerce.number().optional().default(0)),
+  },
   responses: {
     "200": {
       schema: UserResultsResponseComponent,

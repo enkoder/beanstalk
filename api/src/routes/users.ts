@@ -1,7 +1,5 @@
 import { RequestWithDB } from "../types";
 import {
-  GetUserRankingComponent,
-  GetUserRankingSchema,
   GetUserResultsSchema,
   GetUserSchema,
   GetUsersSchema,
@@ -63,11 +61,24 @@ export class GetUserResults extends OpenAPIRoute {
       return errorResponse(400, "User does not exist");
     }
 
+    const seasonId = Number(req.query["season"] || 0);
+    const season = await Seasons.getFromId(seasonId);
+    console.log(seasonId);
+
     const results = await Results.getManyByUserIdExpanded(user.id);
+
+    const currentRank = await Leaderboards.getUserRankForSeason(
+      season.id,
+      user.id,
+    );
 
     return json({
       user_id: user.id,
       user_name: user.name,
+      seasonId: season.id,
+      seasonName: season.name,
+      // zero based
+      rank: currentRank + 1,
       results: results.map((result) => {
         try {
           return ResultComponent.parse(result);
@@ -76,33 +87,5 @@ export class GetUserResults extends OpenAPIRoute {
         }
       }),
     });
-  }
-}
-
-export class GetUserRankForSeason extends OpenAPIRoute {
-  static schema = GetUserRankingSchema;
-
-  async handle(req: RequestWithDB) {
-    const userIdOrName = req.params!["user"];
-    const user = await Users.getByIdOrName(userIdOrName);
-    if (!user) {
-      return errorResponse(400, "User does not exist");
-    }
-
-    const seasonId = Number(req.query["season"]);
-    const season = await Seasons.getFromId(seasonId);
-
-    const currentRank = await Leaderboards.getUserRankForSeason(
-      season.id,
-      user.id,
-    );
-
-    return json(
-      GetUserRankingComponent.parse({
-        seasonId: season.id,
-        seasonName: season.name,
-        rank: currentRank,
-      }),
-    );
   }
 }

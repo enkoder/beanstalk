@@ -8,6 +8,9 @@ import type { Result } from './Result';
 export type UserResultsResponse = {
     user_name: string;
     user_id: number;
+    rank: number;
+    seasonId: number;
+    seasonName: string;
     results: Array<Result>;
 };
 
