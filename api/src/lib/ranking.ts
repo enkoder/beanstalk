@@ -62,7 +62,7 @@ export function calculateTournamentPointDistribution(
   };
 
   const distributePayouts = (alpha: number) => {
-    const payouts = [];
+    const payouts = [firstPlacePoints];
     for (let i = 1; i <= totalWinners; i++) {
       const prize =
         minimumPrize + (firstPlacePoints - minimumPrize) / Math.pow(i, alpha);
