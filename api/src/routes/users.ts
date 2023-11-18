@@ -63,10 +63,7 @@ export class GetUserResults extends OpenAPIRoute {
 
     const seasonId = Number(req.query["season"] || 0);
     const season = await Seasons.getFromId(seasonId);
-    console.log(seasonId);
-
-    const results = await Results.getManyByUserIdExpanded(user.id);
-
+    const results = await Results.getManyByUserIdExpanded(user.id, seasonId);
     const currentRank = await Leaderboards.getUserRankForSeason(
       season.id,
       user.id,

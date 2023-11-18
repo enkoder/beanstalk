@@ -55,9 +55,12 @@ export class Results {
     return await q.execute();
   }
 
-  public static async getManyByUserIdExpanded(id: number): Promise<Result[]> {
+  public static async getManyByUserIdExpanded(
+    id: number,
+    seasonId?: number,
+  ): Promise<Result[]> {
     // TODO: make generic
-    const q = getDB()
+    let q = getDB()
       .selectFrom("results")
       .selectAll()
       .innerJoin("users", "users.id", "results.user_id")
@@ -69,6 +72,10 @@ export class Results {
       ])
       .orderBy("tournaments.date", "desc")
       .where("user_id", "=", id);
+
+    if (seasonId) {
+      q = q.where("tournaments.season_id", "=", seasonId);
+    }
 
     return await q.execute();
   }
