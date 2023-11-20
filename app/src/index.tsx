@@ -182,23 +182,24 @@ const SidebarButtons: SidebarButtonType[] = [
 ];
 
 interface SidebarProps {
-  width: number;
+  toggleOpen: boolean;
   onMenuClick: () => void;
   onButtonClick: MouseEventHandler<HTMLDivElement>;
   activeButton: number;
 }
+
+function getSidebarWidth(isOpen: boolean) {
+  return isOpen ? SIDEBAR_WIDTH : SIDEBAR_MIN_WIDTH;
+}
+
 export function Sidebar({
-  width,
+  toggleOpen,
   onMenuClick,
   onButtonClick,
   activeButton,
 }: SidebarProps) {
   const { user, logout } = useAuth();
   const [footerOpen, setFooterOpen] = useState<boolean>(false);
-
-  const isOpen = () => {
-    return width == SIDEBAR_WIDTH;
-  };
 
   const isActive = (i: number) => {
     return activeButton === i;
@@ -228,9 +229,12 @@ export function Sidebar({
   }
 
   return (
-    <div className="sidebar" style={{ width: `${width}px` }}>
+    <div
+      className="sidebar"
+      style={{ width: `${getSidebarWidth(toggleOpen)}px` }}
+    >
       <div className="sidebar-header">
-        {isOpen() && (
+        {toggleOpen && (
           <Link to={"/"}>
             <img src={greenBeans} alt="logo" id={"sidebar-image"} />
             <strong>Beanstalk</strong>
@@ -252,7 +256,7 @@ export function Sidebar({
               button-id={i}
             >
               <FontAwesomeIcon icon={sb.icon} className={"fai"} />
-              {isOpen() && <span>{sb.label}</span>}
+              {toggleOpen && <span>{sb.label}</span>}
             </div>
           </>
         ))}
@@ -263,7 +267,7 @@ export function Sidebar({
           <div className="sidebar-footer-avatar">
             <FontAwesomeIcon icon={faUser} />
           </div>
-          {isOpen() && (
+          {toggleOpen && (
             <div className={"sidebar-footer-name"}>
               <h6>Profile</h6>
             </div>
@@ -282,12 +286,12 @@ export function Sidebar({
           {footerOpen ? (
             <div className={`sidebar-button`} onClick={handleLogin}>
               <FontAwesomeIcon icon={faRightToBracket} className={"fai"} />
-              {isOpen() && <span>Login</span>}
+              {toggleOpen && <span>Login</span>}
             </div>
           ) : (
             <div className={`sidebar-button`} onClick={handleLogout}>
               <FontAwesomeIcon icon={faRightFromBracket} className={"fai"} />
-              {isOpen() && <span>Logout</span>}
+              {toggleOpen && <span>Logout</span>}
             </div>
           )}
         </div>
@@ -310,8 +314,22 @@ export function Footer() {
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarWidth, setSidebarWidth] = useState<number>(SIDEBAR_WIDTH);
   const [activeButton, setActiveButton] = useState<number>(0);
+
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const isMobile = screenWidth <= 768;
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(!isMobile);
+
+  function handleWindowSizeChange() {
+    setScreenWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
 
   useEffect(() => {
     for (let i = 0; i < SidebarButtons.length; i++) {
@@ -324,11 +342,7 @@ function Layout() {
   }, [location]);
 
   const toggleNav = () => {
-    if (sidebarWidth > SIDEBAR_MIN_WIDTH) {
-      setSidebarWidth(SIDEBAR_MIN_WIDTH);
-    } else {
-      setSidebarWidth(SIDEBAR_WIDTH);
-    }
+    setSidebarOpen(!sidebarOpen);
   };
 
   const nav: MouseEventHandler<HTMLDivElement> = (e) => {
@@ -343,12 +357,15 @@ function Layout() {
     <AuthProvider>
       <div className={"layout"}>
         <Sidebar
-          width={sidebarWidth}
+          toggleOpen={sidebarOpen}
           onMenuClick={toggleNav}
           onButtonClick={nav}
           activeButton={activeButton}
         />
-        <div className={"content"} style={{ marginLeft: sidebarWidth }}>
+        <div
+          className={"content"}
+          style={{ marginLeft: getSidebarWidth(sidebarOpen) }}
+        >
           <Outlet />
         </div>
       </div>
