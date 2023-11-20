@@ -10,6 +10,7 @@ import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import "@picocss/pico/css/pico.css";
+import "@picocss/pico/css/pico.colors.css";
 import "./index.css";
 import "./theme.css";
 import {
@@ -25,10 +26,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsSpin,
   faBars,
+  faCaretDown,
+  faCaretUp,
   faCoins,
   faElevator,
   faLock,
   faQuestion,
+  faRightFromBracket,
+  faRightToBracket,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
@@ -132,6 +138,7 @@ export function Header() {
 
 const SIDEBAR_WIDTH = 250;
 const SIDEBAR_MIN_WIDTH = 80;
+const SIDEBAR_FOOTER_MIN_HEIGHT = "56px";
 
 interface SidebarButtonType {
   icon: IconDefinition;
@@ -186,7 +193,8 @@ export function Sidebar({
   onButtonClick,
   activeButton,
 }: SidebarProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [footerOpen, setFooterOpen] = useState<boolean>(false);
 
   const isOpen = () => {
     return width == SIDEBAR_WIDTH;
@@ -195,6 +203,29 @@ export function Sidebar({
   const isActive = (i: number) => {
     return activeButton === i;
   };
+
+  const toggleSidebarFooter = () => {
+    setFooterOpen(!footerOpen);
+  };
+
+  const getFooterHeight = () => {
+    return footerOpen ? "fit-content" : SIDEBAR_FOOTER_MIN_HEIGHT;
+  };
+
+  function handleLogin() {
+    AuthService.getGetLoginUrl()
+      .then(({ auth_url }) => {
+        window.location.assign(auth_url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return () => {};
+  }
+
+  function handleLogout() {
+    logout();
+  }
 
   return (
     <div className="sidebar" style={{ width: `${width}px` }}>
@@ -207,7 +238,6 @@ export function Sidebar({
         )}
         <FontAwesomeIcon icon={faBars} id={"menu-icon"} onClick={onMenuClick} />
       </div>
-
       <div className="sidebar-content">
         {SidebarButtons.filter(
           (sb) => !sb.requiresAdmin || (user && !user.is_admin),
@@ -221,11 +251,46 @@ export function Sidebar({
               onClick={onButtonClick}
               button-id={i}
             >
-              <FontAwesomeIcon icon={sb.icon} className={"fas"} />
+              <FontAwesomeIcon icon={sb.icon} className={"fai"} />
               {isOpen() && <span>{sb.label}</span>}
             </div>
           </>
         ))}
+      </div>
+
+      <div className={"sidebar-footer"} style={{ height: getFooterHeight() }}>
+        <div className={"sidebar-footer-heading"} onClick={toggleSidebarFooter}>
+          <div className="sidebar-footer-avatar">
+            <FontAwesomeIcon icon={faUser} />
+          </div>
+          {isOpen() && (
+            <div className={"sidebar-footer-name"}>
+              <h6>Profile</h6>
+            </div>
+          )}
+          <div className={"sidebar-footer-toggle"}>
+            {footerOpen ? (
+              <FontAwesomeIcon icon={faCaretDown} />
+            ) : (
+              <FontAwesomeIcon icon={faCaretUp} />
+            )}
+          </div>
+        </div>
+
+        <div className={"sidebar-footer-content"}>
+          <hr />
+          {footerOpen ? (
+            <div className={`sidebar-button`} onClick={handleLogin}>
+              <FontAwesomeIcon icon={faRightToBracket} className={"fai"} />
+              {isOpen() && <span>Login</span>}
+            </div>
+          ) : (
+            <div className={`sidebar-button`} onClick={handleLogout}>
+              <FontAwesomeIcon icon={faRightFromBracket} className={"fai"} />
+              {isOpen() && <span>Logout</span>}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
