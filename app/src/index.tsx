@@ -8,7 +8,7 @@ import { Beans } from "./routes/Beans";
 import { Seasons, SeasonsLoader } from "./routes/Seasons";
 import greenBeans from "../images/beanstalk_royalties.png";
 import ReactDOM from "react-dom/client";
-import React, { useEffect } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import "@picocss/pico/css/pico.css";
 import "./index.css";
 import "./theme.css";
@@ -18,7 +18,19 @@ import {
   Outlet,
   redirect,
   RouterProvider,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowsSpin,
+  faBars,
+  faCoins,
+  faElevator,
+  faLock,
+  faQuestion,
+} from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -118,6 +130,107 @@ export function Header() {
   );
 }
 
+const SIDEBAR_WIDTH = 250;
+const SIDEBAR_MIN_WIDTH = 80;
+
+interface SidebarButtonType {
+  icon: IconDefinition;
+  label: string;
+  selectionStarter: boolean;
+  requiresAdmin?: boolean;
+  to: string;
+}
+const SidebarButtons: SidebarButtonType[] = [
+  {
+    icon: faElevator,
+    label: "Leaderboard",
+    selectionStarter: true,
+    to: "/",
+  },
+  {
+    icon: faArrowsSpin,
+    label: "Seasons",
+    selectionStarter: false,
+    to: "/seasons",
+  },
+  {
+    icon: faCoins,
+    label: "Beans",
+    selectionStarter: true,
+    to: "/beans",
+  },
+  {
+    icon: faQuestion,
+    label: "FAQ",
+    selectionStarter: false,
+    to: "/faq",
+  },
+  {
+    icon: faLock,
+    label: "Admin",
+    selectionStarter: true,
+    requiresAdmin: true,
+    to: "/admin",
+  },
+];
+
+interface SidebarProps {
+  width: number;
+  onMenuClick: () => void;
+  onButtonClick: MouseEventHandler<HTMLDivElement>;
+  activeButton: number;
+}
+export function Sidebar({
+  width,
+  onMenuClick,
+  onButtonClick,
+  activeButton,
+}: SidebarProps) {
+  const { user } = useAuth();
+
+  const isOpen = () => {
+    return width == SIDEBAR_WIDTH;
+  };
+
+  const isActive = (i: number) => {
+    return activeButton === i;
+  };
+
+  return (
+    <div className="sidebar" style={{ width: `${width}px` }}>
+      <div className="sidebar-header">
+        {isOpen() && (
+          <Link to={"/"}>
+            <img src={greenBeans} alt="logo" id={"sidebar-image"} />
+            <strong>Beanstalk</strong>
+          </Link>
+        )}
+        <FontAwesomeIcon icon={faBars} id={"menu-icon"} onClick={onMenuClick} />
+      </div>
+
+      <div className="sidebar-content">
+        {SidebarButtons.filter(
+          (sb) => !sb.requiresAdmin || (user && !user.is_admin),
+        ).map((sb, i) => (
+          <>
+            {sb.selectionStarter && <hr />}
+            <div
+              className={`sidebar-button ${
+                isActive(i) && "sidebar-button-active"
+              }`}
+              onClick={onButtonClick}
+              button-id={i}
+            >
+              <FontAwesomeIcon icon={sb.icon} className={"fas"} />
+              {isOpen() && <span>{sb.label}</span>}
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Footer() {
   return (
     <div className={"footer-text-container"}>
@@ -130,19 +243,48 @@ export function Footer() {
 }
 
 function Layout() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [sidebarWidth, setSidebarWidth] = useState<number>(SIDEBAR_WIDTH);
+  const [activeButton, setActiveButton] = useState<number>(0);
+
+  useEffect(() => {
+    for (let i = 0; i < SidebarButtons.length; i++) {
+      const sb = SidebarButtons[i];
+      if (sb.to === location.pathname) {
+        setActiveButton(i);
+      }
+    }
+    console.log(location);
+  }, [location]);
+
+  const toggleNav = () => {
+    if (sidebarWidth > SIDEBAR_MIN_WIDTH) {
+      setSidebarWidth(SIDEBAR_MIN_WIDTH);
+    } else {
+      setSidebarWidth(SIDEBAR_WIDTH);
+    }
+  };
+
+  const nav: MouseEventHandler<HTMLDivElement> = (e) => {
+    const buttonId = Number(e.currentTarget.getAttribute("button-id"));
+    const button = SidebarButtons[buttonId];
+
+    setActiveButton(buttonId);
+    navigate(button.to);
+  };
+
   return (
     <AuthProvider>
       <div className={"layout"}>
-        <div className={"header"}>
-          <Header />
-        </div>
-        <div className={"left-spacer"}></div>
-        <div className={"content"}>
+        <Sidebar
+          width={sidebarWidth}
+          onMenuClick={toggleNav}
+          onButtonClick={nav}
+          activeButton={activeButton}
+        />
+        <div className={"content"} style={{ marginLeft: sidebarWidth }}>
           <Outlet />
-        </div>
-        <div className={"right-spacer"}></div>
-        <div className={"footer"}>
-          <Footer />
         </div>
       </div>
     </AuthProvider>

@@ -10,7 +10,6 @@
   flex-direction: row;
 
   gap: 50px;
-  padding-top: 20px;
   height: var(--filters-container-height);
   justify-content: center;
   align-items: center;

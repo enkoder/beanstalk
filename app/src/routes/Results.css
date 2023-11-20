@@ -1,9 +1,6 @@
 .results-container {
   display: flex;
   flex-direction: column;
-
-  height: var(--content-height);
-  width: var(--content-width);
 }
 
 .results-header {
@@ -19,7 +16,6 @@
 
   overflow: auto;
   max-height: fit-content;
-  width: var(--content-width);
 }
 
 .results-row {
