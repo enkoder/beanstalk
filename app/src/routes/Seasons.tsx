@@ -15,6 +15,14 @@ export function Seasons() {
   // TODO: Figure out how to link to an anchor
   return (
     <div className={"seasons-container"}>
+      <hgroup>
+        <h1>Seasons</h1>
+        <small>
+          Seasons are a mechanic that keeps the leaderboard fresh. Seasons are
+          typically tied to NSG content releases and the yearly tournament
+          season cadence.
+        </small>
+      </hgroup>
       <table>
         <thead>
           <tr>
