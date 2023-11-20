@@ -76,66 +76,6 @@ function ErrorPage() {
   );
 }
 
-export function Header() {
-  const { logout } = useAuth();
-  const { user } = useAuth();
-
-  function handleLogin() {
-    AuthService.getGetLoginUrl()
-      .then(({ auth_url }) => {
-        window.location.assign(auth_url);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    return () => {};
-  }
-
-  function handleLogout() {
-    logout();
-  }
-
-  return (
-    <nav>
-      <ul>
-        <li>
-          <Link to={"/"}>
-            <img
-              src={greenBeans}
-              alt="logo"
-              style={{ height: 50, padding: 5 }}
-            />
-            <strong>Beanstalk</strong>
-          </Link>
-        </li>
-      </ul>
-      <ul>
-        <li>
-          <Link to={"/faq"}>
-            <a>FAQ</a>
-          </Link>
-        </li>
-        {user ? (
-          <>
-            <li>
-              <Link to={`/results/${user.name}`}>
-                <a>{user.name}</a>
-              </Link>
-            </li>
-            <li>
-              <a onClick={handleLogout}>Logout</a>
-            </li>
-          </>
-        ) : (
-          <li>
-            <a onClick={handleLogin}>Login</a>
-          </li>
-        )}
-      </ul>
-    </nav>
-  );
-}
-
 const SIDEBAR_WIDTH = 250;
 const SIDEBAR_MIN_WIDTH = 80;
 const SIDEBAR_FOOTER_MIN_HEIGHT = "56px";
@@ -296,17 +236,6 @@ export function Sidebar({
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-export function Footer() {
-  return (
-    <div className={"footer-text-container"}>
-      <small style={{ paddingBottom: "10px" }}>
-        Built by <a href={"https://gitub.com/enkoder"}>enkoder</a> •
-        <a href="https://github.com/enkoder/beanstalk"> Source Code</a>
-      </small>
     </div>
   );
 }
