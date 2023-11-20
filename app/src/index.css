@@ -181,7 +181,6 @@ small {
 
   width: 100%;
   height: 54px;
-  cursor: pointer;
 }
 
 .sidebar-footer-avatar {
@@ -220,6 +219,8 @@ small {
   margin-right: 22px;
   margin-top: 11px;
   color: var(--sidebar-primary);
+  cursor: pointer;
+  width: 50px;
 }
 
 .sidebar-footer-content {

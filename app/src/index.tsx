@@ -203,16 +203,23 @@ export function Sidebar({
       </div>
 
       <div className={"sidebar-footer"} style={{ height: getFooterHeight() }}>
-        <div className={"sidebar-footer-heading"} onClick={toggleSidebarFooter}>
+        <div className={"sidebar-footer-heading"}>
           <div className="sidebar-footer-avatar">
             <FontAwesomeIcon icon={faUser} />
           </div>
           {toggleOpen && (
             <div className={"sidebar-footer-name"}>
-              <h6>Profile</h6>
+              {user ? (
+                <Link to={`/results/${user.name}`}>{user.name} </Link>
+              ) : (
+                <h6>Profile</h6>
+              )}
             </div>
           )}
-          <div className={"sidebar-footer-toggle"}>
+          <div
+            className={"sidebar-footer-toggle"}
+            onClick={toggleSidebarFooter}
+          >
             {footerOpen ? (
               <FontAwesomeIcon icon={faCaretDown} />
             ) : (
@@ -223,7 +230,7 @@ export function Sidebar({
 
         <div className={"sidebar-footer-content"}>
           <hr />
-          {footerOpen ? (
+          {footerOpen && !user ? (
             <div className={`sidebar-button`} onClick={handleLogin}>
               <FontAwesomeIcon icon={faRightToBracket} className={"fai"} />
               {toggleOpen && <span>Login</span>}
