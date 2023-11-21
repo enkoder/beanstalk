@@ -1,4 +1,4 @@
-import "./Faq.css";
+//import "./Faq.css";
 import { Link } from "react-router-dom";
 
 type Question = {
@@ -74,8 +74,8 @@ const QUESTIONS: Question[] = [
 export function Faq() {
   // TODO: Figure out how to link to an anchor
   return (
-    <div className={"faq-container"}>
-      <article>
+    <div className={""}>
+      <article className={"prose text-cyan-400"}>
         <header>
           <hgroup>
             <h2>Frequently Asked Questions</h2>

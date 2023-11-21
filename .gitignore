@@ -6,3 +6,4 @@ dist
 build
 api/.dev.vars
 !app/rspack.config.js
+storybook-static

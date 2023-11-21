@@ -3,7 +3,10 @@ const rspack = require("@rspack/core");
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const postcssConfig = require("./postcss.config");
+
 module.exports = {
+  target: "web",
   entry: {
     main: "./src/index.tsx",
   },
@@ -21,6 +24,18 @@ module.exports = {
         resource: path.resolve(__dirname, "../api/src/lib/ranking.ts"),
         type: "asset/source",
       },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: postcssConfig,
+            },
+          },
+        ],
+        type: "css",
+      },
     ],
   },
   plugins: [
@@ -35,5 +50,10 @@ module.exports = {
     client: { logging: "info" },
     port: 8080,
     historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
+    compress: true,
   },
+  devtool: "source-map",
 };
