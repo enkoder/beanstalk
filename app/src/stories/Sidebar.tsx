@@ -1,5 +1,6 @@
 import useAuth from "../useAuth";
 import { AuthService, User } from "../client";
+// @ts-ignore
 import greenBeans from "../../images/beanstalk_royalties.png";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {

@@ -4,8 +4,8 @@ import {
   Season,
   SeasonsService,
 } from "../client";
+import { LeaderboardTable } from "../stories/LeaderboardTable";
 import { Link, useSearchParams } from "react-router-dom";
-import "./Leaderboard.css";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 const DEFAULT_SEASON = 1;
@@ -97,39 +97,11 @@ export function Leaderboard() {
         </div>
       </div>
       <div className={"leaderboard"}>
-        <table className={"striped"}>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Beans</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaderboard &&
-              leaderboard.users
-                .filter(
-                  (user) =>
-                    user &&
-                    user.name
-                      ?.toLowerCase()
-                      .includes(searchString.toLowerCase()),
-                )
-                .map((user) => (
-                  <tr>
-                    <td>{user.rank}</td>{" "}
-                    <td align={"center"}>
-                      <Link
-                        to={`results/${user.name}?season=${selectedSeason}`}
-                      >
-                        {user.name}
-                      </Link>
-                    </td>
-                    <td>{user.points.toFixed(2)}</td>
-                  </tr>
-                ))}
-          </tbody>
-        </table>
+        <LeaderboardTable
+          leaderboard={leaderboard}
+          searchString={searchString}
+          selectedSeason={selectedSeason}
+        ></LeaderboardTable>
       </div>
     </div>
   );

@@ -2,12 +2,12 @@ import type { Preview } from "@storybook/react";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
-import "../src/tailwind.css";
+import "../src/output.css";
 library.add(fas);
 
 const preview: Preview = {
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {

@@ -9,7 +9,7 @@ import { Seasons, SeasonsLoader } from "./routes/Seasons";
 import { Sidebar } from "./stories/Sidebar";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import "./tailwind.css";
+import "./output.css";
 import {
   createBrowserRouter,
   Outlet,
