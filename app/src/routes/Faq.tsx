@@ -1,4 +1,5 @@
 //import "./Faq.css";
+import { PageHeading } from "../stories/PageHeader";
 import { Link } from "react-router-dom";
 
 type Question = {
@@ -74,16 +75,9 @@ const QUESTIONS: Question[] = [
 export function Faq() {
   // TODO: Figure out how to link to an anchor
   return (
-    <div className={""}>
-      <article className={"prose text-cyan-400"}>
-        <header>
-          <hgroup>
-            <h2>Frequently Asked Questions</h2>
-            <small>
-              Reach out to enkoder if your question isn't answered here
-            </small>
-          </hgroup>
-        </header>
+    <div className={"flex flex-col"}>
+      <PageHeading text={"Frequently Asked Questions"} />
+      <article className={"text-gray-400"}>
         {QUESTIONS.map((question) => (
           <div className={"faq-item"}>
             <details>

@@ -599,6 +599,10 @@ html {
   top: 1svw;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -621,6 +625,14 @@ html {
 
 .mt-0 {
   margin-top: 0px;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.block {
+  display: block;
 }
 
 .flex {
@@ -671,12 +683,16 @@ html {
   height: 100%;
 }
 
-.w-0 {
-  width: 0px;
+.h-64 {
+  height: 16rem;
 }
 
-.w-10 {
-  width: 2.5rem;
+.h-20 {
+  height: 5rem;
+}
+
+.w-0 {
+  width: 0px;
 }
 
 .w-16 {
@@ -693,10 +709,6 @@ html {
 
 .w-full {
   width: 100%;
-}
-
-.min-w-\[200px\] {
-  min-width: 200px;
 }
 
 .flex-1 {
@@ -774,10 +786,6 @@ html {
   border-width: 1px;
 }
 
-.border-2 {
-  border-width: 2px;
-}
-
 .border-b {
   border-bottom-width: 1px;
 }
@@ -800,6 +808,11 @@ html {
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
 }
 
+.border-gray-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity));
+}
+
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
@@ -815,8 +828,16 @@ html {
   background-color: rgb(2 6 23 / var(--tw-bg-opacity));
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
 .p-8 {
   padding: 2rem;
+}
+
+.p-4 {
+  padding: 1rem;
 }
 
 .px-4 {
@@ -858,9 +879,19 @@ html {
   line-height: 2rem;
 }
 
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .font-bold {
@@ -879,6 +910,16 @@ html {
 .text-gray-300 {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.text-gray-100 {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity));
 }
 
 .outline {
@@ -926,4 +967,27 @@ html {
 
 .hover\:font-bold:hover {
   font-weight: 700;
+}
+
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+@media (min-width: 640px) {
+  .sm\:h-16 {
+    height: 4rem;
+  }
+
+  .sm\:h-24 {
+    height: 6rem;
+  }
+
+  .sm\:h-20 {
+    height: 5rem;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
 }

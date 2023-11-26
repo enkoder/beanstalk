@@ -1,5 +1,6 @@
 import "./Seasons.css";
 import { Season, SeasonsService } from "../client";
+import { PageHeading } from "../stories/PageHeader";
 import { Link, useLoaderData } from "react-router-dom";
 import moment from "moment";
 
@@ -12,17 +13,14 @@ const DT_FORMAT = "MMMM DD YYYY";
 export function Seasons() {
   const seasons = useLoaderData() as Season[];
 
-  // TODO: Figure out how to link to an anchor
   return (
-    <div className={"seasons-container"}>
-      <hgroup>
-        <h1>Seasons</h1>
-        <small>
-          Seasons are a mechanic that keeps the leaderboard fresh. Seasons are
-          typically tied to NSG content releases and the yearly tournament
-          season cadence.
-        </small>
-      </hgroup>
+    <div className={"flex flex-col"}>
+      <PageHeading text={"Seasons"} />
+      <small className={"text-sm text-gray-400"}>
+        Seasons are a mechanic that keeps the leaderboard fresh. Seasons are
+        typically tied to NSG content releases and the yearly tournament season
+        cadence.
+      </small>
       <table>
         <thead>
           <tr>

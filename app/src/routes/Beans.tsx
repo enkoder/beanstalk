@@ -1,4 +1,3 @@
-import "./Beans.css";
 // @ts-ignore
 import rankings from "./../../../api/src/lib/ranking.ts";
 import {
@@ -7,6 +6,7 @@ import {
   Tier,
 } from "../client";
 // @ts-ignore
+import { PageHeading } from "../stories/PageHeader";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -39,7 +39,7 @@ function PointsSimulation() {
   };
 
   return (
-    <div className={"points-container"}>
+    <div className={"flex flex-col"}>
       <div className="filters">
         <form onSubmit={handleSubmit} role={"group"}>
           <select onChange={(e) => setSelectedTier(Number(e.target.value))}>
@@ -95,9 +95,10 @@ function PointsSimulation() {
 
 export function Beans() {
   return (
-    <div className={"beans-container"}>
+    <div className={"flex flex-col"}>
+      <PageHeading text={"Beans"} />
       <div>
-        <article>
+        <article className={"text-gray-400"}>
           <header>
             <hgroup>
               <h2>How are beans calculated?</h2>

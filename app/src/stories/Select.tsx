@@ -1,30 +1,36 @@
-import { ChangeEventHandler } from "react";
+import { SelectHTMLAttributes } from "react";
 
-interface OptionType {
+export type Option = {
   id: number;
   text: string;
-}
+};
 
-export interface SelectProps {
-  options: OptionType[];
-  selectedId: number;
-  handleOnChange: ChangeEventHandler<HTMLSelectElement>;
-}
+export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  options: Option[];
+  initialOptionText?: string;
+  label?: string;
+};
 
-export function Select({ options, selectedId, handleOnChange }: SelectProps) {
+export function Select({
+  label,
+  options,
+  initialOptionText,
+  onChange,
+  ...props
+}: SelectProps) {
   return (
-    <div className={"h-10 w-10 min-w-[200px]"}>
-      <label>Season</label>
+    <div className={"m-2 flex h-16 w-full flex-col text-gray-400"}>
+      {label && <small className={"px-4"}>{label}</small>}
       <select
         className={
-          "h-full w-full rounded-3xl border bg-gray border-gray-light text-gray-light"
+          "h-full w-full rounded-3xl border border-gray-600 bg-slate-900 px-4 py-2 text-gray-400"
         }
-        onChange={handleOnChange}
+        onChange={onChange}
+        {...props}
       >
+        {initialOptionText && <option>{initialOptionText}</option>}
         {options.map((option) => (
-          <option value={option.id} selected={option.id == selectedId}>
-            {option.text}
-          </option>
+          <option value={option.id}>{option.text}</option>
         ))}
       </select>
     </div>

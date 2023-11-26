@@ -230,7 +230,7 @@ export function SidebarFooter({
     <div
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
-        "z-2 absolute bottom-0 w-full rounded-3xl border-2 border-solid border-cyan-400",
+        "z-2 absolute bottom-0 w-full rounded-3xl border border-solid border-cyan-400",
       )}
       style={{ height: getFooterHeight() }}
     >
