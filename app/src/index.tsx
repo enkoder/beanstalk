@@ -6,7 +6,9 @@ import { PointDistributionTable } from "./routes/Points";
 import { Faq } from "./routes/Faq";
 import { Beans } from "./routes/Beans";
 import { Seasons, SeasonsLoader } from "./routes/Seasons";
-import { Sidebar } from "./stories/Sidebar";
+import { Sidebar, SidebarButtons } from "./stories/Sidebar";
+import { Sim } from "./routes/Sim";
+import { Code } from "./routes/Code";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import "./output.css";
@@ -17,14 +19,8 @@ import {
   RouterProvider,
   useLocation,
   useNavigate,
+  useOutletContext,
 } from "react-router-dom";
-import {
-  faArrowsSpin,
-  faCoins,
-  faElevator,
-  faLock,
-  faQuestion,
-} from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const getToken = async (): Promise<string> => {
@@ -65,65 +61,36 @@ function ErrorPage() {
   );
 }
 
-const SIDEBAR_WIDTH = 250;
+const SIDEBAR_WIDTH = 256;
 const SIDEBAR_MIN_WIDTH = 80;
-
-interface SidebarButtonType {
-  icon: IconDefinition;
-  label: string;
-  selectionStarter: boolean;
-  requiresAdmin?: boolean;
-  to: string;
-}
-const SidebarButtons: SidebarButtonType[] = [
-  {
-    icon: faElevator,
-    label: "Leaderboard",
-    selectionStarter: true,
-    to: "/",
-  },
-  {
-    icon: faArrowsSpin,
-    label: "Seasons",
-    selectionStarter: false,
-    to: "/seasons",
-  },
-  {
-    icon: faCoins,
-    label: "Beans",
-    selectionStarter: true,
-    to: "/beans",
-  },
-  {
-    icon: faQuestion,
-    label: "FAQ",
-    selectionStarter: false,
-    to: "/faq",
-  },
-  {
-    icon: faLock,
-    label: "Admin",
-    selectionStarter: true,
-    requiresAdmin: true,
-    to: "/admin",
-  },
-];
 
 function getSidebarWidth(isOpen: boolean) {
   return isOpen ? SIDEBAR_WIDTH : SIDEBAR_MIN_WIDTH;
 }
 
+export type OutletContextType = {
+  contentWidth: number;
+};
+
+export function useContentWidth() {
+  return useOutletContext<OutletContextType>();
+}
+
 function Layout() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname, hash, key } = useLocation();
   const [activeButton, setActiveButton] = useState<number>(0);
 
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const isMobile = screenWidth <= 768;
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(!isMobile);
+  const [contentWidth, setContentWidth] = useState<number>(
+    screenWidth - getSidebarWidth(sidebarOpen),
+  );
 
   function handleWindowSizeChange() {
     setScreenWidth(window.innerWidth);
+    setContentWidth(window.innerWidth - getSidebarWidth(sidebarOpen));
   }
 
   useEffect(() => {
@@ -136,12 +103,26 @@ function Layout() {
   useEffect(() => {
     for (let i = 0; i < SidebarButtons.length; i++) {
       const sb = SidebarButtons[i];
-      if (sb.to === location.pathname) {
+      if (sb.to === pathname) {
         setActiveButton(i);
       }
     }
-    console.log(location);
-  }, [location]);
+  }, [pathname]);
+
+  useEffect(() => {
+    // https://stackoverflow.com/questions/40280369/use-anchors-with-react-router
+    if (hash === "") {
+      window.scrollTo(0, 0);
+    } else {
+      setTimeout(() => {
+        const id = hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView();
+        }
+      }, 0);
+    }
+  }, [pathname, hash, key]); // do this on route change
 
   const toggleNav = () => {
     setSidebarOpen(!sidebarOpen);
@@ -165,10 +146,10 @@ function Layout() {
           activeButton={activeButton}
         />
         <div
-          className={"h-[100svh] flex-1 scroll-auto p-8 duration-500"}
+          className={"w-full overflow-hidden pl-2 duration-500"}
           style={{ marginLeft: getSidebarWidth(sidebarOpen) }}
         >
-          <Outlet />
+          <Outlet context={{ contentWidth: contentWidth }} />
         </div>
       </div>
     </AuthProvider>
@@ -186,6 +167,8 @@ const router = createBrowserRouter([
       { path: "/results/:user", element: <Results /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
       { path: "/beans", element: <Beans /> },
+      { path: "/sim", element: <Sim /> },
+      { path: "/code", element: <Code /> },
       { path: "/seasons", element: <Seasons />, loader: SeasonsLoader },
       {
         path: "/points",

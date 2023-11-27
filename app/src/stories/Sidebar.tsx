@@ -8,7 +8,9 @@ import {
   faBars,
   faCaretDown,
   faCaretUp,
+  faCode,
   faCoins,
+  faComputer,
   faElevator,
   faLock,
   faQuestion,
@@ -35,7 +37,7 @@ interface SidebarButtonType {
   to: string;
 }
 
-const SidebarButtons: SidebarButtonType[] = [
+export const SidebarButtons: SidebarButtonType[] = [
   {
     icon: faElevator,
     label: "Leaderboard",
@@ -55,9 +57,21 @@ const SidebarButtons: SidebarButtonType[] = [
     to: "/beans",
   },
   {
+    icon: faComputer,
+    label: "Sim",
+    selectionStarter: false,
+    to: "/sim",
+  },
+  {
+    icon: faCode,
+    label: "Code",
+    selectionStarter: false,
+    to: "/code",
+  },
+  {
     icon: faQuestion,
     label: "FAQ",
-    selectionStarter: false,
+    selectionStarter: true,
     to: "/faq",
   },
   {
@@ -91,7 +105,7 @@ export function SidebarHeader({ isOpen, onMenuClick }: SidebarHeaderProps) {
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
         SIDEBAR_TEXT_COLOR,
-        "z-1 flex h-16 flex-row items-center justify-between pl-4 pr-4 text-2xl transition-width",
+        "flex h-16 flex-row items-center justify-between pl-4 pr-4 text-2xl transition-width",
       )}
     >
       {isOpen && (
@@ -147,7 +161,7 @@ export function SidebarContent({
               className={clsx(
                 "flex flex-row items-center",
                 "ml-4 mr-4 h-14",
-                "z-2 rounded-3xl transition-colors",
+                "rounded-3xl transition-colors",
                 "hover:rounded-3xl hover:bg-black hover:font-bold",
                 isActive(i) && "rounded-3xl bg-black font-bold",
               )}
@@ -196,7 +210,7 @@ export function SidebarFooter({
             className={clsx(
               "flex flex-row items-center",
               "ml-4 mr-4 h-14",
-              "z-2 rounded-3xl transition-colors",
+              "rounded-3xl transition-colors",
               "hover:rounded-3xl hover:bg-black hover:font-bold",
             )}
             onClick={handleLogin}
@@ -209,7 +223,7 @@ export function SidebarFooter({
             className={clsx(
               "flex flex-row items-center",
               "ml-4 mr-4 h-14",
-              "z-2 rounded-3xl transition-colors",
+              "rounded-3xl transition-colors",
               "hover:rounded-3xl hover:bg-black hover:font-bold",
             )}
             onClick={handleLogout}
@@ -230,7 +244,7 @@ export function SidebarFooter({
     <div
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
-        "z-2 absolute bottom-0 w-full rounded-3xl border border-solid border-cyan-400",
+        "absolute bottom-0 w-full rounded-3xl border border-solid border-cyan-400",
       )}
       style={{ height: getFooterHeight() }}
     >
@@ -294,7 +308,7 @@ export function Sidebar({
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
         SIDEBAR_TEXT_COLOR,
-        "z-1 fixed left-[1svw] top-[1svw] flex h-[calc(100svh-2vh)] w-0 select-none flex-col overflow-hidden rounded-3xl duration-500",
+        "fixed left-[1svw] top-[1svw] flex h-[calc(100svh-2vh)] w-0 select-none flex-col overflow-hidden rounded-3xl duration-500",
       )}
       style={{ width: `${getSidebarWidth(isOpen)}px` }}
     >
@@ -305,13 +319,13 @@ export function Sidebar({
         isOpen={isOpen}
         activeButton={activeButton}
         onButtonClick={onButtonClick}
-      ></SidebarContent>
+      />
       <SidebarFooter
         user={user}
         isOpen={isOpen}
         handleLogout={handleLogout}
         handleLogin={handleLogin}
-      ></SidebarFooter>
+      />
     </div>
   );
 }

@@ -1,28 +1,38 @@
 //import "./Faq.css";
 import { PageHeading } from "../stories/PageHeader";
+import { Anchor } from "../stories/Anchor";
 import { Link } from "react-router-dom";
+import { clsx } from "clsx/clsx";
 
 type Question = {
   title: string;
+  id: string;
   content: JSX.Element;
 };
 
 const QUESTIONS: Question[] = [
   {
     title: "Beans? What are beans?",
+    id: "what-are-beans",
     content: (
       <p>
         Beans are points, the unit of measurement we use here at the Beanstalk.
         In some circles, primarily close to{" "}
-        <a href={"https://netrunnerdb.com/en/profile/6502/ctz"}>CTZ</a>, people
-        call the card Beanstalk Royalties "green beans". Count up those beans,
-        because you're going to need them in order to climb the rankings to the
-        top of the Beanstalk.
+        <a
+          className={"text-cyan-400"}
+          href={"https://netrunnerdb.com/en/profile/6502/ctz"}
+        >
+          CTZ
+        </a>
+        , people call the card Beanstalk Royalties "green beans". Count up those
+        beans, because you're going to need them in order to climb the rankings
+        to the top of the Beanstalk.
       </p>
     ),
   },
   {
     title: "How are Beans calculated?",
+    id: "how-are-beans-calculated",
     content: (
       <p>
         We've got a great page that goes deep on how beans are calculated, shows
@@ -38,11 +48,18 @@ const QUESTIONS: Question[] = [
   },
   {
     title: "What's the origin story of Beanstalk",
+    id: "origin-story",
     content: (
       <p>
         During discussions about starting a pro-circuit for Netrunner, my
-        <a href={"https://netrunnerdb.com/en/card/34008"}> wheels</a> got
-        spinning. The ideas of building a global leaderboard complete with
+        <a
+          className={"text-cyan-400"}
+          href={"https://netrunnerdb.com/en/card/34008"}
+        >
+          {" "}
+          wheels
+        </a>{" "}
+        got spinning. The ideas of building a global leaderboard complete with
         seasons and a dynamic point system was just too exciting to let go. The
         original goal was to just build a leaderboard for the pro circuit, but I
         totally got nerd sniped by this project resulting in me jamming on this
@@ -53,20 +70,24 @@ const QUESTIONS: Question[] = [
   },
   {
     title: "What's next for the project?",
+    id: "what-is-next",
     content: (
       <p>
         My dream is to create a comprehensive seasonal ranking leaderboard for
         all online games played on
-        <a href={"https//jinteki.net"}> jinteki.net</a>, independent of
-        tournaments. The ranking would be based on an ELO-like system. Both
-        ranked and unranked games would be recorded and logged, affecting your
-        current season ranking. I also envision access to seasonal stats,
-        all-time stats, and analytical tools for evaluating data. This includes
-        not just your win/loss rate, but also a detailed analysis of your win
-        rate against specific runners and corporations, as well as win-loss
-        rates against other players. This is an ambitious goal, but I'm
-        optimistic. I believe this game has longevity, and I'm committed to
-        creating an exciting experience for the community.
+        <a className={"text-cyan-400"} href={"https//jinteki.net"}>
+          {" "}
+          jinteki.net
+        </a>
+        , independent of tournaments. The ranking would be based on an ELO-like
+        system. Both ranked and unranked games would be recorded and logged,
+        affecting your current season ranking. I also envision access to
+        seasonal stats, all-time stats, and analytical tools for evaluating
+        data. This includes not just your win/loss rate, but also a detailed
+        analysis of your win rate against specific runners and corporations, as
+        well as win-loss rates against other players. This is an ambitious goal,
+        but I'm optimistic. I believe this game has longevity, and I'm committed
+        to creating an exciting experience for the community.
       </p>
     ),
   },
@@ -75,20 +96,20 @@ const QUESTIONS: Question[] = [
 export function Faq() {
   // TODO: Figure out how to link to an anchor
   return (
-    <div className={"flex flex-col"}>
+    <div
+      className={
+        "mx-4 mt-4 flex h-[100svh] flex-col overflow-auto text-gray-100"
+      }
+    >
       <PageHeading text={"Frequently Asked Questions"} />
-      <article className={"text-gray-400"}>
-        {QUESTIONS.map((question) => (
-          <div className={"faq-item"}>
-            <details>
-              <summary role={"button"} className={"outline"}>
-                {question.title}
-              </summary>
-              <article> {question.content}</article>
-            </details>
-          </div>
-        ))}
-      </article>
+      {QUESTIONS.map((question) => (
+        <>
+          <Anchor navToPath={"faq"} id={question.id} className={"mb-2 mt-4"}>
+            {question.title}
+          </Anchor>
+          <p className={"pl-2 text-gray-300"}> {question.content}</p>
+        </>
+      ))}
     </div>
   );
 }

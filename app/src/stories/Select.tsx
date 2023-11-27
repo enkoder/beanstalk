@@ -1,7 +1,7 @@
 import { SelectHTMLAttributes } from "react";
 
 export type Option = {
-  id: number;
+  value: number;
   text: string;
 };
 
@@ -30,7 +30,7 @@ export function Select({
       >
         {initialOptionText && <option>{initialOptionText}</option>}
         {options.map((option) => (
-          <option value={option.id}>{option.text}</option>
+          <option value={option.value}>{option.text}</option>
         ))}
       </select>
     </div>

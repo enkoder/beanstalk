@@ -69,13 +69,13 @@ export function Leaderboard() {
   };
 
   return (
-    <div className={"flex flex-col"}>
+    <div className={"mx-4 mt-4 flex h-[100svh] flex-col"}>
       <PageHeading text={"Leaderboard"} />
       <div className={"mb-4 flex flex-col sm:flex-row"}>
         <Select
           label={"Seasons"}
           options={seasons.map((s) => {
-            return { id: s.id, text: s.name };
+            return { value: s.id, text: s.name };
           })}
           id="season"
           name={seasonParam}
@@ -83,17 +83,17 @@ export function Leaderboard() {
         />
         <Input
           label={"Search"}
-          isSearch={true}
+          type={"search"}
           placeholder="Search"
           onChange={(e) => setSearchString(e.target.value)}
         />
       </div>
-      <div className={"leaderboard"}>
+      <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
         <LeaderboardTable
           leaderboard={leaderboard}
           searchString={searchString}
           selectedSeason={selectedSeason}
-        ></LeaderboardTable>
+        />
       </div>
     </div>
   );
