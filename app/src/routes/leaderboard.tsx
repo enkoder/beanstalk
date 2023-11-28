@@ -69,31 +69,35 @@ export function Leaderboard() {
   };
 
   return (
-    <div className={"mx-4 mt-4 flex h-[100svh] flex-col"}>
-      <PageHeading text={"Leaderboard"} />
-      <div className={"mb-4 flex flex-col sm:flex-row"}>
-        <Select
-          label={"Seasons"}
-          options={seasons.map((s) => {
-            return { value: s.id, text: s.name };
-          })}
-          id="season"
-          name={seasonParam}
-          onChange={handleSeasonChange}
-        />
-        <Input
-          label={"Search"}
-          type={"search"}
-          placeholder="Search"
-          onChange={(e) => setSearchString(e.target.value)}
-        />
-      </div>
-      <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
-        <LeaderboardTable
-          leaderboard={leaderboard}
-          searchString={searchString}
-          selectedSeason={selectedSeason}
-        />
+    <div
+      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
+    >
+      <div className={"flex w-full flex-col sm:w-5/6"}>
+        <PageHeading text={"Leaderboard"} />
+        <div className={"mb-4 flex flex-col sm:flex-row"}>
+          <Select
+            label={"Seasons"}
+            options={seasons.map((s) => {
+              return { value: s.id, text: s.name };
+            })}
+            id="season"
+            name={seasonParam}
+            onChange={handleSeasonChange}
+          />
+          <Input
+            label={"Search"}
+            type={"search"}
+            placeholder="Search"
+            onChange={(e) => setSearchString(e.target.value)}
+          />
+        </div>
+        <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
+          <LeaderboardTable
+            leaderboard={leaderboard}
+            searchString={searchString}
+            selectedSeason={selectedSeason}
+          />
+        </div>
       </div>
     </div>
   );

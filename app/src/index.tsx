@@ -6,7 +6,7 @@ import { PointDistributionTable } from "./routes/Points";
 import { Faq } from "./routes/Faq";
 import { Beans } from "./routes/Beans";
 import { Seasons, SeasonsLoader } from "./routes/Seasons";
-import { Sidebar, SidebarButtons } from "./stories/Sidebar";
+import { getSidebarWidth, Sidebar, SidebarButtons } from "./stories/Sidebar";
 import { Sim } from "./routes/Sim";
 import { Code } from "./routes/Code";
 import ReactDOM from "react-dom/client";
@@ -21,7 +21,7 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { Stars } from "./stories/Stars";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -59,13 +59,6 @@ function ErrorPage() {
       </hgroup>
     </main>
   );
-}
-
-const SIDEBAR_WIDTH = 256;
-const SIDEBAR_MIN_WIDTH = 80;
-
-function getSidebarWidth(isOpen: boolean) {
-  return isOpen ? SIDEBAR_WIDTH : SIDEBAR_MIN_WIDTH;
 }
 
 export type OutletContextType = {
@@ -138,7 +131,12 @@ function Layout() {
 
   return (
     <AuthProvider>
-      <div className={"flex h-[100svh] w-[100svw] flex-row"}>
+      <Stars count={100} />
+      <div
+        className={
+          "z-1 relative flex h-[100svh] w-[100svw] flex-row bg-gray-950 opacity-80"
+        }
+      >
         <Sidebar
           isOpen={sidebarOpen}
           onMenuClick={toggleNav}
@@ -146,7 +144,7 @@ function Layout() {
           activeButton={activeButton}
         />
         <div
-          className={"w-full overflow-hidden pl-2 duration-500"}
+          className={"w-full overflow-hidden duration-500"}
           style={{ marginLeft: getSidebarWidth(sidebarOpen) }}
         >
           <Outlet context={{ contentWidth: contentWidth }} />
@@ -184,7 +182,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <body className={"h-full"}>
+    <body>
       <RouterProvider router={router} />
     </body>
   </React.StrictMode>,

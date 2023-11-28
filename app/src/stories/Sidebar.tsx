@@ -26,8 +26,8 @@ import { clsx } from "clsx";
 const SIDEBAR_WIDTH = 256;
 const SIDEBAR_MIN_WIDTH = 80;
 const SIDEBAR_FOOTER_MIN_HEIGHT = "56px";
-const SIDEBAR_BACKGROUND_COLOR = "bg-slate-900";
-const SIDEBAR_TEXT_COLOR = "text-cyan-400";
+const SIDEBAR_BACKGROUND_COLOR = "bg-gray-900";
+const SIDEBAR_TEXT_COLOR = "text-cyan-500";
 
 interface SidebarButtonType {
   icon: IconDefinition;
@@ -90,7 +90,7 @@ interface SidebarProps {
   activeButton: number;
 }
 
-function getSidebarWidth(isOpen: boolean) {
+export function getSidebarWidth(isOpen: boolean) {
   return isOpen ? SIDEBAR_WIDTH : SIDEBAR_MIN_WIDTH;
 }
 
@@ -110,7 +110,7 @@ export function SidebarHeader({ isOpen, onMenuClick }: SidebarHeaderProps) {
     >
       {isOpen && (
         <Link to={"/"} className={clsx("flex flex-row items-center")}>
-          <img className={"h-12 rounded-3xl"} src={greenBeans} alt="logo" />
+          <img className={"h-12"} src={greenBeans} alt="logo" />
           <strong className={"pl-4"}>Beanstalk</strong>
         </Link>
       )}
@@ -155,15 +155,13 @@ export function SidebarContent({
         .map((sb, i) => (
           <>
             {sb.selectionStarter && (
-              <hr className={"mb-0 border-cyan-400 pl-4 pr-4"} />
+              <hr className={"mb-4 border-cyan-500 pl-4 pr-4"} />
             )}
             <div
               className={clsx(
-                "flex flex-row items-center",
-                "ml-4 mr-4 h-14",
-                "rounded-3xl transition-colors",
-                "hover:rounded-3xl hover:bg-black hover:font-bold",
-                isActive(i) && "rounded-3xl bg-black font-bold",
+                "ml-4 flex h-14 flex-row items-center rounded-l-3xl transition-colors",
+                "hover:rounded-l-3xl hover:bg-gray-950 hover:font-bold hover:text-cyan-400",
+                isActive(i) && "bg-gray-950 font-bold text-cyan-400",
               )}
               onClick={onButtonClick}
               button-id={i}
@@ -203,16 +201,13 @@ export function SidebarFooter({
   const renderFooterContent = (u: User | null | undefined) => {
     return (
       // Footer content container
-      <div className={"flex flex-col items-stretch rounded-3xl"}>
-        <hr className={"mb-0 mt-0 border-cyan-400 pl-4 pr-4"} />
+      <div className={"flex flex-col items-stretch"}>
+        <hr className={"mb-0 mt-0 border-cyan-500 pl-4 pr-4"} />
         {!u ? (
           <div
-            className={clsx(
-              "flex flex-row items-center",
-              "ml-4 mr-4 h-14",
-              "rounded-3xl transition-colors",
-              "hover:rounded-3xl hover:bg-black hover:font-bold",
-            )}
+            className={
+              "ml-4 mr-4 flex h-14 flex-row items-center transition-colors hover:bg-gray-950 hover:font-bold"
+            }
             onClick={handleLogin}
           >
             <FontAwesomeIcon icon={faRightToBracket} className={"pl-4 pr-4"} />
@@ -220,12 +215,9 @@ export function SidebarFooter({
           </div>
         ) : (
           <div
-            className={clsx(
-              "flex flex-row items-center",
-              "ml-4 mr-4 h-14",
-              "rounded-3xl transition-colors",
-              "hover:rounded-3xl hover:bg-black hover:font-bold",
-            )}
+            className={
+              "ml-4 mr-4 flex h-14 flex-row items-center transition-colors hover:bg-gray-950 hover:font-bold"
+            }
             onClick={handleLogout}
           >
             <FontAwesomeIcon
@@ -244,7 +236,7 @@ export function SidebarFooter({
     <div
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
-        "absolute bottom-0 w-full rounded-3xl border border-solid border-cyan-400",
+        "absolute bottom-0 w-full rounded-3xl border border-solid border-cyan-500",
       )}
       style={{ height: getFooterHeight() }}
     >
@@ -308,7 +300,7 @@ export function Sidebar({
       className={clsx(
         SIDEBAR_BACKGROUND_COLOR,
         SIDEBAR_TEXT_COLOR,
-        "fixed left-[1svw] top-[1svw] flex h-[calc(100svh-2vh)] w-0 select-none flex-col overflow-hidden rounded-3xl duration-500",
+        "fixed flex h-full select-none flex-col overflow-hidden duration-500",
       )}
       style={{ width: `${getSidebarWidth(isOpen)}px` }}
     >

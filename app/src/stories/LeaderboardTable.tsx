@@ -15,7 +15,7 @@ export function LeaderboardTable({
   return (
     <table
       className={
-        "h-full w-full table-fixed border-separate border-spacing-0 text-gray-300"
+        "w-full table-fixed border-separate border-spacing-0 text-gray-300"
       }
     >
       <thead className={"sticky top-0 h-10 bg-slate-950 text-center text-lg"}>
@@ -43,17 +43,18 @@ export function LeaderboardTable({
                 user.name?.toLowerCase().includes(searchString.toLowerCase()),
             )
             .map((user) => (
-              <tr
-                className={
-                  "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
-                }
-              >
+              <tr className={"text-center odd:bg-slate-900 even:bg-slate-950"}>
                 <td className={"px-4 py-2"}>{user.rank}</td>
                 <th
                   scope="row"
-                  className="whitespace-nowrap font-medium text-cyan-400"
+                  className="whitespace-nowrap font-medium text-cyan-500"
                 >
-                  <Link to={`results/${user.name}?season=${selectedSeason}`}>
+                  <Link
+                    className={
+                      "hover:font-bold hover:text-cyan-400 hover:underline"
+                    }
+                    to={`results/${user.name}?season=${selectedSeason}`}
+                  >
                     {user.name}
                   </Link>
                 </th>

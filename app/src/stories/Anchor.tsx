@@ -25,7 +25,7 @@ export function Anchor({
         icon={faHashtag}
         onClick={() => navigate(`/${navToPath}#${id}`)}
       />
-      <h6 id={id} className={"text-2xl text-gray-100"}>
+      <h6 id={id} className={"text-2xl text-gray-300"}>
         {children}
       </h6>
     </div>

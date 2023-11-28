@@ -19,7 +19,7 @@ const QUESTIONS: Question[] = [
         Beans are points, the unit of measurement we use here at the Beanstalk.
         In some circles, primarily close to{" "}
         <a
-          className={"text-cyan-400"}
+          className={"text-cyan-500"}
           href={"https://netrunnerdb.com/en/profile/6502/ctz"}
         >
           CTZ
@@ -53,7 +53,7 @@ const QUESTIONS: Question[] = [
       <p>
         During discussions about starting a pro-circuit for Netrunner, my
         <a
-          className={"text-cyan-400"}
+          className={"text-cyan-500"}
           href={"https://netrunnerdb.com/en/card/34008"}
         >
           {" "}
@@ -75,7 +75,7 @@ const QUESTIONS: Question[] = [
       <p>
         My dream is to create a comprehensive seasonal ranking leaderboard for
         all online games played on
-        <a className={"text-cyan-400"} href={"https//jinteki.net"}>
+        <a className={"text-cyan-500"} href={"https//jinteki.net"}>
           {" "}
           jinteki.net
         </a>
@@ -97,19 +97,19 @@ export function Faq() {
   // TODO: Figure out how to link to an anchor
   return (
     <div
-      className={
-        "mx-4 mt-4 flex h-[100svh] flex-col overflow-auto text-gray-100"
-      }
+      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
-      <PageHeading text={"Frequently Asked Questions"} />
-      {QUESTIONS.map((question) => (
-        <>
-          <Anchor navToPath={"faq"} id={question.id} className={"mb-2 mt-4"}>
-            {question.title}
-          </Anchor>
-          <p className={"pl-2 text-gray-300"}> {question.content}</p>
-        </>
-      ))}
+      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
+        <PageHeading text={"Frequently Asked Questions"} />
+        {QUESTIONS.map((question) => (
+          <>
+            <Anchor navToPath={"faq"} id={question.id} className={"mb-2 mt-4"}>
+              {question.title}
+            </Anchor>
+            <p className={"pl-2 text-gray-400"}> {question.content}</p>
+          </>
+        ))}
+      </div>
     </div>
   );
 }
