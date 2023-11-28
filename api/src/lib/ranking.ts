@@ -4,12 +4,12 @@ import { TournamentType } from "../models/tournament";
 
 // Sets the number of players who will be receiving any points. Defined as a percentage of total players
 export const PERCENT_RECEIVING_POINTS = 50.0;
-export const PERCENT_FOR_FIRST_PLACE = 15.0;
-export const EXTRA_POINTS_PER_PERSON = 10;
-export const MIN_PLAYERS_TO_BE_LEGAL = 8;
+export const PERCENT_FOR_FIRST_PLACE = 20.0;
+export const EXTRA_POINTS_PER_PERSON = 20;
+export const MIN_PLAYERS_TO_BE_LEGAL = 16;
 
 export const TOURNAMENT_POINTS = {
-  [TournamentType.Worlds]: 5000,
+  [TournamentType.Worlds]: 4000,
   [TournamentType.Continental]: 2000,
   [TournamentType.Nationals]: 1000,
   [TournamentType.Intercontinental]: 1000,
@@ -62,7 +62,7 @@ export function calculateTournamentPointDistribution(
   };
 
   const distributePayouts = (alpha: number) => {
-    const payouts = [firstPlacePoints];
+    const payouts = [];
     for (let i = 1; i <= totalWinners; i++) {
       const prize =
         minimumPrize + (firstPlacePoints - minimumPrize) / Math.pow(i, alpha);
