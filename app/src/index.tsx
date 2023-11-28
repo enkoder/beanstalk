@@ -9,8 +9,11 @@ import { Seasons, SeasonsLoader } from "./routes/Seasons";
 import { getSidebarWidth, Sidebar, SidebarButtons } from "./stories/Sidebar";
 import { Sim } from "./routes/Sim";
 import { Code } from "./routes/Code";
+import { Stars } from "./stories/Stars";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
+import "@fontsource/inter/400.css";
+import "@fontsource/jetbrains-mono/400.css";
 import "./output.css";
 import {
   createBrowserRouter,
@@ -21,7 +24,6 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
-import { Stars } from "./stories/Stars";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
