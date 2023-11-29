@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { GetPointDistributionResponse } from '../models/GetPointDistributionResponse';
-import type { LeaderboardResponse } from '../models/LeaderboardResponse';
+import type { LeaderboardRow } from '../models/LeaderboardRow';
 import type { Tier } from '../models/Tier';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -14,23 +14,17 @@ export class LeaderboardService {
 
     /**
      * Gets the current season's leaderboard
-     * @param size
-     * @param page
      * @param seasonId
-     * @returns LeaderboardResponse Returns a array of rows compromising the full leaderboard for the given season
+     * @returns LeaderboardRow Returns a array of rows compromising the full leaderboard for the given season
      * @throws ApiError
      */
     public static getGetLeaderboard(
-        size?: number | null,
-        page?: number | null,
         seasonId?: number | null,
-    ): CancelablePromise<LeaderboardResponse> {
+    ): CancelablePromise<Array<LeaderboardRow>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/leaderboard',
             query: {
-                'size': size,
-                'page': page,
                 'seasonId': seasonId,
             },
         });

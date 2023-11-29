@@ -77,11 +77,12 @@ export type TierComponentType = z.infer<typeof TierComponent>;
 
 export const LeaderboardRowComponent = z
   .object({
-    rank: z.number(),
-    id: z.number(),
-    name: z.coerce.string(),
     points: z.number(),
-    attended: z.number(),
+    rank: z.number(),
+    user_id: z.number(),
+    user_name: z.coerce.string(),
+    season_id: z.number(),
+    season_name: z.string(),
   })
   .openapi("LeaderboardRow");
 export type LeaderboardRowComponentType = z.infer<
@@ -271,26 +272,15 @@ export const GetSeasonTournamentsSchema = {
   },
 };
 
-export const LeaderboardResponseComponent = z
-  .object({
-    users: z.array(LeaderboardRowComponent),
-    total: z.number(),
-    pages: z.number(),
-    current_page: z.number(),
-  })
-  .openapi("LeaderboardResponse");
-
 export const GetLeaderboardSchema = {
   tags: ["Leaderboard"],
   summary: "Gets the current season's leaderboard",
   parameters: {
-    size: Query(z.coerce.number().optional()),
-    page: Query(z.coerce.number().optional()),
     seasonId: Query(z.coerce.number().optional()),
   },
   responses: {
     "200": {
-      schema: LeaderboardResponseComponent,
+      schema: z.array(LeaderboardRowComponent),
       description:
         "Returns a array of rows compromising the full leaderboard for the given season",
     },

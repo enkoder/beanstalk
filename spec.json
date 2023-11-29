@@ -97,26 +97,14 @@
       "LeaderboardRow": {
         "type": "object",
         "properties": {
-          "rank": { "type": "number" },
-          "id": { "type": "number" },
-          "name": { "type": ["string", "null"] },
           "points": { "type": "number" },
-          "attended": { "type": "number" }
+          "rank": { "type": "number" },
+          "user_id": { "type": "number" },
+          "user_name": { "type": ["string", "null"] },
+          "season_id": { "type": "number" },
+          "season_name": { "type": "string" }
         },
-        "required": ["rank", "id", "points", "attended"]
-      },
-      "LeaderboardResponse": {
-        "type": "object",
-        "properties": {
-          "users": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/LeaderboardRow" }
-          },
-          "total": { "type": "number" },
-          "pages": { "type": "number" },
-          "current_page": { "type": "number" }
-        },
-        "required": ["users", "total", "pages", "current_page"]
+        "required": ["points", "rank", "user_id", "season_id", "season_name"]
       },
       "GetPointDistributionResponse": {
         "type": "object",
@@ -372,18 +360,6 @@
           {
             "schema": { "type": ["number", "null"] },
             "required": false,
-            "name": "size",
-            "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "page",
-            "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
             "name": "seasonId",
             "in": "query"
           }
@@ -393,7 +369,10 @@
             "description": "Returns a array of rows compromising the full leaderboard for the given season",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LeaderboardResponse" }
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LeaderboardRow" }
+                }
               }
             }
           }

@@ -1,5 +1,5 @@
 import {
-  LeaderboardResponse,
+  LeaderboardRow,
   LeaderboardService,
   Season,
   SeasonsService,
@@ -26,17 +26,15 @@ export function Leaderboard() {
   const [searchParams] = useSearchParams();
 
   const initialSeason = Number(searchParams.get(seasonParam) || DEFAULT_SEASON);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardResponse>();
+  const [leaderboardRows, setLeaderboardRows] = useState<LeaderboardRow[]>();
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [searchString, setSearchString] = useState<string>("");
   const [selectedSeason, setSelectedSeason] = useState<number>(initialSeason);
 
   const fetchLeaderboard = useCallback(async (seasonId: number | null) => {
-    LeaderboardService.getGetLeaderboard(null, null, seasonId).then(
-      (leaderboard) => {
-        setLeaderboard(leaderboard);
-      },
-    );
+    LeaderboardService.getGetLeaderboard(seasonId).then((rows) => {
+      setLeaderboardRows(rows);
+    });
   }, []);
 
   const fetchSeasons = useCallback(async () => {
@@ -61,9 +59,9 @@ export function Leaderboard() {
     const newURL = `${window.location.pathname}?${newSearchParams.toString()}`;
     window.history.pushState({ path: newURL }, "", newURL);
 
-    LeaderboardService.getGetLeaderboard(null, null, Number(value)).then(
-      (leaderboard: LeaderboardResponse) => {
-        setLeaderboard(leaderboard);
+    LeaderboardService.getGetLeaderboard(Number(value)).then(
+      (rows: LeaderboardRow[]) => {
+        setLeaderboardRows(rows);
       },
     );
   };
@@ -98,7 +96,7 @@ export function Leaderboard() {
         </div>
         <div className={"overflow-auto whitespace-nowrap"}>
           <LeaderboardTable
-            leaderboard={leaderboard}
+            leaderboard={leaderboardRows}
             searchString={searchString}
             selectedSeason={selectedSeason}
           />

@@ -1,8 +1,8 @@
-import { LeaderboardResponse } from "../client";
+import { LeaderboardRow } from "../client";
 import { Link } from "react-router-dom";
 
 type LeaderboardProps = {
-  leaderboard?: LeaderboardResponse;
+  leaderboard?: LeaderboardRow[];
   searchString: string;
   selectedSeason: number;
 };
@@ -36,15 +36,17 @@ export function LeaderboardTable({
       </thead>
       <tbody>
         {leaderboard &&
-          leaderboard.users
-            .filter(
-              (user) =>
-                user &&
-                user.name?.toLowerCase().includes(searchString.toLowerCase()),
+          leaderboard
+            .filter((row) =>
+              row.user_name
+                ? row.user_name
+                    .toLowerCase()
+                    .includes(searchString.toLowerCase())
+                : false,
             )
-            .map((user) => (
+            .map((row) => (
               <tr className={"text-center odd:bg-slate-900 even:bg-slate-950"}>
-                <td className={"px-4 py-2"}>{user.rank}</td>
+                <td className={"px-4 py-2"}>{row.rank}</td>
                 <th
                   scope="row"
                   className="whitespace-nowrap font-medium text-cyan-500"
@@ -53,12 +55,12 @@ export function LeaderboardTable({
                     className={
                       "hover:font-bold hover:text-cyan-400 hover:underline"
                     }
-                    to={`results/${user.name}?season=${selectedSeason}`}
+                    to={`results/${row.user_name}?season=${selectedSeason}`}
                   >
-                    {user.name}
+                    {row.user_name}
                   </Link>
                 </th>
-                <td>{user.points.toFixed(2)}</td>
+                <td>{row.points.toFixed(2)}</td>
               </tr>
             ))}
       </tbody>

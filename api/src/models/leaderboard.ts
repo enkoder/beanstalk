@@ -6,26 +6,24 @@ export interface LeaderboardTable {
   season_id: number;
   rank: number;
   points: number;
-  most_recent_tournament_id: number | null;
 }
 
-export type Leaderboard = Selectable<LeaderboardTable>;
+export type LeaderboardRow = Selectable<LeaderboardTable>;
 export type UpdateLeaderboard = Updateable<LeaderboardTable>;
 
 export class Leaderboards {
-  public static async getExpanded() {
+  public static async getFromSeasonIdExpanded(
+    seasonId: number,
+  ): Promise<LeaderboardRow[]> {
     return await getDB()
       .selectFrom("leaderboards")
-      .leftJoin(
-        "tournaments",
-        "leaderboards.most_recent_tournament_id",
-        "tournaments.id",
-      )
+      .innerJoin("seasons", "seasons.id", "leaderboards.season_id")
+      .innerJoin("users", "leaderboards.user_id", "users.id")
       .selectAll("leaderboards")
-      .select([
-        "tournaments.id as most_recent_tournament_id",
-        "tournaments.name as most_recent_tournament_name",
-      ])
+      .select(["seasons.name as season_name"])
+      .select(["users.name as user_name"])
+      .where("leaderboards.season_id", "=", seasonId)
+      .orderBy("rank asc")
       .execute();
   }
 
