@@ -56,7 +56,8 @@ export class GetUserResults extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const userIdOrName = req.params!["user"];
-    const user = await Users.getByIdOrName(userIdOrName);
+    console.log(decodeURI(userIdOrName));
+    const user = await Users.getByIdOrName(decodeURI(userIdOrName));
     if (!user) {
       return errorResponse(400, "User does not exist");
     }

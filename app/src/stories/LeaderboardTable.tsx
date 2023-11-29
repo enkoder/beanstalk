@@ -55,7 +55,9 @@ export function LeaderboardTable({
                     className={
                       "hover:font-bold hover:text-cyan-400 hover:underline"
                     }
-                    to={`results/${row.user_name}?season=${selectedSeason}`}
+                    to={`results/${
+                      row.user_name && encodeURI(row.user_name)
+                    }?season=${selectedSeason}`}
                   >
                     {row.user_name}
                   </Link>

@@ -83,7 +83,9 @@ export function Leaderboard() {
             onChange={handleSeasonChange}
           >
             {seasons.map((s, i) => (
-              <option value={i}>{s.name}</option>
+              <option value={i} selected={i == selectedSeason}>
+                {s.name}
+              </option>
             ))}
           </Select>
           <Input
