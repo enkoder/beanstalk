@@ -2,7 +2,6 @@ import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
 import { OpenAPI } from "./client";
 import useAuth, { AuthProvider } from "./useAuth";
-import { PointDistributionTable } from "./routes/Points";
 import { Faq } from "./routes/Faq";
 import { Beans } from "./routes/Beans";
 import { Seasons, SeasonsLoader } from "./routes/Seasons";
@@ -10,6 +9,8 @@ import { getSidebarWidth, Sidebar, SidebarButtons } from "./stories/Sidebar";
 import { Sim } from "./routes/Sim";
 import { Code } from "./routes/Code";
 import { Stars } from "./stories/Stars";
+import { PageHeading } from "./stories/PageHeader";
+import { Tournament } from "./routes/Tournament";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
 import "@fontsource/inter/400.css";
@@ -25,9 +26,6 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
-import { PageHeading } from "./stories/PageHeader";
-import greenBeans from "../images/beanstalk_royalties.png";
-import { Tournament } from "./routes/Tournament";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -179,10 +177,6 @@ const router = createBrowserRouter([
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },
       { path: "/seasons", element: <Seasons />, loader: SeasonsLoader },
-      {
-        path: "/points",
-        element: <PointDistributionTable />,
-      },
     ],
   },
 ]);

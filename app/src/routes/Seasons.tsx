@@ -1,4 +1,3 @@
-import "./Seasons.css";
 import { Season, SeasonsService } from "../client";
 import { PageHeading } from "../stories/PageHeader";
 import { Link, useLoaderData } from "react-router-dom";

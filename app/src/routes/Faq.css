@@ -1,9 +1,0 @@
-.faq-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.faq-item {
-  flex: 1;
-  margin-bottom: 20px;
-}
