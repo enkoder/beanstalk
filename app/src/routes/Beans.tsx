@@ -9,11 +9,7 @@ export function Beans() {
       <div className={"m-4 flex w-5/6 flex-col"}>
         <PageHeading text={"Beans"} />
         <article className={"text-gray-400"}>
-          <Anchor
-            navToPath={"beans"}
-            id={"decaying-distribution"}
-            className={"mb-2 mt-4"}
-          >
+          <Anchor id={"decaying-distribution"} className={"mb-2 mt-4"}>
             Exponential decaying distribution
           </Anchor>
           <p className={"pl-2"}>
@@ -48,7 +44,7 @@ export function Beans() {
             right.
           </p>
 
-          <Anchor navToPath={"beans"} id={"points"} className={"mb-2 mt-4"}>
+          <Anchor id={"points"} className={"mb-2 mt-4"}>
             Points for the top %
           </Anchor>
           <p className={"pl-2"}>
@@ -65,7 +61,7 @@ export function Beans() {
             amount of points. Everyone else will receive 0 points.
           </p>
 
-          <Anchor navToPath={"beans"} id={"tiers"} className={"mb-2 mt-4"}>
+          <Anchor id={"tiers"} className={"mb-2 mt-4"}>
             Tiered tournament point values
           </Anchor>
           <p className={"pl-2"}>
@@ -77,11 +73,7 @@ export function Beans() {
             tournament type
           </p>
 
-          <Anchor
-            navToPath={"beans"}
-            id={"scale-by-tourney"}
-            className={"mb-2 mt-4"}
-          >
+          <Anchor id={"scale-by-tourney"} className={"mb-2 mt-4"}>
             Points scale by tournament size
           </Anchor>
           <p className={"pl-2"}>

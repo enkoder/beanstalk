@@ -103,7 +103,7 @@ export function Faq() {
         <PageHeading text={"Frequently Asked Questions"} />
         {QUESTIONS.map((question) => (
           <>
-            <Anchor navToPath={"faq"} id={question.id} className={"mb-2 mt-4"}>
+            <Anchor id={question.id} className={"mb-2 mt-4"}>
               {question.title}
             </Anchor>
             <p className={"pl-2 text-gray-400"}> {question.content}</p>

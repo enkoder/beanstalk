@@ -119,7 +119,7 @@ function Layout() {
         const id = hash.replace("#", "");
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView();
+          element.scrollIntoView({ block: "start", behavior: "smooth" });
         }
       }, 0);
     }
