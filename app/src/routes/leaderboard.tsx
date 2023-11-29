@@ -84,7 +84,7 @@ export function Leaderboard() {
           >
             {seasons.map((s, i) => (
               <option value={i} selected={i == selectedSeason}>
-                {s.name}
+                S{i} - {s.name}
               </option>
             ))}
           </Select>
