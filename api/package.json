@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "wrangler dev",
+    "start": "wrangler dev --test-scheduled",
     "build": "wrangler build"
   },
   "keywords": [],

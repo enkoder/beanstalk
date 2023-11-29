@@ -78,7 +78,6 @@ export class Leaderboards {
   }
 
   static async updateRanking(leaderboard: UpdateLeaderboard) {
-    console.log(JSON.stringify(leaderboard));
     return await getDB()
       .insertInto("leaderboards")
       .values(leaderboard)

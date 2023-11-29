@@ -19,6 +19,7 @@ import {
   TOURNAMENT_POINTS,
 } from "./lib/ranking";
 import { Seasons } from "./models/season";
+import { Leaderboards } from "./models/leaderboard";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -238,14 +239,48 @@ export async function handleQueue(
   }
 }
 
-export async function handleScheduled(_: ScheduledEvent, env: Env) {
+export async function handleScheduled(event: ScheduledEvent, env: Env) {
   initDB(env.DB);
-  await abrIngest(
-    env,
-    null,
-    ABRTournamentTypeFilter.IntercontinentalChampionship,
-  );
-  await abrIngest(env, null, ABRTournamentTypeFilter.ContinentalChampionship);
-  await abrIngest(env, null, ABRTournamentTypeFilter.NationalChampionship);
-  await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
+
+  switch (event.cron) {
+    // Every day at midnight
+    case "0 0 * * *":
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.IntercontinentalChampionship}`,
+      );
+      await abrIngest(
+        env,
+        null,
+        ABRTournamentTypeFilter.IntercontinentalChampionship,
+      );
+
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.ContinentalChampionship}`,
+      );
+      await abrIngest(
+        env,
+        null,
+        ABRTournamentTypeFilter.ContinentalChampionship,
+      );
+
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.NationalChampionship}`,
+      );
+      await abrIngest(env, null, ABRTournamentTypeFilter.NationalChampionship);
+
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.WorldsChampionship}`,
+      );
+      await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
+
+      break;
+
+    case "*/30 * * * *":
+      // Every thirty minutes
+      for (const season of await Seasons.getAll()) {
+        await Leaderboards.recalculateLeaderboard(season.id);
+        console.log(`CRON: recalculateLeaderboard | seasons_id: ${season.id}`);
+      }
+      break;
+  }
 }
