@@ -74,7 +74,6 @@ export class GetUserResults extends OpenAPIRoute {
       user_name: user.name,
       seasonId: season.id,
       seasonName: season.name,
-      // zero based
       rank: currentRank,
       results: results.map((result) => {
         try {

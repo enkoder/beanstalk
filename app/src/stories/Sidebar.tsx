@@ -27,7 +27,7 @@ const SIDEBAR_WIDTH = 256;
 const SIDEBAR_MIN_WIDTH = 80;
 const SIDEBAR_FOOTER_MIN_HEIGHT = "56px";
 const SIDEBAR_BACKGROUND_COLOR = "bg-gray-900";
-const SIDEBAR_TEXT_COLOR = "text-cyan-500";
+const SIDEBAR_TEXT_COLOR = "text-cyan-400";
 
 interface SidebarButtonType {
   icon: IconDefinition;
@@ -110,7 +110,7 @@ export function SidebarHeader({ isOpen, onMenuClick }: SidebarHeaderProps) {
     >
       {isOpen && (
         <Link to={"/"} className={clsx("flex flex-row items-center")}>
-          <img className={"h-12"} src={greenBeans} alt="logo" />
+          <img className={"h-12 rounded-full"} src={greenBeans} alt="logo" />
           <strong className={"pl-4"}>Beanstalk</strong>
         </Link>
       )}
@@ -155,13 +155,13 @@ export function SidebarContent({
         .map((sb, i) => (
           <>
             {sb.selectionStarter && (
-              <hr className={"mb-4 border-cyan-500 pl-4 pr-4"} />
+              <hr className={"mb-4 border border-cyan-600 pl-4 pr-4"} />
             )}
             <div
               className={clsx(
                 "ml-4 flex h-14 flex-row items-center rounded-l-3xl transition-colors",
-                "hover:rounded-l-3xl hover:bg-gray-950 hover:font-bold hover:text-cyan-400",
-                isActive(i) && "bg-gray-950 font-bold text-cyan-400",
+                "hover:rounded-l-3xl hover:bg-gray-950 hover:text-lg hover:font-bold hover:text-cyan-300",
+                isActive(i) && "bg-gray-950 text-lg font-bold text-cyan-300",
               )}
               onClick={onButtonClick}
               button-id={i}

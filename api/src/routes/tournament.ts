@@ -1,6 +1,7 @@
 import { RequestWithDB } from "../types";
 import { Tournaments } from "../models/tournament";
 import {
+  GetTournamentResultsSchema,
   GetTournamentSchema,
   GetTournamentsSchema,
   ResultComponent,
@@ -35,13 +36,19 @@ export class GetTournaments extends OpenAPIRoute {
 }
 
 export class GetTournamentResults extends OpenAPIRoute {
-  static schema = GetTournamentSchema;
+  static schema = GetTournamentResultsSchema;
 
   async handle(req: RequestWithDB) {
     const tournamentId = req.params!["tournamentId"];
     const results = await Results.getManyExpandedByTournamentId(
       Number(tournamentId),
     );
-    return json(results.map((result) => ResultComponent.parse(result)));
+    return json(
+      results
+        .sort((a, b) =>
+          (a.rank_cut || a.rank_swiss) > (b.rank_cut || b.rank_swiss) ? 1 : -1,
+        )
+        .map((result) => ResultComponent.parse(result)),
+    );
   }
 }

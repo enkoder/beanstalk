@@ -15,6 +15,7 @@ import React, { MouseEventHandler, useEffect, useState } from "react";
 import "@fontsource/inter/400.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "./output.css";
+import doggo from "../images/doggo.png";
 import {
   createBrowserRouter,
   Outlet,
@@ -24,6 +25,9 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
+import { PageHeading } from "./stories/PageHeader";
+import greenBeans from "../images/beanstalk_royalties.png";
+import { Tournament } from "./routes/Tournament";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -54,12 +58,16 @@ export function OAuth2Callback() {
 
 function ErrorPage() {
   return (
-    <main className="container">
-      <hgroup>
-        <h1>404!</h1>
-        <h6>Do something cool with a 404 page</h6>
-      </hgroup>
-    </main>
+    <div
+      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
+    >
+      <Stars count={100} />
+      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
+        <PageHeading text={"404!"} />
+        <text className={"my-4 text-lg"}>Something went wrong...</text>
+        <img className={"w-64"} src={doggo} alt="logo" />
+      </div>
+    </div>
   );
 }
 
@@ -165,6 +173,7 @@ const router = createBrowserRouter([
       { index: true, element: <Leaderboard /> },
       { path: "/faq", element: <Faq /> },
       { path: "/results/:user", element: <Results /> },
+      { path: "/tournament/:tournament", element: <Tournament /> },
       { path: "/api/oauth/callback", element: <OAuth2Callback /> },
       { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },

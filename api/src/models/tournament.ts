@@ -50,11 +50,6 @@ export const Tiers = [
     name: TournamentType.Nationals,
     points: TOURNAMENT_POINTS[TournamentType.Nationals],
   },
-  {
-    id: ABRTournamentTypeFilter.IntercontinentalChampionship,
-    name: TournamentType.Intercontinental,
-    points: TOURNAMENT_POINTS[TournamentType.Intercontinental],
-  },
 ];
 
 export interface TournamentsTable {

@@ -19,5 +19,7 @@ export type Result = {
     runner_deck_identity_name?: string | null;
     runner_deck_faction?: string | null;
     runner_deck_url?: string | null;
+    user_id: number;
+    user_name: string;
 };
 

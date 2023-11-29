@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Result } from '../models/Result';
 import type { Tournament } from '../models/Tournament';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -41,14 +42,14 @@ export class TournamentService {
     }
 
     /**
-     * Gets a single tournament
+     * Gets a list of results from the given tournament
      * @param tournamentId
-     * @returns Tournament Full Tournament object
+     * @returns Result List of Results from the supplied tournament
      * @throws ApiError
      */
     public static getGetTournamentResults(
         tournamentId: number,
-    ): CancelablePromise<Tournament> {
+    ): CancelablePromise<Array<Result>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/tournaments/{tournamentId}/results',

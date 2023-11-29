@@ -72,26 +72,31 @@ export function Leaderboard() {
     <div
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
-      <div className={"flex w-full flex-col sm:w-5/6"}>
+      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
         <PageHeading text={"Leaderboard"} />
-        <div className={"mb-4 flex flex-col sm:flex-row"}>
+        <div
+          className={
+            "my-4 flex flex-col justify-around gap-4 md:w-full md:flex-row md:gap-8"
+          }
+        >
           <Select
+            className={"h-12 w-full rounded-3xl"}
             label={"Seasons"}
-            options={seasons.map((s) => {
-              return { value: s.id, text: s.name };
-            })}
-            id="season"
-            name={seasonParam}
             onChange={handleSeasonChange}
-          />
+          >
+            {seasons.map((s, i) => (
+              <option value={i}>{s.name}</option>
+            ))}
+          </Select>
           <Input
+            className={"h-12 w-full rounded-3xl"}
             label={"Search"}
             type={"search"}
             placeholder="Search"
             onChange={(e) => setSearchString(e.target.value)}
           />
         </div>
-        <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
+        <div className={"overflow-auto whitespace-nowrap"}>
           <LeaderboardTable
             leaderboard={leaderboard}
             searchString={searchString}

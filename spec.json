@@ -55,7 +55,9 @@
           "runner_deck_identity_id": { "type": "number" },
           "runner_deck_identity_name": { "type": ["string", "null"] },
           "runner_deck_faction": { "type": ["string", "null"] },
-          "runner_deck_url": { "type": ["string", "null"] }
+          "runner_deck_url": { "type": ["string", "null"] },
+          "user_id": { "type": "number" },
+          "user_name": { "type": "string" }
         },
         "required": [
           "rank_swiss",
@@ -65,7 +67,9 @@
           "tournament_name",
           "registration_count",
           "corp_deck_identity_id",
-          "runner_deck_identity_id"
+          "runner_deck_identity_id",
+          "user_id",
+          "user_name"
         ]
       },
       "UserResultsResponse": {
@@ -563,7 +567,7 @@
     "/api/tournaments/{tournamentId}/results": {
       "get": {
         "tags": ["Tournament"],
-        "summary": "Gets a single tournament",
+        "summary": "Gets a list of results from the given tournament",
         "operationId": "get_GetTournamentResults",
         "parameters": [
           {
@@ -575,10 +579,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Full Tournament object",
+            "description": "List of Results from the supplied tournament",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Tournament" }
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Result" }
+                }
               }
             }
           }

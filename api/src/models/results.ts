@@ -45,6 +45,7 @@ export class Results {
       .innerJoin("users", "users.id", "results.user_id")
       .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
       .select([
+        "users.id as user_id",
         "users.name as user_name",
         "tournaments.name as tournament_name",
         "tournaments.registration_count as registration_count",

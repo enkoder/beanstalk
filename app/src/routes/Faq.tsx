@@ -2,7 +2,6 @@
 import { PageHeading } from "../stories/PageHeader";
 import { Anchor } from "../stories/Anchor";
 import { Link } from "react-router-dom";
-import { clsx } from "clsx/clsx";
 
 type Question = {
   title: string;
@@ -39,9 +38,10 @@ const QUESTIONS: Question[] = [
         the full algorithm, and has a tool to simulate the payout based upon a
         few inputs sources. We want to be as transparent as possible so everyone
         knows how to climb the beanstalk. Check it out!
-        <hr />
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Link to={"/beans"}>https://netrunner-beanstalk.net/beans</Link>
+        <div className={"mt-4 flex justify-center"}>
+          <Link className={"text-cyan-500"} to={"/beans"}>
+            https://netrunner-beanstalk.net/beans
+          </Link>
         </div>
       </p>
     ),

@@ -4,6 +4,8 @@ import {
   LeaderboardService,
   Tier,
 } from "../client";
+import { Select } from "../stories/Select";
+import { Input } from "../stories/Input";
 import { FormEvent, useEffect, useState } from "react";
 
 export function Sim() {
@@ -35,49 +37,48 @@ export function Sim() {
     <div
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
-      <div className={"m-4 flex w-full flex-col text-gray-300 md:w-5/6"}>
+      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
         <PageHeading text={"Bean Simulator"} />
-        <text className={"mb-4 text-gray-400"}>
+        <text className={"mb-8 text-gray-400"}>
           Below you can enter in the configuration for your tournament and get a
           breakdown of the bean distribution. Use this to figure out how many
           beans you'll get for your performance!
         </text>
         <form
-          className={"mx-4 mb-4 flex flex-col gap-2 md:flex-row"}
+          className={"mb-4 flex flex-col gap-5 lg:flex-row lg:gap-4"}
           onSubmit={handleSubmit}
         >
-          <select
-            className={
-              "flex-1 border border-gray-600 bg-slate-900 px-2 py-2 text-gray-400"
-            }
+          <Select
+            className={"h-12 w-full rounded-3xl"}
+            label={"Tournament Type"}
+            id="tournament"
             onChange={(e) => setSelectedTier(Number(e.target.value))}
           >
             {tiers &&
               tiers.map((tier, index) => (
                 <option value={index}>{tier.name}</option>
               ))}
-          </select>
+          </Select>
 
-          <input
-            className={
-              "w-full border border-gray-600 bg-slate-900 px-2 py-2 text-gray-400"
-            }
+          <Input
+            className={"h-12 w-full rounded-3xl"}
+            id={"baseline"}
+            label={"Baseline Beans"}
             type="number"
             disabled
             value={tiers.length ? tiers[selectedTier].points : 0}
           />
-          <input
-            className={
-              "w-full border border-gray-600 bg-slate-900 px-2 py-2 text-gray-400"
-            }
+          <Input
+            className={"h-12 w-full rounded-3xl"}
+            label={"Number of Players"}
             type="number"
-            placeholder={"Num Players"}
+            id={"num-players"}
             value={numPlayers}
             onChange={(e) => setNumPlayers(Number(e.target.value))}
           />
           <button
             className={
-              "w-full border border-gray-600 bg-cyan-500 px-2 py-2 font-bold text-gray-950"
+              "h-12 w-full rounded-3xl border border-gray-600 bg-cyan-500 px-2 py-2 font-bold text-gray-950"
             }
             type="submit"
           >

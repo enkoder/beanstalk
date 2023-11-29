@@ -12,7 +12,6 @@ export const TOURNAMENT_POINTS = {
   [TournamentType.Worlds]: 4000,
   [TournamentType.Continental]: 2000,
   [TournamentType.Nationals]: 1000,
-  [TournamentType.Intercontinental]: 1000,
 };
 
 export function calculateTournamentPointDistribution(

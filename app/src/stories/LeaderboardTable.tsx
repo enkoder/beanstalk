@@ -15,7 +15,7 @@ export function LeaderboardTable({
   return (
     <table
       className={
-        "w-full table-fixed border-separate border-spacing-0 text-gray-300"
+        "w-full table-auto border-separate border-spacing-0 text-gray-300"
       }
     >
       <thead className={"sticky top-0 h-10 bg-slate-950 text-center text-lg"}>

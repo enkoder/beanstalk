@@ -31,6 +31,8 @@ export const ResultComponent = z
     runner_deck_identity_name: z.string().nullable().optional(),
     runner_deck_faction: z.string().optional().nullable(),
     runner_deck_url: z.string().nullable().optional(),
+    user_id: z.number(),
+    user_name: z.string(),
   })
   .openapi("Result");
 export type ResultComponentType = z.infer<typeof ResultComponent>;
