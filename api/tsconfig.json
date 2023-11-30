@@ -4,10 +4,13 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
-    "types": ["@cloudflare/workers-types"],
+    "types": [
+      "@cloudflare/workers-types",
+      "jest",
+      "jest-environment-miniflare/globals"
+    ],
     "skipLibCheck": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCaseInSwitch": true
+    "noUnusedParameters": true
   }
 }

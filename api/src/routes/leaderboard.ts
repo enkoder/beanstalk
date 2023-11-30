@@ -8,9 +8,13 @@ import {
   TierComponent,
 } from "../openapi";
 import { RequestWithDB } from "../types";
-import { calculateTournamentPointDistribution } from "../lib/ranking";
-import { Tiers } from "../models/tournament";
+import {
+  calculateTournamentPointDistribution,
+  TOURNAMENT_POINTS,
+} from "../lib/ranking";
 import { Leaderboards } from "../models/leaderboard";
+import { TournamentType } from "../models/tournament";
+import { ABRTournamentTypeFilter } from "../lib/abr";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 
@@ -66,6 +70,24 @@ export class GetTiers extends OpenAPIRoute {
   static schema = GetTiersSchema;
 
   async handle() {
-    return json(Tiers.map((tier) => TierComponent.parse(tier)));
+    // TODO: this is a mess, figure out a good data format for this
+    const tiers = [
+      {
+        id: ABRTournamentTypeFilter.WorldsChampionship,
+        name: TournamentType.Worlds,
+        points: TOURNAMENT_POINTS[TournamentType.Worlds],
+      },
+      {
+        id: ABRTournamentTypeFilter.ContinentalChampionship,
+        name: TournamentType.Continental,
+        points: TOURNAMENT_POINTS[TournamentType.Continental],
+      },
+      {
+        id: ABRTournamentTypeFilter.NationalChampionship,
+        name: TournamentType.Nationals,
+        points: TOURNAMENT_POINTS[TournamentType.Nationals],
+      },
+    ];
+    return json(tiers.map((tier) => TierComponent.parse(tier)));
   }
 }

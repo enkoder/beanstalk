@@ -1,6 +1,4 @@
 import { getDB } from "./index";
-import { ABRTournamentTypeFilter } from "../lib/abr";
-import { TOURNAMENT_POINTS } from "../lib/ranking";
 import { Insertable, Selectable, Updateable } from "kysely";
 
 export enum Formats {
@@ -26,31 +24,6 @@ export enum TournamentType {
   Worlds = "worlds championship",
   Regionals = "regional championship",
 }
-
-export interface TierType {
-  id: ABRTournamentTypeFilter;
-  name: TournamentType;
-  points: number;
-}
-
-// TODO: this is a mess, configure this in one place
-export const Tiers = [
-  {
-    id: ABRTournamentTypeFilter.WorldsChampionship,
-    name: TournamentType.Worlds,
-    points: TOURNAMENT_POINTS[TournamentType.Worlds],
-  },
-  {
-    id: ABRTournamentTypeFilter.ContinentalChampionship,
-    name: TournamentType.Continental,
-    points: TOURNAMENT_POINTS[TournamentType.Continental],
-  },
-  {
-    id: ABRTournamentTypeFilter.NationalChampionship,
-    name: TournamentType.Nationals,
-    points: TOURNAMENT_POINTS[TournamentType.Nationals],
-  },
-];
 
 export interface TournamentsTable {
   id: number;
