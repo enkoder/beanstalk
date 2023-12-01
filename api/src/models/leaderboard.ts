@@ -1,5 +1,6 @@
 import { getDB } from "./index";
 import { Selectable, Updateable } from "kysely/dist/esm";
+import pLimit from "p-limit";
 
 export interface LeaderboardTable {
   user_id: number;
@@ -72,8 +73,17 @@ export class Leaderboards {
           .as("rank"),
       );
 
-    for (const result of await q.execute()) {
-      await Leaderboards.updateRanking(result);
+    const limit = pLimit(5);
+    const results = await q.execute();
+    for (let i = 0; i < results.length; i += 5) {
+      await Promise.all(
+        results.slice(i, i + 5).map((result) =>
+          limit(() => {
+            console.log(result);
+            Leaderboards.updateRanking(result);
+          }),
+        ),
+      );
     }
   }
 
