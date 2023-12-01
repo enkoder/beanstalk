@@ -3,11 +3,11 @@
 import { TournamentType } from "../models/tournament";
 
 // Sets the number of players who will be receiving any points. Defined as a percentage
-// of total players i.e. value of 50 implies half of the field will get points
+// of total players i.e. value of .5 implies half of the field will get points
 export const PERCENT_RECEIVING_POINTS = 0.5;
 
 // Sets the percentage of the total adjusted point total first place receives
-// i.e. 20 implies that first place will get 20% of the total available points for that tournament
+// i.e. .2 implies that first place will get 20% of the total available points for that tournament
 export const PERCENT_FOR_FIRST_PLACE = 0.2;
 
 // Defines how many additional points are added per player to the total available point
