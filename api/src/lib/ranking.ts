@@ -5,15 +5,19 @@ import { TournamentType } from "../models/tournament";
 // Sets the number of players who will be receiving any points. Defined as a percentage
 // of total players i.e. value of 50 implies half of the field will get points
 export const PERCENT_RECEIVING_POINTS = 0.5;
+
 // Sets the percentage of the total adjusted point total first place receives
 // i.e. 20 implies that first place will get 20% of the total available points for that tournament
 export const PERCENT_FOR_FIRST_PLACE = 0.2;
+
 // Defines how many additional points are added per player to the total available point
 // This is used to increase the overall payout for large tournaments
 export const EXTRA_POINTS_PER_PERSON = 20;
+
 // Sets a baseline number of players a tournament must have in order to receive any points at all
 // This means that small tournaments are not eligible for point payouts
 export const MIN_PLAYERS_TO_BE_LEGAL = 10;
+
 // Defines the baseline point total per tournament type before the additional points per player is added
 export const TOURNAMENT_POINTS = {
   [TournamentType.Worlds]: 4000,
