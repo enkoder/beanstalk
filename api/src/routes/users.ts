@@ -71,10 +71,16 @@ export class GetUserResults extends OpenAPIRoute {
       ? getFactionFromCode(factionCode as FactionCode)
       : undefined;
 
-    const seasonId = Number(req.query["season"] || 0);
-    const season = await Seasons.getFromId(seasonId);
+    let seasonName: string = undefined;
+    let seasonId: number = undefined;
 
-    const results = await Results.getManyExpanded(
+    if (req.query["season"] != undefined) {
+      const season = await Seasons.getFromId(Number(req.query["season"]));
+      seasonName = season.name;
+      seasonId = season.id;
+    }
+
+    const results = await Results.getExpanded(
       user.id,
       seasonId,
       faction,
@@ -83,7 +89,7 @@ export class GetUserResults extends OpenAPIRoute {
 
     const currentRank = await Leaderboards.getUserRank(
       user.id,
-      season.id,
+      seasonId,
       faction,
       format,
     );
@@ -91,8 +97,10 @@ export class GetUserResults extends OpenAPIRoute {
     return json({
       user_id: user.id,
       user_name: user.name,
-      seasonId: season.id,
-      seasonName: season.name,
+      seasonId: seasonId,
+      seasonName: seasonName,
+      format: format,
+      factionCode: faction?.code,
       rank: currentRank,
       results: results.map((result) => {
         try {

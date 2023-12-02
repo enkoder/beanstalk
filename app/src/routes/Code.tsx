@@ -31,7 +31,7 @@ export function Code() {
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
       <div className={"m-4 flex w-full flex-col text-gray-300 sm:w-5/6"}>
-        <PageHeading text={"Code"} className={"mb-8"} />
+        <PageHeading text={"Code"} includeUnderline={true} className={"mb-8"} />
         <Select
           label={"Theme Picker"}
           className={"mb-4 w-64 rounded-3xl"}

@@ -24,13 +24,13 @@ export enum TournamentType {
 export interface TournamentsTable {
   id: number;
   name: string;
-  date: string | null;
   concluded: number;
   location: string;
   format: Format;
   type: TournamentType;
-  season_id: number;
-  registration_count: number;
+  players_count: number;
+  season_id: number | null;
+  date: string | null;
 }
 
 export const TournamentsTableKeys: Array<keyof TournamentsTable> = [
@@ -112,6 +112,7 @@ export class Tournaments {
       .returningAll()
       .executeTakeFirst();
   }
+
   public static async insert(
     tournament: UpdateTournament,
     overwriteOnConflict: boolean = true,

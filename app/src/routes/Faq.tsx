@@ -2,6 +2,7 @@ import { PageHeading } from "../stories/PageHeader";
 import { Anchor } from "../stories/Anchor";
 // @ts-ignore
 import doggo from "../../assets/doggo.png";
+import { Sep } from "../stories/Sep";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -202,21 +203,25 @@ export function Faq() {
                 {question.title}
               </Anchor>
               <p className={"pl-2 text-gray-400"}> {question.content}</p>
+              <Sep showLine={true} className={"my-4"} />
             </>
           ))}
-        </div>
-        <div className={"my-32 flex flex-row justify-center"}>
-          <span className={"text-lg"}>
-            Made with{" "}
-            <FontAwesomeIcon
-              className={"text-xl text-red-700"}
-              icon={faHeart}
-            />{" "}
-            by{" "}
-            <a className={"text-cyan-600"} href={"https://github.com/enkoder"}>
-              enkoder
-            </a>
-          </span>
+          <div className={"my-32 flex flex-row justify-center"}>
+            <span className={"text-lg"}>
+              Made with{" "}
+              <FontAwesomeIcon
+                className={"text-xl text-red-700"}
+                icon={faHeart}
+              />{" "}
+              by{" "}
+              <a
+                className={"text-cyan-600"}
+                href={"https://github.com/enkoder"}
+              >
+                enkoder
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </div>

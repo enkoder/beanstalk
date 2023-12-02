@@ -16,7 +16,6 @@ import {
   useState,
 } from "react";
 
-const DEFAULT_SEASON = 1;
 export const SEASON_PARAM_NAME = "season";
 export const FACTION_PARAM_NAME = "factionCode";
 export const FORMAT_PARAM_NAME = "formatCode";
@@ -28,17 +27,17 @@ type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export type FilterSectionValues = {
-  searchString: string;
-  seasonId: number;
-  format: Format | undefined;
-  faction: string | undefined;
+  searchString?: string;
+  seasonId?: number;
+  format?: Format;
+  faction?: string;
 };
 
 export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
-  const searchString = sp.get(SEARCH_PARAM_NAME) || "";
-  const seasonId = Number(sp.get(SEASON_PARAM_NAME) || DEFAULT_SEASON);
+  const searchString = sp.get(SEARCH_PARAM_NAME) || undefined;
+  const seasonId = Number(sp.get(SEASON_PARAM_NAME)) || undefined;
   const faction = sp.get(FACTION_PARAM_NAME) || undefined;
-  const format = sp.get(FORMAT_PARAM_NAME) || undefined;
+  const format = (sp.get(FORMAT_PARAM_NAME) as Format) || undefined;
   return { searchString, seasonId, format, faction };
 }
 
@@ -47,16 +46,17 @@ export function getSearchParamsFromValues(
   base: string = "",
 ) {
   const sp = new URLSearchParams(base);
-  sp.set(SEASON_PARAM_NAME, String(values.seasonId));
-
   if (values.searchString) {
     sp.set(SEARCH_PARAM_NAME, values.searchString);
   }
-  if (values.faction) {
-    sp.set(FACTION_PARAM_NAME, values.faction);
+  if (values.seasonId) {
+    sp.set(SEASON_PARAM_NAME, String(values.seasonId));
   }
   if (values.format) {
     sp.set(FORMAT_PARAM_NAME, values.format);
+  }
+  if (values.faction) {
+    sp.set(FACTION_PARAM_NAME, values.faction);
   }
   return sp;
 }
@@ -71,7 +71,7 @@ export function FilterSection({
   const [searchString, setSearchString] = useState<string>("");
 
   const [seasons, setSeasons] = useState<Season[]>([]);
-  const [selectedSeasonId, setSelectedSeasonId] = useState<number>(
+  const [selectedSeasonId, setSelectedSeasonId] = useState<number | undefined>(
     values.seasonId,
   );
 
@@ -180,10 +180,11 @@ export function FilterSection({
   return (
     <div
       className={
-        "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
+        "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
       }
     >
       <Select
+        initialOptionText={"Season Filter..."}
         className={"h-12 w-full rounded-3xl"}
         label={"Seasons"}
         onChange={handleSeasonChange}

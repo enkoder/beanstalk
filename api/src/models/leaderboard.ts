@@ -1,35 +1,8 @@
 import { getDB } from "./index";
 import { Faction } from "./factions";
 import { Format } from "./tournament";
-import { Selectable, Updateable } from "kysely/dist/esm";
-import pLimit from "p-limit";
-
-export interface LeaderboardTable {
-  user_id: number;
-  season_id: number;
-  rank: number;
-  points: number;
-}
-
-export type LeaderboardRow = Selectable<LeaderboardTable>;
-export type UpdateLeaderboard = Updateable<LeaderboardTable>;
 
 export class Leaderboards {
-  public static async getFromSeasonIdExpanded(
-    seasonId: number,
-  ): Promise<LeaderboardRow[]> {
-    return await getDB()
-      .selectFrom("leaderboards")
-      .innerJoin("seasons", "seasons.id", "leaderboards.season_id")
-      .innerJoin("users", "leaderboards.user_id", "users.id")
-      .selectAll("leaderboards")
-      .select(["seasons.name as season_name"])
-      .select(["users.name as user_name"])
-      .where("leaderboards.season_id", "=", seasonId)
-      .orderBy("rank asc")
-      .execute();
-  }
-
   public static async getUserRank(
     userId: number,
     seasonId?: number,
@@ -68,7 +41,7 @@ export class Leaderboards {
           ])
           .innerJoin("users", "results.user_id", "users.id")
           .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
-          .innerJoin("seasons", "seasons.id", "results.season_id")
+          .innerJoin("seasons", "seasons.id", "tournaments.season_id")
           .where("user_id", "!=", 0)
           .groupBy("user_id")
           .orderBy(["points desc", "attended desc"]);
@@ -101,30 +74,5 @@ export class Leaderboards {
       );
 
     return await q.execute();
-  }
-
-  public static async recalculateLeaderboard(seasonId?: number) {
-    const rows = await this.getExpanded(seasonId);
-    const limit = pLimit(5);
-    for (let i = 0; i < rows.length; i += 5) {
-      await Promise.all(
-        rows.slice(i, i + 5).map((row) =>
-          limit(() => {
-            Leaderboards.updateRanking(row);
-          }),
-        ),
-      );
-    }
-  }
-
-  static async updateRanking(leaderboard: UpdateLeaderboard) {
-    return await getDB()
-      .insertInto("leaderboards")
-      .values(leaderboard)
-      .onConflict((oc) => {
-        return oc.columns(["user_id", "season_id"]).doUpdateSet(leaderboard);
-      })
-      .returningAll()
-      .executeTakeFirst();
   }
 }

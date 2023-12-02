@@ -38,7 +38,7 @@ export function Sim() {
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
       <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
-        <PageHeading text={"Bean Simulator"} />
+        <PageHeading includeUnderline={true} text={"Bean Simulator"} />
         <text className={"mb-8 text-gray-400"}>
           Below you can enter in the configuration for your tournament and get a
           breakdown of the bean distribution. Use this to figure out how many

@@ -17,7 +17,7 @@ export function Seasons() {
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
       <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
-        <PageHeading text={"Seasons"} />
+        <PageHeading includeUnderline={true} text={"Seasons"} />
         <small className={"text-sm text-gray-400"}>
           Seasons are a mechanic that keeps the leaderboard fresh. Seasons are
           typically tied to NSG content releases and the yearly tournament

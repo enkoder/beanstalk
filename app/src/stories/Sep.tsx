@@ -11,7 +11,7 @@ export const Sep = ({ showLine, className }: SepProps) => {
     <hr
       className={twMerge(
         className,
-        clsx(showLine ? "border border-gray-600" : "border-none"),
+        clsx(showLine ? "border border-gray-700" : "border-none"),
       )}
     />
   );

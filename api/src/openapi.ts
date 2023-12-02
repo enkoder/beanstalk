@@ -21,11 +21,11 @@ export const ResultComponent = z
   .object({
     rank_swiss: z.number(),
     rank_cut: z.number().nullable().optional(),
-    season_id: z.number(),
+    season_id: z.number().nullable(),
     points_earned: z.number(),
     tournament_id: z.number(),
     tournament_name: z.string(),
-    registration_count: z.number(),
+    players_count: z.number(),
     corp_deck_identity_id: z.number(),
     corp_deck_identity_name: z.string().nullable().optional(),
     corp_deck_faction: z.string().nullable().optional(),
@@ -45,7 +45,6 @@ export const SeasonComponent = z
   .object({
     id: z.number(),
     name: z.string(),
-    tier: z.string(),
     started_at: z.string().datetime(),
     ended_at: z.coerce.date().optional().nullable(),
   })
@@ -445,8 +444,10 @@ export const UserResultsResponseComponent = z
     user_name: z.string(),
     user_id: z.number(),
     rank: z.number(),
-    seasonId: z.number(),
-    seasonName: z.string(),
+    seasonId: z.number().optional(),
+    seasonName: z.string().optional(),
+    format: FormatComponent.optional(),
+    factionCode: z.string().optional(),
     results: z.array(ResultComponent),
   })
   .openapi("UserResultsResponse");
@@ -456,7 +457,7 @@ export const GetUserResultsSchema = {
   summary: "Gets the results for the given user",
   parameters: {
     user: Path(Str, { description: "Name or ID of the user" }),
-    season: Query(z.coerce.number()),
+    season: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
   },

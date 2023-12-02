@@ -2,27 +2,37 @@ import { getDB } from "./index";
 import { Format, TournamentType } from "./tournament";
 import { Faction, FactionCode } from "./factions";
 import { Selectable, Updateable } from "kysely";
-export interface ResultsTable {
+
+export type ResultsTable = {
   tournament_id: number;
-  tournament_name?: string;
   user_id: number;
-  user_name?: string;
-  runner_deck_faction: FactionCode;
+
   runner_deck_identity_id: number;
+  runner_deck_faction: FactionCode;
   runner_deck_url: string;
+  runner_deck_identity_name: string;
+
   corp_deck_identity_id: number;
-  corp_deck_url: string;
   corp_deck_faction: FactionCode;
+  corp_deck_url: string;
+  corp_deck_identity_name: string;
+
   rank_swiss: number;
   rank_cut: number;
-  season_id: number;
+
   points_earned: number;
-  runner_deck_identity_name: string;
-  corp_deck_identity_name: string;
-  format: Format;
-}
+};
+
 export type UpdateResult = Updateable<ResultsTable>;
 export type Result = Selectable<ResultsTable>;
+
+export type ResultsTableExpanded = ResultsTable & {
+  players_count: number;
+  tournament_name: string;
+  user_name: string;
+  format: Format;
+};
+export type ResultExpanded = Selectable<ResultsTableExpanded>;
 
 export class Results {
   public static async get(
@@ -39,7 +49,7 @@ export class Results {
   public static async getAll() {
     return await getDB().selectFrom("results").selectAll().execute();
   }
-  public static async getManyExpandedByTournamentId(
+  public static async getByTournamentIdExpanded(
     tournamentId: number,
   ): Promise<Result[]> {
     // TODO: make generic
@@ -49,10 +59,10 @@ export class Results {
       .innerJoin("users", "users.id", "results.user_id")
       .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
       .select([
-        "users.id as user_id",
         "users.name as user_name",
         "tournaments.name as tournament_name",
-        "tournaments.registration_count as registration_count",
+        "tournaments.players_count as players_count",
+        "tournaments.format as format",
       ])
       .orderBy(["results.rank_cut", "results.rank_swiss"])
       .where("tournament_id", "=", tournamentId);
@@ -60,13 +70,12 @@ export class Results {
     return await q.execute();
   }
 
-  public static async getManyExpanded(
+  public static async getExpanded(
     id: number,
     seasonId?: number,
     faction?: Faction,
     format?: Format,
-  ): Promise<Result[]> {
-    // TODO: make generic
+  ): Promise<ResultExpanded[]> {
     let q = getDB()
       .selectFrom("results")
       .selectAll()
@@ -75,7 +84,7 @@ export class Results {
       .select([
         "users.name as user_name",
         "tournaments.name as tournament_name",
-        "tournaments.registration_count as registration_count",
+        "tournaments.players_count as players_count",
         "tournaments.format as format",
       ])
       .orderBy("tournaments.date", "desc")
@@ -135,6 +144,7 @@ export class Results {
       .where("tournaments.season_id", "=", season_id)
       .execute();
   }
+
   public static async getByTournamentType(type: TournamentType) {
     return getDB()
       .selectFrom("results")

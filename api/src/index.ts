@@ -1,7 +1,6 @@
 import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
 import {
   IngestTournaments,
-  RecalculateLeaderboard,
   Rerank,
   UpdateCards,
   UpdateTournamentSeasons,
@@ -90,7 +89,6 @@ router
   .post("/api/admin/ingestTournaments", IngestTournaments)
   .post("/api/admin/updateCards", UpdateCards)
   .post("/api/admin/updateTournamentsSeason", UpdateTournamentSeasons)
-  .post("/api/admin/recalculateLeaderboard", RecalculateLeaderboard)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

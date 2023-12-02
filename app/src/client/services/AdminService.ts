@@ -80,22 +80,4 @@ export class AdminService {
         });
     }
 
-    /**
-     * Triggers a recalculation of the leaderboard table
-     * @param season
-     * @returns any Empty object indicates success on triggering recalculation.
-     * @throws ApiError
-     */
-    public static postRecalculateLeaderboard(
-        season?: number | null,
-    ): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/admin/recalculateLeaderboard',
-            query: {
-                'season': season,
-            },
-        });
-    }
-
 }

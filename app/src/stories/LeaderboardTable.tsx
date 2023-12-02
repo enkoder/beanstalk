@@ -46,7 +46,7 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
               row.user_name
                 ? row.user_name
                     .toLowerCase()
-                    .includes(values.searchString.toLowerCase())
+                    .includes(values.searchString?.toLowerCase() || "")
                 : false,
             )
             .map((row) => (

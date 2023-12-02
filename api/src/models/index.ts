@@ -1,7 +1,6 @@
 import { UsersTable } from "./user";
 import { SeasonsTable } from "./season";
 import { TournamentsTable } from "./tournament";
-import { LeaderboardTable } from "./leaderboard";
 import { ResultsTable } from "./results";
 import { error } from "itty-router";
 import { D1Dialect } from "kysely-d1";
@@ -34,6 +33,5 @@ export interface Database {
   users: UsersTable;
   seasons: SeasonsTable;
   tournaments: TournamentsTable;
-  leaderboards: LeaderboardTable;
   results: ResultsTable;
 }

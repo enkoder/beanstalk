@@ -1,4 +1,4 @@
-import { Formats, Tournament, TournamentType } from "../models/tournament";
+import { Format, Tournament, TournamentType } from "../models/tournament";
 import { Result } from "../models/results";
 import { z } from "zod";
 
@@ -60,20 +60,18 @@ export const ABRTournament = z.object({
 
 export function abrToTournament(
   abr: ABRTournamentType,
-  seasonId: number,
+  seasonId: number | null,
 ): Tournament {
   return {
     id: abr.id,
-    season_id: seasonId,
     name: abr.title,
-    date: abr.date.toString(),
-    location: abr.location,
-    type: abr.type,
-    format: abr.format as Formats,
     concluded: abr.concluded ? 1 : 0,
-    // Damn, didn't realize that players_count is the value of
-    // TODO: rename column to players_count
-    registration_count: abr.players_count,
+    location: abr.location,
+    format: abr.format as Format,
+    type: abr.type,
+    players_count: abr.players_count,
+    season_id: seasonId,
+    date: abr.date.toString(),
   };
 }
 export type ABRTournamentType = z.infer<typeof ABRTournament>;

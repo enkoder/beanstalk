@@ -19,7 +19,6 @@ import {
   TOURNAMENT_POINTS,
 } from "./lib/ranking";
 import { Seasons } from "./models/season";
-import { Leaderboards } from "./models/leaderboard";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -99,7 +98,7 @@ async function handleResultIngest(
   // Being explicit, even though defaults are supplied
   const { points } = calculateTournamentPointDistribution(
     TOURNAMENT_POINTS[tournament.type],
-    tournament.registration_count,
+    tournament.players_count,
   );
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
@@ -147,9 +146,10 @@ async function handleTournamentIngest(
   abrTournament: ABRTournamentType,
 ) {
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
+  const seasonId = seasons.length != 0 ? seasons[0].id : null;
 
   const tournament = await Tournaments.insert(
-    abrToTournament(abrTournament, seasons[0].id),
+    abrToTournament(abrTournament, seasonId),
     true,
   );
 
@@ -273,14 +273,6 @@ export async function handleScheduled(event: ScheduledEvent, env: Env) {
       );
       await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
 
-      break;
-
-    case "*/30 * * * *":
-      // Every thirty minutes
-      for (const season of await Seasons.getAll()) {
-        await Leaderboards.recalculateLeaderboard(season.id);
-        console.log(`CRON: recalculateLeaderboard | seasons_id: ${season.id}`);
-      }
       break;
   }
 }
