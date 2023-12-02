@@ -38,6 +38,10 @@
         },
         "required": ["id", "name", "email"]
       },
+      "Format": {
+        "type": "string",
+        "enum": ["standard", "startup", "eternal"]
+      },
       "Result": {
         "type": "object",
         "properties": {
@@ -57,7 +61,8 @@
           "runner_deck_faction": { "type": ["string", "null"] },
           "runner_deck_url": { "type": ["string", "null"] },
           "user_id": { "type": "number" },
-          "user_name": { "type": "string" }
+          "user_name": { "type": "string" },
+          "format": { "$ref": "#/components/schemas/Format" }
         },
         "required": [
           "rank_swiss",
@@ -69,7 +74,8 @@
           "corp_deck_identity_id",
           "runner_deck_identity_id",
           "user_id",
-          "user_name"
+          "user_name",
+          "format"
         ]
       },
       "UserResultsResponse": {
@@ -105,10 +111,6 @@
           "season_name": { "type": "string" }
         },
         "required": ["points", "rank", "user_id", "season_id", "season_name"]
-      },
-      "Format": {
-        "type": "string",
-        "enum": ["standard", "startup", "eternal"]
       },
       "GetPointDistributionResponse": {
         "type": "object",
@@ -348,9 +350,21 @@
             "in": "path"
           },
           {
-            "schema": { "type": ["number", "null"], "default": 0 },
+            "schema": { "type": ["number", "null"] },
             "required": false,
             "name": "season",
+            "in": "query"
+          },
+          {
+            "schema": { "type": "string" },
+            "required": false,
+            "name": "factionCode",
+            "in": "query"
+          },
+          {
+            "schema": { "$ref": "#/components/schemas/Format" },
+            "required": false,
+            "name": "format",
             "in": "query"
           }
         ],

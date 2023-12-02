@@ -1,6 +1,6 @@
 import { getDB } from "./index";
-import { TournamentType } from "./tournament";
-import { FactionCode } from "./factions";
+import { Format, TournamentType } from "./tournament";
+import { Faction, FactionCode } from "./factions";
 import { Selectable, Updateable } from "kysely";
 export interface ResultsTable {
   tournament_id: number;
@@ -19,6 +19,7 @@ export interface ResultsTable {
   points_earned: number;
   runner_deck_identity_name: string;
   corp_deck_identity_name: string;
+  format: Format;
 }
 export type UpdateResult = Updateable<ResultsTable>;
 export type Result = Selectable<ResultsTable>;
@@ -59,9 +60,11 @@ export class Results {
     return await q.execute();
   }
 
-  public static async getManyByUserIdExpanded(
+  public static async getManyExpanded(
     id: number,
     seasonId?: number,
+    faction?: Faction,
+    format?: Format,
   ): Promise<Result[]> {
     // TODO: make generic
     let q = getDB()
@@ -73,12 +76,22 @@ export class Results {
         "users.name as user_name",
         "tournaments.name as tournament_name",
         "tournaments.registration_count as registration_count",
+        "tournaments.format as format",
       ])
       .orderBy("tournaments.date", "desc")
       .where("user_id", "=", id);
 
     if (seasonId) {
       q = q.where("tournaments.season_id", "=", seasonId);
+    }
+    if (faction && faction.side_code == "runner") {
+      q = q.where("results.runner_deck_faction", "=", faction.code);
+    }
+    if (faction && faction.side_code == "corp") {
+      q = q.where("results.corp_deck_faction", "=", faction.code);
+    }
+    if (format) {
+      q = q.where("tournaments.format", "=", format);
     }
 
     return await q.execute();

@@ -18,7 +18,7 @@ import {
   TOURNAMENT_POINTS,
 } from "../lib/ranking";
 import { Leaderboards } from "../models/leaderboard";
-import { Formats, FormatType, TournamentType } from "../models/tournament";
+import { Format, Formats, TournamentType } from "../models/tournament";
 import { ABRTournamentTypeFilter } from "../lib/abr";
 import { FactionCode, Factions, getFactionFromCode } from "../models/factions";
 import { json } from "itty-router";
@@ -30,7 +30,7 @@ export class GetLeaderboard extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const seasonId = Number(req.query!["seasonId"]);
     const factionCode = req.query!["factionCode"];
-    const format = req.query!["format"] as FormatType;
+    const format = req.query!["format"] as Format;
 
     const faction = factionCode
       ? getFactionFromCode(factionCode as FactionCode)
@@ -122,7 +122,7 @@ export class GetFactions extends OpenAPIRoute {
 export class GetFormats extends OpenAPIRoute {
   static schema = GetFormatSchema;
   async handle() {
-    const formats: FormatType[] = [];
+    const formats: Format[] = [];
     for (const format of Formats) {
       formats.push(FormatComponent.parse(format));
     }

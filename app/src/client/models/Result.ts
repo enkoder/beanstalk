@@ -3,6 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { Format } from './Format';
+
 export type Result = {
     rank_swiss: number;
     rank_cut?: number | null;
@@ -21,5 +23,6 @@ export type Result = {
     runner_deck_url?: string | null;
     user_id: number;
     user_name: string;
+    format: Format;
 };
 

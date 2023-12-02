@@ -51,11 +51,14 @@ export function Results() {
 
   const getResults = (v: FilterSectionValues) => {
     if (params.user) {
-      ResultsService.getGetUserResults(params.user, v.seasonId).then(
-        (results) => {
-          setResults(results);
-        },
-      );
+      ResultsService.getGetUserResults(
+        params.user,
+        v.seasonId,
+        v.faction,
+        v.format,
+      ).then((results) => {
+        setResults(results);
+      });
     }
   };
 
@@ -76,8 +79,12 @@ export function Results() {
           {results && (
             <>
               <PageHeading text={results.user_name} />
-              {results.rank != null && (
-                <text className={"text-gray-400"}>
+              {results.results.length === 0 ? (
+                <text className={"text-lg text-gray-400"}>
+                  No results found for search filters
+                </text>
+              ) : (
+                <text className={"text-lg text-gray-400"}>
                   Ranked #{results.rank} for Season {results.seasonId} -{" "}
                   {results.seasonName}
                 </text>
@@ -99,6 +106,12 @@ export function Results() {
                 className={"border-b-2 border-solid border-gray-300"}
               >
                 Tournament
+              </th>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                Format
               </th>
               <th
                 scope="col"
@@ -155,6 +168,7 @@ export function Results() {
                       </small>
                     </span>
                   </td>
+                  <td>{result.format}</td>
                   <td>{Decks(result)}</td>
                   <td>{formatPlacement(result)}</td>
                   <td>{result.points_earned.toFixed(2)}</td>

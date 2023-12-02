@@ -12,6 +12,8 @@ import { Users } from "../models/user";
 import { Results } from "../models/results";
 import { Seasons } from "../models/season";
 import { Leaderboards } from "../models/leaderboard";
+import { Format } from "../models/tournament";
+import { FactionCode, getFactionFromCode } from "../models/factions";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 
@@ -56,18 +58,34 @@ export class GetUserResults extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const userIdOrName = req.params!["user"];
-    console.log(decodeURI(userIdOrName));
+
     const user = await Users.getByIdOrName(decodeURI(userIdOrName));
     if (!user) {
       return errorResponse(400, "User does not exist");
     }
 
+    const format = req.query["format"] as Format;
+
+    const factionCode = req.query["factionCode"];
+    const faction = factionCode
+      ? getFactionFromCode(factionCode as FactionCode)
+      : undefined;
+
     const seasonId = Number(req.query["season"] || 0);
     const season = await Seasons.getFromId(seasonId);
-    const results = await Results.getManyByUserIdExpanded(user.id, seasonId);
-    const currentRank = await Leaderboards.getUserRankForSeason(
-      season.id,
+
+    const results = await Results.getManyExpanded(
       user.id,
+      seasonId,
+      faction,
+      format,
+    );
+
+    const currentRank = await Leaderboards.getUserRank(
+      user.id,
+      season.id,
+      faction,
+      format,
     );
 
     return json({

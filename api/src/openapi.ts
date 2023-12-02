@@ -3,6 +3,8 @@ import { Formats } from "./models/tournament";
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 
+export const FormatComponent = z.enum(Formats).openapi("Format");
+
 export const UserComponent = z
   .object({
     id: z.number({ description: "User ID" }),
@@ -34,6 +36,7 @@ export const ResultComponent = z
     runner_deck_url: z.string().nullable().optional(),
     user_id: z.number(),
     user_name: z.string(),
+    format: FormatComponent,
   })
   .openapi("Result");
 export type ResultComponentType = z.infer<typeof ResultComponent>;
@@ -137,8 +140,6 @@ export const GetPointDistributionResponseComponent = z
 export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
-
-export const FormatComponent = z.enum(Formats).openapi("Format");
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -455,7 +456,9 @@ export const GetUserResultsSchema = {
   summary: "Gets the results for the given user",
   parameters: {
     user: Path(Str, { description: "Name or ID of the user" }),
-    season: Query(z.coerce.number().optional().default(0)),
+    season: Query(z.coerce.number()),
+    factionCode: Query(z.string().optional()),
+    format: Query(FormatComponent.optional()),
   },
   responses: {
     "200": {

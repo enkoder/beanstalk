@@ -1,7 +1,7 @@
 import { getDB } from "./index";
 import { Insertable, Selectable, Updateable } from "kysely";
 
-export type FormatType = "standard" | "startup" | "eternal";
+export type Format = "standard" | "startup" | "eternal";
 export const Formats = ["standard", "startup", "eternal"] as const;
 
 export enum TournamentType {
@@ -27,7 +27,7 @@ export interface TournamentsTable {
   date: string | null;
   concluded: number;
   location: string;
-  format: FormatType;
+  format: Format;
   type: TournamentType;
   season_id: number;
   registration_count: number;

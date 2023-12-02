@@ -1,6 +1,6 @@
 import { getDB } from "./index";
 import { Faction } from "./factions";
-import { FormatType } from "./tournament";
+import { Format } from "./tournament";
 import { Selectable, Updateable } from "kysely/dist/esm";
 import pLimit from "p-limit";
 
@@ -30,24 +30,28 @@ export class Leaderboards {
       .execute();
   }
 
-  public static async getUserRankForSeason(seasonId: number, userId: number) {
-    const result = await getDB()
-      .selectFrom("leaderboards")
-      .leftJoin("seasons", "leaderboards.season_id", "seasons.id")
-      .select("rank")
-      .where("season_id", "=", seasonId)
-      .where("user_id", "=", userId)
-      .executeTakeFirst();
-    if (!result) {
+  public static async getUserRank(
+    userId: number,
+    seasonId?: number,
+    faction?: Faction,
+    format?: Format,
+  ) {
+    const results = await this.getExpanded(seasonId, faction, format, userId);
+    if (!results.length) {
       return 0;
     }
-    return result.rank;
+
+    if (userId != results[0].user_id) {
+      throw new Error(`Error: Could not determine rank for user ${userId}`);
+    }
+    return results[0].rank;
   }
 
   public static async getExpanded(
     seasonId?: number,
     faction?: Faction,
-    format?: FormatType,
+    format?: Format,
+    userId?: number,
   ) {
     const q = getDB()
       .selectFrom((innerEb) => {
@@ -81,6 +85,9 @@ export class Leaderboards {
         }
         if (format) {
           q = q.where("tournaments.format", "=", format);
+        }
+        if (userId) {
+          q = q.where("users.id", "=", userId);
         }
 
         return q.as("inner");
