@@ -1,17 +1,22 @@
+import {
+  FilterSectionValues,
+  getSearchParamsFromValues,
+} from "./FilterSection";
 import { LeaderboardRow } from "../client";
 import { Link } from "react-router-dom";
 
 type LeaderboardProps = {
   leaderboard?: LeaderboardRow[];
-  searchString: string;
-  selectedSeason: number;
+  values: FilterSectionValues;
 };
 
-export function LeaderboardTable({
-  leaderboard,
-  searchString,
-  selectedSeason,
-}: LeaderboardProps) {
+export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
+  const getLinkToUserSearchParams = (row: LeaderboardRow) => {
+    const userName = encodeURI(row.user_name || "");
+    const searchParams = getSearchParamsFromValues(values);
+    return `results/${userName}?${searchParams.toString()}`;
+  };
+
   return (
     <table
       className={
@@ -41,7 +46,7 @@ export function LeaderboardTable({
               row.user_name
                 ? row.user_name
                     .toLowerCase()
-                    .includes(searchString.toLowerCase())
+                    .includes(values.searchString.toLowerCase())
                 : false,
             )
             .map((row) => (
@@ -55,9 +60,7 @@ export function LeaderboardTable({
                     className={
                       "hover:font-bold hover:text-cyan-400 hover:underline"
                     }
-                    to={`results/${
-                      row.user_name && encodeURI(row.user_name)
-                    }?season=${selectedSeason}`}
+                    to={getLinkToUserSearchParams(row)}
                   >
                     {row.user_name}
                   </Link>

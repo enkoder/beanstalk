@@ -8,6 +8,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { Faction } from './models/Faction';
+export { Format } from './models/Format';
 export type { GetPointDistributionResponse } from './models/GetPointDistributionResponse';
 export type { LeaderboardRow } from './models/LeaderboardRow';
 export type { Result } from './models/Result';

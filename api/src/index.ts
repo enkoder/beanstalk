@@ -12,6 +12,7 @@ import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
 import {
   GetFactions,
+  GetFormats,
   GetLeaderboard,
   GetPointDistribution,
   GetTiers,
@@ -70,6 +71,7 @@ router
   .get("/api/leaderboard", GetLeaderboard)
   .get("/api/point-distribution", GetPointDistribution)
   .get("/api/factions", GetFactions)
+  .get("/api/formats", GetFormats)
 
   // Seasons
   .get("/api/seasons", GetSeasons)

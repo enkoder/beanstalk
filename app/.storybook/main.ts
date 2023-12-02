@@ -1,5 +1,3 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
-
 import { join, dirname } from "path";
 
 /**
@@ -9,7 +7,7 @@ import { join, dirname } from "path";
 function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, "package.json")));
 }
-const config: StorybookConfig = {
+const config = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
     getAbsolutePath("@storybook/addon-links"),
@@ -19,13 +17,10 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-interactions"),
     "storybook-addon-react-router-v6",
   ],
-  framework: {
-    name: getAbsolutePath("@storybook/react-webpack5"),
-    options: {},
-  },
-  docs: {
-    autodocs: "tag",
-  },
+  framework: "storybook-react-rspack",
+  options: { fastRefresh: true },
+  typescript: { reactDocgen: "react-docgen" },
   staticDirs: ["../public"],
 };
+
 export default config;

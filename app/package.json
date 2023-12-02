@@ -22,7 +22,7 @@
     "@storybook/blocks": "^7.5.3",
     "@storybook/preset-create-react-app": "^7.5.3",
     "@storybook/react": "^7.5.3",
-    "@storybook/react-webpack5": "^7.5.3",
+    "storybook-react-rspack": "latest",
     "@storybook/testing-library": "^0.2.2",
     "@tailwindcss/typography": "^0.5.10",
     "@types/react": "18.2.0",

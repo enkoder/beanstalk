@@ -605,13 +605,30 @@ html {
   top: 50%;
 }
 
+.order-1 {
+  order: 1;
+}
+
+.order-last {
+  order: 9999;
+}
+
 .m-4 {
   margin: 1rem;
+}
+
+.m-8 {
+  margin: 2rem;
 }
 
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .mb-0 {
@@ -658,16 +675,16 @@ html {
   display: block;
 }
 
-.inline {
-  display: inline;
-}
-
 .flex {
   display: flex;
 }
 
 .table {
   display: table;
+}
+
+.grid {
+  display: grid;
 }
 
 .h-10 {
@@ -791,6 +808,10 @@ html {
   resize: both;
 }
 
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -825,6 +846,10 @@ html {
 
 .gap-5 {
   gap: 1.25rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
 }
 
 .overflow-auto {
@@ -1124,6 +1149,10 @@ html {
 }
 
 @media (min-width: 768px) {
+  .md\:flex {
+    display: flex;
+  }
+
   .md\:w-full {
     width: 100%;
   }
@@ -1135,9 +1164,17 @@ html {
   .md\:gap-8 {
     gap: 2rem;
   }
+
+  .md\:gap-4 {
+    gap: 1rem;
+  }
 }
 
 @media (min-width: 1024px) {
+  .lg\:flex {
+    display: flex;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
   }

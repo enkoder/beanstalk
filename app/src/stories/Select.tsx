@@ -9,6 +9,7 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
 export function Select({
   label,
   id,
+  name,
   initialOptionText,
   className,
   onChange,
@@ -24,6 +25,7 @@ export function Select({
       )}
       <select
         id={id}
+        name={name}
         className={twMerge(
           className,
           "h-full w-full border border-gray-600 bg-slate-900 px-4 py-2 text-gray-400",
@@ -31,7 +33,7 @@ export function Select({
         onChange={onChange}
         {...props}
       >
-        {initialOptionText && <option>{initialOptionText}</option>}
+        {initialOptionText && <option value={""}>{initialOptionText}</option>}
         {children}
       </select>
     </div>

@@ -1,107 +1,22 @@
-import {
-  Faction,
-  LeaderboardRow,
-  LeaderboardService,
-  Season,
-  SeasonsService,
-} from "../client";
+import { LeaderboardRow, LeaderboardService } from "../client";
 import { LeaderboardTable } from "../stories/LeaderboardTable";
-import { Select } from "../stories/Select";
-import { Input } from "../stories/Input";
+import {
+  FilterSection,
+  FilterSectionValues,
+  getFilterValues,
+} from "../stories/FilterSection";
 import { PageHeading } from "../stories/PageHeader";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-
-const DEFAULT_SEASON = 1;
-const seasonParam = "season";
-const factionCodeParam = "factionCode";
-
-export async function LeaderboardLoader() {
-  const [leaderboard, seasons] = await Promise.all([
-    LeaderboardService.getGetLeaderboard(),
-    SeasonsService.getGetSeasons(),
-  ]);
-  return { leaderboard, seasons };
-}
 
 export function Leaderboard() {
-  const [searchParams] = useSearchParams();
-
-  const initialSeason = Number(searchParams.get(seasonParam) || DEFAULT_SEASON);
   const [leaderboardRows, setLeaderboardRows] = useState<LeaderboardRow[]>();
-  const [seasons, setSeasons] = useState<Season[]>([]);
-  const [searchString, setSearchString] = useState<string>("");
-  const [selectedSeason, setSelectedSeason] = useState<number>(initialSeason);
+  const [searchParams] = useSearchParams();
+  const values = getFilterValues(searchParams);
 
-  const [selectedFaction, setSelectedFaction] = useState<number>(0);
-  const [factions, setFactions] = useState<Faction[]>([]);
-
-  const fetchLeaderboard = useCallback(async (seasonId: number | null) => {
-    // Needing to -1 here since we are adding in a 0th item in the default list
-    const faction: Faction = factions[selectedFaction - 1];
-    LeaderboardService.getGetLeaderboard(seasonId, faction?.code).then(
+  const getLeaderboard = (v: FilterSectionValues) => {
+    LeaderboardService.getGetLeaderboard(v.seasonId, v.faction, v.format).then(
       (rows) => {
-        setLeaderboardRows(rows);
-      },
-    );
-  }, []);
-
-  const fetchFactions = useCallback(async () => {
-    LeaderboardService.getGetFactions().then((factions) => {
-      setFactions(factions);
-    });
-  }, []);
-
-  const fetchSeasons = useCallback(async () => {
-    SeasonsService.getGetSeasons().then((seasons) => {
-      setSeasons(seasons);
-    });
-  }, []);
-
-  // fetches initial resources
-  useEffect(() => {
-    fetchSeasons().catch((e) => console.log(e));
-    fetchFactions().catch((e) => console.log(e));
-    fetchLeaderboard(selectedSeason).catch((e) => console.log(e));
-    return () => {};
-  }, []);
-
-  const handleSeasonChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
-    setSelectedSeason(Number(value));
-
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(seasonParam, value);
-    const newURL = `${window.location.pathname}?${newSearchParams.toString()}`;
-    window.history.pushState({ path: newURL }, "", newURL);
-
-    LeaderboardService.getGetLeaderboard(
-      Number(value),
-      factions[selectedFaction - 1]?.code,
-    ).then((rows: LeaderboardRow[]) => {
-      setLeaderboardRows(rows);
-    });
-  };
-
-  const handleFactionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
-    const selectedFactionIndex = Number(value);
-    setSelectedFaction(selectedFactionIndex);
-    const faction = factions[selectedFactionIndex - 1];
-
-    const newSearchParams = new URLSearchParams(searchParams);
-
-    if (faction) {
-      newSearchParams.set(factionCodeParam, faction.code);
-    } else {
-      newSearchParams.delete(factionCodeParam);
-    }
-
-    const newURL = `${window.location.pathname}?${newSearchParams.toString()}`;
-    window.history.pushState({ path: newURL }, "", newURL);
-
-    LeaderboardService.getGetLeaderboard(selectedSeason, faction?.code).then(
-      (rows: LeaderboardRow[]) => {
         setLeaderboardRows(rows);
       },
     );
@@ -115,50 +30,13 @@ export function Leaderboard() {
         <PageHeading text={"Leaderboard"} />
         <div
           className={
-            "my-4 flex flex-col justify-around gap-4 md:w-full md:flex-row md:gap-8"
+            "my-8 flex flex-col justify-around gap-4 md:w-full md:flex-row md:gap-8"
           }
         >
-          <Select
-            className={"h-12 w-full rounded-3xl"}
-            label={"Seasons"}
-            onChange={handleSeasonChange}
-          >
-            {seasons.map((s, i) => (
-              <option value={i} selected={i == selectedSeason}>
-                S{i} - {s.name}
-              </option>
-            ))}
-          </Select>
-          <Select
-            initialOptionText={"Faction Filter..."}
-            className={"h-12 w-full rounded-3xl"}
-            label={"Faction"}
-            onChange={handleFactionChange}
-          >
-            {factions.map((f, i) => (
-              <option
-                value={i + 1}
-                selected={i + 1 == selectedFaction}
-                className={`bg-[#${f.color}]`}
-              >
-                {f.name != "Neutral" ? f.name : `${f.name} ${f.side_code}`}
-              </option>
-            ))}
-          </Select>
-          <Input
-            className={"h-12 w-full rounded-3xl"}
-            label={"Search"}
-            type={"search"}
-            placeholder="Search"
-            onChange={(e) => setSearchString(e.target.value)}
-          />
+          <FilterSection hasSearchBar={true} onParamChange={getLeaderboard} />
         </div>
         <div className={"overflow-auto whitespace-nowrap"}>
-          <LeaderboardTable
-            leaderboard={leaderboardRows}
-            searchString={searchString}
-            selectedSeason={selectedSeason}
-          />
+          <LeaderboardTable leaderboard={leaderboardRows} values={values} />
         </div>
       </div>
     </div>

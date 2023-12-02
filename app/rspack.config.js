@@ -7,6 +7,7 @@ const postcssConfig = require("./postcss.config");
 
 module.exports = {
   target: "web",
+  context: __dirname,
   entry: {
     main: "./src/index.tsx",
   },
@@ -18,7 +19,7 @@ module.exports = {
     rules: [
       {
         test: /\.png$/,
-        type: "asset/resource",
+        type: "asset",
       },
       {
         resource: path.resolve(__dirname, "../api/src/lib/ranking.ts"),

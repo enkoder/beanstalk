@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Faction } from '../models/Faction';
+import type { Format } from '../models/Format';
 import type { GetPointDistributionResponse } from '../models/GetPointDistributionResponse';
 import type { LeaderboardRow } from '../models/LeaderboardRow';
 import type { Tier } from '../models/Tier';
@@ -17,12 +18,14 @@ export class LeaderboardService {
      * Gets the current season's leaderboard
      * @param seasonId
      * @param factionCode
+     * @param format
      * @returns LeaderboardRow Returns a array of rows compromising the full leaderboard for the given season
      * @throws ApiError
      */
     public static getGetLeaderboard(
         seasonId?: number | null,
         factionCode?: string,
+        format?: Format,
     ): CancelablePromise<Array<LeaderboardRow>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -30,6 +33,7 @@ export class LeaderboardService {
             query: {
                 'seasonId': seasonId,
                 'factionCode': factionCode,
+                'format': format,
             },
         });
     }
@@ -64,6 +68,18 @@ export class LeaderboardService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/factions',
+        });
+    }
+
+    /**
+     * Returns a list of supported Netrunner Formats
+     * @returns Format Returns an array supported Formats
+     * @throws ApiError
+     */
+    public static getGetFormats(): CancelablePromise<Array<Format>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/formats',
         });
     }
 

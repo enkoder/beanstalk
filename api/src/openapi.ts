@@ -1,4 +1,5 @@
 import { ABRTournamentTypeFilter } from "./lib/abr";
+import { Formats } from "./models/tournament";
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 
@@ -136,6 +137,8 @@ export const GetPointDistributionResponseComponent = z
 export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
+
+export const FormatComponent = z.enum(Formats).openapi("Format");
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -289,6 +292,7 @@ export const GetLeaderboardSchema = {
   parameters: {
     seasonId: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
+    format: Query(FormatComponent.optional()),
   },
   responses: {
     "200": {
@@ -318,6 +322,17 @@ export const GetFactionsSchema = {
     "200": {
       schema: z.array(FactionComponent),
       description: "Returns an array Factions",
+    },
+  },
+};
+
+export const GetFormatSchema = {
+  tags: ["Leaderboard"],
+  summary: "Returns a list of supported Netrunner Formats",
+  responses: {
+    "200": {
+      schema: z.array(FormatComponent),
+      description: "Returns an array supported Formats",
     },
   },
 };

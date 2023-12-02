@@ -1,5 +1,6 @@
 import { getDB } from "./index";
-import { Faction, FactionCode } from "./factions";
+import { Faction } from "./factions";
+import { FormatType } from "./tournament";
 import { Selectable, Updateable } from "kysely/dist/esm";
 import pLimit from "p-limit";
 
@@ -43,7 +44,11 @@ export class Leaderboards {
     return result.rank;
   }
 
-  public static async getExpanded(seasonId?: number, faction?: Faction) {
+  public static async getExpanded(
+    seasonId?: number,
+    faction?: Faction,
+    format?: FormatType,
+  ) {
     const q = getDB()
       .selectFrom((innerEb) => {
         let q = innerEb
@@ -54,6 +59,7 @@ export class Leaderboards {
             eb.fn.sum<number>("results.points_earned").as("points"),
             eb.fn.countAll<number>().as("attended"),
             "tournaments.season_id as season_id",
+            "tournaments.format as format",
             "seasons.name as season_name",
           ])
           .innerJoin("users", "results.user_id", "users.id")
@@ -72,6 +78,9 @@ export class Leaderboards {
         }
         if (faction && faction.side_code == "runner") {
           q = q.where("results.runner_deck_faction", "=", faction.code);
+        }
+        if (format) {
+          q = q.where("tournaments.format", "=", format);
         }
 
         return q.as("inner");

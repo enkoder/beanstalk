@@ -1,7 +1,9 @@
 import {
   FactionComponent,
   FactionComponentType,
+  FormatComponent,
   GetFactionsSchema,
+  GetFormatSchema,
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
   GetPointDistributionSchema,
@@ -16,7 +18,7 @@ import {
   TOURNAMENT_POINTS,
 } from "../lib/ranking";
 import { Leaderboards } from "../models/leaderboard";
-import { TournamentType } from "../models/tournament";
+import { Formats, FormatType, TournamentType } from "../models/tournament";
 import { ABRTournamentTypeFilter } from "../lib/abr";
 import { FactionCode, Factions, getFactionFromCode } from "../models/factions";
 import { json } from "itty-router";
@@ -28,12 +30,18 @@ export class GetLeaderboard extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const seasonId = Number(req.query!["seasonId"]);
     const factionCode = req.query!["factionCode"];
+    const format = req.query!["format"] as FormatType;
+
     const faction = factionCode
       ? getFactionFromCode(factionCode as FactionCode)
       : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
-    for (const result of await Leaderboards.getExpanded(seasonId, faction)) {
+    for (const result of await Leaderboards.getExpanded(
+      seasonId,
+      faction,
+      format,
+    )) {
       rows.push(LeaderboardRowComponent.parse(result));
     }
 
@@ -108,5 +116,16 @@ export class GetFactions extends OpenAPIRoute {
       factions.push(FactionComponent.parse(Factions[faction]));
     }
     return json(factions);
+  }
+}
+
+export class GetFormats extends OpenAPIRoute {
+  static schema = GetFormatSchema;
+  async handle() {
+    const formats: FormatType[] = [];
+    for (const format of Formats) {
+      formats.push(FormatComponent.parse(format));
+    }
+    return json(formats);
   }
 }

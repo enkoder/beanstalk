@@ -106,6 +106,10 @@
         },
         "required": ["points", "rank", "user_id", "season_id", "season_name"]
       },
+      "Format": {
+        "type": "string",
+        "enum": ["standard", "startup", "eternal"]
+      },
       "GetPointDistributionResponse": {
         "type": "object",
         "properties": {
@@ -379,6 +383,12 @@
             "required": false,
             "name": "factionCode",
             "in": "query"
+          },
+          {
+            "schema": { "$ref": "#/components/schemas/Format" },
+            "required": false,
+            "name": "format",
+            "in": "query"
           }
         ],
         "responses": {
@@ -442,6 +452,26 @@
                 "schema": {
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/Faction" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/formats": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Returns a list of supported Netrunner Formats",
+        "operationId": "get_GetFormats",
+        "responses": {
+          "200": {
+            "description": "Returns an array supported Formats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Format" }
                 }
               }
             }

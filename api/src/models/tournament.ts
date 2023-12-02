@@ -1,12 +1,8 @@
 import { getDB } from "./index";
 import { Insertable, Selectable, Updateable } from "kysely";
 
-export enum Formats {
-  Standard = "standard",
-  Startup = "startup",
-  Eternal = "eternal",
-  InfiniteRecursion = "infinite recursion",
-}
+export type FormatType = "standard" | "startup" | "eternal";
+export const Formats = ["standard", "startup", "eternal"] as const;
 
 export enum TournamentType {
   GNK = "GNK / seasonal",
@@ -31,7 +27,7 @@ export interface TournamentsTable {
   date: string | null;
   concluded: number;
   location: string;
-  format: Formats;
+  format: FormatType;
   type: TournamentType;
   season_id: number;
   registration_count: number;
