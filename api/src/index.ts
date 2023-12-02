@@ -11,6 +11,7 @@ import { Env, RequestWithDB } from "./types";
 import { adminOnly, authenticatedUser } from "./lib/auth";
 import { errorResponse } from "./lib/errors";
 import {
+  GetFactions,
   GetLeaderboard,
   GetPointDistribution,
   GetTiers,
@@ -68,6 +69,7 @@ router
   // Leaderboard
   .get("/api/leaderboard", GetLeaderboard)
   .get("/api/point-distribution", GetPointDistribution)
+  .get("/api/factions", GetFactions)
 
   // Seasons
   .get("/api/seasons", GetSeasons)

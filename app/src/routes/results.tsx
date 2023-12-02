@@ -61,7 +61,12 @@ export function Results() {
   const [seasons, setSeasons] = useState<Season[]>();
   const [results, setResults] = useState<UserResultsResponse>();
   const [loading, setLoading] = useState(false);
-  const [selectedSeason, setSelectedSeason] = useState<number>(DEFAULT_SEASON);
+
+  const [selectedSeason, setSelectedSeason] = useState<number>(
+    searchParams.get("season")
+      ? Number(searchParams.get("season"))
+      : DEFAULT_SEASON,
+  );
 
   const fetchSeasons = useCallback(async () => {
     SeasonsService.getGetSeasons().then((seasons) => {

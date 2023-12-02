@@ -1,15 +1,18 @@
 import { getDB } from "./index";
 import { TournamentType } from "./tournament";
+import { FactionCode } from "./factions";
 import { Selectable, Updateable } from "kysely";
 export interface ResultsTable {
   tournament_id: number;
   tournament_name?: string;
   user_id: number;
   user_name?: string;
+  runner_deck_faction: FactionCode;
   runner_deck_identity_id: number;
   runner_deck_url: string;
   corp_deck_identity_id: number;
   corp_deck_url: string;
+  corp_deck_faction: FactionCode;
   rank_swiss: number;
   rank_cut: number;
   season_id: number;

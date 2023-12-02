@@ -132,6 +132,17 @@
           "pointDistribution"
         ]
       },
+      "Faction": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "color": { "type": "string" },
+          "is_mini": { "type": "boolean" },
+          "name": { "type": "string" },
+          "side_code": { "type": "string" }
+        },
+        "required": ["code", "color", "is_mini", "name", "side_code"]
+      },
       "Season": {
         "type": "object",
         "properties": {
@@ -362,6 +373,12 @@
             "required": false,
             "name": "seasonId",
             "in": "query"
+          },
+          {
+            "schema": { "type": "string" },
+            "required": false,
+            "name": "factionCode",
+            "in": "query"
           }
         ],
         "responses": {
@@ -396,24 +413,6 @@
             "required": false,
             "name": "numPlayers",
             "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "percentReceivingPoints",
-            "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "targetTopPercentage",
-            "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "targetPointPercentageForTop",
-            "in": "query"
           }
         ],
         "responses": {
@@ -423,6 +422,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetPointDistributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/factions": {
+      "get": {
+        "tags": ["Leaderboard"],
+        "summary": "Returns a list of Netrunner Factions",
+        "operationId": "get_GetFactions",
+        "responses": {
+          "200": {
+            "description": "Returns an array Factions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Faction" }
                 }
               }
             }

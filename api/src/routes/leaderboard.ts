@@ -1,4 +1,7 @@
 import {
+  FactionComponent,
+  FactionComponentType,
+  GetFactionsSchema,
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
   GetPointDistributionSchema,
@@ -15,6 +18,7 @@ import {
 import { Leaderboards } from "../models/leaderboard";
 import { TournamentType } from "../models/tournament";
 import { ABRTournamentTypeFilter } from "../lib/abr";
+import { FactionCode, Factions, getFactionFromCode } from "../models/factions";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 
@@ -23,9 +27,13 @@ export class GetLeaderboard extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const seasonId = Number(req.query!["seasonId"]);
+    const factionCode = req.query!["factionCode"];
+    const faction = factionCode
+      ? getFactionFromCode(factionCode as FactionCode)
+      : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
-    for (const result of await Leaderboards.getFromSeasonIdExpanded(seasonId)) {
+    for (const result of await Leaderboards.getExpanded(seasonId, faction)) {
       rows.push(LeaderboardRowComponent.parse(result));
     }
 
@@ -89,5 +97,16 @@ export class GetTiers extends OpenAPIRoute {
       },
     ];
     return json(tiers.map((tier) => TierComponent.parse(tier)));
+  }
+}
+
+export class GetFactions extends OpenAPIRoute {
+  static schema = GetFactionsSchema;
+  async handle() {
+    const factions: FactionComponentType[] = [];
+    for (const faction in Factions) {
+      factions.push(FactionComponent.parse(Factions[faction]));
+    }
+    return json(factions);
   }
 }

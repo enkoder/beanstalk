@@ -75,6 +75,17 @@ export const TierComponent = z
   .openapi("Tier");
 export type TierComponentType = z.infer<typeof TierComponent>;
 
+export const FactionComponent = z
+  .object({
+    code: z.string(),
+    color: z.string(),
+    is_mini: z.boolean(),
+    name: z.string(),
+    side_code: z.string(),
+  })
+  .openapi("Faction");
+export type FactionComponentType = z.infer<typeof FactionComponent>;
+
 export const LeaderboardRowComponent = z
   .object({
     points: z.number(),
@@ -277,6 +288,7 @@ export const GetLeaderboardSchema = {
   summary: "Gets the current season's leaderboard",
   parameters: {
     seasonId: Query(z.coerce.number().optional()),
+    factionCode: Query(z.string().optional()),
   },
   responses: {
     "200": {
@@ -295,6 +307,17 @@ export const GetTiersSchema = {
     "200": {
       schema: z.array(TierComponent),
       description: "Returns an array Tiers",
+    },
+  },
+};
+
+export const GetFactionsSchema = {
+  tags: ["Leaderboard"],
+  summary: "Returns a list of Netrunner Factions",
+  responses: {
+    "200": {
+      schema: z.array(FactionComponent),
+      description: "Returns an array Factions",
     },
   },
 };

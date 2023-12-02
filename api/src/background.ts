@@ -114,7 +114,7 @@ async function handleResultIngest(
     if (!result) {
       console.log(
         [
-          `${Queues} | `,
+          `${Queues.IngestResult} | `,
           "FAIL | ",
           `user_id: ${abrEntry.user_id} | `,
           `user_name: ${abrEntry.user_name} | `,
@@ -126,7 +126,7 @@ async function handleResultIngest(
     } else {
       console.log(
         [
-          `${Queues.IngestTournament} | `,
+          `${Queues.IngestResult} | `,
           "SUCCESS | ",
           `user_id: ${result.user_id} | `,
           `user_name: ${abrEntry.user_name} | `,
