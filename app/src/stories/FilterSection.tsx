@@ -178,7 +178,11 @@ export function FilterSection({
   };
 
   return (
-    <div className={"grid grid-cols-2 gap-6 lg:flex lg:flex-row lg:gap-4"}>
+    <div
+      className={
+        "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:flex xl:flex-grow xl:grid-cols-none xl:flex-row"
+      }
+    >
       <Select
         className={"h-12 w-full rounded-3xl"}
         label={"Seasons"}
