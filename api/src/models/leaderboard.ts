@@ -46,7 +46,7 @@ export class Leaderboards {
           .groupBy("user_id")
           .orderBy(["points desc", "attended desc"]);
 
-        if (seasonId) {
+        if (typeof seasonId == "number") {
           q = q.where("tournaments.season_id", "=", seasonId);
         }
 

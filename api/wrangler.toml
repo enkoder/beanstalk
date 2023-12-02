@@ -10,8 +10,7 @@ kv_namespaces = [
 
 [triggers]
 # Every day at midnight
-# Every 30 minutes
-crons = ["0 0 * * *", '*/30 * * * *']
+crons = ["0 0 * * *"]
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB

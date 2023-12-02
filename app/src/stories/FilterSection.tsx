@@ -35,7 +35,9 @@ export type FilterSectionValues = {
 
 export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
   const searchString = sp.get(SEARCH_PARAM_NAME) || undefined;
-  const seasonId = Number(sp.get(SEASON_PARAM_NAME)) || undefined;
+  const seasonId = sp.get(SEASON_PARAM_NAME)
+    ? Number(sp.get(SEASON_PARAM_NAME))
+    : undefined;
   const faction = sp.get(FACTION_PARAM_NAME) || undefined;
   const format = (sp.get(FORMAT_PARAM_NAME) as Format) || undefined;
   return { searchString, seasonId, format, faction };
@@ -124,7 +126,7 @@ export function FilterSection({
   ) => {
     const { value } = event.target;
 
-    if (value) {
+    if (value != "") {
       searchParams.set(SEASON_PARAM_NAME, value);
       setSelectedSeasonId(Number(value));
     } else {
