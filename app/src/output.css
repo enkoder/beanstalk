@@ -613,26 +613,6 @@ html {
   margin: 2rem;
 }
 
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-.mx-16 {
-  margin-left: 4rem;
-  margin-right: 4rem;
-}
-
-.mx-4 {
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
 .my-2 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -641,6 +621,16 @@ html {
 .my-32 {
   margin-top: 8rem;
   margin-bottom: 8rem;
+}
+
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .mb-0 {
@@ -683,32 +673,12 @@ html {
   margin-top: 1rem;
 }
 
-.ml-8 {
-  margin-left: 2rem;
+.mt-8 {
+  margin-top: 2rem;
 }
 
-.-ml-16 {
-  margin-left: -4rem;
-}
-
-.mr-32 {
-  margin-right: 8rem;
-}
-
-.mb-64 {
-  margin-bottom: 16rem;
-}
-
-.mb-60 {
-  margin-bottom: 15rem;
-}
-
-.mt-60 {
-  margin-top: 15rem;
-}
-
-.mt-32 {
-  margin-top: 8rem;
+.mt-2 {
+  margin-top: 0.5rem;
 }
 
 .block {
@@ -765,10 +735,6 @@ html {
 
 .h-full {
   height: 100%;
-}
-
-.h-64 {
-  height: 16rem;
 }
 
 .w-16 {
@@ -856,24 +822,8 @@ html {
   list-style-type: disc;
 }
 
-.grid-flow-col {
-  grid-auto-flow: column;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.grid-rows-2 {
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
-.grid-rows-3 {
-  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -910,10 +860,6 @@ html {
 
 .gap-5 {
   gap: 1.25rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
 }
 
 .overflow-auto {
@@ -961,16 +907,16 @@ html {
   border-bottom-width: 2px;
 }
 
-.border-b-8 {
-  border-bottom-width: 8px;
-}
-
 .border-b-4 {
   border-bottom-width: 4px;
 }
 
 .border-solid {
   border-style: solid;
+}
+
+.border-none {
+  border-style: none;
 }
 
 .border-cyan-500 {
@@ -991,16 +937,6 @@ html {
 .border-gray-600 {
   --tw-border-opacity: 1;
   border-color: rgb(75 85 99 / var(--tw-border-opacity));
-}
-
-.border-cyan-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(34 211 238 / var(--tw-border-opacity));
-}
-
-.border-gray-800 {
-  --tw-border-opacity: 1;
-  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
 .border-gray-700 {
@@ -1038,6 +974,11 @@ html {
   background-color: rgb(2 6 23 / var(--tw-bg-opacity));
 }
 
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -1055,6 +996,11 @@ html {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .pb-4 {
@@ -1081,16 +1027,12 @@ html {
   padding-top: 1rem;
 }
 
-.pl-16 {
-  padding-left: 4rem;
+.pb-2 {
+  padding-bottom: 0.5rem;
 }
 
-.pl-32 {
-  padding-left: 8rem;
-}
-
-.pb-60 {
-  padding-bottom: 15rem;
+.pt-8 {
+  padding-top: 2rem;
 }
 
 .text-left {
@@ -1153,6 +1095,11 @@ html {
   color: rgb(6 182 212 / var(--tw-text-opacity));
 }
 
+.text-cyan-600 {
+  --tw-text-opacity: 1;
+  color: rgb(8 145 178 / var(--tw-text-opacity));
+}
+
 .text-gray-300 {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
@@ -1168,24 +1115,19 @@ html {
   color: rgb(3 7 18 / var(--tw-text-opacity));
 }
 
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
 .text-red-700 {
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
-.text-cyan-600 {
+.text-gray-100 {
   --tw-text-opacity: 1;
-  color: rgb(8 145 178 / var(--tw-text-opacity));
+  color: rgb(243 244 246 / var(--tw-text-opacity));
 }
 
-.text-gray-600 {
+.text-gray-200 {
   --tw-text-opacity: 1;
-  color: rgb(75 85 99 / var(--tw-text-opacity));
+  color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
 .opacity-80 {
@@ -1267,28 +1209,12 @@ html {
 }
 
 @media (min-width: 640px) {
-  .sm\:flex {
-    display: flex;
-  }
-
   .sm\:w-5\/6 {
     width: 83.333333%;
   }
 
-  .sm\:flex-grow {
-    flex-grow: 1;
-  }
-
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sm\:grid-cols-none {
-    grid-template-columns: none;
-  }
-
-  .sm\:flex-row {
-    flex-direction: row;
   }
 }
 
@@ -1307,18 +1233,6 @@ html {
 }
 
 @media (min-width: 1024px) {
-  .lg\:flex {
-    display: flex;
-  }
-
-  .lg\:flex-grow {
-    flex-grow: 1;
-  }
-
-  .lg\:grid-cols-none {
-    grid-template-columns: none;
-  }
-
   .lg\:flex-row {
     flex-direction: row;
   }

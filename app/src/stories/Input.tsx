@@ -11,7 +11,7 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 export function Input({ label, id, type, className, ...props }: InputProps) {
   return (
     <div
-      className={twMerge(className, " relative flex flex-col text-gray-400")}
+      className={twMerge(className, " relative flex flex-col text-gray-200")}
     >
       <text className={"absolute -top-5 px-4 text-sm"}>{label}</text>
       <div
@@ -22,7 +22,7 @@ export function Input({ label, id, type, className, ...props }: InputProps) {
         )}
       >
         {type === "search" && (
-          <FontAwesomeIcon icon={faSearch} className={"p-1 text-gray-400"} />
+          <FontAwesomeIcon icon={faSearch} className={"p-1 text-gray-200"} />
         )}
         <input
           className={"w-full bg-slate-900 p-1 focus:outline-none"}

@@ -202,6 +202,9 @@ importers:
       babel-plugin-named-exports-order:
         specifier: ^0.0.2
         version: 0.0.2
+      file-loader:
+        specifier: ^6.2.0
+        version: 6.2.0(webpack@5.89.0)
       form-data:
         specifier: ^4.0.0
         version: 4.0.0

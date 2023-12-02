@@ -22,6 +22,13 @@ module.exports = {
         type: "asset",
       },
       {
+        test: /\.(pdf)$/i,
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]",
+        },
+      },
+      {
         resource: path.resolve(__dirname, "../api/src/lib/ranking.ts"),
         type: "asset/source",
       },

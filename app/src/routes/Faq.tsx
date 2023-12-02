@@ -1,7 +1,7 @@
 import { PageHeading } from "../stories/PageHeader";
 import { Anchor } from "../stories/Anchor";
 // @ts-ignore
-import doggo from "../../images/doggo.png";
+import doggo from "../../assets/doggo.png";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -179,19 +179,6 @@ const QUESTIONS: Question[] = [
           Beanstalk Github{" "}
         </a>
         page.
-        <div className={"my-32 flex flex-row justify-center"}>
-          <span className={"text-lg"}>
-            Made with{" "}
-            <FontAwesomeIcon
-              className={"text-xl text-red-700"}
-              icon={faHeart}
-            />{" "}
-            by{" "}
-            <a className={"text-cyan-600"} href={"https://github.com/enkoder"}>
-              enkoder
-            </a>
-          </span>
-        </div>
       </>
     ),
   },
@@ -217,6 +204,19 @@ export function Faq() {
               <p className={"pl-2 text-gray-400"}> {question.content}</p>
             </>
           ))}
+        </div>
+        <div className={"my-32 flex flex-row justify-center"}>
+          <span className={"text-lg"}>
+            Made with{" "}
+            <FontAwesomeIcon
+              className={"text-xl text-red-700"}
+              icon={faHeart}
+            />{" "}
+            by{" "}
+            <a className={"text-cyan-600"} href={"https://github.com/enkoder"}>
+              enkoder
+            </a>
+          </span>
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ export function PageHeading({
         className={twMerge(
           className,
           clsx(
-            includeUnderline && "border-b-4 border-gray-700",
+            includeUnderline && "border-b border-gray-700 pb-2",
             "text-3xl text-gray-300",
           ),
         )}

@@ -17,7 +17,7 @@ export function Select({
   ...props
 }: SelectProps) {
   return (
-    <div className={twMerge(className, "relative flex flex-col text-gray-400")}>
+    <div className={twMerge(className, "relative flex flex-col text-gray-100")}>
       {label && (
         <label for={id} className={"absolute -top-5 px-4 text-sm"}>
           {label}
@@ -28,7 +28,7 @@ export function Select({
         name={name}
         className={twMerge(
           className,
-          "h-full w-full border border-gray-600 bg-slate-900 px-4 py-2 text-gray-400",
+          "h-full w-full border border-gray-600 bg-slate-900 px-4 py-2 text-gray-100",
         )}
         onChange={onChange}
         {...props}

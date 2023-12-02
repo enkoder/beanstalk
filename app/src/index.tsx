@@ -16,7 +16,7 @@ import React, { MouseEventHandler, useEffect, useState } from "react";
 import "@fontsource/inter/400.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "./output.css";
-import doggo from "../images/doggo.png";
+import doggo from "../assets/doggo.png";
 import {
   createBrowserRouter,
   Outlet,
