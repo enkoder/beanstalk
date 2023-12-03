@@ -41,7 +41,7 @@ const QUESTIONS: Question[] = [
     id: "how-are-beans-calculated",
     content: (
       <p>
-        There are a few pages dedicated to transparency around how points are
+        There are a few pages dedicated to transparency around how beans are
         calculated, including a view into the full algorithm. There's also a
         page where you can simulate a tournament and see the point distribution
         for yourself. We want to be as transparent as possible so everyone knows
@@ -58,6 +58,41 @@ const QUESTIONS: Question[] = [
             https://netrunner-beanstalk.net/code
           </Link>
         </div>
+      </p>
+    ),
+  },
+  {
+    title: "Where is the data coming from?",
+    id: "data",
+    content: (
+      <p>
+        This website is entirely powered by{" "}
+        <a
+          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
+          href={"https://alwaysberunning.net"}
+        >
+          alwaysberunning.net
+        </a>
+        . Every night, the Beanstalk will re-ingest all supported tournaments,
+        pulling down data ABR data to it's servers. Just like ABR, the Beanstalk
+        user accounts are tied directly to{" "}
+        <a
+          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
+          href={"https://netrunnerdb.com"}
+        >
+          netrunnerdb.com
+        </a>{" "}
+        user accounts. While ingesting ABR tournament data, if I can't find an
+        associated NRDB user, then I do not pull in that tournament entry. Since
+        I re-ingest once a day, you can go back and make sure that past
+        tournaments are using your NRDB user account. The best way to ensure
+        attribution works correctly is to claim your deck on ABR. This will
+        ensure that the username used on the ABR tournament will be guaranteed
+        to match your NRDB name.
+        <Sep className={"mt-4"} />
+        This ends up working out pretty well as most people who do well in
+        tournaments will claim their decks. I recommend going back and running
+        the ABR archives! You might be able to scrounge up some more beans.
       </p>
     ),
   },
