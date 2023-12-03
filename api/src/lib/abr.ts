@@ -40,7 +40,6 @@ export const ABRTournament = z.object({
   location_country: z.string().nullable(),
   location_state: z.string().nullable(),
   approved: z.number().nullable(),
-  registration_count: z.number(),
   players_count: z.number(),
   url: z.string().url(),
   // TODO: check enum

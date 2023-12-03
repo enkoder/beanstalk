@@ -56,7 +56,7 @@ export const TournamentComponent = z
     id: z.number(),
     name: z.string(),
     date: z.string().datetime().nullable(),
-    registration_count: z.number(),
+    players_count: z.number(),
     location: z.string(),
     concluded: z.coerce.boolean(),
     format: z.string(),

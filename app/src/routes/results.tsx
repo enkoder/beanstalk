@@ -63,7 +63,7 @@ export function Results() {
   };
 
   const formatPlacement = (r: Result) => {
-    let retStr = `${r.rank_swiss} / ${r.registration_count}`;
+    let retStr = `${r.rank_swiss} / ${r.players_count}`;
     if (r.rank_cut) {
       retStr = `${r.rank_cut} / ${retStr}`;
     }

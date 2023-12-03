@@ -7,7 +7,7 @@ export type Tournament = {
     id: number;
     name: string;
     date: string | null;
-    registration_count: number;
+    players_count: number;
     location: string;
     concluded?: boolean | null;
     format: string;
