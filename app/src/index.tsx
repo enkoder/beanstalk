@@ -39,7 +39,7 @@ OpenAPI.WITH_CREDENTIALS = true;
 OpenAPI.BASE =
   process.env.NODE_ENV !== "development"
     ? "https://netrunner-beanstalk.net/api"
-    : "http://0.0.0.0:8787/api";
+    : "http://0.0.0.0:8787";
 
 export function OAuth2Callback() {
   const { login } = useAuth();

@@ -60,41 +60,41 @@ const { preflight, corsify } = createCors({
 router
   // un-authed endpoints
   .all("*", preflight)
-  .all("/api/*", withDB)
+  .all("/*", withDB)
 
-  .get("/api/auth/login_url", GetLoginUrl)
-  .get("/api/auth/token", GetTokenFromCode)
-  .get("/api/auth/refresh_token", RefreshToken)
+  .get("/auth/login_url", GetLoginUrl)
+  .get("/auth/token", GetTokenFromCode)
+  .get("/auth/refresh_token", RefreshToken)
 
-  // Users
-  .get("/api/users/@me", authenticatedUser, Me)
-  .get("/api/users", GetUsers)
-  .get("/api/users/:userID", GetUser)
-  .get("/api/users/:user/results", GetUserResults)
+  // User
+  .get("/users/@me", authenticatedUser, Me)
+  .get("/users", GetUsers)
+  .get("/users/:userID", GetUser)
+  .get("/users/:user/results", GetUserResults)
 
-  // Leaderboard
-  .get("/api/leaderboard", GetLeaderboard)
-  .get("/api/point-distribution", GetPointDistribution)
-  .get("/api/factions", GetFactions)
-  .get("/api/formats", GetFormats)
+  // Leadard
+  .get("/leaderboard", GetLeaderboard)
+  .get("/point-distribution", GetPointDistribution)
+  .get("/factions", GetFactions)
+  .get("/formats", GetFormats)
 
-  // Seasons
-  .get("/api/seasons", GetSeasons)
-  .get("/api/seasons/:seasonId/tournaments", GetSeasonTournaments)
+  // Seas
+  .get("/seasons", GetSeasons)
+  .get("/seasons/:seasonId/tournaments", GetSeasonTournaments)
 
-  // Tournament
-  .get("/api/tournaments", GetTournaments)
-  .get("/api/tournaments/tiers", GetTiers)
-  .get("/api/tournaments/:tournamentId", GetTournament)
-  .get("/api/tournaments/:tournamentId/results", GetTournamentResults)
+  // Tournt
+  .get("/tournaments", GetTournaments)
+  .get("/tournaments/tiers", GetTiers)
+  .get("/tournaments/:tournamentId", GetTournament)
+  .get("/tournaments/:tournamentId/results", GetTournamentResults)
 
-  // Admin only endpoints
-  .all("/api/admin/*", authenticatedUser, adminOnly)
-  .get("/api/admin/updateNRDBNames", UpdateUsers)
-  .get("/api/admin/rerank", Rerank)
-  .post("/api/admin/ingestTournaments", IngestTournaments)
-  .post("/api/admin/updateCards", UpdateCards)
-  .post("/api/admin/updateTournamentsSeason", UpdateTournamentSeasons)
+  // Admily endpoints
+  .all("/admin/*", authenticatedUser, adminOnly)
+  .get("/admin/updateNRDBNames", UpdateUsers)
+  .get("/admin/rerank", Rerank)
+  .post("/admin/ingestTournaments", IngestTournaments)
+  .post("/admin/updateCards", UpdateCards)
+  .post("/admin/updateTournamentsSeason", UpdateTournamentSeasons)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

@@ -16,6 +16,7 @@ export type { Season } from './models/Season';
 export type { Tier } from './models/Tier';
 export type { TokenResponse } from './models/TokenResponse';
 export type { Tournament } from './models/Tournament';
+export { TournamentType } from './models/TournamentType';
 export type { User } from './models/User';
 export type { UserResultsResponse } from './models/UserResultsResponse';
 

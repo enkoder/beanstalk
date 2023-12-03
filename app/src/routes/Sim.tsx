@@ -27,6 +27,7 @@ export function Sim() {
       LeaderboardService.getGetPointDistribution(
         tiers[selectedTier].points,
         numPlayers,
+        tiers[selectedTier].type,
       ).then((response) => {
         setPointsDistributionResponse(response);
       });

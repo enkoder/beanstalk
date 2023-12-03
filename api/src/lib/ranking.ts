@@ -16,13 +16,14 @@ export const EXTRA_POINTS_PER_PERSON = 20;
 
 // Sets a baseline number of players a tournament must have in order to receive any points at all
 // This means that small tournaments are not eligible for point payouts
-export const MIN_PLAYERS_TO_BE_LEGAL = 10;
+export const MIN_PLAYERS_TO_BE_LEGAL = 12;
 
 // Defines the baseline point total per tournament type before the additional points per player is added
 export const TOURNAMENT_POINTS = {
   [TournamentType.Worlds]: 4000,
   [TournamentType.Continental]: 2000,
   [TournamentType.Nationals]: 1000,
+  [TournamentType.Intercontinental]: 200,
 };
 
 /**
@@ -33,14 +34,27 @@ export const TOURNAMENT_POINTS = {
  * @param firstPlacePercentage Flat percentage of points first place receives from the adjusted total point pool
  * @param percentReceivingPoints Percentage of the field that should receive any points
  * @param extraPointsPerPerson Extra points to add to the total point pool per person
+ * @param tournamentType Type of tournament which is used to conditionally change the payout structure
  */
 export function calculateTournamentPointDistribution(
   totalPoints: number,
   numPlayers: number,
+  tournamentType?: TournamentType,
   firstPlacePercentage: number = PERCENT_FOR_FIRST_PLACE,
   percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
   extraPointsPerPerson: number = EXTRA_POINTS_PER_PERSON,
 ) {
+  // Interconts is winner take all!!
+  if (
+    tournamentType &&
+    tournamentType.valueOf() === TournamentType.Intercontinental.valueOf()
+  ) {
+    return {
+      points: Array.from([totalPoints, ...Array(numPlayers).fill(0).slice(1)]),
+      adjustedTotalPoints: totalPoints,
+    };
+  }
+
   // Must have enough players to earn any points
   if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL) {
     return {

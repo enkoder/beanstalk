@@ -55,9 +55,10 @@ export class GetPointDistribution extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const totalPoints = Number(req.query["totalPoints"]);
     const numPlayers = Number(req.query["numPlayers"]);
+    const type = req.query["type"] as TournamentType;
 
     const { points, adjustedTotalPoints } =
-      calculateTournamentPointDistribution(totalPoints, numPlayers);
+      calculateTournamentPointDistribution(totalPoints, numPlayers, type);
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {
@@ -92,16 +93,25 @@ export class GetTiers extends OpenAPIRoute {
         id: ABRTournamentTypeFilter.WorldsChampionship,
         name: TournamentType.Worlds,
         points: TOURNAMENT_POINTS[TournamentType.Worlds],
+        type: TournamentType.Worlds,
       },
       {
         id: ABRTournamentTypeFilter.ContinentalChampionship,
         name: TournamentType.Continental,
         points: TOURNAMENT_POINTS[TournamentType.Continental],
+        type: TournamentType.Continental,
       },
       {
         id: ABRTournamentTypeFilter.NationalChampionship,
         name: TournamentType.Nationals,
         points: TOURNAMENT_POINTS[TournamentType.Nationals],
+        type: TournamentType.Nationals,
+      },
+      {
+        id: ABRTournamentTypeFilter.IntercontinentalChampionship,
+        name: TournamentType.Intercontinental,
+        points: TOURNAMENT_POINTS[TournamentType.Intercontinental],
+        type: TournamentType.Intercontinental,
       },
     ];
     return json(tiers.map((tier) => TierComponent.parse(tier)));
