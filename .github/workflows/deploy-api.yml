@@ -25,11 +25,8 @@ jobs:
       - name: Run tests
         run: pnpm -r build && pnpm -r test && pnpm -r lint
 
-      - name: Deploy Worker
-        uses: cloudflare/wrangler-action@v3
-        with:
-          packageManager: pnpm
-          environment: production
-          workingDirectory: "api"
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Build and Deploy API
+        run: pnpm --filter api exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
