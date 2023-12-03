@@ -11,7 +11,6 @@ export function Tournament() {
   const params = useParams<TournamentParams>();
   const [results, setResults] = useState<Result[]>([]);
   const [tournament, setTournament] = useState<Tournament>();
-  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchResults = useCallback(async (tournamentId: number) => {
     TournamentService.getGetTournamentResults(tournamentId).then((results) => {
@@ -26,11 +25,9 @@ export function Tournament() {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     const tournamentId = Number(params.tournament);
     fetchResults(tournamentId).catch((e) => console.log(e));
     fetchTournament(tournamentId).catch((e) => console.log(e));
-    setLoading(false);
     return () => {};
   }, [params.tournament]);
 

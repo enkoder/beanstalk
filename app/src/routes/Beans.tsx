@@ -1,5 +1,6 @@
 import { PageHeading } from "../stories/PageHeader";
 import { Anchor } from "../stories/Anchor";
+// @ts-ignore
 import whitepaper from "../../assets/whitepaper.pdf";
 import { Sep } from "../stories/Sep";
 import { Link } from "react-router-dom";

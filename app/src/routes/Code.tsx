@@ -26,6 +26,7 @@ export function Code() {
     });
   }, []);
 
+  // @ts-ignore
   return (
     <div
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}

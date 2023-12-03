@@ -11,12 +11,10 @@ import { Code } from "./routes/Code";
 import { Stars } from "./stories/Stars";
 import { PageHeading } from "./stories/PageHeader";
 import { Tournament } from "./routes/Tournament";
+// @ts-ignore
+import doggo from "../assets/doggo.png";
 import ReactDOM from "react-dom/client";
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import "@fontsource/inter/400.css";
-import "@fontsource/jetbrains-mono/400.css";
-import "./output.css";
-import doggo from "../assets/doggo.png";
 import {
   createBrowserRouter,
   Outlet,
@@ -26,6 +24,10 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
+
+import "@fontsource/inter/400.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "./output.css";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
