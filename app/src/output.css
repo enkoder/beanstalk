@@ -724,6 +724,18 @@ html {
   height: 100%;
 }
 
+.h-64 {
+  height: 16rem;
+}
+
+.h-80 {
+  height: 20rem;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
 .w-16 {
   width: 4rem;
 }
@@ -819,6 +831,10 @@ html {
 
 .flex-col {
   flex-direction: column;
+}
+
+.content-center {
+  align-content: center;
 }
 
 .items-center {

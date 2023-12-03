@@ -2,6 +2,8 @@ import { PageHeading } from "../stories/PageHeader";
 import { Anchor } from "../stories/Anchor";
 // @ts-ignore
 import doggo from "../../assets/doggo.png";
+// @ts-ignore
+import aiBeanstalk from "../../assets/ai_beanstalk_royalties.jpeg";
 import { Sep } from "../stories/Sep";
 import { Link } from "../stories/Link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +16,29 @@ type Question = {
 };
 
 const QUESTIONS: Question[] = [
+  {
+    title: "What is the Beanstalk",
+    id: "beanstalk",
+    content: (
+      <p>
+        In the Android universe, the{" "}
+        <Link to={"https://android-universe-fan.fandom.com/wiki/Beanstalk"}>
+          Beanstalk
+        </Link>{" "}
+        is a giant 70,000km tall "Space Elevator". This website takes on it's
+        name because it's entirely built around providing a leaderboard for
+        Netrunner, where runners across the world compete in tournaments to win
+        Beans and climb the rankings to reach the top... of the Beanstalk.
+        <div className={"flex flex-row justify-center"}>
+          <img
+            className={"mb-8 mt-4 h-96"}
+            src={aiBeanstalk}
+            alt={"Beanstalk"}
+          />
+        </div>
+      </p>
+    ),
+  },
   {
     title: "Beans? What are beans?",
     id: "what-are-beans",
