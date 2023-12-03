@@ -73,6 +73,14 @@ pnpm start-app
 pnpm start-tailwind
 ```
 
+### Tests
+
+You will not find many tests at the Beanstalk. But if you do want to run them locally, you can with.
+
+```shell
+pnpm -r test
+```
+
 ### Environment Variables
 
 Move the [.dev.vars.example](/api/.dev.vars.example) file to api/.dev.vars and edit any secrets to test certain features
@@ -85,7 +93,7 @@ mv api/.dev.vars.example api/.dev.vars
 ### Linting
 
 This repo has some pre-commits installed to help ensure the repo stays looking fresh. To install and
-setup pre-commit, run the following. If you are on Linux, you can install pre-commit w/ pip.
+setup pre-commit, run the following. If you are on Linux, you can install pre-commit w/ pip
 
 ```shell
 brew install pre-commit
@@ -101,3 +109,9 @@ pnpm -r lint
 ### IDE Configuration
 
 -[ ] Setup VSCode config -[ ] Setup Webstorm config
+
+### CI
+
+[Github Actions](.github/workflows/tests.yaml) are set up for this repo. The CI job will install dependencies, run
+lints,
+and any tests configured in any of the pnpm workspaces. You will receive during development on PRs.
