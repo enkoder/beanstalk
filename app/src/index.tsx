@@ -174,7 +174,7 @@ const router = createBrowserRouter([
       { path: "/faq", element: <Faq /> },
       { path: "/results/:user", element: <Results /> },
       { path: "/tournament/:tournament", element: <Tournament /> },
-      { path: "/api/oauth/callback", element: <OAuth2Callback /> },
+      { path: "/oauth/callback", element: <OAuth2Callback /> },
       { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },

@@ -1,6 +1,7 @@
 import { Season, SeasonsService } from "../client";
 import { PageHeading } from "../stories/PageHeader";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "../stories/Link";
+import { useLoaderData } from "react-router-dom";
 import moment from "moment";
 
 export async function SeasonsLoader() {

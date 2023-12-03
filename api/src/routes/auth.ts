@@ -11,7 +11,7 @@ import { error, json } from "itty-router";
 const NRDB_BASE_URL = "https://netrunnerdb.com";
 const NRDB_AUTH_URL = `${NRDB_BASE_URL}/oauth/v2/auth`;
 const NRDB_TOKEN_URL = `${NRDB_BASE_URL}/oauth/v2/token`;
-const REDIRECT_URL = "https://netrunner-beanstalk.net/api/oauth/callback";
+const REDIRECT_URL = "https://netrunner-beanstalk.net/oauth/callback";
 
 export class GetLoginUrl extends OpenAPIRoute {
   static schema = GetOAuthLoginURLSchema;
