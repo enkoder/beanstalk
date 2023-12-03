@@ -26,9 +26,11 @@ const QUESTIONS: Question[] = [
           Beanstalk
         </Link>{" "}
         is a giant 70,000km tall "Space Elevator". This website takes on it's
-        name because it's entirely built around providing a leaderboard for
-        Netrunner, where runners across the world compete in tournaments to win
-        Beans and climb the rankings to reach the top... of the Beanstalk.
+        name because it's dedicated to providing a leaderboard and ranking
+        system for the game{" "}
+        <Link to={"https://nullsignal.games/"}>Netrunner</Link>. Runners across
+        the world compete in tournaments to win Beans and climb the rankings to
+        reach the top... of the Beanstalk.
         <div className={"flex flex-row justify-center"}>
           <img
             className={"mb-8 mt-4 h-48 lg:h-96"}
