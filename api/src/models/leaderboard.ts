@@ -44,6 +44,7 @@ export class Leaderboards {
 
         // SeasonId can be 0 which is non-truthy
         if (seasonId !== undefined) {
+          console.log("sesonId", seasonId);
           q = q.where("tournaments.season_id", "=", seasonId);
         }
         if (faction && faction.side_code == "corp") {

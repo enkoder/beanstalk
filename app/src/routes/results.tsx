@@ -72,7 +72,7 @@ export function Results() {
 
   return (
     <div
-      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
+      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-hidden"}
     >
       <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
         <div className={"mb-8"}>
@@ -94,88 +94,92 @@ export function Results() {
         </div>
 
         <FilterSection hasSearchBar={false} onParamChange={getResults} />
-        <table
-          className={
-            "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300"
-          }
-        >
-          <thead className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}>
-            <tr className={"border-b"}>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Tournament
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Format
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Decks
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                <div>
-                  <div>Results</div>
-                  <small>Cut/Swiss/Total</small>
-                </div>
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Points
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {results &&
-              results.results.map((result) => (
-                <tr
-                  className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-                  key={results.user_id + "/" + result.tournament_id}
+        <div className={"overflow-auto whitespace-nowrap"}>
+          <table
+            className={
+              "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300"
+            }
+          >
+            <thead
+              className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}
+            >
+              <tr className={"border-b"}>
+                <th
+                  scope="col"
+                  className={"border-b-2 border-solid border-gray-300"}
                 >
-                  <td>
-                    <span>
-                      <Link
-                        className={
-                          "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-                        }
-                        to={`/tournament/${result.tournament_id}`}
-                      >
-                        {result.tournament_name}
-                      </Link>
-                      <small style={{ paddingLeft: "10px" }}>
-                        <a
+                  Tournament
+                </th>
+                <th
+                  scope="col"
+                  className={"border-b-2 border-solid border-gray-300"}
+                >
+                  Format
+                </th>
+                <th
+                  scope="col"
+                  className={"border-b-2 border-solid border-gray-300"}
+                >
+                  Decks
+                </th>
+                <th
+                  scope="col"
+                  className={"border-b-2 border-solid border-gray-300"}
+                >
+                  <div>
+                    <div>Results</div>
+                    <small>Cut/Swiss/Total</small>
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className={"border-b-2 border-solid border-gray-300"}
+                >
+                  Points
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {results &&
+                results.results.map((result) => (
+                  <tr
+                    className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+                    key={results.user_id + "/" + result.tournament_id}
+                  >
+                    <td>
+                      <span>
+                        <Link
                           className={
                             "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
                           }
-                          href={
-                            "https://alwaysberunning.net/tournaments/" +
-                            result.tournament_id
-                          }
+                          to={`/tournament/${result.tournament_id}`}
                         >
-                          (ABR)
-                        </a>
-                      </small>
-                    </span>
-                  </td>
-                  <td>{result.format}</td>
-                  <td>{Decks(result)}</td>
-                  <td>{formatPlacement(result)}</td>
-                  <td>{result.points_earned.toFixed(2)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+                          {result.tournament_name}
+                        </Link>
+                        <small style={{ paddingLeft: "10px" }}>
+                          <a
+                            className={
+                              "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
+                            }
+                            href={
+                              "https://alwaysberunning.net/tournaments/" +
+                              result.tournament_id
+                            }
+                          >
+                            (ABR)
+                          </a>
+                        </small>
+                      </span>
+                    </td>
+                    <td>{result.format}</td>
+                    <td>{Decks(result)}</td>
+                    <td>{formatPlacement(result)}</td>
+                    <td>{result.points_earned.toFixed(2)}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
