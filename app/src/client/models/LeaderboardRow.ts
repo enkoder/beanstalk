@@ -8,7 +8,5 @@ export type LeaderboardRow = {
     rank: number;
     user_id: number;
     user_name?: string | null;
-    season_id: number;
-    season_name: string;
 };
 

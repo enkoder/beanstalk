@@ -101,11 +101,9 @@
           "points": { "type": "number" },
           "rank": { "type": "number" },
           "user_id": { "type": "number" },
-          "user_name": { "type": ["string", "null"] },
-          "season_id": { "type": "number" },
-          "season_name": { "type": "string" }
+          "user_name": { "type": ["string", "null"] }
         },
-        "required": ["points", "rank", "user_id", "season_id", "season_name"]
+        "required": ["points", "rank", "user_id"]
       },
       "GetPointDistributionResponse": {
         "type": "object",

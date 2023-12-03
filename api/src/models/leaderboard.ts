@@ -35,21 +35,17 @@ export class Leaderboards {
             "users.name as user_name",
             eb.fn.sum<number>("results.points_earned").as("points"),
             eb.fn.countAll<number>().as("attended"),
-            "tournaments.season_id as season_id",
             "tournaments.format as format",
-            "seasons.name as season_name",
           ])
           .innerJoin("users", "results.user_id", "users.id")
           .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
-          .innerJoin("seasons", "seasons.id", "tournaments.season_id")
-          .where("user_id", "!=", 0)
           .groupBy("user_id")
           .orderBy(["points desc", "attended desc"]);
 
-        if (typeof seasonId == "number") {
+        // SeasonId can be 0 which is non-truthy
+        if (seasonId !== undefined) {
           q = q.where("tournaments.season_id", "=", seasonId);
         }
-
         if (faction && faction.side_code == "corp") {
           q = q.where("results.corp_deck_faction", "=", faction.code);
         }
@@ -59,13 +55,14 @@ export class Leaderboards {
         if (format) {
           q = q.where("tournaments.format", "=", format);
         }
+        // this is just used here for getUserRank
         if (userId) {
           q = q.where("users.id", "=", userId);
         }
 
         return q.as("inner");
       })
-      .select(["user_id", "user_name", "season_id", "season_name", "points"])
+      .select(["user_id", "user_name", "points"])
       .select((eb) =>
         eb.fn
           .agg<number>("ROW_NUMBER")

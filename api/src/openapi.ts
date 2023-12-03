@@ -95,8 +95,6 @@ export const LeaderboardRowComponent = z
     rank: z.number(),
     user_id: z.number(),
     user_name: z.coerce.string(),
-    season_id: z.number(),
-    season_name: z.string(),
   })
   .openapi("LeaderboardRow");
 export type LeaderboardRowComponentType = z.infer<

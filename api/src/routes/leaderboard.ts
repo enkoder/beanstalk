@@ -28,7 +28,10 @@ export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB) {
-    const seasonId = Number(req.query!["seasonId"]);
+    const seasonId = req.query!["seasonId"]
+      ? Number(req.query!["seasonId"])
+      : undefined;
+
     const factionCode = req.query!["factionCode"];
     const format = req.query!["format"] as Format;
 
@@ -37,11 +40,8 @@ export class GetLeaderboard extends OpenAPIRoute {
       : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
-    for (const result of await Leaderboards.getExpanded(
-      seasonId,
-      faction,
-      format,
-    )) {
+    const results = await Leaderboards.getExpanded(seasonId, faction, format);
+    for (const result of results) {
       rows.push(LeaderboardRowComponent.parse(result));
     }
 
