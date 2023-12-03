@@ -31,7 +31,7 @@ const QUESTIONS: Question[] = [
         Beans and climb the rankings to reach the top... of the Beanstalk.
         <div className={"flex flex-row justify-center"}>
           <img
-            className={"mb-8 mt-4 h-96"}
+            className={"mb-8 mt-4 h-48 lg:h-96"}
             src={aiBeanstalk}
             alt={"Beanstalk"}
           />

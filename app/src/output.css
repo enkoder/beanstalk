@@ -736,6 +736,14 @@ html {
   height: 24rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
+.h-48 {
+  height: 12rem;
+}
+
 .w-16 {
   width: 4rem;
 }
@@ -1200,6 +1208,10 @@ html {
 }
 
 @media (min-width: 1024px) {
+  .lg\:h-96 {
+    height: 24rem;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
   }
