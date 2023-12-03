@@ -7,6 +7,7 @@ import type { Format } from '../models/Format';
 import type { GetPointDistributionResponse } from '../models/GetPointDistributionResponse';
 import type { LeaderboardRow } from '../models/LeaderboardRow';
 import type { Tier } from '../models/Tier';
+import type { TournamentType } from '../models/TournamentType';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -42,12 +43,14 @@ export class LeaderboardService {
      * Tool to show distribution of points from various given parameters
      * @param totalPoints
      * @param numPlayers
+     * @param type
      * @returns GetPointDistributionResponse Returns a array of numbers representing the point distribution of the simulated tournament
      * @throws ApiError
      */
     public static getGetPointDistribution(
         totalPoints?: number | null,
         numPlayers?: number | null,
+        type?: TournamentType,
     ): CancelablePromise<GetPointDistributionResponse> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -55,6 +58,7 @@ export class LeaderboardService {
             query: {
                 'totalPoints': totalPoints,
                 'numPlayers': numPlayers,
+                'type': type,
             },
         });
     }

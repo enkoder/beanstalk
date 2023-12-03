@@ -1,9 +1,12 @@
 import { ABRTournamentTypeFilter } from "./lib/abr";
-import { Formats } from "./models/tournament";
+import { Formats, TournamentType } from "./models/tournament";
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 
 export const FormatComponent = z.enum(Formats).openapi("Format");
+export const TournamentTypeComponent = z
+  .nativeEnum(TournamentType)
+  .openapi("TournamentType");
 
 export const UserComponent = z
   .object({
@@ -74,6 +77,7 @@ export const TierComponent = z
     name: z.string(),
     points: z.number(),
     season: z.number().optional(),
+    type: TournamentTypeComponent.optional(),
   })
   .openapi("Tier");
 export type TierComponentType = z.infer<typeof TierComponent>;
@@ -341,6 +345,7 @@ export const GetPointDistributionSchema = {
   parameters: {
     totalPoints: Query(z.coerce.number()),
     numPlayers: Query(z.coerce.number()),
+    type: Query(TournamentTypeComponent.optional()),
   },
   responses: {
     "200": {

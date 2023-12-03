@@ -170,6 +170,23 @@ const SECTIONS: Section[] = [
       </p>
     ),
   },
+  {
+    title: "Intercontinentals",
+    id: "interconts",
+    content: (
+      <p className={"pl-2"}>
+        Intercontinentals is such a fun tournament. Top 4 of each continental
+        dukes it out for fame and the prestigious award being able to design a
+        card with <Link to={"https://nullsignal.games/"}>NSG</Link>. Since it's
+        such a fun tournament for the community, we've decided that there should
+        be some bean action associated with it.
+        <Sep className={"mb-4"}></Sep>
+        To increase the stakes and ramp up the fun, the Intercontinental payout
+        structure is winner takes all! You can find the current number of beans
+        given to first place on the <Link to={"/code"}>Code</Link> page.
+      </p>
+    ),
+  },
 ];
 
 export function Beans() {

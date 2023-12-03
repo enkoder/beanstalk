@@ -3,10 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { TournamentType } from './TournamentType';
+
 export type Tier = {
     id: number;
     name: string;
     points: number;
     season?: number;
+    type?: TournamentType;
 };
 
