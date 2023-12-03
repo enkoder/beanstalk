@@ -25,10 +25,4 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        run: pnpm -r test
-
-      - name: Run lints
-        run: pnpm -r lint
-
-      - name: Run Builds
-        run: pnpm -r build
+        run: pnpm -r build && pnpm -r test && pnpm -r lint
