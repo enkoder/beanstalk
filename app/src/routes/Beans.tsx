@@ -165,11 +165,29 @@ const SECTIONS: Section[] = [
         everyone wants to get 1st, but when you make the top cut, it's a special
         feeling. To recreate this feeling, we have implemented a top-half cutoff
         where you need to make top half of the tournament in order to receive
-        any points. This should create exciting experiences for people who don't
+        any beans. This should create exciting experiences for people who don't
         make the cut but perform well enough to make the top half. For large
         tournaments, the beans acquired by making top half is still significant.
-        This mechanic also creates a better concentration of points for the top
+        This mechanic also creates a better concentration of beans for the top
         winners.
+      </p>
+    ),
+  },
+  {
+    title: "Minimum Players",
+    id: "minimum-players",
+    content: (
+      <p className={"pl-2"}>
+        This is arbitrarily set to 10 for now, but we will need to set an
+        appropriate limit on number of players. This is relevant for small
+        tournaments like Nationals which do happen in the UK. The way we make
+        attempt to make this fair is by scaling beans off of the number of
+        players while also setting an appropriate baseline number of beans. We
+        will have to keep an eye on this value. We could set a higher floor, but
+        we could also scale the added beans per player on a tiered basis. For
+        the smaller tournaments like some nationals, this would have a lower
+        base bean totals but have a higher scaling method. Again, for now I'm
+        not going to change this and keep it at a fixed threshold.
       </p>
     ),
   },

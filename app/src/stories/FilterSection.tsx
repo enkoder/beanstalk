@@ -51,7 +51,7 @@ export function getSearchParamsFromValues(
   if (values.searchString) {
     sp.set(SEARCH_PARAM_NAME, values.searchString);
   }
-  if (values.seasonId) {
+  if (values.seasonId != undefined) {
     sp.set(SEASON_PARAM_NAME, String(values.seasonId));
   }
   if (values.format) {
@@ -193,7 +193,7 @@ export function FilterSection({
       >
         {seasons.map((s, i) => (
           <option value={i} selected={i == selectedSeasonId}>
-            {i ? `S${i} - ${s.name}` : s.name}
+            {`S${i} - ${s.name}`}
           </option>
         ))}
       </Select>
