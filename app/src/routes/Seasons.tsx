@@ -69,14 +69,7 @@ export function Seasons() {
                 >
                   <td>{season.id}</td>
                   <td className={"px-4 py-2"}>
-                    <Link
-                      className={
-                        "text-cyan-500 hover:font-bold hover:text-cyan-400 hover:underline"
-                      }
-                      to={"/?season=" + season.id}
-                    >
-                      {season.name}
-                    </Link>
+                    <Link to={`/?season=${season.id}`}>{season.name}</Link>
                   </td>
                   <td className={"px-4 py-2"}>
                     {moment(season.started_at).format(DT_FORMAT)}

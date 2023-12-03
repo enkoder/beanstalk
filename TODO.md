@@ -31,7 +31,6 @@
 ## Storybook
 
 - Figure out what images don't work in storybook
-- Create styled links that wrap react router Link
 - Make a Table story. Potentially look into https://tanstack.com/table/v8
 
 ## Infrastructure

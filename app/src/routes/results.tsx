@@ -1,8 +1,9 @@
 import { Result, ResultsService, UserResultsResponse } from "../client";
 import { PageHeading } from "../stories/PageHeader";
 import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
+import { Link } from "../stories/Link";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 type ResultsParams = {
   user: string;
@@ -13,30 +14,20 @@ function Decks(result: Result) {
     <div className={"flex flex-col text-gray-400"}>
       {result.corp_deck_url ? (
         <small>
-          <a
-            className={
-              "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-            }
-            href={result.corp_deck_url}
-          >
+          <Link to={result.corp_deck_url}>
             {/* TODO: replace the corp ID with the picture of the faction and the name of the ID */}
             {result.corp_deck_identity_name}
-          </a>
+          </Link>
         </small>
       ) : (
         <small>{result.corp_deck_identity_name}</small>
       )}
       {result.runner_deck_url ? (
         <small>
-          <a
-            className={
-              "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-            }
-            href={result.runner_deck_url}
-          >
+          <Link to={result.runner_deck_url}>
             {/* TODO: replace the runner ID with the picture of the faction and the name of the ID */}
             {result.runner_deck_identity_name}
-          </a>
+          </Link>
         </small>
       ) : (
         <small>{result.runner_deck_identity_name}</small>
@@ -149,26 +140,17 @@ export function Results() {
                     <td>
                       <span>
                         <Link
-                          className={
-                            "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-                          }
+                          className={"text-lg"}
                           to={`/tournament/${result.tournament_id}`}
                         >
                           {result.tournament_name}
                         </Link>
-                        <small style={{ paddingLeft: "10px" }}>
-                          <a
-                            className={
-                              "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-                            }
-                            href={
-                              "https://alwaysberunning.net/tournaments/" +
-                              result.tournament_id
-                            }
-                          >
-                            (ABR)
-                          </a>
-                        </small>
+                        <Link
+                          className={"pl-2 text-sm"}
+                          to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                        >
+                          (ABR)
+                        </Link>
                       </span>
                     </td>
                     <td>{result.format}</td>

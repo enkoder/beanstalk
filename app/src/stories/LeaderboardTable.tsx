@@ -2,8 +2,8 @@ import {
   FilterSectionValues,
   getSearchParamsFromValues,
 } from "./FilterSection";
+import { Link } from "./Link";
 import { LeaderboardRow } from "../client";
-import { Link } from "react-router-dom";
 
 type LeaderboardProps = {
   leaderboard?: LeaderboardRow[];
@@ -56,12 +56,7 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
                   scope="row"
                   className="whitespace-nowrap font-medium text-cyan-500"
                 >
-                  <Link
-                    className={
-                      "hover:font-bold hover:text-cyan-400 hover:underline"
-                    }
-                    to={getLinkToUserSearchParams(row)}
-                  >
+                  <Link to={getLinkToUserSearchParams(row)}>
                     {row.user_name}
                   </Link>
                 </th>

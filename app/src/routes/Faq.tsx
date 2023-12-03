@@ -3,7 +3,7 @@ import { Anchor } from "../stories/Anchor";
 // @ts-ignore
 import doggo from "../../assets/doggo.png";
 import { Sep } from "../stories/Sep";
-import { Link } from "react-router-dom";
+import { Link } from "../stories/Link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
@@ -21,16 +21,11 @@ const QUESTIONS: Question[] = [
       <p>
         Beans are points, the unit of measurement we use here at the Beanstalk.
         In some circles, primarily close to{" "}
-        <a
-          className={"text-cyan-500"}
-          href={"https://netrunnerdb.com/en/profile/6502/ctz"}
-        >
-          CTZ
-        </a>
-        , people call the card{" "}
-        <a href={"https://netrunnerdb.com/en/card/01098"}>
+        <Link to={"https://netrunnerdb.com/en/profile/6502/ctz"}>CTZ</Link>,
+        people call the card{" "}
+        <Link to={"https://netrunnerdb.com/en/card/01098"}>
           Beanstalk Royalties
-        </a>{" "}
+        </Link>{" "}
         "green beans". Count up those beans, because you're going to need them
         in order to climb the rankings to the top of the Beanstalk.
       </p>
@@ -67,22 +62,12 @@ const QUESTIONS: Question[] = [
     content: (
       <p>
         This website is entirely powered by{" "}
-        <a
-          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
-          href={"https://alwaysberunning.net"}
-        >
-          alwaysberunning.net
-        </a>
-        . Every night, the Beanstalk will re-ingest all supported tournaments,
+        <Link to={"https://alwaysberunning.net"}>alwaysberunning.net</Link>.
+        Every night, the Beanstalk will re-ingest all supported tournaments,
         pulling down data ABR data to it's servers. Just like ABR, the Beanstalk
         user accounts are tied directly to{" "}
-        <a
-          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
-          href={"https://netrunnerdb.com"}
-        >
-          netrunnerdb.com
-        </a>{" "}
-        user accounts. While ingesting ABR tournament data, if I can't find an
+        <Link to={"https://netrunnerdb.com"}>netrunnerdb.com</Link> user
+        accounts. While ingesting ABR tournament data, if I can't find an
         associated NRDB user, then I do not pull in that tournament entry. Since
         I re-ingest once a day, you can go back and make sure that past
         tournaments are using your NRDB user account. The best way to ensure
@@ -101,20 +86,14 @@ const QUESTIONS: Question[] = [
     id: "origin-story",
     content: (
       <p>
-        During discussions about starting a pro-circuit for Netrunner, my
-        <a
-          className={"text-cyan-500"}
-          href={"https://netrunnerdb.com/en/card/34008"}
-        >
-          {" "}
-          wheels
-        </a>{" "}
-        got turning. The idea of building a global leaderboard complete with
-        seasons and a dynamic point system was just too exciting to let go. The
-        original goal was to just build a leaderboard for the pro circuit, but I
-        totally got nerd sniped by this project resulting in me jamming on this
-        during nights and weekends. I had a lot of fun building the website, and
-        I hope the community enjoys it as well!
+        During discussions about starting a pro-circuit for Netrunner, my{" "}
+        <Link to={"https://netrunnerdb.com/en/card/34008"}>wheels</Link> got
+        turning. The idea of building a global leaderboard complete with seasons
+        and a dynamic point system was just too exciting to let go. The original
+        goal was to just build a leaderboard for the pro circuit, but I totally
+        got nerd sniped by this project resulting in me jamming on this during
+        nights and weekends. I had a lot of fun building the website, and I hope
+        the community enjoys it as well!
       </p>
     ),
   },
@@ -124,11 +103,8 @@ const QUESTIONS: Question[] = [
     content: (
       <p>
         My long term vision for the Beanstalk is to deliver a comprehensive
-        seasonal ranking leaderboard for all online games played on
-        <a className={"text-cyan-500"} href={"https//jinteki.net"}>
-          {" "}
-          jinteki.net
-        </a>
+        seasonal ranking leaderboard for all online games played on{" "}
+        <Link to={"https//jinteki.net"}>jinteki.net</Link>
         . The ranking system would be based on an ELO-like system similar to
         Chess. Both ranked and unranked games would be recorded and logged,
         affecting your current season ranking. I also envision access to
@@ -207,13 +183,10 @@ const QUESTIONS: Question[] = [
           </ul>
         </div>
         All of the code is open source and available at the
-        <a
-          className={"font-bold text-cyan-600"}
-          href={"https://github.com/enkoder/beanstalk"}
-        >
+        <Link to={"https://github.com/enkoder/beanstalk"}>
           {" "}
           Beanstalk Github{" "}
-        </a>
+        </Link>
         page.
       </>
     ),
@@ -248,13 +221,7 @@ export function Faq() {
                 className={"text-xl text-red-700"}
                 icon={faHeart}
               />{" "}
-              by{" "}
-              <a
-                className={"text-cyan-600"}
-                href={"https://github.com/enkoder"}
-              >
-                enkoder
-              </a>
+              by <Link to={"https://github.com/enkoder"}>enkoder</Link>
             </span>
           </div>
         </div>

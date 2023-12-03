@@ -1,7 +1,8 @@
 import { PageHeading } from "../stories/PageHeader";
 import { Result, Tournament, TournamentService } from "../client";
+import { Link } from "../stories/Link";
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 type TournamentParams = {
   tournament: string;
@@ -78,12 +79,7 @@ export function Tournament() {
                     {result.rank_cut ? result.rank_cut : result.rank_swiss}
                   </td>
                   <td>
-                    <Link
-                      className={
-                        "text-cyan-400 hover:font-bold hover:text-cyan-300 hover:underline"
-                      }
-                      to={`/results/${result.user_name}`}
-                    >
+                    <Link to={`/results/${result.user_name}`}>
                       {result.user_name}
                     </Link>
                   </td>

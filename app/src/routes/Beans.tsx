@@ -3,7 +3,7 @@ import { Anchor } from "../stories/Anchor";
 // @ts-ignore
 import whitepaper from "../../assets/whitepaper.pdf";
 import { Sep } from "../stories/Sep";
-import { Link } from "react-router-dom";
+import { Link } from "../stories/Link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faHeart } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,12 +20,9 @@ const SECTIONS: Section[] = [
     content: (
       <p>
         The{" "}
-        <a
-          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
-          href={"https://en.wikipedia.org/wiki/Pareto_principle"}
-        >
+        <Link to={"https://en.wikipedia.org/wiki/Pareto_principle"}>
           Pareto Principle
-        </a>{" "}
+        </Link>{" "}
         states that 20% of the input yields 80% of the output. This is also
         known as the 80/20 rule and it can be found in a number of places. This
         principle was a motivating factor for me to pursue an exponential
@@ -39,22 +36,14 @@ const SECTIONS: Section[] = [
         research papers.
         <Sep className={"py-2"} />
         Eventually I found a paper titled
-        <a
-          href={"https://arxiv.org/pdf/1601.04203.pdf"}
-          className={"text-cyan-400 hover:text-cyan-400 hover:underline"}
-        >
+        <Link to={"https://arxiv.org/pdf/1601.04203.pdf"}>
           {" "}
           Determining Tournament Payout Structures for Daily Fantasy Sports.{" "}
-        </a>{" "}
+        </Link>{" "}
         (
-        <a
-          className={"text-cyan-600 hover:text-cyan-400 hover:underline"}
-          href={whitepaper}
-          download
-        >
-          {" "}
+        <Link to={whitepaper} download>
           Download <FontAwesomeIcon icon={faDownload} />
-        </a>
+        </Link>
         )
         <Sep className={"mb-4"} />
         This paper is a great read. Please go read it as I have implemented
@@ -68,12 +57,8 @@ const SECTIONS: Section[] = [
         you can use a binary search tree to find an accurate value of Alpha
         which is used to calculate the rate of exponential decay.
         <Sep className={"mb-4"} />
-        You can find a well documented and tested algorithm over at the
-        <Link className={"text-lg text-cyan-600"} to={"/code"}>
-          {" "}
-          Code{" "}
-        </Link>
-        page.
+        You can find a well documented and tested algorithm over at the{" "}
+        <Link to={"/code"}>Code</Link> page.
       </p>
     ),
   },
@@ -92,16 +77,12 @@ const SECTIONS: Section[] = [
         tournament with 100 players, which creates high stakes for a tournament
         to win first, but doesn't create a huge separation between first and the
         rest of the players. We're coming for you{" "}
-        <Link
-          className={"text-cyan-500 hover:text-cyan-400 hover:underline"}
-          to={"/results/Sokka"}
-        >
+        <Link to={"/results/Sokka"}>
           Sokka <FontAwesomeIcon className={"text-red-700"} icon={faHeart} />{" "}
         </Link>
         <Sep className={"mt-4"} />
-        Head over to the
+        Head over to the{" "}
         <Link className={"text-lg text-cyan-600"} to={"/sim"}>
-          {" "}
           Sim
         </Link>{" "}
         and get a feel for yourself!
@@ -121,12 +102,10 @@ const SECTIONS: Section[] = [
         <Sep className={"my-2"} />
         You can find the tiered bean values defined in{" "}
         <Link className={"text-lg text-cyan-600"} to={"/code"}>
-          {" "}
           Code
         </Link>
-        , or you can view them in the
+        , or you can view them in the{" "}
         <Link className={"text-lg text-cyan-600"} to={"/sim"}>
-          {" "}
           Sim
         </Link>
         .
@@ -148,9 +127,8 @@ const SECTIONS: Section[] = [
         scale well for the typical number of tournament players we see in
         Netrunner tournaments.
         <Sep className={"my-2"} />
-        Again, head over to the
+        Again, head over to the{" "}
         <Link className={"text-lg text-cyan-600"} to={"/sim"}>
-          {" "}
           Sim
         </Link>{" "}
         to take a look at how the bean values change as you add more players.
@@ -228,13 +206,7 @@ export function Beans() {
                 className={"text-xl text-red-700"}
                 icon={faHeart}
               />{" "}
-              by{" "}
-              <a
-                className={"text-cyan-600"}
-                href={"https://github.com/enkoder"}
-              >
-                enkoder
-              </a>
+              by <Link to={"https://github.com/enkoder"}>enkoder</Link>
             </span>
           </div>
         </div>
