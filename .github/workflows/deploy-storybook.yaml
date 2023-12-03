@@ -24,5 +24,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run tests
+      - name: Build & Deploy Storybook
         run: pnpm -r build-storybook && pnpm exec wrangler pages deploy ./app/storybook-static
+        with:
+          env:
+            CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+            CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
