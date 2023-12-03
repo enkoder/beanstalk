@@ -37,7 +37,10 @@ function withDB(request: RequestWithDB, env: Env): void {
   request.db = getDB();
 }
 
-const router = OpenAPIRouter();
+const router = OpenAPIRouter({
+  docs_url: "/api/docs",
+  redoc_url: "/api/redocs",
+});
 
 router.registry.registerComponent("securitySchemes", "bearerAuth", {
   type: "http",

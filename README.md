@@ -20,7 +20,8 @@ which makes it trivial to create an [OpenAPI](https://spec.openapis.org/oas/v3.1
 Typescript + [Zod](https://github.com/colinhacks/zod) objects. Using this project works great with the CF workers and
 trivializes keeping the OpenAPI spec up to date.
 
-You can see the Beanstalk's API spec at https://beanstalk-api.enkoder.workers.dev/docs.
+You can see the Beanstalk's API spec at https://netrunner-beanstalk.net/api/docs
+or [redocs](https://netrunner-beanstalk.net/api/redocs).
 
 Using this OpenAPI spec, we entirely generate our Typescript based UI clients
 using https://github.com/ferdikoomen/openapi-typescript-codegen, allowing us to just write the API once and immediately
@@ -119,10 +120,11 @@ pnpm -r lint
 
 ### IDE Configuration
 
--[ ] Setup VSCode config -[ ] Setup Webstorm config
+- Setup VSCode config
+- Setup Webstorm config
 
 ### CI
 
 [Github Actions](.github/workflows/tests.yaml) are set up for this repo. The CI job will install dependencies, run
-lints,
-and any tests configured in any of the pnpm workspaces. You will receive during development on PRs.
+lints, and run any tests configured in any of the pnpm workspaces. Tests will run on your Pull Requests and give
+and post test statuses. We expect tests to pass prior to merging.
