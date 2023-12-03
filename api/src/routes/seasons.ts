@@ -27,7 +27,6 @@ export class GetSeasonTournaments extends OpenAPIRoute {
     const tournaments = await Tournaments.getAllExpandedFromSeasonId(
       Number(seasonId),
     );
-    console.log(JSON.stringify(tournaments[0]));
     return json(
       tournaments.map((tournament) => TournamentComponent.parse(tournament)),
     );

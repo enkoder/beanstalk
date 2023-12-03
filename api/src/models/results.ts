@@ -90,7 +90,8 @@ export class Results {
       .orderBy("tournaments.date", "desc")
       .where("user_id", "=", id);
 
-    if (seasonId) {
+    // SeasonId can be 0 which is non-truthy
+    if (seasonId != undefined) {
       q = q.where("tournaments.season_id", "=", seasonId);
     }
     if (faction && faction.side_code == "runner") {

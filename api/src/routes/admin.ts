@@ -45,7 +45,6 @@ export class Rerank extends OpenAPIRoute {
         for (let i = 0; i < results.length; i++) {
           const result = results[i];
 
-          console.log(i, result.rank_swiss, points[i]);
           if (result.points_earned != points[i]) {
             await Results.update(result.tournament_id, result.user_id, {
               points_earned: points[i],
@@ -65,7 +64,6 @@ export class UpdateUsers extends OpenAPIRoute {
 
   async handle(_: RequestWithDB) {
     const users = await Users.getAllWithoutName();
-    console.log(JSON.stringify(users));
     for (let i = 0; i < users.length; i++) {
       console.log(JSON.stringify(users[i]));
       const user = await Users.update(users[i].id, {

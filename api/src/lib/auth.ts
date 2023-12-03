@@ -85,8 +85,6 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
     }
   }
 
-  console.log(JSON.stringify(accountInfo));
-
   let user = await Users.getById(accountInfo.id);
   if (!user) {
     user = await Users.insert({

@@ -18,7 +18,6 @@ export function Sim() {
   useEffect(() => {
     LeaderboardService.getGetTiers().then((tiers) => {
       setTiers(tiers);
-      console.log(tiers);
     });
   }, []);
 

@@ -40,15 +40,12 @@ export class GetTokenFromCode extends OpenAPIRoute {
     nrdbUrl.searchParams.append("redirect_uri", REDIRECT_URL);
     nrdbUrl.searchParams.append("code", code);
 
-    console.log(nrdbUrl.toString());
     const r = await fetch(nrdbUrl.toString());
     if (!r.ok) {
       return error(400, `Error during token exchange - ${await r.text()}`);
     }
 
     const jsonBody = await r.json();
-    console.log(JSON.stringify(jsonBody));
-
     return json(TokenResponseComponent.parse(jsonBody));
   }
 }
@@ -58,7 +55,6 @@ export class RefreshToken extends OpenAPIRoute {
 
   async handle(req: RequestWithDB, env: Env) {
     const refresh_token = req.query!["refresh_token"];
-    console.log(refresh_token);
     if (!refresh_token) {
       return error(400, "Invalid refresh token");
     }
@@ -69,7 +65,6 @@ export class RefreshToken extends OpenAPIRoute {
     nrdbUrl.searchParams.append("grant_type", "refresh_token");
     nrdbUrl.searchParams.append("refresh_token", String(refresh_token));
 
-    console.log(nrdbUrl.toString());
     const r = await fetch(nrdbUrl.toString());
     if (!r.ok) {
       return error(
@@ -79,8 +74,6 @@ export class RefreshToken extends OpenAPIRoute {
     }
 
     const jsonBody = await r.json();
-    console.log(JSON.stringify(jsonBody));
-
     return json(TokenResponseComponent.parse(jsonBody));
   }
 }
