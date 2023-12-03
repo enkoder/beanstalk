@@ -5,12 +5,13 @@
     "packages/*"
   ],
   "scripts": {
+    "lint": "pnpm --stream exec eslint",
     "build": "pnpm --stream -r run build",
     "start": "pnpm --stream -r run start",
-    "api-start": "pnpm --filter api run start",
-    "app-start": "pnpm --filter app run start",
-    "storybook": "pnpm --filter app run storybook",
-    "tailwind": "pnpm --filter app exec tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+    "start-api": "pnpm --filter api run start",
+    "start-app": "pnpm --filter app run start",
+    "start-storybook": "pnpm --filter app run storybook",
+    "start-tailwind": "pnpm --filter app exec tailwindcss -i ./src/input.css -o ./src/output.css --watch"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
+    "lint": "eslint --fix src",
     "start": "wrangler dev --test-scheduled",
     "build": "wrangler build"
   },

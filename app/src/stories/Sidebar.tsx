@@ -1,7 +1,7 @@
 import useAuth from "../useAuth";
 import { AuthService, User } from "../client";
 // @ts-ignore
-import greenBeans from "../../assets/beanstalk_royalties.png";
+import greenBeans from "../../assets/ai_beanstalk_royalties.jpeg";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faArrowsSpin,

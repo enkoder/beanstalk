@@ -18,8 +18,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.png$/,
-        type: "asset",
+        test: /\.(png|jpg|jpeg)$/,
+        type: "asset/resource",
       },
       {
         test: /\.(pdf)$/i,

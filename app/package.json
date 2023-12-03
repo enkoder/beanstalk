@@ -4,6 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
+    "lint": "eslint --fix src",
     "start": "rspack serve",
     "build": "rspack build",
     "clean": "rspack clean",
