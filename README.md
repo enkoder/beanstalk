@@ -57,6 +57,17 @@ Cloudflare has [some limitations](https://developers.cloudflare.com/workers/plat
 decent amount of logic in the [background.ts](api/src/background.ts). There's a CPU time limit as well as a concurrency
 limit.
 
+### Sentry & Error Reporting
+
+At Beanstalk we have a free-tier Sentry domain up and running and we should try hard to keep it free. Currently, this is
+set up using
+Cloudflare's [Sentry Integration](https://developers.cloudflare.com/workers/observability/sentry-integration/)
+configured
+to create issues for every 400, 4xx (!401), and every 5xx.
+
+If you become a collaborator on the project, I'm happy to grant access to our Sentry
+project -> https://netrunner-beanstalk.sentry.io/issues/
+
 ## Developer Environment
 
 This project uses [pnpm](https://pnpm.io/) as it's package manager which is again, the new hotness. Symlinks ftw!
