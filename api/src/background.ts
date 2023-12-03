@@ -99,6 +99,7 @@ async function handleResultIngest(
   const { points } = calculateTournamentPointDistribution(
     TOURNAMENT_POINTS[tournament.type],
     tournament.players_count,
+    tournament.type,
   );
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
@@ -108,7 +109,7 @@ async function handleResultIngest(
       env,
       abrEntry,
       tournament.id,
-      points[placement],
+      points[placement - 1],
     );
     if (!result) {
       console.log(
