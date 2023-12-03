@@ -38,7 +38,7 @@ OpenAPI.TOKEN = getToken;
 OpenAPI.WITH_CREDENTIALS = true;
 OpenAPI.BASE =
   process.env.NODE_ENV !== "development"
-    ? "https://netrunner-beanstalk.net/api"
+    ? "https://netrunner-beanstalk.net"
     : "http://0.0.0.0:8787";
 
 export function OAuth2Callback() {
