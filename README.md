@@ -21,7 +21,7 @@ Typescript + [Zod](https://github.com/colinhacks/zod) objects. Using this projec
 trivializes keeping the OpenAPI spec up to date.
 
 You can see the Beanstalk's API spec at https://netrunner-beanstalk.net/api/docs
-or [redocs](https://netrunner-beanstalk.net/api/redocs).
+or [redoc](https://netrunner-beanstalk.net/api/redoc).
 
 Using this OpenAPI spec, we entirely generate our Typescript based UI clients
 using https://github.com/ferdikoomen/openapi-typescript-codegen, allowing us to just write the API once and immediately
