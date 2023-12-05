@@ -7,6 +7,19 @@ import {
   Season,
   SeasonsService,
 } from "../client";
+import { Factions } from "../../../api/src/models/factions";
+import adamIcon from "../../assets/factions/adam.png";
+import sunnyIcon from "../../assets/factions/sunny-lebeau.png";
+import apexIcon from "../../assets/factions/apex.png";
+import shaperIcon from "../../assets/factions/shaper.png";
+import crimIcon from "../../assets/factions/criminal.png";
+import anarchIcon from "../../assets/factions/anarch.png";
+import hbIcon from "../../assets/factions/haas-bioroid.png";
+import jintekiIcon from "../../assets/factions/jinteki.png";
+import nbnIcon from "../../assets/factions/nbn.png";
+import weylandIcon from "../../assets/factions/weyland-consortium.png";
+import neutralRunnerIcon from "../../assets/factions/neutral-runner.png";
+import neutralCorpIcon from "../../assets/factions/neutral-corp.png";
 import { useSearchParams } from "react-router-dom";
 import {
   ChangeEvent,
@@ -17,8 +30,38 @@ import {
 } from "react";
 
 export const SEASON_PARAM_NAME = "season";
+const EMPTY_SEASON = {
+  id: -1,
+  name: "Season Filter...",
+  started_at: "",
+} as Season;
+
 export const FACTION_PARAM_NAME = "factionCode";
+const EMPTY_FACTION = {
+  code: "",
+  color: "",
+  is_mini: false,
+  name: "Faction Filter...",
+  side_code: "",
+} as Faction;
+const FACTION_ICONS: Record<string, any> = {
+  [Factions.Adam.code]: adamIcon,
+  [Factions.SunnyLebeau.code]: sunnyIcon,
+  [Factions.Apex.code]: apexIcon,
+  [Factions.Shaper.code]: shaperIcon,
+  [Factions.Criminal.code]: crimIcon,
+  [Factions.Anarch.code]: anarchIcon,
+  [Factions.NeutralRunner.code]: neutralRunnerIcon,
+  [Factions.Jinteki.code]: jintekiIcon,
+  [Factions.HaasBioroid.code]: hbIcon,
+  [Factions.NBN.code]: nbnIcon,
+  [Factions.WeylandConsortium.code]: weylandIcon,
+  [Factions.NeutralCorp.code]: neutralCorpIcon,
+};
+
 export const FORMAT_PARAM_NAME = "formatCode";
+const EMPTY_FORMAT = "Format Filter...";
+
 export const SEARCH_PARAM_NAME = "search";
 
 type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
@@ -72,36 +115,31 @@ export function FilterSection({
   const values = getFilterValues(searchParams);
   const [searchString, setSearchString] = useState<string>("");
 
-  const [seasons, setSeasons] = useState<Season[]>([]);
-  const [selectedSeasonId, setSelectedSeasonId] = useState<number | undefined>(
-    values.seasonId,
-  );
+  const [seasons, setSeasons] = useState<Season[]>([EMPTY_SEASON]);
+  const [selectedSeason, setSelectedSeason] = useState<Season>(EMPTY_SEASON);
 
-  const [factions, setFactions] = useState<Faction[]>([]);
-  const [selectedFaction, setSelectedFaction] = useState<string | undefined>(
-    values.faction,
-  );
+  const [factions, setFactions] = useState<Faction[]>([EMPTY_FACTION]);
+  const [selectedFaction, setSelectedFaction] =
+    useState<Faction>(EMPTY_FACTION);
 
-  const [formats, setFormats] = useState<Format[]>([]);
-  const [selectedFormat, setSelectedFormat] = useState<string | undefined>(
-    values.format,
-  );
+  const [formats, setFormats] = useState<string[]>([EMPTY_FORMAT]);
+  const [selectedFormat, setSelectedFormat] = useState<string>(EMPTY_FORMAT);
 
   const fetchFactions = useCallback(async () => {
     LeaderboardService.getGetFactions().then((factions) => {
-      setFactions(factions);
+      setFactions([EMPTY_FACTION, ...factions]);
     });
   }, []);
 
   const fetchSeasons = useCallback(async () => {
     SeasonsService.getGetSeasons().then((seasons) => {
-      setSeasons(seasons);
+      setSeasons([EMPTY_SEASON, ...seasons]);
     });
   }, []);
 
   const fetchFormats = useCallback(async () => {
     LeaderboardService.getGetFormats().then((formats) => {
-      setFormats(formats);
+      setFormats([EMPTY_FORMAT, ...formats]);
     });
   }, []);
 
@@ -121,49 +159,37 @@ export function FilterSection({
     return () => clearTimeout(getLeaderboard);
   }, [searchParams]);
 
-  const handleSeasonChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { value } = event.target;
-
-    if (value != "") {
-      searchParams.set(SEASON_PARAM_NAME, value);
-      setSelectedSeasonId(Number(value));
+  const handleSeasonChange = (s: Season) => {
+    if (s.id >= 0) {
+      searchParams.set(SEASON_PARAM_NAME, String(s.id));
     } else {
       searchParams.delete(SEASON_PARAM_NAME);
     }
 
     setSearchParams(searchParams);
+    setSelectedSeason(s);
   };
 
-  const handleFormatChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { value } = event.target;
-
-    if (value) {
-      searchParams.set(FORMAT_PARAM_NAME, value);
-    } else {
-      searchParams.delete(FORMAT_PARAM_NAME);
-    }
-
-    setSearchParams(searchParams);
-    setSelectedFormat(value);
-  };
-
-  const handleFactionChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { value } = event.target;
-
-    if (value) {
-      searchParams.set(FACTION_PARAM_NAME, value);
+  const handleFactionChange = (f: Faction) => {
+    if (f.code) {
+      searchParams.set(FACTION_PARAM_NAME, f.code);
     } else {
       searchParams.delete(FACTION_PARAM_NAME);
     }
 
     setSearchParams(searchParams);
-    setSelectedFaction(value);
+    setSelectedFaction(f);
+  };
+
+  const handleFormatChange = (f: string) => {
+    if (f != EMPTY_FORMAT) {
+      searchParams.set(FORMAT_PARAM_NAME, f);
+    } else {
+      searchParams.delete(FORMAT_PARAM_NAME);
+    }
+
+    setSearchParams(searchParams);
+    setSelectedFormat(f);
   };
 
   const handleSearchStringChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -182,56 +208,57 @@ export function FilterSection({
   return (
     <div
       className={
-        "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
+        "grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
       }
     >
       <Select
-        initialOptionText={"Season Filter..."}
-        className={"h-12 w-full rounded-3xl"}
+        className={"h-12 w-full rounded-lg"}
+        items={seasons}
+        renderItem={(s) => {
+          return s && s.id >= 0 ? `S${s.id} - ${s.name}` : s.name;
+        }}
+        selected={selectedSeason}
         label={"Seasons"}
         onChange={handleSeasonChange}
-      >
-        {seasons.map((s, i) => (
-          <option value={i} selected={i == selectedSeasonId}>
-            {`S${i} - ${s.name}`}
-          </option>
-        ))}
-      </Select>
+      />
       <Select
-        initialOptionText={"Faction Filter..."}
-        className={"h-12 w-full rounded-3xl"}
+        className={"h-12 w-full rounded-lg"}
+        items={factions}
+        selected={selectedFaction}
+        renderItem={(f) => {
+          return (
+            <div className={"relative flex flex-row items-center"}>
+              <div>
+                {f.code in FACTION_ICONS ? (
+                  <img
+                    className={"left-0 h-4 w-4"}
+                    alt={f.code}
+                    src={FACTION_ICONS[f.code]}
+                  />
+                ) : (
+                  f.code != "" && <div className={"h-4 w-4"} />
+                )}
+              </div>
+              <text className={"pl-2"}>{f.name}</text>
+            </div>
+          );
+        }}
         label={"Faction"}
         onChange={handleFactionChange}
-      >
-        {factions.map((f) => (
-          <option
-            value={f.code}
-            data-name={FACTION_PARAM_NAME}
-            selected={f.code == selectedFaction}
-          >
-            {f.name != "Neutral" ? f.name : `${f.name} ${f.side_code}`}
-          </option>
-        ))}
-      </Select>
+      />
       <Select
-        initialOptionText={"Format Filter..."}
-        className={"h-12 w-full rounded-3xl"}
+        className={"h-12 w-full rounded-lg"}
+        items={formats}
+        renderItem={(f) => {
+          return f;
+        }}
+        selected={selectedFormat}
         label={"Format"}
         onChange={handleFormatChange}
-      >
-        {formats.map((f) => (
-          <option
-            value={f}
-            data-name={FORMAT_PARAM_NAME}
-            selected={f == selectedFormat}
-          >
-            {f}
-          </option>
-        ))}
-      </Select>
+      />
       {hasSearchBar && (
         <Input
-          className={"h-12 w-full rounded-3xl"}
+          className={"h-12 w-full rounded-lg"}
           label={"Search"}
           type={"search"}
           placeholder="Search"

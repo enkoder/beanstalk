@@ -27,11 +27,7 @@ export function Leaderboard() {
       className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
     >
       <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
-        <PageHeading
-          includeUnderline={true}
-          className={"mb-8"}
-          text={"Leaderboard"}
-        />
+        <PageHeading includeUnderline={true} text={"Leaderboard"} />
         <FilterSection hasSearchBar={true} onParamChange={getLeaderboard} />
         <div className={"overflow-auto whitespace-nowrap"}>
           <LeaderboardTable leaderboard={leaderboardRows} values={values} />
