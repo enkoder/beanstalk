@@ -128,18 +128,31 @@ export function FilterSection({
   const fetchFactions = useCallback(async () => {
     LeaderboardService.getGetFactions().then((factions) => {
       setFactions([EMPTY_FACTION, ...factions]);
+      for (const f of factions) {
+        if (values.faction == f.code) {
+          setSelectedFaction(f);
+        }
+      }
     });
   }, []);
 
   const fetchSeasons = useCallback(async () => {
     SeasonsService.getGetSeasons().then((seasons) => {
       setSeasons([EMPTY_SEASON, ...seasons]);
+      if (values.seasonId != undefined) {
+        setSelectedSeason(seasons[values.seasonId]);
+      }
     });
   }, []);
 
   const fetchFormats = useCallback(async () => {
     LeaderboardService.getGetFormats().then((formats) => {
       setFormats([EMPTY_FORMAT, ...formats]);
+      for (const f of formats) {
+        if (values.format == f) {
+          setSelectedFormat(f);
+        }
+      }
     });
   }, []);
 

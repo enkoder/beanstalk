@@ -4,27 +4,32 @@ import type { Meta, StoryObj } from "@storybook/react";
 const meta = {
   title: "Beanstalk/Select",
   component: Select,
-  argTypes: {},
+  argTypes: { onChange: { action: "change" } },
 } satisfies Meta<typeof Select>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const items = ["Item 1", "Item 2", "Item 3"];
+const selected = "Item 1";
+
 export const Basic: Story = {
   args: {
-    options: [
-      { id: 0, text: "First Item" },
-      { id: 1, text: "Second Item" },
-    ],
+    items: items,
+    selected: selected,
+    renderItem: (s: string) => {
+      return s;
+    },
   },
 };
 
 export const Label: Story = {
   args: {
-    options: [
-      { id: 0, text: "First Item" },
-      { id: 1, text: "Second Item" },
-    ],
-    label: "Seasons",
+    items: items,
+    selected: selected,
+    renderItem: (s: string) => {
+      return s;
+    },
+    label: "Items",
   },
 };
