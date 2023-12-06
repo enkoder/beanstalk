@@ -72,11 +72,11 @@ const SECTIONS: Section[] = [
         to first place. Winning a tournament is very hard, and I believe winners
         of large tournaments should be heavily rewarded. However, the payout
         shouldn't be so large that winning large tournaments creates such a
-        massive gap. There's a sweet spot here, and currently we landed on 20%.
-        At this value, second place receives ~10% and third place gets ~%7 for a
-        tournament with 100 players, which creates high stakes for a tournament
-        to win first, but doesn't create a huge separation between first and the
-        rest of the players. We're coming for you{" "}
+        massive gap. There's a sweet spot here, and currently we landed on 15%.
+        At this value, second place receives ~8% and third place gets ~%6.5 for
+        a tournament with 100 players, which creates high stakes for a
+        tournament to win first, but doesn't create a huge separation between
+        first and the rest of the players. We're coming for you{" "}
         <Link to={"/results/Sokka"}>
           Sokka <FontAwesomeIcon className={"text-red-700"} icon={faHeart} />{" "}
         </Link>
