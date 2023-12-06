@@ -4,34 +4,56 @@ import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
 import { Link } from "../stories/Link";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { clsx } from "clsx";
 
 type ResultsParams = {
   user: string;
 };
 
 function Decks(result: Result) {
+  const imageSizes = "h-5 w-5 sm:h-8 sm:w-8 lg:w-10 lg:h-10 xl:h-12 xl:w-12";
+
   return (
-    <div className={"flex flex-col text-gray-400"}>
-      {result.corp_deck_url ? (
-        <small>
-          <Link to={result.corp_deck_url}>
+    <div className={"flex flex-row justify-center text-gray-400"}>
+      {/*grey separator between deck images*/}
+      <div className={"b-2 border-r border-gray-700 pr-2"}>
+        {/* cyan underline showing it's clickable */}
+        <div
+          className={clsx(
+            result.corp_deck_url &&
+              "border-b-2 border-cyan-600 pb-1 hover:border-cyan-400",
+          )}
+        >
+          <Link to={result.corp_deck_url || ""}>
             {/* TODO: replace the corp ID with the picture of the faction and the name of the ID */}
-            {result.corp_deck_identity_name}
+            <img
+              className={clsx(imageSizes, "rounded")}
+              src={`https://alwaysberunning.net/img/ids/${result.corp_deck_identity_id
+                .toString()
+                .padStart(5, "0")}.png`}
+              alt={result.corp_deck_identity_name || ""}
+            />
           </Link>
-        </small>
-      ) : (
-        <small>{result.corp_deck_identity_name}</small>
-      )}
-      {result.runner_deck_url ? (
-        <small>
-          <Link to={result.runner_deck_url}>
-            {/* TODO: replace the runner ID with the picture of the faction and the name of the ID */}
-            {result.runner_deck_identity_name}
+        </div>
+      </div>
+      <div className={"pl-2"}>
+        <div
+          className={clsx(
+            result.corp_deck_url &&
+              "border-b-2 border-cyan-600 pb-1 hover:border-cyan-400",
+          )}
+        >
+          <Link to={result.runner_deck_url || ""}>
+            <img
+              className={clsx(imageSizes, "rounded")}
+              src={`https://alwaysberunning.net/img/ids/${result.runner_deck_identity_id
+                .toString()
+                .padStart(5, "0")}.png`}
+              alt={result.runner_deck_identity_name || ""}
+            />
           </Link>
-        </small>
-      ) : (
-        <small>{result.runner_deck_identity_name}</small>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -83,81 +105,62 @@ export function Results() {
       </div>
 
       <FilterSection hasSearchBar={false} onParamChange={getResults} />
-      <div className={"overflow-auto whitespace-nowrap"}>
-        <table
-          className={
-            "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300"
-          }
-        >
-          <thead className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}>
-            <tr className={"border-b"}>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
+
+      <table
+        className={
+          "mt-4 w-full table-fixed border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
+        }
+      >
+        <thead className={"sticky top-0 bg-slate-950 text-left"}>
+          <tr>
+            <th scope="col" className={"w-3/6 text-left"}>
+              Tournament
+            </th>
+            <th scope="col" className={"w-1/6 text-center"}>
+              Decks
+            </th>
+            <th scope="col" className={"w-3/12 text-center"}>
+              <div>
+                <div>Results</div>
+                <small>C / S / #</small>
+              </div>
+            </th>
+            <th scope="col" className={"w-1/12 text-right"}>
+              Points
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {results &&
+            results.results.map((result) => (
+              <tr
+                className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+                key={results.user_id + "/" + result.tournament_id}
               >
-                Tournament
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Format
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Decks
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                <div>
-                  <div>Results</div>
-                  <small>Cut/Swiss/Total</small>
-                </div>
-              </th>
-              <th
-                scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
-              >
-                Points
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {results &&
-              results.results.map((result) => (
-                <tr
-                  className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-                  key={results.user_id + "/" + result.tournament_id}
-                >
-                  <td>
-                    <span>
-                      <Link
-                        className={"text-lg"}
-                        to={`/tournament/${result.tournament_id}`}
-                      >
-                        {result.tournament_name}
-                      </Link>
-                      <Link
-                        className={"pl-2 text-sm"}
-                        to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
-                      >
-                        (ABR)
-                      </Link>
-                    </span>
-                  </td>
-                  <td>{result.format}</td>
-                  <td>{Decks(result)}</td>
-                  <td>{formatPlacement(result)}</td>
-                  <td>{result.points_earned.toFixed(2)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
+                <td className={"whitespace-pre-wrap py-2"}>
+                  <span>
+                    <Link to={`/tournament/${result.tournament_id}`}>
+                      {result.tournament_name}
+                    </Link>
+                    <Link
+                      className={"pl-2 text-xs"}
+                      to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                    >
+                      (ABR)
+                    </Link>
+                  </span>
+                </td>
+                <td className={"py-2 align-middle"}>{Decks(result)}</td>
+                <td className={"py-2 text-center"}>
+                  {formatPlacement(result)}
+                </td>
+                <td className={"py-2 text-right"}>
+                  {result.points_earned.toFixed(2)}
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </>
   );
 }

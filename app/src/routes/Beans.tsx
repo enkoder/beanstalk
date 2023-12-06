@@ -219,7 +219,7 @@ export function Beans() {
               className={"text-xl text-red-700"}
               icon={faHeart}
             />{" "}
-            by <Link to={"https://github.com/enkoder"}>enkoder</Link>
+            by <Link to={"https://github.com/enkoder/beanstalk"}>enkoder</Link>
           </span>
         </div>
       </div>
