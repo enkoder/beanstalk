@@ -85,7 +85,7 @@ export function Sim() {
       <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
         <table
           className={
-            "h-full w-full table-fixed border-separate border-spacing-0 text-lg text-gray-300"
+            "h-full w-full table-fixed border-separate border-spacing-0 break-all text-lg text-gray-300"
           }
         >
           <thead
@@ -106,7 +106,9 @@ export function Sim() {
               </th>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300 px-4"}
+                className={
+                  "break-words border-b-2 border-solid border-gray-300 px-4"
+                }
               >
                 Cumulative (
                 {pointsDistributionResponse &&

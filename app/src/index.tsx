@@ -99,7 +99,7 @@ function Layout() {
     <AuthProvider>
       <div className={"h-screen w-screen bg-gray-950 opacity-80"}>
         <Navbar />
-        <div className={"w-full px-4 pt-20 duration-500"}>
+        <div className={"mx-auto max-w-7xl px-4 pt-20 duration-500"}>
           <Outlet />
         </div>
       </div>

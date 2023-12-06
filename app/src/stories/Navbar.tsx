@@ -85,7 +85,7 @@ export function Navbar() {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-cyan-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-600">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -119,7 +119,7 @@ export function Navbar() {
                         className={clsx(
                           item.isCurrent
                             ? "bg-gray-950 text-cyan-400"
-                            : "text-gray-400 hover:bg-cyan-400 hover:text-gray-950",
+                            : "text-gray-400 hover:bg-cyan-600 hover:text-gray-950",
                           "rounded-lg px-3 py-2",
                         )}
                         aria-current={item.isCurrent ? "page" : undefined}
@@ -145,7 +145,7 @@ export function Navbar() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <UserCircleIcon
@@ -177,7 +177,7 @@ export function Navbar() {
                                   onClick={menuItem.onClick}
                                   className={clsx(
                                     active
-                                      ? "rounded-lg bg-cyan-400 text-gray-950"
+                                      ? "rounded-lg bg-cyan-600 text-gray-950"
                                       : "",
                                     "mx-2 block w-44 px-4 py-2 text-gray-400",
                                   )}
@@ -204,8 +204,8 @@ export function Navbar() {
                   href={item.to}
                   className={clsx(
                     item.isCurrent
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                      ? "bg-gray-950 text-cyan-400"
+                      : "text-cyan-400 hover:bg-cyan-600 hover:text-gray-950",
                     "block rounded-md px-3 py-2 text-base font-medium",
                   )}
                   aria-current={item.isCurrent ? "page" : undefined}
