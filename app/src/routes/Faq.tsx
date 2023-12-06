@@ -223,36 +223,32 @@ const QUESTIONS: Question[] = [
 export function Faq() {
   // TODO: Figure out how to link to an anchor
   return (
-    <div
-      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-hidden"}
-    >
-      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
-        <PageHeading
-          includeUnderline={true}
-          text={"Frequently Asked Questions"}
-        />
-        <div className={"overflow-auto"}>
-          {QUESTIONS.map((question) => (
-            <>
-              <Anchor id={question.id} className={"mb-2 mt-4"}>
-                {question.title}
-              </Anchor>
-              <p className={"pl-2 text-gray-400"}> {question.content}</p>
-              <Sep showLine={true} className={"my-4"} />
-            </>
-          ))}
-          <div className={"my-32 flex flex-row justify-center"}>
-            <span className={"text-lg"}>
-              Made with{" "}
-              <FontAwesomeIcon
-                className={"text-xl text-red-700"}
-                icon={faHeart}
-              />{" "}
-              by <Link to={"https://github.com/enkoder"}>enkoder</Link>
-            </span>
-          </div>
+    <>
+      <PageHeading
+        includeUnderline={true}
+        text={"Frequently Asked Questions"}
+      />
+      <div className={"overflow-auto pt-4 text-gray-400"}>
+        {QUESTIONS.map((question) => (
+          <>
+            <Anchor id={question.id} className={"mb-2 mt-4"}>
+              {question.title}
+            </Anchor>
+            <p className={"pl-2 text-gray-400"}> {question.content}</p>
+            <Sep showLine={true} className={"my-4"} />
+          </>
+        ))}
+        <div className={"my-32 flex flex-row justify-center"}>
+          <span className={"text-lg"}>
+            Made with{" "}
+            <FontAwesomeIcon
+              className={"text-xl text-red-700"}
+              icon={faHeart}
+            />{" "}
+            by <Link to={"https://github.com/enkoder"}>enkoder</Link>
+          </span>
         </div>
       </div>
-    </div>
+    </>
   );
 }

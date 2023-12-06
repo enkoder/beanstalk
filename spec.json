@@ -201,12 +201,13 @@
         "type": "object",
         "properties": {
           "id": { "type": "number" },
+          "code": { "type": "string" },
           "name": { "type": "string" },
           "points": { "type": "number" },
           "season": { "type": "number" },
           "type": { "$ref": "#/components/schemas/TournamentType" }
         },
-        "required": ["id", "name", "points"]
+        "required": ["id", "code", "name", "points"]
       }
     },
     "parameters": {}

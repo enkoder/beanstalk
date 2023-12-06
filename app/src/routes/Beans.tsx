@@ -191,43 +191,38 @@ const SECTIONS: Section[] = [
 
 export function Beans() {
   return (
-    <div
-      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-hidden"}
-    >
-      <div className={"m-4 flex w-5/6 flex-col"}>
-        <PageHeading text={"Beans"} includeUnderline={true} />
-        <div className={"overflow-auto pt-4 text-gray-400"}>
-          <text className={"text-gray-400"}>
-            This goal of this page is to share the thought process behind the
-            tournament scoring system. Our goal is to be as transparent as
-            possible and equip everyone with an equitable level of context and
-            information. We are always looking for feedback to make the
-            Beanstalk better, if you have questions, please reach out to the dev
-            team.
-          </text>
+    <>
+      <PageHeading text={"Beans"} includeUnderline={true} />
+      <div className={"overflow-auto pt-4 text-gray-400"}>
+        <text className={"text-gray-400"}>
+          This goal of this page is to share the thought process behind the
+          tournament scoring system. Our goal is to be as transparent as
+          possible and equip everyone with an equitable level of context and
+          information. We are always looking for feedback to make the Beanstalk
+          better, if you have questions, please reach out to the dev team.
+        </text>
 
-          {SECTIONS.map((s) => (
-            <>
-              <Anchor id={s.id} className={"mb-2 mt-4"}>
-                {" "}
-                {s.title}
-              </Anchor>
-              {s.content}
-              <Sep className={"my-4"} showLine={true} />
-            </>
-          ))}
-          <div className={"my-32 flex flex-row justify-center"}>
-            <span className={"text-lg"}>
-              Made with{" "}
-              <FontAwesomeIcon
-                className={"text-xl text-red-700"}
-                icon={faHeart}
-              />{" "}
-              by <Link to={"https://github.com/enkoder"}>enkoder</Link>
-            </span>
-          </div>
+        {SECTIONS.map((s) => (
+          <>
+            <Anchor id={s.id} className={"mb-2 mt-4"}>
+              {" "}
+              {s.title}
+            </Anchor>
+            {s.content}
+            <Sep className={"my-4"} showLine={true} />
+          </>
+        ))}
+        <div className={"my-32 flex flex-row justify-center"}>
+          <span className={"text-lg"}>
+            Made with{" "}
+            <FontAwesomeIcon
+              className={"text-xl text-red-700"}
+              icon={faHeart}
+            />{" "}
+            by <Link to={"https://github.com/enkoder"}>enkoder</Link>
+          </span>
         </div>
       </div>
-    </div>
+    </>
   );
 }

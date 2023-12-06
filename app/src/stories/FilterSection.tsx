@@ -116,14 +116,19 @@ export function FilterSection({
   const [searchString, setSearchString] = useState<string>("");
 
   const [seasons, setSeasons] = useState<Season[]>([EMPTY_SEASON]);
-  const [selectedSeason, setSelectedSeason] = useState<Season>(EMPTY_SEASON);
+  const [selectedSeason, setSelectedSeason] = useState<Season | undefined>(
+    EMPTY_SEASON,
+  );
 
   const [factions, setFactions] = useState<Faction[]>([EMPTY_FACTION]);
-  const [selectedFaction, setSelectedFaction] =
-    useState<Faction>(EMPTY_FACTION);
+  const [selectedFaction, setSelectedFaction] = useState<Faction | undefined>(
+    EMPTY_FACTION,
+  );
 
   const [formats, setFormats] = useState<string[]>([EMPTY_FORMAT]);
-  const [selectedFormat, setSelectedFormat] = useState<string>(EMPTY_FORMAT);
+  const [selectedFormat, setSelectedFormat] = useState<string | undefined>(
+    EMPTY_FORMAT,
+  );
 
   const fetchFactions = useCallback(async () => {
     LeaderboardService.getGetFactions().then((factions) => {
@@ -172,8 +177,8 @@ export function FilterSection({
     return () => clearTimeout(getLeaderboard);
   }, [searchParams]);
 
-  const handleSeasonChange = (s: Season) => {
-    if (s.id >= 0) {
+  const handleSeasonChange = (s: Season | undefined) => {
+    if (s != undefined && s.id >= 0) {
       searchParams.set(SEASON_PARAM_NAME, String(s.id));
     } else {
       searchParams.delete(SEASON_PARAM_NAME);
@@ -183,8 +188,8 @@ export function FilterSection({
     setSelectedSeason(s);
   };
 
-  const handleFactionChange = (f: Faction) => {
-    if (f.code) {
+  const handleFactionChange = (f: Faction | undefined) => {
+    if (f != undefined && f.code) {
       searchParams.set(FACTION_PARAM_NAME, f.code);
     } else {
       searchParams.delete(FACTION_PARAM_NAME);
@@ -194,11 +199,11 @@ export function FilterSection({
     setSelectedFaction(f);
   };
 
-  const handleFormatChange = (f: string) => {
-    if (f != EMPTY_FORMAT) {
-      searchParams.set(FORMAT_PARAM_NAME, f);
-    } else {
+  const handleFormatChange = (f: string | undefined) => {
+    if (f == EMPTY_FORMAT || f == undefined) {
       searchParams.delete(FORMAT_PARAM_NAME);
+    } else {
+      searchParams.set(FORMAT_PARAM_NAME, f);
     }
 
     setSearchParams(searchParams);
@@ -221,38 +226,38 @@ export function FilterSection({
   return (
     <div
       className={
-        "grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
+        "z-1 grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
       }
     >
       <Select
-        className={"h-12 w-full rounded-lg"}
+        width={"w-full"}
         items={seasons}
         renderItem={(s) => {
-          return s && s.id >= 0 ? `S${s.id} - ${s.name}` : s.name;
+          return s != undefined && s.id >= 0 ? `S${s.id} - ${s.name}` : s?.name;
         }}
         selected={selectedSeason}
         label={"Seasons"}
         onChange={handleSeasonChange}
       />
       <Select
-        className={"h-12 w-full rounded-lg"}
+        width={"w-full"}
         items={factions}
         selected={selectedFaction}
         renderItem={(f) => {
           return (
             <div className={"relative flex flex-row items-center"}>
               <div>
-                {f.code in FACTION_ICONS ? (
+                {f != undefined && f.code in FACTION_ICONS ? (
                   <img
                     className={"left-0 h-4 w-4"}
                     alt={f.code}
                     src={FACTION_ICONS[f.code]}
                   />
                 ) : (
-                  f.code != "" && <div className={"h-4 w-4"} />
+                  f?.code != "" && <div className={"h-4 w-4"} />
                 )}
               </div>
-              <text className={"pl-2"}>{f.name}</text>
+              <text className={"pl-2"}>{f?.name}</text>
             </div>
           );
         }}
@@ -260,7 +265,7 @@ export function FilterSection({
         onChange={handleFactionChange}
       />
       <Select
-        className={"h-12 w-full rounded-lg"}
+        width={"w-full"}
         items={formats}
         renderItem={(f) => {
           return f;

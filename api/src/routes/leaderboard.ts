@@ -91,25 +91,29 @@ export class GetTiers extends OpenAPIRoute {
     const tiers = [
       {
         id: ABRTournamentTypeFilter.WorldsChampionship,
-        name: TournamentType.Worlds,
+        code: TournamentType.Worlds,
+        name: "Worlds",
         points: TOURNAMENT_POINTS[TournamentType.Worlds],
         type: TournamentType.Worlds,
       },
       {
         id: ABRTournamentTypeFilter.ContinentalChampionship,
-        name: TournamentType.Continental,
+        code: TournamentType.Continental,
+        name: "Conts",
         points: TOURNAMENT_POINTS[TournamentType.Continental],
         type: TournamentType.Continental,
       },
       {
         id: ABRTournamentTypeFilter.NationalChampionship,
-        name: TournamentType.Nationals,
+        code: TournamentType.Nationals,
+        name: "Nats",
         points: TOURNAMENT_POINTS[TournamentType.Nationals],
         type: TournamentType.Nationals,
       },
       {
         id: ABRTournamentTypeFilter.IntercontinentalChampionship,
-        name: TournamentType.Intercontinental,
+        code: TournamentType.Intercontinental,
+        name: "Interconts",
         points: TOURNAMENT_POINTS[TournamentType.Intercontinental],
         type: TournamentType.Intercontinental,
       },

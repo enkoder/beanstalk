@@ -8,58 +8,56 @@ import { useEffect, useState } from "react";
 
 export function Code() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [themeNames, setThemeNames] = useState<string[]>([]);
   const [themes, setThemes] = useState<any[]>([]);
-  const [selectedTheme, setSelectedTheme] = useState<string>("vscDarkPlus");
+  const [selectedTheme, setSelectedTheme] = useState<any>();
 
   useEffect(() => {
     setLoading(true);
     // @ts-ignore
     import("react-syntax-highlighter/dist/esm/styles/prism").then((styles) => {
-      const themeNames = [];
-      for (const style in styles) {
-        themeNames.push(style);
+      const themes = [];
+      for (const name in styles) {
+        const theme = styles[name];
+        theme.name = name;
+        themes.push(theme);
       }
-      setThemeNames(themeNames);
-      setThemes(styles);
+      setThemes(themes);
+      setSelectedTheme(styles["vscDarkPlus"]);
       setLoading(false);
     });
   }, []);
 
   // @ts-ignore
   return (
-    <div
-      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-auto"}
-    >
-      <div className={"m-4 flex w-full flex-col text-gray-300 sm:w-5/6"}>
-        <PageHeading text={"Code"} includeUnderline={true} className={"mb-8"} />
-        <Select
-          label={"Theme Picker"}
-          className={"mb-4 w-64 rounded-3xl"}
-          onChange={(e) => setSelectedTheme(e.target.value)}
-        >
-          {themeNames.map((themeName) => (
-            <option value={themeName} selected={themeName == selectedTheme}>
-              {themeName}
-            </option>
-          ))}
-        </Select>
-        <text>
-          Below is the exact code deployed that defines the points distribution
-          payout for each tournament.
-        </text>
+    <>
+      <PageHeading text={"Code"} includeUnderline={true} className={"mb-8"} />
+      {!loading && (
+        <div className={"flex flex-col"}>
+          <Select
+            label={"Theme Picker"}
+            width={"w-64"}
+            items={themes}
+            selected={selectedTheme}
+            renderItem={(t) => {
+              return t.name;
+            }}
+            onChange={(t) => setSelectedTheme(t)}
+          />
+          <text className={"my-2 text-gray-400"}>
+            Below is the exact code currently deployed that defines the points
+            distribution payout for each tournament.
+          </text>
 
-        {!loading && (
           <SyntaxHighlighter
             language="typescript"
-            style={themes ? themes[selectedTheme] : false}
+            style={selectedTheme}
             customStyle={{ fontSize: "small" }}
             showLineNumbers={true}
           >
             {rankings}
           </SyntaxHighlighter>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 }

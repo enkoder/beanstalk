@@ -64,7 +64,7 @@ export const TournamentComponent = z
     concluded: z.coerce.boolean(),
     format: z.string(),
     type: z.string(),
-    season_id: z.number(),
+    season_id: z.number().nullable(),
     season_name: z.string().optional(),
     season_tier: z.string().optional(),
   })
@@ -74,6 +74,7 @@ export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 export const TierComponent = z
   .object({
     id: z.number(),
+    code: z.string(),
     name: z.string(),
     points: z.number(),
     season: z.number().optional(),

@@ -3,33 +3,26 @@ import { Listbox, Transition } from "@headlessui/react";
 
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 
 export interface SelectProps<T> {
-  className?: string;
+  width: string;
   label?: string;
   items: T[];
-  renderItem: (o: T) => ReactNode;
-  selected: T;
-  onChange: (o: T) => void;
+  renderItem: (o: T | undefined) => ReactNode;
+  selected: T | undefined;
+  onChange: (o: T | undefined) => void;
 }
 
 export function Select<T>({
-  className,
+  width,
   label,
   items,
   renderItem,
   selected,
   onChange,
 }: SelectProps<T>) {
-  console.log(selected);
   return (
-    <Listbox
-      as={"div"}
-      className={"w-full"}
-      value={selected}
-      onChange={onChange}
-    >
+    <Listbox as={"div"} className={width} value={selected} onChange={onChange}>
       {({ open }) => (
         <>
           {label && (
@@ -39,9 +32,9 @@ export function Select<T>({
           )}
           <div className="relative">
             <Listbox.Button
-              className={twMerge(
-                className,
-                "relative w-full cursor-default bg-gray-900 py-1.5 pl-3 pr-10 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
+              className={clsx(
+                width,
+                "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pl-3 pr-10 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
               )}
             >
               <span className="flex items-center">

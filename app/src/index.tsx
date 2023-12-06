@@ -5,23 +5,21 @@ import useAuth, { AuthProvider } from "./useAuth";
 import { Faq } from "./routes/Faq";
 import { Beans } from "./routes/Beans";
 import { Seasons, SeasonsLoader } from "./routes/Seasons";
-import { getSidebarWidth, Sidebar, SidebarButtons } from "./stories/Sidebar";
 import { Sim } from "./routes/Sim";
 import { Code } from "./routes/Code";
 import { Stars } from "./stories/Stars";
 import { PageHeading } from "./stories/PageHeader";
 import { Tournament } from "./routes/Tournament";
-// @ts-ignore
+import { Navbar } from "./stories/Navbar";
 import doggo from "../assets/doggo.png";
 import ReactDOM from "react-dom/client";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   createBrowserRouter,
   Outlet,
   redirect,
   RouterProvider,
   useLocation,
-  useNavigate,
   useOutletContext,
 } from "react-router-dom";
 
@@ -80,37 +78,7 @@ export function useContentWidth() {
 }
 
 function Layout() {
-  const navigate = useNavigate();
   const { pathname, hash, key } = useLocation();
-  const [activeButton, setActiveButton] = useState<number>(0);
-
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const isMobile = screenWidth <= 768;
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(!isMobile);
-  const [contentWidth, setContentWidth] = useState<number>(
-    screenWidth - getSidebarWidth(sidebarOpen),
-  );
-
-  function handleWindowSizeChange() {
-    setScreenWidth(window.innerWidth);
-    setContentWidth(window.innerWidth - getSidebarWidth(sidebarOpen));
-  }
-
-  useEffect(() => {
-    window.addEventListener("resize", handleWindowSizeChange);
-    return () => {
-      window.removeEventListener("resize", handleWindowSizeChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    for (let i = 0; i < SidebarButtons.length; i++) {
-      const sb = SidebarButtons[i];
-      if (sb.to === pathname) {
-        setActiveButton(i);
-      }
-    }
-  }, [pathname]);
 
   useEffect(() => {
     // https://stackoverflow.com/questions/40280369/use-anchors-with-react-router
@@ -127,37 +95,12 @@ function Layout() {
     }
   }, [pathname, hash, key]); // do this on route change
 
-  const toggleNav = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const nav: MouseEventHandler<HTMLDivElement> = (e) => {
-    const buttonId = Number(e.currentTarget.getAttribute("button-id"));
-    const button = SidebarButtons[buttonId];
-
-    setActiveButton(buttonId);
-    navigate(button.to);
-  };
-
   return (
     <AuthProvider>
-      <Stars count={100} />
-      <div
-        className={
-          "z-1 relative flex h-[100svh] w-[100svw] flex-row bg-gray-950 opacity-80"
-        }
-      >
-        <Sidebar
-          isOpen={sidebarOpen}
-          onMenuClick={toggleNav}
-          onButtonClick={nav}
-          activeButton={activeButton}
-        />
-        <div
-          className={"w-full overflow-hidden duration-500"}
-          style={{ marginLeft: getSidebarWidth(sidebarOpen) }}
-        >
-          <Outlet context={{ contentWidth: contentWidth }} />
+      <div className={"h-screen w-screen bg-gray-950 opacity-80"}>
+        <Navbar />
+        <div className={"w-full px-4 pt-20 duration-500"}>
+          <Outlet />
         </div>
       </div>
     </AuthProvider>

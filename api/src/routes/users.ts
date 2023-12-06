@@ -87,12 +87,16 @@ export class GetUserResults extends OpenAPIRoute {
       format,
     );
 
-    const currentRank = await Leaderboards.getUserRank(
-      user.id,
+    let currentRank = 0;
+    for (const row of await Leaderboards.getExpanded(
       seasonId,
       faction,
       format,
-    );
+    )) {
+      if (row.user_id == user.id) {
+        currentRank = row.rank;
+      }
+    }
 
     return json({
       user_id: user.id,

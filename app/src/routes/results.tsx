@@ -62,107 +62,102 @@ export function Results() {
   };
 
   return (
-    <div
-      className={"mt-4 flex h-[100svh] flex-row justify-center overflow-hidden"}
-    >
-      <div className={"m-4 flex w-5/6 flex-col text-gray-300"}>
-        <div className={"mb-8"}>
-          {results && (
-            <>
-              <PageHeading text={results.user_name} />
-              {results.results.length === 0 ? (
-                <text className={"text-lg text-gray-400"}>
-                  No results found for search filters
-                </text>
-              ) : (
-                <text className={"text-lg text-gray-400"}>
-                  Ranked #{results.rank} for Season {results.seasonId} -{" "}
-                  {results.seasonName}
-                </text>
-              )}
-            </>
-          )}
-        </div>
-
-        <FilterSection hasSearchBar={false} onParamChange={getResults} />
-        <div className={"overflow-auto whitespace-nowrap"}>
-          <table
-            className={
-              "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300"
-            }
-          >
-            <thead
-              className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}
-            >
-              <tr className={"border-b"}>
-                <th
-                  scope="col"
-                  className={"border-b-2 border-solid border-gray-300"}
-                >
-                  Tournament
-                </th>
-                <th
-                  scope="col"
-                  className={"border-b-2 border-solid border-gray-300"}
-                >
-                  Format
-                </th>
-                <th
-                  scope="col"
-                  className={"border-b-2 border-solid border-gray-300"}
-                >
-                  Decks
-                </th>
-                <th
-                  scope="col"
-                  className={"border-b-2 border-solid border-gray-300"}
-                >
-                  <div>
-                    <div>Results</div>
-                    <small>Cut/Swiss/Total</small>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className={"border-b-2 border-solid border-gray-300"}
-                >
-                  Points
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {results &&
-                results.results.map((result) => (
-                  <tr
-                    className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-                    key={results.user_id + "/" + result.tournament_id}
-                  >
-                    <td>
-                      <span>
-                        <Link
-                          className={"text-lg"}
-                          to={`/tournament/${result.tournament_id}`}
-                        >
-                          {result.tournament_name}
-                        </Link>
-                        <Link
-                          className={"pl-2 text-sm"}
-                          to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
-                        >
-                          (ABR)
-                        </Link>
-                      </span>
-                    </td>
-                    <td>{result.format}</td>
-                    <td>{Decks(result)}</td>
-                    <td>{formatPlacement(result)}</td>
-                    <td>{result.points_earned.toFixed(2)}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+    <>
+      <div className={"mb-4"}>
+        {results && (
+          <>
+            <PageHeading text={results.user_name} includeUnderline={true} />
+            {results.results.length === 0 ? (
+              <text className={"text-lg text-gray-400"}>
+                No results found for search filters
+              </text>
+            ) : (
+              <text className={"text-lg text-gray-400"}>
+                Ranked #{results.rank}
+                {results.seasonName &&
+                  ` for Season ${results.seasonId} - ${results.seasonName}`}
+              </text>
+            )}
+          </>
+        )}
       </div>
-    </div>
+
+      <FilterSection hasSearchBar={false} onParamChange={getResults} />
+      <div className={"overflow-auto whitespace-nowrap"}>
+        <table
+          className={
+            "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300"
+          }
+        >
+          <thead className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}>
+            <tr className={"border-b"}>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                Tournament
+              </th>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                Format
+              </th>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                Decks
+              </th>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                <div>
+                  <div>Results</div>
+                  <small>Cut/Swiss/Total</small>
+                </div>
+              </th>
+              <th
+                scope="col"
+                className={"border-b-2 border-solid border-gray-300"}
+              >
+                Points
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {results &&
+              results.results.map((result) => (
+                <tr
+                  className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+                  key={results.user_id + "/" + result.tournament_id}
+                >
+                  <td>
+                    <span>
+                      <Link
+                        className={"text-lg"}
+                        to={`/tournament/${result.tournament_id}`}
+                      >
+                        {result.tournament_name}
+                      </Link>
+                      <Link
+                        className={"pl-2 text-sm"}
+                        to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                      >
+                        (ABR)
+                      </Link>
+                    </span>
+                  </td>
+                  <td>{result.format}</td>
+                  <td>{Decks(result)}</td>
+                  <td>{formatPlacement(result)}</td>
+                  <td>{result.points_earned.toFixed(2)}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }

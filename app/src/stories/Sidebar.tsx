@@ -272,10 +272,6 @@ export function SidebarFooter({
   );
 }
 
-type NavbarProps = {
-  isOpen: boolean;
-};
-
 export function Sidebar({
   isOpen,
   onMenuClick,

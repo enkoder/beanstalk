@@ -3,28 +3,10 @@ import { Faction } from "./factions";
 import { Format } from "./tournament";
 
 export class Leaderboards {
-  public static async getUserRank(
-    userId: number,
-    seasonId?: number,
-    faction?: Faction,
-    format?: Format,
-  ) {
-    const results = await this.getExpanded(seasonId, faction, format, userId);
-    if (!results.length) {
-      return 0;
-    }
-
-    if (userId != results[0].user_id) {
-      throw new Error(`Error: Could not determine rank for user ${userId}`);
-    }
-    return results[0].rank;
-  }
-
   public static async getExpanded(
     seasonId?: number,
     faction?: Faction,
     format?: Format,
-    userId?: number,
   ) {
     const q = getDB()
       .selectFrom((innerEb) => {
@@ -54,10 +36,6 @@ export class Leaderboards {
         }
         if (format) {
           q = q.where("tournaments.format", "=", format);
-        }
-        // this is just used here for getUserRank
-        if (userId) {
-          q = q.where("users.id", "=", userId);
         }
 
         return q.as("inner");
