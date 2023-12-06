@@ -1,7 +1,7 @@
 import greenBeans from "../../assets/ai_beanstalk_royalties.jpeg";
 import useAuth from "../useAuth";
 import { AuthService } from "../client";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -27,6 +27,7 @@ export function Navbar() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [current, setCurrent] = useState<string>();
 
   function handleLogin() {
     AuthService.getGetLoginUrl()
@@ -67,12 +68,11 @@ export function Navbar() {
       onClick: logout,
     },
   ];
+
   useEffect(() => {
     for (const nav of navigation) {
       if (location.pathname == nav.to) {
-        nav.isCurrent = true;
-      } else {
-        nav.isCurrent = false;
+        setCurrent(nav.to);
       }
     }
   }, [location]);
@@ -117,12 +117,12 @@ export function Navbar() {
                       <Link
                         to={item.to}
                         className={clsx(
-                          item.isCurrent
+                          item.to == current
                             ? "bg-gray-950 text-cyan-400"
                             : "text-gray-400 hover:bg-cyan-600 hover:text-gray-950",
                           "rounded-lg px-3 py-2",
                         )}
-                        aria-current={item.isCurrent ? "page" : undefined}
+                        aria-current={item.to == current ? "page" : undefined}
                       >
                         {item.name}
                       </Link>
@@ -203,12 +203,12 @@ export function Navbar() {
                   as="a"
                   href={item.to}
                   className={clsx(
-                    item.isCurrent
+                    item.to == current
                       ? "bg-gray-950 text-cyan-400"
                       : "text-cyan-400 hover:bg-cyan-600 hover:text-gray-950",
                     "block rounded-md px-3 py-2 text-base font-medium",
                   )}
-                  aria-current={item.isCurrent ? "page" : undefined}
+                  aria-current={item.to == current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
