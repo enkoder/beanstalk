@@ -17,7 +17,7 @@ function Decks(result: Result) {
     <div className={"flex flex-row justify-center text-gray-400"}>
       {/*grey separator between deck images*/}
       <div className={"b-2 border-r border-gray-700 pr-2"}>
-        {/* cyan underline showing it's clickable */}
+        {/* cyan underline showing its clickable */}
         <div
           className={clsx(
             result.corp_deck_url &&

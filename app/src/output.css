@@ -739,10 +739,6 @@ html {
   height: 4rem;
 }
 
-.h-4 {
-  height: 1rem;
-}
-
 .h-48 {
   height: 12rem;
 }
@@ -793,10 +789,6 @@ html {
 
 .w-3\/6 {
   width: 50%;
-}
-
-.w-4 {
-  width: 1rem;
 }
 
 .w-44 {
@@ -1093,6 +1085,14 @@ html {
 .bg-slate-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(2 6 23 / var(--tw-bg-opacity));
+}
+
+.fill-gray-300 {
+  fill: #d1d5db;
+}
+
+.fill-red-600 {
+  fill: #dc2626;
 }
 
 .p-1 {

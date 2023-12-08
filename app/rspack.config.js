@@ -33,16 +33,17 @@ module.exports = {
         type: "asset/source",
       },
       {
-        test: /\.css$/,
+        test: /\.svg$/,
         use: [
           {
-            loader: "postcss-loader",
+            loader: "@svgr/webpack",
             options: {
-              postcssOptions: postcssConfig,
+              typescript: true,
+              ext: "tsx",
+              icon: true,
             },
           },
         ],
-        type: "css",
       },
     ],
   },

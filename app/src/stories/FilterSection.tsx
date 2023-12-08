@@ -8,18 +8,18 @@ import {
   SeasonsService,
 } from "../client";
 import { Factions } from "../../../api/src/models/factions";
-import adamIcon from "../../assets/factions/adam.png";
-import sunnyIcon from "../../assets/factions/sunny-lebeau.png";
-import apexIcon from "../../assets/factions/apex.png";
-import shaperIcon from "../../assets/factions/shaper.png";
-import crimIcon from "../../assets/factions/criminal.png";
-import anarchIcon from "../../assets/factions/anarch.png";
-import hbIcon from "../../assets/factions/haas-bioroid.png";
-import jintekiIcon from "../../assets/factions/jinteki.png";
-import nbnIcon from "../../assets/factions/nbn.png";
-import weylandIcon from "../../assets/factions/weyland-consortium.png";
-import neutralRunnerIcon from "../../assets/factions/neutral-runner.png";
-import neutralCorpIcon from "../../assets/factions/neutral-corp.png";
+import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
+import SunnyIcon from "../../assets/factions/NSG_SUNNY.svg";
+import ApexIcon from "../../assets/factions/NSG_APEX.svg";
+import ShaperIcon from "../../assets/factions/NSG_SHAPER.svg";
+import CrimIcon from "../../assets/factions/NSG_CRIMINAL.svg";
+import AnarchIcon from "../../assets/factions/NSG_ANARCH.svg";
+import HbIcon from "../../assets/factions/NSG_HB.svg";
+import JintekiIcon from "../../assets/factions/NSG_JINTEKI.svg";
+import NbnIcon from "../../assets/factions/NSG_NBN.svg";
+import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
+import NeutralRunnerIcon from "../../assets/factions/NSG_LINK.svg";
+import NeutralCorpIcon from "../../assets/factions/NSG_AGENDA.svg";
 import { useSearchParams } from "react-router-dom";
 import {
   ChangeEvent,
@@ -28,6 +28,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { clsx } from "clsx";
 
 export const SEASON_PARAM_NAME = "season";
 const EMPTY_SEASON = {
@@ -44,19 +45,29 @@ const EMPTY_FACTION = {
   name: "Faction Filter...",
   side_code: "",
 } as Faction;
+
+const ICON_SIZE = "h-6 w-6";
 const FACTION_ICONS: Record<string, any> = {
-  [Factions.Adam.code]: adamIcon,
-  [Factions.SunnyLebeau.code]: sunnyIcon,
-  [Factions.Apex.code]: apexIcon,
-  [Factions.Shaper.code]: shaperIcon,
-  [Factions.Criminal.code]: crimIcon,
-  [Factions.Anarch.code]: anarchIcon,
-  [Factions.NeutralRunner.code]: neutralRunnerIcon,
-  [Factions.Jinteki.code]: jintekiIcon,
-  [Factions.HaasBioroid.code]: hbIcon,
-  [Factions.NBN.code]: nbnIcon,
-  [Factions.WeylandConsortium.code]: weylandIcon,
-  [Factions.NeutralCorp.code]: neutralCorpIcon,
+  [Factions.Adam.code]: (
+    <AdamIcon className={ICON_SIZE} width={16} height={16} />
+  ),
+  [Factions.SunnyLebeau.code]: <SunnyIcon className={ICON_SIZE} />,
+  [Factions.Apex.code]: (
+    <ApexIcon className={clsx(ICON_SIZE, "fill-red-600")} />
+  ),
+  [Factions.Shaper.code]: <ShaperIcon className={ICON_SIZE} />,
+  [Factions.Criminal.code]: <CrimIcon className={ICON_SIZE} />,
+  [Factions.Anarch.code]: <AnarchIcon className={ICON_SIZE} />,
+  [Factions.NeutralRunner.code]: (
+    <NeutralRunnerIcon className={clsx(ICON_SIZE, "fill-gray-300")} />
+  ),
+  [Factions.Jinteki.code]: <JintekiIcon className={ICON_SIZE} />,
+  [Factions.HaasBioroid.code]: <HbIcon className={ICON_SIZE} />,
+  [Factions.NBN.code]: <NbnIcon className={ICON_SIZE} />,
+  [Factions.WeylandConsortium.code]: <WeylandIcon className={ICON_SIZE} />,
+  [Factions.NeutralCorp.code]: (
+    <NeutralCorpIcon className={clsx(ICON_SIZE, "fill-gray-300")} />
+  ),
 };
 
 export const FORMAT_PARAM_NAME = "formatCode";
@@ -223,6 +234,22 @@ export function FilterSection({
     setSearchString(value);
   };
 
+  const renderFactionItem = (f: Faction | undefined) => {
+    let name = f ? f.name : "";
+    if (f && f == Factions.NeutralCorp) {
+      name = "Neutral Corp";
+    }
+    if (f && f == Factions.NeutralRunner) {
+      name = "Neutral Runner";
+    }
+    return (
+      <div className={"relative flex flex-row items-center"}>
+        {f != undefined && f.code in FACTION_ICONS && FACTION_ICONS[f?.code]}
+        <text className={"pl-2"}>{name}</text>
+      </div>
+    );
+  };
+
   return (
     <div
       className={
@@ -243,24 +270,7 @@ export function FilterSection({
         width={"w-full"}
         items={factions}
         selected={selectedFaction}
-        renderItem={(f) => {
-          return (
-            <div className={"relative flex flex-row items-center"}>
-              <div>
-                {f != undefined && f.code in FACTION_ICONS ? (
-                  <img
-                    className={"left-0 h-4 w-4"}
-                    alt={f.code}
-                    src={FACTION_ICONS[f.code]}
-                  />
-                ) : (
-                  f?.code != "" && <div className={"h-4 w-4"} />
-                )}
-              </div>
-              <text className={"pl-2"}>{f?.name}</text>
-            </div>
-          );
-        }}
+        renderItem={renderFactionItem}
         label={"Faction"}
         onChange={handleFactionChange}
       />
