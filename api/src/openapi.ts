@@ -385,6 +385,20 @@ export const UpdateTournamentSeasonSchema = {
   },
 };
 
+export const ExportDBSchema = {
+  tags: ["Admin"],
+  summary: "Exports the production DB",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: z.object({
+        tournamentsUpdated: z.number(),
+      }),
+      description: "How many tournaments were updated",
+    },
+  },
+};
+
 export const UpdateUsersSchema = {
   tags: ["Admin"],
   summary: "Triggers updating all users names from nrdb",
