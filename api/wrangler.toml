@@ -19,6 +19,10 @@ database_id = "c2f0d824-a702-42b0-a708-70a50760461c"
 migrations_table = "migrations"
 migrations_dir = "migrations"
 
+[[r2_buckets]]
+binding = 'BACKUP_BUCKET'
+bucket_name = 'beanstalk-backup-bucket'
+
 [[queues.producers]]
 queue = "ingest-tournament"
 binding = "INGEST_TOURNAMENT_Q"

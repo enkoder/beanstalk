@@ -1,5 +1,6 @@
 import { Env, RequestWithDB } from "../types";
 import {
+  ExportDBSchema,
   IngestTournamentSchema,
   RerankSchema,
   UpdateCardsSchema,
@@ -20,6 +21,10 @@ import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 import pLimit from "p-limit";
 import { parseISO } from "date-fns";
+import {
+  createBackup,
+  CreateBackupOptions,
+} from "@nora-soderlund/cloudflare-d1-backups";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
@@ -143,5 +148,19 @@ export class UpdateTournamentSeasons extends OpenAPIRoute {
     }
 
     return json({ tournamentsUpdated: count });
+  }
+}
+
+export class ExportDB extends OpenAPIRoute {
+  static schema = ExportDBSchema;
+
+  async handle(req: Request, env: Env) {
+    const options: CreateBackupOptions = {
+      fileName: `backups/${new Date().toUTCString()}.sql`,
+      queryLimit: 10,
+    };
+
+    const result = await createBackup(env.DB, env.BACKUP_BUCKET, options);
+    return Response.json(result);
   }
 }

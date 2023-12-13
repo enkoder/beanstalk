@@ -1,5 +1,6 @@
 import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
 import {
+  ExportDB,
   IngestTournaments,
   Rerank,
   UpdateCards,
@@ -88,10 +89,11 @@ router
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
 
-  // Admily endpoints
+  // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)
   .get("/admin/updateNRDBNames", UpdateUsers)
   .get("/admin/rerank", Rerank)
+  .get("/admin/exportDB", ExportDB)
   .post("/admin/ingestTournaments", IngestTournaments)
   .post("/admin/updateCards", UpdateCards)
   .post("/admin/updateTournamentsSeason", UpdateTournamentSeasons)

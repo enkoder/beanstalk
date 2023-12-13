@@ -182,7 +182,7 @@
           "concluded": { "type": ["boolean", "null"] },
           "format": { "type": "string" },
           "type": { "type": "string" },
-          "season_id": { "type": "number" },
+          "season_id": { "type": ["number", "null"] },
           "season_name": { "type": "string" },
           "season_tier": { "type": "string" }
         },
@@ -686,6 +686,28 @@
                   "type": "object",
                   "properties": { "numberUsersUpdate": { "type": "number" } },
                   "required": ["numberUsersUpdate"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/exportDB": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Exports the production DB",
+        "security": [{ "bearerAuth": [] }],
+        "operationId": "get_ExportDB",
+        "responses": {
+          "200": {
+            "description": "How many tournaments were updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "tournamentsUpdated": { "type": "number" } },
+                  "required": ["tournamentsUpdated"]
                 }
               }
             }
