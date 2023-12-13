@@ -4,6 +4,5 @@ export default async (): Promise<Config> => {
   return {
     verbose: true,
     preset: "ts-jest",
-    testEnvironment: "miniflare",
   };
 };

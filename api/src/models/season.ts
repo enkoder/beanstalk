@@ -1,16 +1,16 @@
 import { getDB } from "./index";
-import { Generated } from "kysely";
+import { Generated, Insertable } from "kysely";
 import { Selectable } from "kysely/dist/esm";
 
 export interface SeasonsTable {
   id: Generated<number>;
   name: string;
-  tier: string;
   started_at: string;
   ended_at: string | null;
 }
 
 export type Season = Selectable<SeasonsTable>;
+export type InsertSeason = Insertable<SeasonsTable>;
 
 export class Seasons {
   public static async getAll() {
@@ -39,5 +39,13 @@ export class Seasons {
       .orderBy("started_at", "desc");
     //console.log(JSON.stringify(sql.compile()));
     return await sql.execute();
+  }
+
+  public static async insert(user: InsertSeason): Promise<Season> {
+    return await getDB()
+      .insertInto("seasons")
+      .values(user)
+      .returningAll()
+      .executeTakeFirst();
   }
 }

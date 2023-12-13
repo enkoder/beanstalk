@@ -1,5 +1,3 @@
-import { Env } from "../../api/src/types";
-
 declare module "*.png" {
   const value: any;
   export = value;

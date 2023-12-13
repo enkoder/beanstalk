@@ -3,11 +3,15 @@ import { Faction } from "./factions";
 import { Format } from "./tournament";
 
 export class Leaderboards {
-  public static async getExpanded(
-    seasonId?: number,
-    faction?: Faction,
-    format?: Format,
-  ) {
+  public static async getExpanded({
+    seasonId,
+    faction,
+    format,
+  }: {
+    seasonId?: number;
+    faction?: Faction;
+    format?: Format;
+  }) {
     const q = getDB()
       .selectFrom((innerEb) => {
         let q = innerEb

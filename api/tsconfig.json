@@ -2,7 +2,7 @@
   "include": ["src/*"],
   "exclude": ["**/node_modules/*"],
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ESNext",
     "module": "commonjs",
     "types": [
       "@cloudflare/workers-types",
@@ -11,6 +11,7 @@
     ],
     "skipLibCheck": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "lib": ["ESNext"]
   }
 }

@@ -34,6 +34,13 @@ export type ResultsTableExpanded = ResultsTable & {
 };
 export type ResultExpanded = Selectable<ResultsTableExpanded>;
 
+type getExpandedOptions = {
+  userId: number;
+  seasonId?: number | null;
+  faction?: Faction | null;
+  format?: Format | null;
+};
+
 export class Results {
   public static async get(
     user_id: number,
@@ -70,12 +77,12 @@ export class Results {
     return await q.execute();
   }
 
-  public static async getExpanded(
-    id: number,
-    seasonId?: number,
-    faction?: Faction,
-    format?: Format,
-  ): Promise<ResultExpanded[]> {
+  public static async getExpanded({
+    userId,
+    seasonId = null,
+    faction = null,
+    format = null,
+  }: getExpandedOptions): Promise<ResultExpanded[]> {
     let q = getDB()
       .selectFrom("results")
       .selectAll()
@@ -88,10 +95,10 @@ export class Results {
         "tournaments.format as format",
       ])
       .orderBy("tournaments.date", "desc")
-      .where("user_id", "=", id);
+      .where("user_id", "=", userId);
 
     // SeasonId can be 0 which is non-truthy
-    if (seasonId != undefined) {
+    if (seasonId != null) {
       q = q.where("tournaments.season_id", "=", seasonId);
     }
     if (faction && faction.side_code == "runner") {

@@ -12,6 +12,7 @@ export type IngestResultQueueMessage = {
 // declare what's available in our env
 export type Env = {
   DB: D1Database;
+  BACKUP_BUCKET: R2Bucket;
   INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
   INGEST_RESULT_Q: Queue<IngestResultQueueMessage>;
   // TODO: types for cards
