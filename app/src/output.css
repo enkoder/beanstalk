@@ -739,10 +739,6 @@ html {
   height: 4rem;
 }
 
-.h-4 {
-  height: 1rem;
-}
-
 .h-48 {
   height: 12rem;
 }
@@ -787,20 +783,12 @@ html {
   width: 16.666667%;
 }
 
-.w-2\/12 {
-  width: 16.666667%;
-}
-
 .w-3\/12 {
   width: 25%;
 }
 
 .w-3\/6 {
   width: 50%;
-}
-
-.w-4 {
-  width: 1rem;
 }
 
 .w-44 {
@@ -827,16 +815,8 @@ html {
   width: 16rem;
 }
 
-.w-7\/12 {
-  width: 58.333333%;
-}
-
 .w-8 {
   width: 2rem;
-}
-
-.w-8\/12 {
-  width: 66.666667%;
 }
 
 .w-\[1px\] {
@@ -849,6 +829,18 @@ html {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-2\/12 {
+  width: 16.666667%;
+}
+
+.w-7\/12 {
+  width: 58.333333%;
+}
+
+.w-8\/12 {
+  width: 66.666667%;
 }
 
 .max-w-7xl {
@@ -1042,16 +1034,6 @@ html {
   border-style: none;
 }
 
-.border-cyan-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(165 243 252 / var(--tw-border-opacity));
-}
-
-.border-cyan-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(34 211 238 / var(--tw-border-opacity));
-}
-
 .border-cyan-500 {
   --tw-border-opacity: 1;
   border-color: rgb(6 182 212 / var(--tw-border-opacity));
@@ -1075,6 +1057,11 @@ html {
 .border-gray-700 {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+.border-cyan-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 211 238 / var(--tw-border-opacity));
 }
 
 .bg-cyan-500 {
@@ -1297,11 +1284,6 @@ html {
   color: rgb(8 145 178 / var(--tw-text-opacity));
 }
 
-.text-gray-100 {
-  --tw-text-opacity: 1;
-  color: rgb(243 244 246 / var(--tw-text-opacity));
-}
-
 .text-gray-200 {
   --tw-text-opacity: 1;
   color: rgb(229 231 235 / var(--tw-text-opacity));
@@ -1391,14 +1373,14 @@ html {
   transition-duration: 150ms;
 }
 
-.transition-opacity {
-  transition-property: opacity;
+.transition-zoom {
+  transition-property: zoom;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
 
-.transition-zoom {
-  transition-property: zoom;
+.transition-opacity {
+  transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1457,11 +1439,6 @@ html {
   color: rgb(34 211 238 / var(--tw-text-opacity));
 }
 
-.hover\:text-cyan-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(6 182 212 / var(--tw-text-opacity));
-}
-
 .hover\:text-cyan-600:hover {
   --tw-text-opacity: 1;
   color: rgb(8 145 178 / var(--tw-text-opacity));
@@ -1475,6 +1452,11 @@ html {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.hover\:text-cyan-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(6 182 212 / var(--tw-text-opacity));
 }
 
 .hover\:underline:hover {
