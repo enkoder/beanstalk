@@ -80,19 +80,19 @@ export class GetUserResults extends OpenAPIRoute {
       seasonId = season.id;
     }
 
-    const results = await Results.getExpanded(
-      user.id,
-      seasonId,
-      faction,
-      format,
-    );
+    const results = await Results.getExpanded({
+      userId: user.id,
+      seasonId: seasonId,
+      faction: faction,
+      format: format,
+    });
 
     let currentRank = 0;
-    for (const row of await Leaderboards.getExpanded(
+    for (const row of await Leaderboards.getExpanded({
       seasonId,
       faction,
       format,
-    )) {
+    })) {
       if (row.user_id == user.id) {
         currentRank = row.rank;
       }

@@ -40,7 +40,11 @@ export class GetLeaderboard extends OpenAPIRoute {
       : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
-    const results = await Leaderboards.getExpanded(seasonId, faction, format);
+    const results = await Leaderboards.getExpanded({
+      seasonId,
+      faction,
+      format,
+    });
     for (const result of results) {
       rows.push(LeaderboardRowComponent.parse(result));
     }

@@ -6,7 +6,7 @@ export interface UsersTable {
   name: string | null;
   email: string | null;
   password: string | null;
-  is_admin: boolean;
+  is_admin: number;
 }
 
 export type User = Selectable<UsersTable>;
