@@ -1,7 +1,7 @@
 import { errorResponse } from "./errors";
 import { getPrivateAccountInfo } from "./nrdb";
-import { Env, RequestWithDB } from "../types";
-import { Users } from "../models/user";
+import { Env, RequestWithDB } from "../types.d.js";
+import { Users } from "../models/user.js";
 import { PrivateAccountInfoType } from "../openapi";
 //import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
 

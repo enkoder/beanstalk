@@ -1,49 +1,25 @@
-import { getDB } from "./index";
-import { Insertable, Selectable, Updateable } from "kysely";
+import { getDB } from "./db.js";
+import { Tournament, UpdateTournament } from "../schema.js";
 
-export type Format = "standard" | "startup" | "eternal";
 export const Formats = ["standard", "startup", "eternal"] as const;
 
-export enum TournamentType {
-  GNK = "GNK / seasonal",
-  Asynchronous = "asynchronous tournament",
-  CircuitBreaker = "circuit breaker",
-  CircuitOpener = "circuit opener",
-  Community = "community tournament",
-  Continental = "continental championship",
-  InfiniteRecursion = "infinite recursion",
-  Intercontinental = "intercontinental championship",
-  Nationals = "national championship",
-  Online = "online event",
-  StoreChamp = "store championship",
-  Team = "team tournament",
-  Worlds = "worlds championship",
-  Regionals = "regional championship",
-}
+export const TournamentTypes = [
+  "GNK / seasonal",
+  "asynchronous tournament",
+  "circuit breaker",
+  "circuit opener",
+  "community tournament",
+  "continental championship",
+  "infinite recursion",
+  "intercontinental championship",
+  "national championship",
+  "online event",
+  "store championship",
+  "team tournament",
+  "worlds championship",
+  "regional championship",
+] as const;
 
-export interface TournamentsTable {
-  id: number;
-  name: string;
-  concluded: number;
-  location: string;
-  format: Format;
-  type: TournamentType;
-  players_count: number;
-  season_id: number | null;
-  date: string | null;
-}
-
-export const TournamentsTableKeys: Array<keyof TournamentsTable> = [
-  "id",
-  "name",
-  "date",
-  "concluded",
-  "season_id",
-];
-
-export type Tournament = Selectable<TournamentsTable>;
-export type UpdateTournament = Updateable<TournamentsTable>;
-export type InsertTournament = Insertable<TournamentsTable>;
 export class Tournaments {
   public static async get(id: number): Promise<Tournament> {
     return await getDB()
@@ -73,7 +49,7 @@ export class Tournaments {
     const { count } = await sql.executeTakeFirst();
     return count;
   }
-  public static async getAllExpanded(): Promise<Tournament[]> {
+  public static async getAllExpanded() {
     return await getDB()
       .selectFrom("tournaments")
       .innerJoin("seasons", "seasons.id", "tournaments.season_id")

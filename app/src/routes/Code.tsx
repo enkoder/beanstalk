@@ -1,6 +1,6 @@
 import { PageHeading } from "../stories/PageHeader";
 // @ts-ignore
-import rankings from "../../../api/src/lib/ranking";
+import rankings from "../../../api/src/lib/ranking.ts";
 import { Select } from "../stories/Select";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";

@@ -1,8 +1,13 @@
-import { Faction, Factions } from "../models/factions";
-import { Result } from "../models/results";
-import { Format, Tournament, TournamentType } from "../models/tournament";
-import { User } from "../models/user";
-import { Season } from "../models/season";
+import {
+  Faction,
+  Format,
+  Result,
+  Season,
+  Tournament,
+  TournamentType,
+  User,
+} from "../schema.js";
+import { Factions } from "../models/factions.js";
 
 type ResultArgs = {
   tournament: Tournament;
@@ -57,7 +62,7 @@ export function tournamentFactory({
     concluded: 1,
     location: "location",
     format: format || "standard",
-    type: type || TournamentType.Worlds,
+    type: type || "worlds championship",
     players_count: 10,
     season_id: season?.id,
     date: "",

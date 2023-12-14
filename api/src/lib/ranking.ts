@@ -1,6 +1,6 @@
 // You can see this code on GitHub
 // https://github.com/enkoder/beanstalk/api/src/lib/ranking.ts
-import { TournamentType } from "../models/tournament";
+import { TournamentType } from "../schema.d.js";
 
 // Sets the number of players who will be receiving any points. Defined as a percentage
 // of total players i.e. value of .5 implies half of the field will get points
@@ -19,23 +19,24 @@ export const EXTRA_POINTS_PER_PERSON = 20;
 export const MIN_PLAYERS_TO_BE_LEGAL = 12;
 
 // Defines the baseline point total per tournament type before the additional points per player is added
-export const TOURNAMENT_POINTS: { [key in TournamentType]?: number } = {
-  [TournamentType.Worlds]: 4000,
-  [TournamentType.Continental]: 2000,
-  [TournamentType.Nationals]: 1000,
-  [TournamentType.Intercontinental]: 200,
-  [TournamentType.CircuitOpener]: 50,
+export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
+  ["worlds championship"]: 4000,
+  ["continental championship"]: 2000,
+  ["national championship"]: 1000,
+  ["intercontinental championship"]: 200,
+  ["circuit opener"]: 50,
 };
 
 // Defines the number of tournaments a person can get points for
 // We take the top values if a person attends more than the defined max
-export const MAX_TOURNAMENTS_PER_TYPE: { [key in TournamentType]?: number } = {
-  [TournamentType.Worlds]: 1,
-  [TournamentType.Continental]: 1,
-  [TournamentType.Intercontinental]: 1,
-  [TournamentType.Nationals]: 3,
-  [TournamentType.CircuitOpener]: 5,
-};
+export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
+  {
+    ["worlds championship"]: 1,
+    ["continental championship"]: 1,
+    ["national championship"]: 1,
+    ["intercontinental championship"]: 3,
+    ["circuit opener"]: 5,
+  };
 
 /**
  * Given the various input params, calculates the point distribution for a tournament.
@@ -56,10 +57,7 @@ export function calculateTournamentPointDistribution(
   extraPointsPerPerson: number = EXTRA_POINTS_PER_PERSON,
 ) {
   // Interconts is winner take all!!
-  if (
-    tournamentType &&
-    tournamentType.valueOf() === TournamentType.Intercontinental.valueOf()
-  ) {
+  if (tournamentType === "intercontinental championship") {
     return {
       points: Array.from([totalPoints, ...Array(numPlayers).fill(0).slice(1)]),
       adjustedTotalPoints: totalPoints,

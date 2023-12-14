@@ -1,7 +1,4 @@
-import { UsersTable } from "./user";
-import { SeasonsTable } from "./season";
-import { TournamentsTable } from "./tournament";
-import { ResultsTable } from "./results";
+import { Database } from "../schema.js";
 import { error } from "itty-router";
 import { D1Dialect } from "kysely-d1";
 import { Kysely } from "kysely";
@@ -27,11 +24,4 @@ export function getDB() {
   } else {
     throw error(500, "DB has not been initialized");
   }
-}
-
-export interface Database {
-  users: UsersTable;
-  seasons: SeasonsTable;
-  tournaments: TournamentsTable;
-  results: ResultsTable;
 }

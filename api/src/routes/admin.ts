@@ -1,4 +1,4 @@
-import { Env, RequestWithDB } from "../types";
+import { Env, RequestWithDB } from "../types.d.js";
 import {
   ExportDBSchema,
   IngestTournamentSchema,
@@ -6,17 +6,17 @@ import {
   UpdateCardsSchema,
   UpdateTournamentSeasonSchema,
   UpdateUsersSchema,
-} from "../openapi";
-import { Results } from "../models/results";
-import { Seasons } from "../models/season";
+} from "../openapi.js";
+import { Results } from "../models/results.js";
+import { Seasons } from "../models/season.js";
 import {
   calculateTournamentPointDistribution,
   TOURNAMENT_POINTS,
-} from "../lib/ranking";
-import { Tournaments } from "../models/tournament";
-import { Users } from "../models/user";
-import { getCards, getNameFromId } from "../lib/nrdb";
-import { abrIngest } from "../background";
+} from "../lib/ranking.js";
+import { Tournaments } from "../models/tournament.js";
+import { Users } from "../models/user.js";
+import { getCards, getNameFromId } from "../lib/nrdb.js";
+import { abrIngest } from "../background.js";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 import pLimit from "p-limit";

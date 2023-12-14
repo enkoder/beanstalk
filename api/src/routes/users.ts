@@ -1,4 +1,4 @@
-import { RequestWithDB } from "../types";
+import { RequestWithDB } from "../types.d.js";
 import {
   GetUserResultsSchema,
   GetUserSchema,
@@ -6,14 +6,14 @@ import {
   MeSchema,
   ResultComponent,
   UserComponent,
-} from "../openapi";
-import { errorResponse } from "../lib/errors";
-import { Users } from "../models/user";
-import { Results } from "../models/results";
-import { Seasons } from "../models/season";
-import { Leaderboards } from "../models/leaderboard";
-import { Format } from "../models/tournament";
-import { FactionCode, getFactionFromCode } from "../models/factions";
+} from "../openapi.js";
+import { errorResponse } from "../lib/errors.js";
+import { Users } from "../models/user.js";
+import { Results } from "../models/results.js";
+import { Seasons } from "../models/season.js";
+import { Leaderboards } from "../models/leaderboard.js";
+import { getFactionFromCode } from "../models/factions.js";
+import { FactionCode, Format } from "../schema.js";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 

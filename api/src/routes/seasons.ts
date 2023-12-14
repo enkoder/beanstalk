@@ -3,10 +3,10 @@ import {
   GetSeasonTournamentsSchema,
   SeasonComponent,
   TournamentComponent,
-} from "../openapi";
-import { RequestWithDB } from "../types";
-import { Seasons } from "../models/season";
-import { Tournaments } from "../models/tournament";
+} from "../openapi.js";
+import { RequestWithDB } from "../types.d.js";
+import { Seasons } from "../models/season.js";
+import { Tournaments } from "../models/tournament.js";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 

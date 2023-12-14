@@ -1,10 +1,10 @@
-import { Env, RequestWithDB } from "../types";
+import { Env, RequestWithDB } from "../types.d.js";
 import {
   GetOAuthLoginURLSchema,
   OAuthGetTokenFromCodeSchema,
   RefreshTokenSchema,
   TokenResponseComponent,
-} from "../openapi";
+} from "../openapi.js";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { error, json } from "itty-router";
 

@@ -1,16 +1,20 @@
-import { getMF, initMf, wipeDB } from "./setup";
+import { getMF, initMf, wipeDB } from "./setup.js";
 import {
   resultFactory,
   seasonFactory,
   tournamentFactory,
   userFactory,
-} from "./factories";
-import { Results } from "../models/results";
-import { Leaderboards } from "../models/leaderboard";
-import { Users } from "../models/user";
-import { Tournaments } from "../models/tournament";
-import { Seasons } from "../models/season";
-import { Factions } from "../models/factions";
+} from "./factories.js";
+import { Results } from "../models/results.js";
+import { Leaderboards } from "../models/leaderboard.js";
+import { Users } from "../models/user.js";
+import { Tournaments } from "../models/tournament.js";
+import { Seasons } from "../models/season.js";
+import { Factions } from "../models/factions.js";
+import {
+  LeaderboardRowComponent,
+  LeaderboardRowComponentType,
+} from "../openapi.js";
 
 describe("leaderboard", () => {
   beforeAll(async () => {
@@ -36,8 +40,14 @@ describe("leaderboard", () => {
     await Results.insert(
       resultFactory({ tournament: t, user: u, points: 100 }),
     );
-    const rows = await Leaderboards.getExpanded({});
-    expect(rows[0].points).toEqual(100);
+
+    const url = new URL("http://localhost:8787/api/leaderboard");
+    console.log(url.toString());
+    const response = await getMF().dispatchFetch(url.toString());
+    const rows = (await response.json()) as LeaderboardRowComponentType[];
+
+    expect(rows.length).toEqual(1);
+    expect(LeaderboardRowComponent.parse(rows[0]).points).toEqual(100);
   });
 
   test("check simple ranking", async () => {

@@ -1,13 +1,13 @@
-import { RequestWithDB } from "../types";
-import { Tournaments } from "../models/tournament";
+import { RequestWithDB } from "../types.d.js";
+import { Tournaments } from "../models/tournament.js";
 import {
   GetTournamentResultsSchema,
   GetTournamentSchema,
   GetTournamentsSchema,
   ResultComponent,
   TournamentComponent,
-} from "../openapi";
-import { Results } from "../models/results";
+} from "../openapi.js";
+import { Results } from "../models/results.js";
 import { json } from "itty-router";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 

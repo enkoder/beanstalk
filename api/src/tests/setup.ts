@@ -1,4 +1,4 @@
-import { getDB, initDB } from "../models";
+import { getDB, initDB } from "../models/db.js";
 import { Miniflare } from "miniflare";
 import { error } from "itty-router";
 import { CompiledQuery } from "kysely";
@@ -18,7 +18,7 @@ export async function initMf() {
   console.log("Initializing Miniflare");
   _mf = new Miniflare({
     d1Databases: ["DB"],
-    script: "",
+    scriptPath: "./dist/index.js",
     modules: true,
     modulesRules: [{ type: "ESModule", include: ["**/*.js"] }],
     verbose: true,

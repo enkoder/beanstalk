@@ -1,24 +1,4 @@
-export type FactionCode =
-  | "anarch"
-  | "criminal"
-  | "shaper"
-  | "neutral-runner"
-  | "haas-bioroid"
-  | "jinteki"
-  | "nbn"
-  | "weyland-consortium"
-  | "neutral-corp"
-  | "apex"
-  | "adam"
-  | "sunny-lebeau";
-
-export type Faction = {
-  code: FactionCode;
-  color: string;
-  is_mini: boolean;
-  name: string;
-  side_code: "runner" | "corp";
-};
+import { Faction, FactionCode } from "../schema.js";
 
 export const Factions = {
   Anarch: {

@@ -1,7 +1,5 @@
-import { getDB } from "./index";
-import { Faction } from "./factions";
-import { Format, TournamentType } from "./tournament";
-import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking";
+import { getDB } from "./db.js";
+import { Faction, Format } from "../schema.js";
 
 type LeaderboardRow = {
   points: number;
@@ -13,20 +11,7 @@ type LeaderboardRow = {
 
 const getCaseWhen = (eb) => {
   let cb = eb.case();
-
-  for (const key in TournamentType) {
-    // https://stackoverflow.com/questions/51280565/iterate-over-an-enum-with-typescript-and-assign-to-an-enum
-    const type: TournamentType =
-      TournamentType[key as keyof typeof TournamentType];
-
-    if (!MAX_TOURNAMENTS_PER_TYPE[type]) {
-      continue;
-    }
-
-    const max = MAX_TOURNAMENTS_PER_TYPE[type];
-    cb = cb.when("tournament_type", "=", type).then(max);
-  }
-
+  cb = cb.when("tournament_type", "=", "worlds championship").then(1);
   return cb.else(0).end();
 };
 

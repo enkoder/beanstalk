@@ -1,13 +1,13 @@
-import { Env, RequestWithDB } from "../types";
+import { Env, RequestWithDB } from "../types.d.js";
 import {
   AuthLoginBody,
   AuthLoginSchema,
   AuthRegisterSchema,
   UserComponent,
 } from "../openapi";
-import { signPassword, verifyPassword } from "../lib/auth";
+import { signPassword, verifyPassword } from "../lib/auth.js";
 import { errorResponse } from "../lib/errors";
-import { Users } from "../models/user";
+import { Users } from "../models/user.js";
 import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";

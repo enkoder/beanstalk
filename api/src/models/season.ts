@@ -1,17 +1,5 @@
-import { getDB } from "./index";
-import { Generated, Insertable } from "kysely";
-import { Selectable } from "kysely/dist/esm";
-
-export interface SeasonsTable {
-  id: Generated<number>;
-  name: string;
-  started_at: string;
-  ended_at: string | null;
-}
-
-export type Season = Selectable<SeasonsTable>;
-export type InsertSeason = Insertable<SeasonsTable>;
-
+import { getDB } from "./db.js";
+import { InsertSeason, Season } from "../schema.js";
 export class Seasons {
   public static async getAll() {
     return await getDB().selectFrom("seasons").selectAll().execute();

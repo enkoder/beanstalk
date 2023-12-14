@@ -1,6 +1,7 @@
-import { Format, Tournament, TournamentType } from "../models/tournament";
-import { Result } from "../models/results";
+import { Format, Result, Tournament } from "../schema.js";
+import { TournamentTypes } from "../models/tournament.js";
 import { z } from "zod";
+import { Response } from "@cloudflare/workers-types";
 
 async function gatherResponse(response: Response) {
   const { headers } = response;
@@ -47,7 +48,7 @@ export const ABRTournament = z.object({
   // TODO: parse
   date: z.coerce.date(),
   // TODO: check enum
-  type: z.nativeEnum(TournamentType),
+  type: z.enum(TournamentTypes),
   // TODO: check enum
   format: z.string(),
   mwl: z.string(),
@@ -110,7 +111,7 @@ const ABR_BASE_URL = "https://alwaysberunning.net/api";
 
 async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
   const retArr: ABRTournamentType[] = [];
-  const resp = await fetch(url.toString());
+  const resp: Response = await fetch(url.toString());
   if (!resp.ok) {
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }

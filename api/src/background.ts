@@ -1,4 +1,4 @@
-import { Env, IngestResultQueueMessage } from "./types";
+import { Env, IngestResultQueueMessage } from "./types.d.js";
 import {
   ABREntryType,
   abrToResult,
@@ -8,17 +8,18 @@ import {
   getEntries,
   getTournamentsByType,
   getTournamentsByUserId,
-} from "./lib/abr";
-import { initDB } from "./models";
-import { Tournament, Tournaments } from "./models/tournament";
-import { Result, Results } from "./models/results";
-import { User, Users } from "./models/user";
-import * as NRDB from "./lib/nrdb";
+} from "./lib/abr.js";
+import { initDB } from "./models/db.js";
+import { Tournaments } from "./models/tournament.js";
+import { Results } from "./models/results.js";
+import { Users } from "./models/user.js";
+import * as NRDB from "./lib/nrdb.js";
 import {
   calculateTournamentPointDistribution,
   TOURNAMENT_POINTS,
-} from "./lib/ranking";
-import { Seasons } from "./models/season";
+} from "./lib/ranking.js";
+import { Seasons } from "./models/season.js";
+import { Result, Tournament, User } from "./schema.js";
 
 enum Queues {
   IngestTournament = "ingest-tournament",

@@ -1,14 +1,14 @@
-import { getMF, initMf, wipeDB } from "./setup";
+import { getMF, initMf, wipeDB } from "./setup.js";
 import {
   resultFactory,
   seasonFactory,
   tournamentFactory,
   userFactory,
-} from "./factories";
-import { Results } from "../models/results";
-import { Users } from "../models/user";
-import { Tournaments } from "../models/tournament";
-import { Seasons } from "../models/season";
+} from "./factories.js";
+import { Results } from "../models/results.js";
+import { Users } from "../models/user.js";
+import { Tournaments } from "../models/tournament.js";
+import { Seasons } from "../models/season.js";
 
 describe("results", () => {
   beforeAll(async () => {

@@ -1,20 +1,8 @@
-import { getDB } from "./index";
-import { Insertable, Selectable, Updateable } from "kysely";
-
-export interface UsersTable {
-  id: number;
-  name: string | null;
-  email: string | null;
-  password: string | null;
-  is_admin: number;
-}
-
-export type User = Selectable<UsersTable>;
-type UpdateUser = Updateable<UsersTable>;
-type InsertUser = Insertable<UsersTable>;
+import { getDB } from "./db.js";
+import { InsertUser, UpdateUser } from "../schema.js";
 
 export class Users {
-  public static async getAll(offset?: number, limit?: number): Promise<User[]> {
+  public static async getAll(offset?: number, limit?: number) {
     let q = getDB().selectFrom("users").selectAll();
     if (offset) {
       q = q.offset(offset);
@@ -24,7 +12,7 @@ export class Users {
     }
     return await q.execute();
   }
-  public static async count(): Promise<number> {
+  public static async count() {
     const { count } = await getDB()
       .selectFrom("users")
       .select((eb) => {
@@ -34,7 +22,7 @@ export class Users {
     return count;
   }
 
-  public static async getAllWithoutName(): Promise<User[]> {
+  public static async getAllWithoutName() {
     return await getDB()
       .selectFrom("users")
       .selectAll()
@@ -42,7 +30,7 @@ export class Users {
       .execute();
   }
 
-  public static async getByIdOrName(user: string): Promise<User> {
+  public static async getByIdOrName(user: string) {
     return await getDB()
       .selectFrom("users")
       .selectAll()
@@ -52,21 +40,21 @@ export class Users {
       .executeTakeFirst();
   }
 
-  public static async get(id: number): Promise<User> {
+  public static async get(id: number) {
     return await getDB()
       .selectFrom("users")
       .selectAll()
       .where("id", "=", id)
       .executeTakeFirst();
   }
-  public static async getByName(name: string): Promise<User> {
+  public static async getByName(name: string) {
     return await getDB()
       .selectFrom("users")
       .selectAll()
       .where("name", "=", name)
       .executeTakeFirst();
   }
-  public static async getByEmail(email: string): Promise<User> {
+  public static async getByEmail(email: string) {
     return await getDB()
       .selectFrom("users")
       .selectAll()
@@ -74,7 +62,7 @@ export class Users {
       .executeTakeFirst();
   }
 
-  public static async getById(id: number): Promise<User> {
+  public static async getById(id: number) {
     return await getDB()
       .selectFrom("users")
       .selectAll()
@@ -85,7 +73,7 @@ export class Users {
   public static async insert(
     user: InsertUser,
     overwriteOnConflict: boolean = true,
-  ): Promise<User> {
+  ) {
     return await getDB()
       .insertInto("users")
       .values(user)
@@ -99,7 +87,7 @@ export class Users {
       .returningAll()
       .executeTakeFirst();
   }
-  public static async update(id: number, user: UpdateUser): Promise<User> {
+  public static async update(id: number, user: UpdateUser) {
     return await getDB()
       .updateTable("users")
       .set(user)
