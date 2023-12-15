@@ -1,5 +1,7 @@
-import { RequestWithDB } from "../types.d.js";
-import { Tournaments } from "../models/tournament.js";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
+import * as Results from "../models/results.js";
+import * as Tournaments from "../models/tournament.js";
 import {
   GetTournamentResultsSchema,
   GetTournamentSchema,
@@ -7,15 +9,13 @@ import {
   ResultComponent,
   TournamentComponent,
 } from "../openapi.js";
-import { Results } from "../models/results.js";
-import { json } from "itty-router";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { RequestWithDB } from "../types.d.js";
 
 export class GetTournament extends OpenAPIRoute {
   static schema = GetTournamentSchema;
 
   async handle(req: RequestWithDB) {
-    const tournamentId = req.params!["tournamentId"];
+    const tournamentId = req.params?.tournamentId;
     const tournament = await Tournaments.get(Number(tournamentId));
     return json(TournamentComponent.parse(tournament));
   }
@@ -30,7 +30,7 @@ export class GetTournaments extends OpenAPIRoute {
     return json(
       tournaments.map((tournament) => {
         TournamentComponent.parse(tournament);
-      })
+      }),
     );
   }
 }
@@ -39,12 +39,16 @@ export class GetTournamentResults extends OpenAPIRoute {
   static schema = GetTournamentResultsSchema;
 
   async handle(req: RequestWithDB) {
-    const tournamentId = req.params!["tournamentId"];
-    const results = await Results.getByTournamentIdExpanded(Number(tournamentId));
+    const tournamentId = req.params?.tournamentId;
+    const results = await Results.getByTournamentIdExpanded(
+      Number(tournamentId),
+    );
     return json(
       results
-        .sort((a, b) => ((a.rank_cut || a.rank_swiss) > (b.rank_cut || b.rank_swiss) ? 1 : -1))
-        .map((result) => ResultComponent.parse(result))
+        .sort((a, b) =>
+          (a.rank_cut || a.rank_swiss) > (b.rank_cut || b.rank_swiss) ? 1 : -1,
+        )
+        .map((result) => ResultComponent.parse(result)),
     );
   }
 }

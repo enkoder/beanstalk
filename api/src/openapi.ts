@@ -1,10 +1,12 @@
-import { ABRTournamentTypeFilter } from "./lib/abr.js";
-import { Formats, TournamentTypes } from "./models/tournament.js";
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
+import { ABRTournamentTypeFilter } from "./lib/abr.js";
+import { Formats, TournamentTypes } from "./models/tournament.js";
 
 export const FormatComponent = z.enum(Formats).openapi("Format");
-export const TournamentTypeComponent = z.enum(TournamentTypes).openapi("TournamentType");
+export const TournamentTypeComponent = z
+  .enum(TournamentTypes)
+  .openapi("TournamentType");
 
 export const UserComponent = z
   .object({
@@ -104,7 +106,9 @@ export const LeaderboardRowComponent = z
     attended: z.number(),
   })
   .openapi("LeaderboardRow");
-export type LeaderboardRowComponentType = z.infer<typeof LeaderboardRowComponent>;
+export type LeaderboardRowComponentType = z.infer<
+  typeof LeaderboardRowComponent
+>;
 
 export const TokenResponseComponent = z
   .object({
@@ -135,11 +139,13 @@ export const GetPointDistributionResponseComponent = z
         placement: z.number(),
         points: z.number(),
         cumulative: z.number(),
-      })
+      }),
     ),
   })
   .openapi("GetPointDistributionResponse");
-export type GetPointDistributionResponseComponentType = z.infer<typeof GetPointDistributionResponseComponent>;
+export type GetPointDistributionResponseComponentType = z.infer<
+  typeof GetPointDistributionResponseComponent
+>;
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -193,7 +199,8 @@ export const GetOAuthLoginURLSchema = {
 
 export const OAuthGetTokenFromCodeSchema = {
   tags: ["Auth"],
-  summary: "From the code supplied during the OAuth redirect, perform the secret exchange and create a token",
+  summary:
+    "From the code supplied during the OAuth redirect, perform the secret exchange and create a token",
   parameters: {
     code: Query(z.string()),
   },
@@ -297,14 +304,16 @@ export const GetLeaderboardSchema = {
   responses: {
     "200": {
       schema: z.array(LeaderboardRowComponent),
-      description: "Returns a array of rows compromising the full leaderboard for the given season",
+      description:
+        "Returns a array of rows compromising the full leaderboard for the given season",
     },
   },
 };
 
 export const GetTiersSchema = {
   tags: ["Leaderboard"],
-  summary: "Returns a list of supported tournament tiers and their point values",
+  summary:
+    "Returns a list of supported tournament tiers and their point values",
   responses: {
     "200": {
       schema: z.array(TierComponent),
@@ -346,7 +355,8 @@ export const GetPointDistributionSchema = {
   responses: {
     "200": {
       schema: GetPointDistributionResponseComponent,
-      description: "Returns a array of numbers representing the point distribution of the simulated tournament",
+      description:
+        "Returns a array of numbers representing the point distribution of the simulated tournament",
     },
   },
 };
@@ -445,7 +455,8 @@ export const RecalculateLeaderboardSchema = {
   responses: {
     "200": {
       schema: z.object({}),
-      description: "Empty object indicates success on triggering recalculation.",
+      description:
+        "Empty object indicates success on triggering recalculation.",
     },
   },
 };
@@ -475,7 +486,8 @@ export const GetUserResultsSchema = {
   responses: {
     "200": {
       schema: UserResultsResponseComponent,
-      description: "Gets a list of all results for the given user and supplied filters",
+      description:
+        "Gets a list of all results for the given user and supplied filters",
     },
   },
 };

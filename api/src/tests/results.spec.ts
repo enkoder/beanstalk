@@ -1,9 +1,9 @@
-import { getMF, initMf, wipeDB } from "./setup.js";
+import * as Results from "../models/results.js";
+import * as Seasons from "../models/season.js";
+import * as Tournaments from "../models/tournament.js";
+import * as Users from "../models/user.js";
 import { result, season, tournament, user } from "./factories.js";
-import { Results } from "../models/results.js";
-import { Users } from "../models/user.js";
-import { Tournaments } from "../models/tournament.js";
-import { Seasons } from "../models/season.js";
+import { getMF, initMf, wipeDB } from "./setup.js";
 
 describe("results", () => {
   beforeAll(async () => {

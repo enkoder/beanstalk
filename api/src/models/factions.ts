@@ -89,7 +89,7 @@ export const Factions = {
 
 export function getFactionFromCode(code: FactionCode): Faction {
   for (const factionName in Factions) {
-    if (Factions[factionName].code == code) {
+    if (Factions[factionName].code === code) {
       return Factions[factionName];
     }
   }

@@ -1,12 +1,15 @@
-import { getMF, initMf, wipeDB } from "./setup.js";
-import * as Factories from "./factories.js";
-import { Results } from "../models/results.js";
-import { Leaderboards } from "../models/leaderboard.js";
-import { Users } from "../models/user.js";
-import { Tournaments } from "../models/tournament.js";
-import { Seasons } from "../models/season.js";
 import { Factions } from "../models/factions.js";
-import { LeaderboardRowComponent, LeaderboardRowComponentType } from "../openapi.js";
+import * as Leaderboard from "../models/leaderboard.js";
+import * as Results from "../models/results.js";
+import * as Seasons from "../models/season.js";
+import * as Tournaments from "../models/tournament.js";
+import * as Users from "../models/user.js";
+import {
+  LeaderboardRowComponent,
+  LeaderboardRowComponentType,
+} from "../openapi.js";
+import * as Factories from "./factories.js";
+import { getMF, initMf, wipeDB } from "./setup.js";
 
 describe("leaderboard", () => {
   beforeAll(async () => {
@@ -22,14 +25,16 @@ describe("leaderboard", () => {
   });
 
   test("check empty state", async () => {
-    const rows = await Leaderboards.getExpanded({});
+    const rows = await Leaderboard.getExpanded({});
     expect(rows.length).toEqual(0);
   });
 
   test("check points total", async () => {
     const u = await Users.insert(Factories.user({ id: 0 }));
     const t = await Tournaments.insert(Factories.tournament({ id: 0 }));
-    await Results.insert(Factories.result({ tournament: t, user: u, points: 100 }));
+    await Results.insert(
+      Factories.result({ tournament: t, user: u, points: 100 }),
+    );
 
     const response = await getMF().dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
@@ -42,9 +47,13 @@ describe("leaderboard", () => {
     const u0 = await Users.insert(Factories.user({ id: 0 }));
     const u1 = await Users.insert(Factories.user({ id: 1 }));
     const t = await Tournaments.insert(Factories.tournament({ id: 0 }));
-    await Results.insert(Factories.result({ tournament: t, user: u0, points: 100 }));
+    await Results.insert(
+      Factories.result({ tournament: t, user: u0, points: 100 }),
+    );
 
-    await Results.insert(Factories.result({ tournament: t, user: u1, points: 100 }));
+    await Results.insert(
+      Factories.result({ tournament: t, user: u1, points: 100 }),
+    );
 
     const response = await getMF().dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
@@ -64,9 +73,15 @@ describe("leaderboard", () => {
     const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
     const t2 = await Tournaments.insert(Factories.tournament({ id: 2 }));
 
-    await Results.insert(Factories.result({ tournament: t0, user: u0, points: 100 }));
-    await Results.insert(Factories.result({ tournament: t1, user: u1, points: 100 }));
-    await Results.insert(Factories.result({ tournament: t2, user: u1, points: 0 }));
+    await Results.insert(
+      Factories.result({ tournament: t0, user: u0, points: 100 }),
+    );
+    await Results.insert(
+      Factories.result({ tournament: t1, user: u1, points: 100 }),
+    );
+    await Results.insert(
+      Factories.result({ tournament: t2, user: u1, points: 0 }),
+    );
 
     const response = await getMF().dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
@@ -87,12 +102,18 @@ describe("leaderboard", () => {
     const u0 = await Users.insert(Factories.user({ id: 0 }));
     const u1 = await Users.insert(Factories.user({ id: 1 }));
 
-    const t0 = await Tournaments.insert(Factories.tournament({ id: 0, season: s0 }));
+    const t0 = await Tournaments.insert(
+      Factories.tournament({ id: 0, season: s0 }),
+    );
 
     const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
 
-    await Results.insert(Factories.result({ tournament: t0, user: u0, points: 100 }));
-    await Results.insert(Factories.result({ tournament: t1, user: u1, points: 50 }));
+    await Results.insert(
+      Factories.result({ tournament: t0, user: u0, points: 100 }),
+    );
+    await Results.insert(
+      Factories.result({ tournament: t1, user: u1, points: 50 }),
+    );
 
     const response = await getMF().dispatchFetch(Factories.url({ season: s0 }));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
@@ -115,7 +136,7 @@ describe("leaderboard", () => {
         user: u0,
         points: 100,
         corpFaction: Factions.HaasBioroid,
-      })
+      }),
     );
     await Results.insert(
       Factories.result({
@@ -123,13 +144,13 @@ describe("leaderboard", () => {
         user: u1,
         points: 100,
         corpFaction: Factions.Jinteki,
-      })
+      }),
     );
 
     const response = await getMF().dispatchFetch(
       Factories.url({
         faction: Factions.HaasBioroid,
-      })
+      }),
     );
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
@@ -141,25 +162,29 @@ describe("leaderboard", () => {
     const u0 = await Users.insert(Factories.user({ id: 0 }));
     const u1 = await Users.insert(Factories.user({ id: 1 }));
 
-    const t0 = await Tournaments.insert(Factories.tournament({ id: 0, format: "startup" }));
-    const t1 = await Tournaments.insert(Factories.tournament({ id: 1, format: "standard" }));
+    const t0 = await Tournaments.insert(
+      Factories.tournament({ id: 0, format: "startup" }),
+    );
+    const t1 = await Tournaments.insert(
+      Factories.tournament({ id: 1, format: "standard" }),
+    );
 
     await Results.insert(
       Factories.result({
         tournament: t0,
         user: u0,
         points: 100,
-      })
+      }),
     );
     await Results.insert(
       Factories.result({
         tournament: t1,
         user: u1,
         points: 100,
-      })
+      }),
     );
 
-    const rows = await Leaderboards.getExpanded({
+    const rows = await Leaderboard.getExpanded({
       format: "startup",
     });
     expect(rows.length).toEqual(1);
@@ -176,14 +201,14 @@ describe("leaderboard", () => {
         id: 0,
         season: s0,
         type: "intercontinental championship",
-      })
+      }),
     );
     const t1 = await Tournaments.insert(
       Factories.tournament({
         id: 1,
         season: s0,
         type: "intercontinental championship",
-      })
+      }),
     );
 
     await Results.insert(
@@ -191,14 +216,14 @@ describe("leaderboard", () => {
         tournament: t0,
         user: u0,
         points: 100,
-      })
+      }),
     );
     await Results.insert(
       Factories.result({
         tournament: t1,
         user: u0,
         points: 100,
-      })
+      }),
     );
 
     // First check that across all-time, no season filter, we use all results

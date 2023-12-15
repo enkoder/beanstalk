@@ -1,0 +1,23 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
+  "files": {
+    "ignore": [
+      "app/**/*.js",
+      "**/output.css",
+      "spec.json",
+      "node_modules",
+      "storybook-static",
+      "dist"
+    ]
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": { "indentStyle": "space", "formatWithErrors": true },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  }
+}

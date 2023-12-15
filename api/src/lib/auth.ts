@@ -1,20 +1,27 @@
-import { errorResponse } from "./errors";
-import { getPrivateAccountInfo } from "./nrdb";
+import * as Users from "../models/user.js";
+import { PrivateAccountInfoType } from "../openapi.js";
 import { Env, RequestWithDB } from "../types.d.js";
-import { Users } from "../models/user.js";
-import { PrivateAccountInfoType } from "../openapi";
-//import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
+import { errorResponse } from "./errors.js";
+import { getPrivateAccountInfo } from "./nrdb.js";
 
-export async function signPassword(key: string, email: string, rawPassword: string): Promise<string> {
+export async function signPassword(
+  key: string,
+  email: string,
+  rawPassword: string,
+): Promise<string> {
   const encoder = new TextEncoder();
   const cryptoKey = await crypto.subtle.importKey(
     "raw",
     encoder.encode(key),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
-  const signature = await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(`${email}/${rawPassword}`));
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    cryptoKey,
+    encoder.encode(`${email}/${rawPassword}`),
+  );
 
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
@@ -32,7 +39,7 @@ export async function verifyPassword(
   key: string,
   email: string,
   rawPassword: string,
-  signedPassword: string
+  signedPassword: string,
 ): Promise<boolean> {
   const encoder = new TextEncoder();
   const cryptoKey = await crypto.subtle.importKey(
@@ -40,12 +47,17 @@ export async function verifyPassword(
     encoder.encode(key),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["verify"]
+    ["verify"],
   );
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
   const sigBuf = Uint8Array.from(atob(signedPassword), (c) => c.charCodeAt(0));
 
-  return await crypto.subtle.verify("HMAC", cryptoKey, sigBuf, encoder.encode(`${email}/${rawPassword}`));
+  return await crypto.subtle.verify(
+    "HMAC",
+    cryptoKey,
+    sigBuf,
+    encoder.encode(`${email}/${rawPassword}`),
+  );
 }
 
 //async function validateToken(token: string, env: Env) {
@@ -67,7 +79,7 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
   try {
     accountInfo = await getPrivateAccountInfo(access_token);
   } catch (e) {
-    if (e.statusCode == 401) {
+    if (e.statusCode === 401) {
       return errorResponse(401, "Authentication error");
     }
   }
@@ -98,7 +110,7 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
   //}
   // user_id not null implies user is logged in
   request.user_id = user.id;
-  request.is_admin = user.is_admin;
+  request.is_admin = user.is_admin !== 0;
 }
 
 export async function adminOnly(request: RequestWithDB, _: Env) {

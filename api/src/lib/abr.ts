@@ -1,7 +1,7 @@
-import { Format, Result, Tournament } from "../schema.js";
-import { TournamentTypes } from "../models/tournament.js";
-import { z } from "zod";
 import { Response } from "@cloudflare/workers-types";
+import { z } from "zod";
+import { TournamentTypes } from "../models/tournament.js";
+import { Format, Result, Tournament } from "../schema.js";
 
 async function gatherResponse(response: Response) {
   const { headers } = response;
@@ -14,19 +14,19 @@ async function gatherResponse(response: Response) {
 
 export enum ABRTournamentTypeFilter {
   GNK = 1,
-  StoreChampionship,
-  RegionalChampionship,
-  NationalChampionship,
-  WorldsChampionship,
-  Community,
-  OnlineEvent,
-  NonTournamentEvent,
-  ContinentalChampionship,
-  TeamTournament,
-  CircuitOpener,
-  Asynchronous,
-  CircuitBreaker,
-  IntercontinentalChampionship,
+  StoreChampionship = 2,
+  RegionalChampionship = 3,
+  NationalChampionship = 4,
+  WorldsChampionship = 5,
+  Community = 6,
+  OnlineEvent = 7,
+  NonTournamentEvent = 8,
+  ContinentalChampionship = 9,
+  TeamTournament = 10,
+  CircuitOpener = 11,
+  Asynchronous = 12,
+  CircuitBreaker = 13,
+  IntercontinentalChampionship = 14,
 }
 
 export const ABRTournament = z.object({
@@ -58,7 +58,10 @@ export const ABRTournament = z.object({
   winner_corp_identity: z.string().optional(),
 });
 
-export function abrToTournament(abr: ABRTournamentType, seasonId: number | null): Tournament {
+export function abrToTournament(
+  abr: ABRTournamentType,
+  seasonId: number | null,
+): Tournament {
   return {
     id: abr.id,
     name: abr.title,
@@ -113,17 +116,18 @@ async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }
   const bodyStr = await gatherResponse(resp);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const body: any[] = JSON.parse(bodyStr);
 
   if (body.length) {
-    body.forEach((tournament) => {
+    for (const tournament of body) {
       try {
         retArr.push(ABRTournament.parse(tournament));
       } catch (error) {
         // TODO: do something with these parser errors
         console.log(error);
       }
-    });
+    }
   }
 
   return retArr;
@@ -143,7 +147,10 @@ export async function getTournamentsByUserId(id: number) {
   return await _getTournaments(url);
 }
 
-export async function getTournaments(offset: number | null, limit: number | null): Promise<ABRTournamentType[]> {
+export async function getTournaments(
+  offset: number | null,
+  limit: number | null,
+): Promise<ABRTournamentType[]> {
   const url = new URL(`${ABR_BASE_URL}/tournaments/results`);
   if (offset) {
     url.searchParams.append("offset", String(offset));
@@ -154,7 +161,9 @@ export async function getTournaments(offset: number | null, limit: number | null
   return _getTournaments(url);
 }
 
-export async function getEntries(tournament_id: number): Promise<ABREntryType[]> {
+export async function getEntries(
+  tournament_id: number,
+): Promise<ABREntryType[]> {
   const retArr: ABREntryType[] = [];
 
   const url = new URL(`${ABR_BASE_URL}/entries`);
@@ -165,17 +174,18 @@ export async function getEntries(tournament_id: number): Promise<ABREntryType[]>
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }
   const bodyStr = await gatherResponse(resp);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const body: any[] = JSON.parse(bodyStr);
 
   if (body.length) {
-    body.forEach((entry) => {
+    for (const entry of body) {
       try {
         retArr.push(ABREntry.parse(entry));
       } catch (error) {
         // TODO: do something with these parser errors
         console.log(error);
       }
-    });
+    }
   }
   return retArr;
 }

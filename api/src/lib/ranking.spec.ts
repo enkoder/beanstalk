@@ -9,7 +9,7 @@ test("calculate points", () => {
     "national championship",
     0.2,
     0.5,
-    20
+    20,
   );
 
   expect(points.length).toBe(num);
@@ -26,7 +26,9 @@ test("calculate points", () => {
   for (let i = 0; i < points.length / 2; i++) {
     sum += points[i];
   }
-  expect(sum > adjustedTotalPoints * 0.98 && sum < adjustedTotalPoints * 1.02).toBe(true);
+  expect(
+    sum > adjustedTotalPoints * 0.98 && sum < adjustedTotalPoints * 1.02,
+  ).toBe(true);
 });
 
 test("not enough players", () => {
@@ -38,7 +40,7 @@ test("not enough players", () => {
     "worlds championship",
     0.2,
     0.5,
-    20
+    20,
   );
 
   expect(points.length).toBe(num);
@@ -59,7 +61,7 @@ test("Intercontinentals", () => {
     "intercontinental championship",
     0.2,
     0.5,
-    20
+    20,
   );
 
   expect(points.length).toBe(num);

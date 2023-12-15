@@ -1,7 +1,7 @@
-import { ABREntryType, ABRTournamentType } from "./lib/abr";
-import { Tournament } from "./models/tournament.js";
-import { Kysely } from "kysely";
 import { IRequest } from "itty-router";
+import { Kysely } from "kysely";
+import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
+import { Database, Tournament } from "./schema.d.js";
 
 export type IngestResultQueueMessage = {
   tournament: Tournament;
@@ -15,6 +15,7 @@ export type Env = {
   INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
   INGEST_RESULT_Q: Queue<IngestResultQueueMessage>;
   // TODO: types for cards
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   INGEST_CARD_Q: Queue<any>;
   LEADERBOARD_KV: KVNamespace;
   CARDS_KV: KVNamespace;

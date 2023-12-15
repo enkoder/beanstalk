@@ -1,22 +1,25 @@
-import { Env, IngestResultQueueMessage } from "./types.d.js";
 import {
   ABREntryType,
-  abrToResult,
-  abrToTournament,
   ABRTournamentType,
   ABRTournamentTypeFilter,
+  abrToResult,
+  abrToTournament,
   getEntries,
   getTournamentsByType,
   getTournamentsByUserId,
 } from "./lib/abr.js";
-import { initDB } from "./models/db.js";
-import { Tournaments } from "./models/tournament.js";
-import { Results } from "./models/results.js";
-import { Users } from "./models/user.js";
 import * as NRDB from "./lib/nrdb.js";
-import { calculateTournamentPointDistribution, TOURNAMENT_POINTS } from "./lib/ranking.js";
-import { Seasons } from "./models/season.js";
+import {
+  TOURNAMENT_POINTS,
+  calculateTournamentPointDistribution,
+} from "./lib/ranking.js";
+import { initDB } from "./models/db.js";
+import * as Results from "./models/results.js";
+import * as Seasons from "./models/season.js";
+import * as Tournaments from "./models/tournament.js";
+import * as Users from "./models/user.js";
 import { Result, Tournament, User } from "./schema.js";
+import { Env, IngestResultQueueMessage } from "./types.d.js";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -30,11 +33,13 @@ async function ingestEntry(
   env: Env,
   entry: ABREntryType,
   tournamentId: number,
-  points: number
+  points: number,
 ): Promise<Result | null> {
   // If there's a non-zero user_id then the user has claimed their spot in the tournament
   let user: User | null = null;
-  let name: string = entry.user_id ? await NRDB.getNameFromId(entry.user_id) : entry.user_name;
+  let name: string = entry.user_id
+    ? await NRDB.getNameFromId(entry.user_id)
+    : entry.user_name;
 
   // name can be null and ID can be 0
   if (!name && entry.user_import_name) {
@@ -58,14 +63,18 @@ async function ingestEntry(
   }
 
   // TODO: types
-  const runner_card = JSON.parse(await env.CARDS_KV.get(String(entry.runner_deck_identity_id)));
-  const corp_card = JSON.parse(await env.CARDS_KV.get(String(entry.corp_deck_identity_id)));
+  const runner_card = JSON.parse(
+    await env.CARDS_KV.get(String(entry.runner_deck_identity_id)),
+  );
+  const corp_card = JSON.parse(
+    await env.CARDS_KV.get(String(entry.corp_deck_identity_id)),
+  );
 
-  const runner_deck_identity_name = runner_card["title"];
-  const runner_deck_faction = runner_card["faction_code"];
+  const runner_deck_identity_name = runner_card.title;
+  const runner_deck_faction = runner_card.faction_code;
 
-  const corp_deck_identity_name = corp_card["title"];
-  const corp_deck_faction = corp_card["faction_code"];
+  const corp_deck_identity_name = corp_card.title;
+  const corp_deck_faction = corp_card.faction_code;
 
   // this is a partial, be sure to add the extra stuff that isn't coming from abr
   return await Results.insert(
@@ -78,22 +87,31 @@ async function ingestEntry(
       corp_deck_identity_name: corp_deck_identity_name,
       corp_deck_faction: corp_deck_faction,
     }),
-    true
+    true,
   );
 }
 
-async function handleResultIngest(env: Env, tournament: Tournament, abrEntry: ABREntryType) {
+async function handleResultIngest(
+  env: Env,
+  tournament: Tournament,
+  abrEntry: ABREntryType,
+) {
   // Being explicit, even though defaults are supplied
   const { points } = calculateTournamentPointDistribution(
     TOURNAMENT_POINTS[tournament.type],
     tournament.players_count,
-    tournament.type
+    tournament.type,
   );
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
   //console.log(JSON.stringify(entry, null, 4));
   try {
-    const result = await ingestEntry(env, abrEntry, tournament.id, points[placement - 1]);
+    const result = await ingestEntry(
+      env,
+      abrEntry,
+      tournament.id,
+      points[placement - 1],
+    );
     if (!result) {
       console.log(
         [
@@ -104,7 +122,7 @@ async function handleResultIngest(env: Env, tournament: Tournament, abrEntry: AB
           `user_import_name: ${abrEntry.user_import_name} | `,
           `tournament_id: ${tournament.id} | `,
           `tournament_name: ${tournament.name}`,
-        ].join(" ")
+        ].join(" "),
       );
     } else {
       console.log(
@@ -116,7 +134,7 @@ async function handleResultIngest(env: Env, tournament: Tournament, abrEntry: AB
           `user_import_name: ${abrEntry.user_import_name} | `,
           `tournament_id: ${tournament.id} | `,
           `tournament_name: ${tournament.name}`,
-        ].join(" ")
+        ].join(" "),
       );
     }
   } catch (e) {
@@ -125,11 +143,17 @@ async function handleResultIngest(env: Env, tournament: Tournament, abrEntry: AB
   }
 }
 
-async function handleTournamentIngest(env: Env, abrTournament: ABRTournamentType) {
+async function handleTournamentIngest(
+  env: Env,
+  abrTournament: ABRTournamentType,
+) {
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
-  const seasonId = seasons.length != 0 ? seasons[0].id : null;
+  const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
-  const tournament = await Tournaments.insert(abrToTournament(abrTournament, seasonId), true);
+  const tournament = await Tournaments.insert(
+    abrToTournament(abrTournament, seasonId),
+    true,
+  );
 
   const entries = await getEntries(tournament.id);
   for (const entry of entries) {
@@ -143,14 +167,23 @@ async function handleTournamentIngestDLQ(tournament: ABRTournamentType) {
   console.log(`handleTournamentIngestDLQ | ${str}`);
 }
 
-async function handleResultIngestDLQ(tournament: Tournament, entry: ABREntryType) {
+async function handleResultIngestDLQ(
+  tournament: Tournament,
+  entry: ABREntryType,
+) {
   // TODO: actually do something here on ingest fail
   const tournamentStr = JSON.stringify(tournament, null, 4);
   const entryStr = JSON.stringify(entry, null, 4);
-  console.log(`handleResultIngestDLQ | tournament=${tournamentStr} | entry=${entryStr}`);
+  console.log(
+    `handleResultIngestDLQ | tournament=${tournamentStr} | entry=${entryStr}`,
+  );
 }
 
-export async function abrIngest(env: Env, userId?: number, tournamentTypeFilter?: ABRTournamentTypeFilter) {
+export async function abrIngest(
+  env: Env,
+  userId?: number,
+  tournamentTypeFilter?: ABRTournamentTypeFilter,
+) {
   // fetch and insert the tournament row
   let abrTournaments: ABRTournamentType[] = null;
   if (userId) {
@@ -160,7 +193,9 @@ export async function abrIngest(env: Env, userId?: number, tournamentTypeFilter?
   }
 
   if (!abrTournaments) {
-    throw new Error(`abrIngest | Could not find ABR Tournaments from query and args`);
+    throw new Error(
+      "abrIngest | Could not find ABR Tournaments from query and args",
+    );
   }
 
   for (const abrTournament of abrTournaments) {
@@ -168,11 +203,14 @@ export async function abrIngest(env: Env, userId?: number, tournamentTypeFilter?
   }
 }
 
-async function handleCardIngest(env: Env, card: any) {
-  await env.CARDS_KV.put(String(Number(card["code"])), JSON.stringify(card));
+async function handleCardIngest(env: Env, card) {
+  await env.CARDS_KV.put(String(Number(card.code)), JSON.stringify(card));
 }
 
-export async function handleQueue(batch: MessageBatch<ABRTournamentType | ABREntryType>, env: Env): Promise<void> {
+export async function handleQueue(
+  batch: MessageBatch<ABRTournamentType | ABREntryType>,
+  env: Env,
+): Promise<void> {
   initDB(env.DB);
   for (const message of batch.messages) {
     //console.log(`${batch.queue} | ${JSON.stringify(message)}`);
@@ -188,12 +226,11 @@ export async function handleQueue(batch: MessageBatch<ABRTournamentType | ABREnt
         await handleResultIngest(env, tournament, entry);
         break;
       }
-      case Queues.IngestResultDLQ:
-        {
-          const { tournament, entry } = message.body as IngestResultQueueMessage;
-          await handleResultIngestDLQ(tournament, entry);
-        }
-        break;
+      case Queues.IngestResultDLQ: {
+        const { tournament, entry } = message.body as IngestResultQueueMessage;
+        await handleResultIngestDLQ(tournament, entry);
+      }
+      break;
       case Queues.IngestCard: {
         await handleCardIngest(env, message.body);
         break;
@@ -208,16 +245,32 @@ export async function handleScheduled(event: ScheduledEvent, env: Env) {
   switch (event.cron) {
     // Every day at midnight
     case "0 0 * * *":
-      console.log(`CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.IntercontinentalChampionship}`);
-      await abrIngest(env, null, ABRTournamentTypeFilter.IntercontinentalChampionship);
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.IntercontinentalChampionship}`,
+      );
+      await abrIngest(
+        env,
+        null,
+        ABRTournamentTypeFilter.IntercontinentalChampionship,
+      );
 
-      console.log(`CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.ContinentalChampionship}`);
-      await abrIngest(env, null, ABRTournamentTypeFilter.ContinentalChampionship);
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.ContinentalChampionship}`,
+      );
+      await abrIngest(
+        env,
+        null,
+        ABRTournamentTypeFilter.ContinentalChampionship,
+      );
 
-      console.log(`CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.NationalChampionship}`);
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.NationalChampionship}`,
+      );
       await abrIngest(env, null, ABRTournamentTypeFilter.NationalChampionship);
 
-      console.log(`CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.WorldsChampionship}`);
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.WorldsChampionship}`,
+      );
       await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
 
       break;

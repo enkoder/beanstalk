@@ -1,12 +1,12 @@
-import { Env, RequestWithDB } from "../types.d.js";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { error, json } from "itty-router";
 import {
   GetOAuthLoginURLSchema,
   OAuthGetTokenFromCodeSchema,
   RefreshTokenSchema,
   TokenResponseComponent,
 } from "../openapi.js";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { error, json } from "itty-router";
+import { Env, RequestWithDB } from "../types.d.js";
 
 const NRDB_BASE_URL = "https://netrunnerdb.com";
 const NRDB_AUTH_URL = `${NRDB_BASE_URL}/oauth/v2/auth`;
@@ -31,7 +31,7 @@ export class GetTokenFromCode extends OpenAPIRoute {
   static schema = OAuthGetTokenFromCodeSchema;
 
   async handle(req: RequestWithDB, env: Env) {
-    const code = String(req.query!["code"]);
+    const code = String(req.query.code);
 
     const nrdbUrl = new URL(NRDB_TOKEN_URL);
     nrdbUrl.searchParams.append("client_id", env.NRDB_OAUTH_CLIENT_ID);
@@ -54,7 +54,7 @@ export class RefreshToken extends OpenAPIRoute {
   static schema = RefreshTokenSchema;
 
   async handle(req: RequestWithDB, env: Env) {
-    const refresh_token = req.query!["refresh_token"];
+    const refresh_token = req.query.refresh_token;
     if (!refresh_token) {
       return error(400, "Invalid refresh token");
     }
@@ -67,7 +67,10 @@ export class RefreshToken extends OpenAPIRoute {
 
     const r = await fetch(nrdbUrl.toString());
     if (!r.ok) {
-      return error(400, `Error during token refresh exchange - ${await r.text()}`);
+      return error(
+        400,
+        `Error during token refresh exchange - ${await r.text()}`,
+      );
     }
 
     const jsonBody = await r.json();

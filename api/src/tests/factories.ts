@@ -1,7 +1,19 @@
-import { Faction, Format, Result, Season, Tournament, TournamentType, User } from "../schema.js";
 import { Factions } from "../models/factions.js";
+import {
+  Faction,
+  Format,
+  Result,
+  Season,
+  Tournament,
+  TournamentType,
+  User,
+} from "../schema.js";
 
-export function url({ season, faction, format }: { season?: Season; faction?: Faction; format?: Format }) {
+export function url({
+  season,
+  faction,
+  format,
+}: { season?: Season; faction?: Faction; format?: Format }) {
   const url = new URL("http://localhost:8787/api/leaderboard");
   if (season) {
     url.searchParams.append("seasonId", String(season.id));
@@ -23,7 +35,13 @@ type ResultArgs = {
   corpFaction?: Faction;
 };
 
-export function result({ tournament, user, points, runnerFaction, corpFaction }: ResultArgs) {
+export function result({
+  tournament,
+  user,
+  points,
+  runnerFaction,
+  corpFaction,
+}: ResultArgs) {
   return {
     tournament_id: tournament.id,
     user_id: user.id,
