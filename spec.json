@@ -2,13 +2,7 @@
   "openapi": "3.1.0",
   "info": { "version": "1.0.0", "title": "OpenAPI" },
   "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
+    "securitySchemes": { "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } },
     "schemas": {
       "TokenResponse": {
         "type": "object",
@@ -26,16 +20,29 @@
           "id": { "type": "number", "description": "User ID" },
           "name": { "type": ["string", "null"], "description": "User name" },
           "email": { "type": ["string", "null"], "description": "User email" },
-          "is_admin": {
-            "type": ["boolean", "null"],
-            "description": "Flag indicating that the user is an Admin user"
-          }
+          "is_admin": { "type": ["boolean", "null"], "description": "Flag indicating that the user is an Admin user" }
         },
         "required": ["id", "name", "email"]
       },
-      "Format": {
+      "Format": { "type": "string", "enum": ["standard", "startup", "eternal"] },
+      "TournamentType": {
         "type": "string",
-        "enum": ["standard", "startup", "eternal"]
+        "enum": [
+          "GNK / seasonal",
+          "asynchronous tournament",
+          "circuit breaker",
+          "circuit opener",
+          "community tournament",
+          "continental championship",
+          "infinite recursion",
+          "intercontinental championship",
+          "national championship",
+          "online event",
+          "store championship",
+          "team tournament",
+          "worlds championship",
+          "regional championship"
+        ]
       },
       "Result": {
         "type": "object",
@@ -46,6 +53,7 @@
           "points_earned": { "type": "number" },
           "tournament_id": { "type": "number" },
           "tournament_name": { "type": "string" },
+          "tournament_type": { "$ref": "#/components/schemas/TournamentType" },
           "players_count": { "type": "number" },
           "corp_deck_identity_id": { "type": "number" },
           "corp_deck_identity_name": { "type": ["string", "null"] },
@@ -57,7 +65,9 @@
           "runner_deck_url": { "type": ["string", "null"] },
           "user_id": { "type": "number" },
           "user_name": { "type": "string" },
-          "format": { "$ref": "#/components/schemas/Format" }
+          "format": { "$ref": "#/components/schemas/Format" },
+          "count_for_tournament_type": { "type": "number", "default": 0 },
+          "is_valid": { "type": "boolean" }
         },
         "required": [
           "rank_swiss",
@@ -65,12 +75,15 @@
           "points_earned",
           "tournament_id",
           "tournament_name",
+          "tournament_type",
           "players_count",
           "corp_deck_identity_id",
           "runner_deck_identity_id",
           "user_id",
           "user_name",
-          "format"
+          "format",
+          "count_for_tournament_type",
+          "is_valid"
         ]
       },
       "UserResultsResponse": {
@@ -83,10 +96,7 @@
           "seasonName": { "type": "string" },
           "format": { "$ref": "#/components/schemas/Format" },
           "factionCode": { "type": "string" },
-          "results": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/Result" }
-          }
+          "results": { "type": "array", "items": { "$ref": "#/components/schemas/Result" } }
         },
         "required": ["user_name", "user_id", "rank", "results"]
       },
@@ -96,9 +106,10 @@
           "points": { "type": "number" },
           "rank": { "type": "number" },
           "user_id": { "type": "number" },
-          "user_name": { "type": ["string", "null"] }
+          "user_name": { "type": ["string", "null"] },
+          "attended": { "type": "number" }
         },
-        "required": ["points", "rank", "user_id"]
+        "required": ["points", "rank", "user_id", "attended"]
       },
       "GetPointDistributionResponse": {
         "type": "object",
@@ -124,25 +135,6 @@
           "currentTargetPointPercentageForTop",
           "adjustedTotalPoints",
           "pointDistribution"
-        ]
-      },
-      "TournamentType": {
-        "type": "string",
-        "enum": [
-          "GNK / seasonal",
-          "asynchronous tournament",
-          "circuit breaker",
-          "circuit opener",
-          "community tournament",
-          "continental championship",
-          "infinite recursion",
-          "intercontinental championship",
-          "national championship",
-          "online event",
-          "store championship",
-          "team tournament",
-          "worlds championship",
-          "regional championship"
         ]
       },
       "Faction": {
@@ -187,7 +179,7 @@
         "type": "object",
         "properties": {
           "id": { "type": "number" },
-          "code": { "type": "string" },
+          "code": { "$ref": "#/components/schemas/TournamentType" },
           "name": { "type": "string" },
           "points": { "type": "number" },
           "season": { "type": "number" },
@@ -225,22 +217,11 @@
         "tags": ["Auth"],
         "summary": "From the code supplied during the OAuth redirect, perform the secret exchange and create a token",
         "operationId": "get_GetTokenFromCode",
-        "parameters": [
-          {
-            "schema": { "type": "string" },
-            "required": true,
-            "name": "code",
-            "in": "query"
-          }
-        ],
+        "parameters": [{ "schema": { "type": "string" }, "required": true, "name": "code", "in": "query" }],
         "responses": {
           "200": {
             "description": "Blob containing the token and refresh_token",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenResponse" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } }
           }
         }
       }
@@ -250,22 +231,11 @@
         "tags": ["Auth"],
         "summary": "Attempts to create a new token from the given refresh_token",
         "operationId": "get_RefreshToken",
-        "parameters": [
-          {
-            "schema": { "type": "string" },
-            "required": true,
-            "name": "refresh_token",
-            "in": "query"
-          }
-        ],
+        "parameters": [{ "schema": { "type": "string" }, "required": true, "name": "refresh_token", "in": "query" }],
         "responses": {
           "200": {
             "description": "Blob containing the token and refresh_token",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/TokenResponse" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } }
           }
         }
       }
@@ -279,11 +249,7 @@
         "responses": {
           "200": {
             "description": "Your own user profile",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/User" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } }
           }
         }
       }
@@ -297,12 +263,7 @@
           "200": {
             "description": "List of all users",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/User" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } } }
             }
           }
         }
@@ -324,11 +285,7 @@
         "responses": {
           "200": {
             "description": "User Object",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/User" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } }
           }
         }
       }
@@ -340,41 +297,19 @@
         "operationId": "get_GetUserResults",
         "parameters": [
           {
-            "schema": {
-              "type": "string",
-              "description": "Name or ID of the user"
-            },
+            "schema": { "type": "string", "description": "Name or ID of the user" },
             "required": true,
             "name": "user",
             "in": "path"
           },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "season",
-            "in": "query"
-          },
-          {
-            "schema": { "type": "string" },
-            "required": false,
-            "name": "factionCode",
-            "in": "query"
-          },
-          {
-            "schema": { "$ref": "#/components/schemas/Format" },
-            "required": false,
-            "name": "format",
-            "in": "query"
-          }
+          { "schema": { "type": ["number", "null"] }, "required": false, "name": "season", "in": "query" },
+          { "schema": { "type": "string" }, "required": false, "name": "factionCode", "in": "query" },
+          { "schema": { "$ref": "#/components/schemas/Format" }, "required": false, "name": "format", "in": "query" }
         ],
         "responses": {
           "200": {
             "description": "Gets a list of all results for the given user and supplied filters",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/UserResultsResponse" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserResultsResponse" } } }
           }
         }
       }
@@ -385,34 +320,16 @@
         "summary": "Gets the current season's leaderboard",
         "operationId": "get_GetLeaderboard",
         "parameters": [
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "seasonId",
-            "in": "query"
-          },
-          {
-            "schema": { "type": "string" },
-            "required": false,
-            "name": "factionCode",
-            "in": "query"
-          },
-          {
-            "schema": { "$ref": "#/components/schemas/Format" },
-            "required": false,
-            "name": "format",
-            "in": "query"
-          }
+          { "schema": { "type": ["number", "null"] }, "required": false, "name": "seasonId", "in": "query" },
+          { "schema": { "type": "string" }, "required": false, "name": "factionCode", "in": "query" },
+          { "schema": { "$ref": "#/components/schemas/Format" }, "required": false, "name": "format", "in": "query" }
         ],
         "responses": {
           "200": {
             "description": "Returns a array of rows compromising the full leaderboard for the given season",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/LeaderboardRow" }
-                }
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LeaderboardRow" } }
               }
             }
           }
@@ -425,18 +342,8 @@
         "summary": "Tool to show distribution of points from various given parameters",
         "operationId": "get_GetPointDistribution",
         "parameters": [
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "totalPoints",
-            "in": "query"
-          },
-          {
-            "schema": { "type": ["number", "null"] },
-            "required": false,
-            "name": "numPlayers",
-            "in": "query"
-          },
+          { "schema": { "type": ["number", "null"] }, "required": false, "name": "totalPoints", "in": "query" },
+          { "schema": { "type": ["number", "null"] }, "required": false, "name": "numPlayers", "in": "query" },
           {
             "schema": { "$ref": "#/components/schemas/TournamentType" },
             "required": false,
@@ -448,11 +355,7 @@
           "200": {
             "description": "Returns a array of numbers representing the point distribution of the simulated tournament",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPointDistributionResponse"
-                }
-              }
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetPointDistributionResponse" } }
             }
           }
         }
@@ -467,12 +370,7 @@
           "200": {
             "description": "Returns an array Factions",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Faction" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Faction" } } }
             }
           }
         }
@@ -487,12 +385,7 @@
           "200": {
             "description": "Returns an array supported Formats",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Format" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Format" } } }
             }
           }
         }
@@ -507,12 +400,7 @@
           "200": {
             "description": "list of Seasons",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Season" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Season" } } }
             }
           }
         }
@@ -536,10 +424,7 @@
             "description": "list of Tournaments for the given season",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Tournament" }
-                }
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Tournament" } }
               }
             }
           }
@@ -556,10 +441,7 @@
             "description": "list of Tournaments",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Tournament" }
-                }
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Tournament" } }
               }
             }
           }
@@ -575,12 +457,7 @@
           "200": {
             "description": "Returns an array Tiers",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Tier" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Tier" } } }
             }
           }
         }
@@ -602,11 +479,7 @@
         "responses": {
           "200": {
             "description": "Full Tournament object",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Tournament" }
-              }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Tournament" } } }
           }
         }
       }
@@ -628,12 +501,7 @@
           "200": {
             "description": "List of Results from the supplied tournament",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Result" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Result" } } }
             }
           }
         }
@@ -648,11 +516,7 @@
         "responses": {
           "200": {
             "description": "Updates all user accounts to pull from NRDB",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": {} }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object", "properties": {} } } }
           }
         }
       }
@@ -714,10 +578,7 @@
                 "type": "object",
                 "properties": {
                   "userId": { "type": "number" },
-                  "tournamentType": {
-                    "type": "integer",
-                    "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-                  }
+                  "tournamentType": { "type": "integer", "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] }
                 }
               }
             }
@@ -726,11 +587,7 @@
         "responses": {
           "200": {
             "description": "Empty object indicates success on triggering ingestion.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": {} }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object", "properties": {} } } }
           }
         }
       }
@@ -744,11 +601,7 @@
         "responses": {
           "200": {
             "description": "Empty object indicates success on updating nrdb cards.",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": {} }
-              }
-            }
+            "content": { "application/json": { "schema": { "type": "object", "properties": {} } } }
           }
         }
       }

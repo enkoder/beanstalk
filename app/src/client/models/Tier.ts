@@ -7,7 +7,7 @@ import type { TournamentType } from './TournamentType';
 
 export type Tier = {
     id: number;
-    code: string;
+    code: TournamentType;
     name: string;
     points: number;
     season?: number;

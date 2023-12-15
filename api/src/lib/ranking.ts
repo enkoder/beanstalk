@@ -31,8 +31,8 @@ export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
 // We take the top values if a person attends more than the defined max
 export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> = {
   ["worlds championship"]: 1,
-  ["continental championship"]: 3,
-  ["national championship"]: 1,
+  ["continental championship"]: 1,
+  ["national championship"]: 3,
   ["intercontinental championship"]: 1,
   ["circuit opener"]: 5,
 };

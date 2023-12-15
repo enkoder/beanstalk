@@ -34,7 +34,7 @@ export function ExpandedSection({ results }: ExpandedSectionProps) {
     <div className={"flex flex-col"}>
       <table
         className={
-          "w-full table-auto border-separate border-spacing-0 text-gray-300"
+          "lx:text-lg w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 md:text-base"
         }
       >
         <tbody>
@@ -118,7 +118,7 @@ export function Leaderboard() {
       <FilterSection hasSearchBar={true} onParamChange={getLeaderboard} />
       <table
         className={
-          "w-full table-auto border-separate border-spacing-0 text-gray-300"
+          "w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
         }
       >
         <thead className={"sticky top-0 h-10 bg-slate-950 text-lg"}>

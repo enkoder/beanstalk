@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "^1.4.1",
     "@rspack/cli": "0.3.10",
     "@rspack/core": "0.3.10",
     "@types/jest": "^29.5.11",

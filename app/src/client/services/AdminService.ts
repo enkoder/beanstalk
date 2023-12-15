@@ -35,6 +35,20 @@ export class AdminService {
     }
 
     /**
+     * Exports the production DB
+     * @returns any How many tournaments were updated
+     * @throws ApiError
+     */
+    public static getExportDb(): CancelablePromise<{
+        tournamentsUpdated: number;
+    }> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/admin/exportDB',
+        });
+    }
+
+    /**
      * Triggers a background job to ingest tournament data from ABR.
      * @param requestBody
      * @returns any Empty object indicates success on triggering ingestion.

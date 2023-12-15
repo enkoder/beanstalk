@@ -44,26 +44,30 @@ export function Tournament() {
       <div className={"overflow-auto whitespace-nowrap text-lg"}>
         <table
           className={
-            "w-full table-auto border-separate border-spacing-0 text-gray-300"
+            "mt-4 w-full table-fixed border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
           }
         >
           <thead className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}>
             <tr className={"border-b"}>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
+                className={"w-1/3 border-b-2 border-solid border-gray-300 pl-4"}
               >
                 Placement
               </th>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
+                className={
+                  "w-1/3 border-b-2 border-solid border-gray-300 text-center"
+                }
               >
                 Player
               </th>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300"}
+                className={
+                  "w-1/3 border-b-2 border-solid border-gray-300 pr-4 text-right"
+                }
               >
                 Points
               </th>
@@ -72,13 +76,17 @@ export function Tournament() {
           <tbody>
             {results.map((result) => (
               <tr className={"text-left odd:bg-slate-900 even:bg-slate-950"}>
-                <td>{result.rank_cut ? result.rank_cut : result.rank_swiss}</td>
-                <td>
+                <td className={"w-1/3 pl-4 pr-4"}>
+                  {result.rank_cut ? result.rank_cut : result.rank_swiss}
+                </td>
+                <td className={"w-1/3 pr-4 text-center"}>
                   <Link to={`/results/${result.user_name}`}>
                     {result.user_name}
                   </Link>
                 </td>
-                <td>{result.points_earned.toFixed(2)}</td>
+                <td className={"w-1/3 pr-4 text-right"}>
+                  {result.points_earned.toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>

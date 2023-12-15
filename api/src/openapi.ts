@@ -26,6 +26,7 @@ export const ResultComponent = z
     points_earned: z.number(),
     tournament_id: z.number(),
     tournament_name: z.string(),
+    tournament_type: TournamentTypeComponent,
     players_count: z.number(),
     corp_deck_identity_id: z.number(),
     corp_deck_identity_name: z.string().nullable().optional(),
@@ -38,7 +39,8 @@ export const ResultComponent = z
     user_id: z.number(),
     user_name: z.string(),
     format: FormatComponent,
-    count_for_tournament_type: z.number(),
+    count_for_tournament_type: z.number().default(0),
+    is_valid: z.boolean(),
   })
   .openapi("Result");
 export type ResultComponentType = z.infer<typeof ResultComponent>;

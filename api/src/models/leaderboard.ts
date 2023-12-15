@@ -45,7 +45,7 @@ export class Leaderboards {
       if (a.points == b.points) {
         return b.attended - a.attended;
       }
-      return a.points - b.points;
+      return b.points - a.points;
     });
 
     for (let i = 0; i < sortedRows.length; i++) {

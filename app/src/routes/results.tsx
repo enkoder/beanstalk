@@ -2,6 +2,7 @@ import { Result, ResultsService, UserResultsResponse } from "../client";
 import { PageHeading } from "../stories/PageHeader";
 import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
 import { Link } from "../stories/Link";
+import { Tooltip } from "../stories/Tooltip";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { clsx } from "clsx";
@@ -131,34 +132,31 @@ export function Results() {
           </tr>
         </thead>
         <tbody>
-          {results &&
-            results.results.map((result) => (
-              <tr
-                className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-                key={results.user_id + "/" + result.tournament_id}
-              >
-                <td className={"whitespace-pre-wrap py-2"}>
-                  <span>
-                    <Link to={`/tournament/${result.tournament_id}`}>
-                      {result.tournament_name}
-                    </Link>
-                    <Link
-                      className={"pl-2 text-xs"}
-                      to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
-                    >
-                      (ABR)
-                    </Link>
-                  </span>
-                </td>
-                <td className={"py-2 align-middle"}>{Decks(result)}</td>
-                <td className={"py-2 text-center"}>
-                  {formatPlacement(result)}
-                </td>
-                <td className={"py-2 text-right"}>
-                  {result.points_earned.toFixed(2)}
-                </td>
-              </tr>
-            ))}
+          {results?.results.map((result) => (
+            <tr
+              className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+              key={results.user_id + "/" + result.tournament_id}
+            >
+              <td className={"whitespace-pre-wrap py-2"}>
+                <span>
+                  <Link to={`/tournament/${result.tournament_id}`}>
+                    {result.tournament_name}
+                  </Link>
+                  <Link
+                    className={"pl-2 text-xs"}
+                    to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                  >
+                    (ABR)
+                  </Link>
+                </span>
+              </td>
+              <td className={"py-2 align-middle"}>{Decks(result)}</td>
+              <td className={"py-2 text-center"}>{formatPlacement(result)}</td>
+              <Tooltip as={"td"} panel={<text>Tooltip</text>}>
+                <span>{result.points_earned.toFixed(2)}</span>
+              </Tooltip>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
