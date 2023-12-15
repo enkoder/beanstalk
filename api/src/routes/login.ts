@@ -1,10 +1,5 @@
 import { Env, RequestWithDB } from "../types.d.js";
-import {
-  AuthLoginBody,
-  AuthLoginSchema,
-  AuthRegisterSchema,
-  UserComponent,
-} from "../openapi";
+import { AuthLoginBody, AuthLoginSchema, AuthRegisterSchema, UserComponent } from "../openapi";
 import { signPassword, verifyPassword } from "../lib/auth.js";
 import { errorResponse } from "../lib/errors";
 import { Users } from "../models/user.js";
@@ -26,11 +21,7 @@ class AuthRegister extends OpenAPIRoute {
       return errorResponse(400, "Email is taken");
     }
 
-    const pw = await signPassword(
-      env.PASSWORD_SECRET_KEY,
-      body.email,
-      body.password,
-    );
+    const pw = await signPassword(env.PASSWORD_SECRET_KEY, body.email, body.password);
 
     user = await Users.insert({
       email: body.email,
@@ -45,26 +36,14 @@ class AuthRegister extends OpenAPIRoute {
 class AuthLogin extends OpenAPIRoute {
   static schema = AuthLoginSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    _: ExecutionContext,
-    data: Record<string, any>,
-  ) {
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: Record<string, any>) {
     const authLoginBody = AuthLoginBody.parse(data.body);
     const user = await Users.getByEmail(authLoginBody.email);
 
     if (!user) {
       return errorResponse(400, "Email not found");
     }
-    if (
-      !(await verifyPassword(
-        env.PASSWORD_SECRET_KEY,
-        authLoginBody.email,
-        authLoginBody.password,
-        user.password,
-      ))
-    ) {
+    if (!(await verifyPassword(env.PASSWORD_SECRET_KEY, authLoginBody.email, authLoginBody.password, user.password))) {
       return errorResponse(400, "Invalid password");
     }
 

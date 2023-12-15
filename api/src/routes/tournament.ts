@@ -30,7 +30,7 @@ export class GetTournaments extends OpenAPIRoute {
     return json(
       tournaments.map((tournament) => {
         TournamentComponent.parse(tournament);
-      }),
+      })
     );
   }
 }
@@ -40,15 +40,11 @@ export class GetTournamentResults extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const tournamentId = req.params!["tournamentId"];
-    const results = await Results.getByTournamentIdExpanded(
-      Number(tournamentId),
-    );
+    const results = await Results.getByTournamentIdExpanded(Number(tournamentId));
     return json(
       results
-        .sort((a, b) =>
-          (a.rank_cut || a.rank_swiss) > (b.rank_cut || b.rank_swiss) ? 1 : -1,
-        )
-        .map((result) => ResultComponent.parse(result)),
+        .sort((a, b) => ((a.rank_cut || a.rank_swiss) > (b.rank_cut || b.rank_swiss) ? 1 : -1))
+        .map((result) => ResultComponent.parse(result))
     );
   }
 }

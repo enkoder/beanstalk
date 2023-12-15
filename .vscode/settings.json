@@ -1,0 +1,23 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "json",
+    "jsonc"
+  ],
+  "eslint.run": "onSave",
+  "eslint.codeActionsOnSave.rules": null,
+  "prettier.configPath": ".prettierrc",
+  "prettier.printWidth": 120,
+  "prettier.trailingComma": "es5",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.useEditorConfig": false
+}

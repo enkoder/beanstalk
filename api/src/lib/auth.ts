@@ -5,24 +5,16 @@ import { Users } from "../models/user.js";
 import { PrivateAccountInfoType } from "../openapi";
 //import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
 
-export async function signPassword(
-  key: string,
-  email: string,
-  rawPassword: string,
-): Promise<string> {
+export async function signPassword(key: string, email: string, rawPassword: string): Promise<string> {
   const encoder = new TextEncoder();
   const cryptoKey = await crypto.subtle.importKey(
     "raw",
     encoder.encode(key),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"],
+    ["sign"]
   );
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    cryptoKey,
-    encoder.encode(`${email}/${rawPassword}`),
-  );
+  const signature = await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(`${email}/${rawPassword}`));
 
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
@@ -40,7 +32,7 @@ export async function verifyPassword(
   key: string,
   email: string,
   rawPassword: string,
-  signedPassword: string,
+  signedPassword: string
 ): Promise<boolean> {
   const encoder = new TextEncoder();
   const cryptoKey = await crypto.subtle.importKey(
@@ -48,17 +40,12 @@ export async function verifyPassword(
     encoder.encode(key),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["verify"],
+    ["verify"]
   );
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
   const sigBuf = Uint8Array.from(atob(signedPassword), (c) => c.charCodeAt(0));
 
-  return await crypto.subtle.verify(
-    "HMAC",
-    cryptoKey,
-    sigBuf,
-    encoder.encode(`${email}/${rawPassword}`),
-  );
+  return await crypto.subtle.verify("HMAC", cryptoKey, sigBuf, encoder.encode(`${email}/${rawPassword}`));
 }
 
 //async function validateToken(token: string, env: Env) {

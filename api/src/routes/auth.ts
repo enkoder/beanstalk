@@ -67,10 +67,7 @@ export class RefreshToken extends OpenAPIRoute {
 
     const r = await fetch(nrdbUrl.toString());
     if (!r.ok) {
-      return error(
-        400,
-        `Error during token refresh exchange - ${await r.text()}`,
-      );
+      return error(400, `Error during token refresh exchange - ${await r.text()}`);
     }
 
     const jsonBody = await r.json();

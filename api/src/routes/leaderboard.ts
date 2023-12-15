@@ -14,10 +14,7 @@ import {
   TierComponentType,
 } from "../openapi.js";
 import { RequestWithDB } from "../types.d.js";
-import {
-  calculateTournamentPointDistribution,
-  TOURNAMENT_POINTS,
-} from "../lib/ranking.js";
+import { calculateTournamentPointDistribution, TOURNAMENT_POINTS } from "../lib/ranking.js";
 import { Leaderboards } from "../models/leaderboard.js";
 import { Formats } from "../models/tournament.js";
 import { ABRTournamentTypeFilter } from "../lib/abr.js";
@@ -30,16 +27,12 @@ export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB) {
-    const seasonId = req.query!["seasonId"]
-      ? Number(req.query!["seasonId"])
-      : undefined;
+    const seasonId = req.query!["seasonId"] ? Number(req.query!["seasonId"]) : undefined;
 
     const factionCode = req.query!["factionCode"];
     const format = req.query!["format"] as Format;
 
-    const faction = factionCode
-      ? getFactionFromCode(factionCode as FactionCode)
-      : undefined;
+    const faction = factionCode ? getFactionFromCode(factionCode as FactionCode) : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
     const results = await Leaderboards.getExpanded({
@@ -63,8 +56,7 @@ export class GetPointDistribution extends OpenAPIRoute {
     const numPlayers = Number(req.query["numPlayers"]);
     const type = req.query["type"] as TournamentType;
 
-    const { points, adjustedTotalPoints } =
-      calculateTournamentPointDistribution(totalPoints, numPlayers, type);
+    const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(totalPoints, numPlayers, type);
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {
@@ -84,7 +76,7 @@ export class GetPointDistribution extends OpenAPIRoute {
             cumulative: Number(cumulative[index].toFixed(2)),
           };
         }),
-      }),
+      })
     );
   }
 }

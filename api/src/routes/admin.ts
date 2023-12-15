@@ -9,10 +9,7 @@ import {
 } from "../openapi.js";
 import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
-import {
-  calculateTournamentPointDistribution,
-  TOURNAMENT_POINTS,
-} from "../lib/ranking.js";
+import { calculateTournamentPointDistribution, TOURNAMENT_POINTS } from "../lib/ranking.js";
 import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
@@ -21,10 +18,7 @@ import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 import pLimit from "p-limit";
 import { parseISO } from "date-fns";
-import {
-  createBackup,
-  CreateBackupOptions,
-} from "@nora-soderlund/cloudflare-d1-backups";
+import { createBackup, CreateBackupOptions } from "@nora-soderlund/cloudflare-d1-backups";
 
 export class Rerank extends OpenAPIRoute {
   static schema = RerankSchema;
@@ -42,10 +36,7 @@ export class Rerank extends OpenAPIRoute {
           continue;
         }
 
-        const { points } = calculateTournamentPointDistribution(
-          TOURNAMENT_POINTS[tournament.type],
-          results.length,
-        );
+        const { points } = calculateTournamentPointDistribution(TOURNAMENT_POINTS[tournament.type], results.length);
 
         for (let i = 0; i < results.length; i++) {
           const result = results[i];
@@ -107,12 +98,8 @@ export class UpdateCards extends OpenAPIRoute {
     console.log(chunkedCards.length);
     await Promise.all(
       chunkedCards.map((chunk) =>
-        limit(() =>
-          env.INGEST_CARD_Q.sendBatch(
-            chunk.map((card) => ({ body: card, contentType: "json" })),
-          ),
-        ),
-      ),
+        limit(() => env.INGEST_CARD_Q.sendBatch(chunk.map((card) => ({ body: card, contentType: "json" }))))
+      )
     );
 
     return json({});
@@ -135,10 +122,7 @@ export class UpdateTournamentSeasons extends OpenAPIRoute {
 
       const tournamentDate = parseISO(tournament.date);
       for (const season of seasons) {
-        if (
-          tournamentDate >= parseISO(season.started_at) &&
-          tournamentDate <= parseISO(season.ended_at)
-        ) {
+        if (tournamentDate >= parseISO(season.started_at) && tournamentDate <= parseISO(season.ended_at)) {
           tournament.season_id = season.id;
           await Tournaments.update(tournament);
           count += 1;

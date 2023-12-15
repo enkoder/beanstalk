@@ -22,11 +22,7 @@ export const TournamentTypes = [
 
 export class Tournaments {
   public static async get(id: number): Promise<Tournament> {
-    return await getDB()
-      .selectFrom("tournaments")
-      .selectAll()
-      .where("id", "=", id)
-      .executeTakeFirst();
+    return await getDB().selectFrom("tournaments").selectAll().where("id", "=", id).executeTakeFirst();
   }
 
   public static async getAll(): Promise<Tournament[]> {
@@ -34,11 +30,7 @@ export class Tournaments {
   }
 
   public static async getBySeasonId(season_id: number): Promise<Tournament[]> {
-    return getDB()
-      .selectFrom("tournaments")
-      .selectAll()
-      .where("tournaments.season_id", "=", season_id)
-      .execute();
+    return getDB().selectFrom("tournaments").selectAll().where("tournaments.season_id", "=", season_id).execute();
   }
 
   public static async getCountFromIds(ids: number[]): Promise<number> {
@@ -58,9 +50,7 @@ export class Tournaments {
       .execute();
   }
 
-  public static async getAllExpandedFromSeasonId(
-    seasonId: number,
-  ): Promise<Tournament[]> {
+  public static async getAllExpandedFromSeasonId(seasonId: number): Promise<Tournament[]> {
     return await getDB()
       .selectFrom("tournaments")
       .innerJoin("seasons", "seasons.id", "tournaments.season_id")
@@ -71,16 +61,11 @@ export class Tournaments {
   }
 
   public static async getAllIds(): Promise<number[]> {
-    const results = await getDB()
-      .selectFrom("tournaments")
-      .select("id")
-      .execute();
+    const results = await getDB().selectFrom("tournaments").select("id").execute();
     return results.map((row) => row.id);
   }
 
-  public static async update(
-    tournament: UpdateTournament,
-  ): Promise<Tournament> {
+  public static async update(tournament: UpdateTournament): Promise<Tournament> {
     return await getDB()
       .updateTable("tournaments")
       .where("id", "=", tournament.id)
@@ -89,10 +74,7 @@ export class Tournaments {
       .executeTakeFirst();
   }
 
-  public static async insert(
-    tournament: UpdateTournament,
-    overwriteOnConflict: boolean = true,
-  ): Promise<Tournament> {
+  public static async insert(tournament: UpdateTournament, overwriteOnConflict: boolean = true): Promise<Tournament> {
     return await getDB()
       .insertInto("tournaments")
       .values(tournament)

@@ -33,19 +33,14 @@ export async function getNameFromId(id: number): Promise<string> {
   return html.querySelector("title").innerText.split("&middot;")[0].trim();
 }
 
-export async function getPrivateAccountInfo(
-  token: string,
-): Promise<PrivateAccountInfoType> {
+export async function getPrivateAccountInfo(token: string): Promise<PrivateAccountInfoType> {
   const url = new URL(`${NRDB_BASE_URL}/api/2.0/private/account/info`);
   const resp = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!resp.ok) {
     // TODO: actually use the NRDB error
-    throw new HttpError(
-      401,
-      `Could not fetch private info from nrdb api - ${await resp.text()}`,
-    );
+    throw new HttpError(401, `Could not fetch private info from nrdb api - ${await resp.text()}`);
   }
   const respBody = await resp.json();
   const nrdbResponse = NRDBResponse.parse(respBody);

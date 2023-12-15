@@ -8,6 +8,7 @@ let _db: Kysely<Database> | null = null;
 
 export function initDB(db: D1Database) {
   _db = new Kysely<Database>({
+    // @ts-ignore
     dialect: new D1Dialect({ database: db }),
     //log(event) {
     //  if (event.level === "query") {

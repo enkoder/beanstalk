@@ -29,14 +29,13 @@ export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
 
 // Defines the number of tournaments a person can get points for
 // We take the top values if a person attends more than the defined max
-export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
-  {
-    ["worlds championship"]: 1,
-    ["continental championship"]: 1,
-    ["national championship"]: 1,
-    ["intercontinental championship"]: 3,
-    ["circuit opener"]: 5,
-  };
+export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> = {
+  ["worlds championship"]: 1,
+  ["continental championship"]: 3,
+  ["national championship"]: 1,
+  ["intercontinental championship"]: 1,
+  ["circuit opener"]: 5,
+};
 
 /**
  * Given the various input params, calculates the point distribution for a tournament.
@@ -54,7 +53,7 @@ export function calculateTournamentPointDistribution(
   tournamentType?: TournamentType,
   firstPlacePercentage: number = PERCENT_FOR_FIRST_PLACE,
   percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
-  extraPointsPerPerson: number = EXTRA_POINTS_PER_PERSON,
+  extraPointsPerPerson: number = EXTRA_POINTS_PER_PERSON
 ) {
   // Interconts is winner take all!!
   if (tournamentType === "intercontinental championship") {
@@ -125,9 +124,7 @@ export function calculateTournamentPointDistribution(
 
   // Check to see we actually found an acceptable distribution
   if (sum < adjustedTotalPoints * 0.98 || sum > adjustedTotalPoints * 1.02) {
-    throw new Error(
-      `Error - invalid distribution. Targeting total of ${adjustedTotalPoints}, but found ${sum}`,
-    );
+    throw new Error(`Error - invalid distribution. Targeting total of ${adjustedTotalPoints}, but found ${sum}`);
   }
 
   // we got there!

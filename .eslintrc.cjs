@@ -1,10 +1,6 @@
 /* eslint-env node */
 module.exports = {
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "import"],
   root: true,
@@ -32,16 +28,7 @@ module.exports = {
     "import/order": [
       "error",
       {
-        groups: [
-          "index",
-          "sibling",
-          "parent",
-          "internal",
-          "external",
-          "builtin",
-          "object",
-          "type",
-        ],
+        groups: ["index", "sibling", "parent", "internal", "external", "builtin", "object", "type"],
       },
     ],
   },

@@ -14,6 +14,9 @@ importers:
       '@rspack/core':
         specifier: 0.3.10
         version: 0.3.10
+      '@types/jest':
+        specifier: ^29.5.11
+        version: 29.5.11
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.14.0
         version: 6.14.0(@typescript-eslint/parser@6.14.0)(eslint@8.55.0)(typescript@5.3.3)
@@ -18368,7 +18371,7 @@ packages:
       webpack:
         optional: true
     dependencies:
-      colorette: 2.0.20
+      colorette: 2.0.19
       memfs: 3.5.3
       mime-types: 2.1.35
       range-parser: 1.2.1

@@ -1,13 +1,19 @@
-import {
-  Faction,
-  Format,
-  Result,
-  Season,
-  Tournament,
-  TournamentType,
-  User,
-} from "../schema.js";
+import { Faction, Format, Result, Season, Tournament, TournamentType, User } from "../schema.js";
 import { Factions } from "../models/factions.js";
+
+export function url({ season, faction, format }: { season?: Season; faction?: Faction; format?: Format }) {
+  const url = new URL("http://localhost:8787/api/leaderboard");
+  if (season) {
+    url.searchParams.append("seasonId", String(season.id));
+  }
+  if (faction) {
+    url.searchParams.append("factionCode", faction.code);
+  }
+  if (format) {
+    url.searchParams.append("format", format);
+  }
+  return url;
+}
 
 type ResultArgs = {
   tournament: Tournament;
@@ -17,13 +23,7 @@ type ResultArgs = {
   corpFaction?: Faction;
 };
 
-export function resultFactory({
-  tournament,
-  user,
-  points,
-  runnerFaction,
-  corpFaction,
-}: ResultArgs) {
+export function result({ tournament, user, points, runnerFaction, corpFaction }: ResultArgs) {
   return {
     tournament_id: tournament.id,
     user_id: user.id,
@@ -49,13 +49,7 @@ type TournamentArgs = {
   format?: Format;
 };
 
-export function tournamentFactory({
-  id,
-  name,
-  season,
-  type,
-  format,
-}: TournamentArgs) {
+export function tournament({ id, name, season, type, format }: TournamentArgs) {
   return {
     id: id,
     name: name || "test name",
@@ -74,7 +68,7 @@ type UserArgs = {
   isAdmin?: number;
 };
 
-export function userFactory({ id, isAdmin }: UserArgs) {
+export function user({ id, isAdmin }: UserArgs) {
   return {
     id: id,
     name: `user${id} name`,
@@ -84,20 +78,12 @@ export function userFactory({ id, isAdmin }: UserArgs) {
   } as User;
 }
 
-export function usersFactory(num: number, startId: number = 0) {
-  const retArr: User[] = [];
-  for (let i = startId; i < num + startId; i++) {
-    retArr.push(userFactory({ id: i }));
-  }
-  return retArr;
-}
-
 type SeasonArgs = {
   id: number;
   endedAt?: string | null;
 };
 
-export function seasonFactory({ id, endedAt = null }: SeasonArgs) {
+export function season({ id, endedAt = null }: SeasonArgs) {
   return {
     id: id,
     name: `season${id} name`,

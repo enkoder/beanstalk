@@ -20,7 +20,7 @@ export async function initMf() {
     d1Databases: ["DB"],
     scriptPath: "./dist/index.js",
     modules: true,
-    modulesRules: [{ type: "ESModule", include: ["**/*.js"] }],
+    modulesRules: [{ type: "ESModule", include: ["**/*.ts"] }],
     verbose: true,
   });
 

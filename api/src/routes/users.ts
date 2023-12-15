@@ -67,9 +67,7 @@ export class GetUserResults extends OpenAPIRoute {
     const format = req.query["format"] as Format;
 
     const factionCode = req.query["factionCode"];
-    const faction = factionCode
-      ? getFactionFromCode(factionCode as FactionCode)
-      : undefined;
+    const faction = factionCode ? getFactionFromCode(factionCode as FactionCode) : undefined;
 
     let seasonName: string = undefined;
     let seasonId: number = undefined;

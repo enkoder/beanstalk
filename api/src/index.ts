@@ -10,28 +10,15 @@ import {
 import { Env, RequestWithDB } from "./types.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
-import {
-  GetFactions,
-  GetFormats,
-  GetLeaderboard,
-  GetPointDistribution,
-  GetTiers,
-} from "./routes/leaderboard.js";
+import { GetFactions, GetFormats, GetLeaderboard, GetPointDistribution, GetTiers } from "./routes/leaderboard.js";
 import { GetSeasons, GetSeasonTournaments } from "./routes/seasons.js";
 import { handleQueue, handleScheduled } from "./background.js";
 import { getDB, initDB } from "./models/db.js";
-import {
-  GetTournament,
-  GetTournamentResults,
-  GetTournaments,
-} from "./routes/tournament.js";
+import { GetTournament, GetTournamentResults, GetTournaments } from "./routes/tournament.js";
 import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth.js";
 import { createCors, error, json } from "itty-router";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
-import type {
-  ExecutionContext,
-  Request as WorkerRequest,
-} from "@cloudflare/workers-types/experimental";
+import type { ExecutionContext, Request as WorkerRequest } from "@cloudflare/workers-types/experimental";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);

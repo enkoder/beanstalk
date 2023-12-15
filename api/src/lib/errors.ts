@@ -17,6 +17,6 @@ export function errorResponse(status: number, msg: string) {
     },
     {
       status: status,
-    },
+    }
   );
 }

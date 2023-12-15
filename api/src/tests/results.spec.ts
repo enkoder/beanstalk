@@ -1,10 +1,5 @@
 import { getMF, initMf, wipeDB } from "./setup.js";
-import {
-  resultFactory,
-  seasonFactory,
-  tournamentFactory,
-  userFactory,
-} from "./factories.js";
+import { result, season, tournament, user } from "./factories.js";
 import { Results } from "../models/results.js";
 import { Users } from "../models/user.js";
 import { Tournaments } from "../models/tournament.js";
@@ -24,33 +19,21 @@ describe("results", () => {
   });
 
   test("check empty state", async () => {
-    const u = await Users.insert(userFactory({ id: 0 }));
+    const u = await Users.insert(user({ id: 0 }));
     const rows = await Results.getExpanded({ userId: u.id });
     expect(rows.length).toEqual(0);
   });
 
   test("check simple sum", async () => {
-    const u = await Users.insert(userFactory({ id: 0 }));
+    const u = await Users.insert(user({ id: 0 }));
 
-    const t0 = await Tournaments.insert(
-      tournamentFactory({ id: 0, name: "test" }),
-    );
-    const t1 = await Tournaments.insert(
-      tournamentFactory({ id: 1, name: "test" }),
-    );
-    const t2 = await Tournaments.insert(
-      tournamentFactory({ id: 2, name: "test" }),
-    );
+    const t0 = await Tournaments.insert(tournament({ id: 0, name: "test" }));
+    const t1 = await Tournaments.insert(tournament({ id: 1, name: "test" }));
+    const t2 = await Tournaments.insert(tournament({ id: 2, name: "test" }));
 
-    await Results.insert(
-      resultFactory({ tournament: t0, user: u, points: 100 }),
-    );
-    await Results.insert(
-      resultFactory({ tournament: t1, user: u, points: 100 }),
-    );
-    await Results.insert(
-      resultFactory({ tournament: t2, user: u, points: 100 }),
-    );
+    await Results.insert(result({ tournament: t0, user: u, points: 100 }));
+    await Results.insert(result({ tournament: t1, user: u, points: 100 }));
+    await Results.insert(result({ tournament: t2, user: u, points: 100 }));
 
     const rows = await Results.getExpanded({ userId: u.id });
     expect(rows.length).toEqual(3);
@@ -61,20 +44,14 @@ describe("results", () => {
   });
 
   test("check season filter", async () => {
-    const u = await Users.insert(userFactory({ id: 0 }));
-    const s = await Seasons.insert(seasonFactory({ id: 0 }));
+    const u = await Users.insert(user({ id: 0 }));
+    const s = await Seasons.insert(season({ id: 0 }));
 
-    const t0 = await Tournaments.insert(tournamentFactory({ id: 0 }));
-    const t1 = await Tournaments.insert(
-      tournamentFactory({ id: 1, season: s }),
-    );
+    const t0 = await Tournaments.insert(tournament({ id: 0 }));
+    const t1 = await Tournaments.insert(tournament({ id: 1, season: s }));
 
-    await Results.insert(
-      resultFactory({ tournament: t0, user: u, points: 100 }),
-    );
-    await Results.insert(
-      resultFactory({ tournament: t1, user: u, points: 100 }),
-    );
+    await Results.insert(result({ tournament: t0, user: u, points: 100 }));
+    await Results.insert(result({ tournament: t1, user: u, points: 100 }));
 
     const rows = await Results.getExpanded({ userId: u.id, seasonId: s.id });
     expect(rows.length).toEqual(1);

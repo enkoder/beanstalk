@@ -18,12 +18,7 @@
           "expires_in": { "type": "number" },
           "token_type": { "type": "string" }
         },
-        "required": [
-          "access_token",
-          "refresh_token",
-          "expires_in",
-          "token_type"
-        ]
+        "required": ["access_token", "refresh_token", "expires_in", "token_type"]
       },
       "User": {
         "type": "object",
@@ -186,16 +181,7 @@
           "season_name": { "type": "string" },
           "season_tier": { "type": "string" }
         },
-        "required": [
-          "id",
-          "name",
-          "date",
-          "players_count",
-          "location",
-          "format",
-          "type",
-          "season_id"
-        ]
+        "required": ["id", "name", "date", "players_count", "location", "format", "type", "season_id"]
       },
       "Tier": {
         "type": "object",

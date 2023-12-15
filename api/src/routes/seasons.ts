@@ -1,9 +1,4 @@
-import {
-  GetSeasonsSchema,
-  GetSeasonTournamentsSchema,
-  SeasonComponent,
-  TournamentComponent,
-} from "../openapi.js";
+import { GetSeasonsSchema, GetSeasonTournamentsSchema, SeasonComponent, TournamentComponent } from "../openapi.js";
 import { RequestWithDB } from "../types.d.js";
 import { Seasons } from "../models/season.js";
 import { Tournaments } from "../models/tournament.js";
@@ -24,11 +19,7 @@ export class GetSeasonTournaments extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const seasonId = req.params!["seasonId"];
-    const tournaments = await Tournaments.getAllExpandedFromSeasonId(
-      Number(seasonId),
-    );
-    return json(
-      tournaments.map((tournament) => TournamentComponent.parse(tournament)),
-    );
+    const tournaments = await Tournaments.getAllExpandedFromSeasonId(Number(seasonId));
+    return json(tournaments.map((tournament) => TournamentComponent.parse(tournament)));
   }
 }

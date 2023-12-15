@@ -58,10 +58,7 @@ export const ABRTournament = z.object({
   winner_corp_identity: z.string().optional(),
 });
 
-export function abrToTournament(
-  abr: ABRTournamentType,
-  seasonId: number | null,
-): Tournament {
+export function abrToTournament(abr: ABRTournamentType, seasonId: number | null): Tournament {
   return {
     id: abr.id,
     name: abr.title,
@@ -146,10 +143,7 @@ export async function getTournamentsByUserId(id: number) {
   return await _getTournaments(url);
 }
 
-export async function getTournaments(
-  offset: number | null,
-  limit: number | null,
-): Promise<ABRTournamentType[]> {
+export async function getTournaments(offset: number | null, limit: number | null): Promise<ABRTournamentType[]> {
   const url = new URL(`${ABR_BASE_URL}/tournaments/results`);
   if (offset) {
     url.searchParams.append("offset", String(offset));
@@ -160,9 +154,7 @@ export async function getTournaments(
   return _getTournaments(url);
 }
 
-export async function getEntries(
-  tournament_id: number,
-): Promise<ABREntryType[]> {
+export async function getEntries(tournament_id: number): Promise<ABREntryType[]> {
   const retArr: ABREntryType[] = [];
 
   const url = new URL(`${ABR_BASE_URL}/entries`);
