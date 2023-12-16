@@ -4,12 +4,13 @@
 /* eslint-disable */
 
 export type GetPointDistributionResponse = {
-  currentTargetTopPercentage: number;
-  currentTargetPointPercentageForTop: number;
-  adjustedTotalPoints: number;
-  pointDistribution: Array<{
-    placement: number;
-    points: number;
-    cumulative: number;
-  }>;
+    currentTargetTopPercentage: number;
+    currentTargetPointPercentageForTop: number;
+    adjustedTotalPoints: number;
+    pointDistribution: Array<{
+        placement: number;
+        points: number;
+        cumulative: number;
+    }>;
 };
+

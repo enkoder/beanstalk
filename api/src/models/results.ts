@@ -18,8 +18,9 @@ export type ResultExpanded = ResultsTable & {
   is_valid: boolean;
 };
 
-type getExpandedOptions = {
+type GetExpandedOptions = {
   userId?: number | null;
+  tournamentId?: number | null;
   seasonId?: number | null;
   faction?: Faction | null;
   format?: Format | null;
@@ -36,31 +37,14 @@ export async function get(user_id: number, tournament_id: number) {
 export async function getAll() {
   return await getDB().selectFrom("results").selectAll().execute();
 }
-export async function getByTournamentIdExpanded(tournamentId: number) {
-  // TODO: make generic
-  const q = getDB()
-    .selectFrom("results")
-    .selectAll()
-    .innerJoin("users", "users.id", "results.user_id")
-    .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
-    .select([
-      "users.name as user_name",
-      "tournaments.name as tournament_name",
-      "tournaments.players_count as players_count",
-      "tournaments.format as format",
-    ])
-    .orderBy(["results.rank_cut", "results.rank_swiss"])
-    .where("tournament_id", "=", tournamentId);
-
-  return await q.execute();
-}
 
 export async function getExpanded({
   userId = null,
+  tournamentId = null,
   seasonId = null,
   faction = null,
   format = null,
-}: getExpandedOptions): Promise<ResultExpanded[]> {
+}: GetExpandedOptions): Promise<ResultExpanded[]> {
   let q = getDB()
     .selectFrom("results")
     .selectAll()

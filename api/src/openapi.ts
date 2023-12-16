@@ -192,7 +192,7 @@ export const GetOAuthLoginURLSchema = {
   responses: {
     "200": {
       description: "Object containing the auth_url",
-      schema: z.object({ auth_url: z.string() }),
+      schema: z.string(),
     },
   },
 };

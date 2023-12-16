@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Result, Tournament, TournamentService } from "../client";
 import { Link } from "../stories/Link";
@@ -10,27 +10,17 @@ type TournamentParams = {
 
 export function TournamentPage() {
   const params = useParams<TournamentParams>();
-  const [results, setResults] = useState<Result[]>([]);
-  const [tournament, setTournament] = useState<Tournament>();
+  const tournamentId = Number(params.tournament);
 
-  const fetchResults = useCallback(async (tournamentId: number) => {
-    TournamentService.getGetTournamentResults(tournamentId).then((results) => {
-      setResults(results);
-    });
-  }, []);
+  const { data: results } = useQuery<Result[]>({
+    queryKey: ["tournamentResults", tournamentId],
+    queryFn: () => TournamentService.getGetTournamentResults(tournamentId),
+  });
 
-  const fetchTournament = useCallback(async (tournamentId: number) => {
-    TournamentService.getGetTournament(tournamentId).then((t) => {
-      setTournament(t);
-    });
-  }, []);
-
-  useEffect(() => {
-    const tournamentId = Number(params.tournament);
-    fetchResults(tournamentId).catch((e) => console.log(e));
-    fetchTournament(tournamentId).catch((e) => console.log(e));
-    return () => {};
-  }, [params.tournament, fetchTournament, fetchResults]);
+  const { data: tournament } = useQuery<Tournament>({
+    queryKey: ["tournament", tournamentId],
+    queryFn: () => TournamentService.getGetTournament(tournamentId),
+  });
 
   return (
     <>
@@ -73,23 +63,25 @@ export function TournamentPage() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {results.map((result) => (
-              <tr className={"text-left odd:bg-slate-900 even:bg-slate-950"}>
-                <td className={"w-1/3 pl-4 pr-4"}>
-                  {result.rank_cut ? result.rank_cut : result.rank_swiss}
-                </td>
-                <td className={"w-1/3 pr-4 text-center"}>
-                  <Link to={`/results/${result.user_name}`}>
-                    {result.user_name}
-                  </Link>
-                </td>
-                <td className={"w-1/3 pr-4 text-right"}>
-                  {result.points_earned.toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {results && (
+            <tbody>
+              {results.map((result) => (
+                <tr className={"text-left odd:bg-slate-900 even:bg-slate-950"}>
+                  <td className={"w-1/3 pl-4 pr-4"}>
+                    {result.rank_cut ? result.rank_cut : result.rank_swiss}
+                  </td>
+                  <td className={"w-1/3 pr-4 text-center"}>
+                    <Link to={`/results/${result.user_name}`}>
+                      {result.user_name}
+                    </Link>
+                  </td>
+                  <td className={"w-1/3 pr-4 text-right"}>
+                    {result.points_earned.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
     </>

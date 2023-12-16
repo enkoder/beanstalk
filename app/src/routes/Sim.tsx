@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { FormEvent, useState } from "react";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
@@ -10,17 +11,17 @@ import { Select } from "../stories/Select";
 
 export function Sim() {
   const [selectedTier, setSelectedTier] = useState<Tier | undefined>();
-  const [tiers, setTiers] = useState<Tier[]>([]);
   const [numPlayers, setNumPlayers] = useState<number>(32);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
-  useEffect(() => {
-    LeaderboardService.getGetTiers().then((tiers) => {
-      setTiers(tiers);
-      setSelectedTier(tiers[0]);
-    });
-  }, []);
+  const { data: tiers } = useQuery<Tier[]>({
+    queryKey: ["tiers"],
+    queryFn: () => LeaderboardService.getGetTiers(),
+  });
+  React.useEffect(() => {
+    if (tiers) setSelectedTier(tiers[0]);
+  }, [tiers]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -49,7 +50,7 @@ export function Sim() {
         <Select
           width={"w-full"}
           label={"Tournament / Beans"}
-          items={tiers}
+          items={tiers || []}
           selected={selectedTier}
           renderItem={(t) => {
             return t !== undefined ? (

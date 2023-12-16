@@ -1,17 +1,16 @@
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
-import { useLoaderData } from "react-router-dom";
 import { Season, SeasonsService } from "../client";
 import { Link } from "../stories/Link";
 import { PageHeading } from "../stories/PageHeader";
 
-export async function SeasonsLoader() {
-  return SeasonsService.getGetSeasons();
-}
-
 const DT_FORMAT = "MMMM DD YYYY";
 
 export function Seasons() {
-  const seasons = useLoaderData() as Season[];
+  const { data: seasons } = useQuery<Season[]>({
+    queryKey: ["seasons"],
+    queryFn: () => SeasonsService.getGetSeasons(),
+  });
 
   return (
     <>

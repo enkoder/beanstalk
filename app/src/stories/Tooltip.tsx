@@ -60,7 +60,15 @@ export function Tooltip({
   };
 
   return (
-    <Popover as={as} className={"relative h-full w-full"}>
+    <Popover
+      as={as}
+      className={twMerge(
+        clsx(
+          className,
+          "relative h-full w-full z-100 rounded-lg bg-gray-900 text-sm text-cyan-400 shadow-sm",
+        ),
+      )}
+    >
       {({ open }) => {
         return (
           <>
@@ -88,12 +96,9 @@ export function Tooltip({
                   ref={setPopperElement}
                   style={styles.popper}
                   {...attributes.popper}
-                  className={twMerge(
-                    clsx(
-                      className,
-                      "z-100 rounded-lg bg-gray-900 text-sm text-cyan-400 shadow-sm",
-                    ),
-                  )}
+                  className={
+                    "z-100 rounded-lg bg-gray-900 text-sm text-cyan-400 shadow-sm"
+                  }
                 >
                   <div
                     className="overflow-hidden rounded-lg shadow-lg"

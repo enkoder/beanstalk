@@ -40,9 +40,9 @@ export class GetTournamentResults extends OpenAPIRoute {
 
   async handle(req: RequestWithDB) {
     const tournamentId = req.params?.tournamentId;
-    const results = await Results.getByTournamentIdExpanded(
-      Number(tournamentId),
-    );
+    const results = await Results.getExpanded({
+      tournamentId: Number(tournamentId),
+    });
     return json(
       results
         .sort((a, b) =>

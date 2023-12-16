@@ -23,7 +23,7 @@ export class GetLoginUrl extends OpenAPIRoute {
     nrdbUrl.searchParams.append("response_type", "code");
     nrdbUrl.searchParams.append("scope", "");
     nrdbUrl.searchParams.append("type", "web_server");
-    return json({ auth_url: nrdbUrl.toString() });
+    return json(nrdbUrl.toString());
   }
 }
 

@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthService, TokenResponse, User, UserService } from "./client";
 
 interface AuthContextType {
@@ -34,11 +34,12 @@ export function AuthProvider({
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const _storeTokens = (tokenResponse: TokenResponse) => {
+  function _storeTokens(tokenResponse: TokenResponse) {
     localStorage.setItem("access_token", tokenResponse.access_token);
     localStorage.setItem("refresh_token", tokenResponse.refresh_token);
-  };
+  }
 
   const fetchUser = useCallback(async () => {
     try {
@@ -60,7 +61,7 @@ export function AuthProvider({
         }
       }
     }
-  }, [_storeTokens]);
+  }, []);
 
   // on first attempt, try to load the user or refresh the token
   useEffect(() => {
@@ -71,14 +72,14 @@ export function AuthProvider({
     return () => {
       setLoading(false);
     };
-  }, [fetchUser]);
+  }, []);
 
   // if the cookies change, store them in the local storage
   // Reset the error state if we change page
   useEffect(() => {
     if (error) setError(undefined);
     return () => {};
-  }, [error]);
+  }, [location.pathname]);
 
   // Flags the component loading state and posts the login data to the server.
   // An error means that the email/password combination is not valid.

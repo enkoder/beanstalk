@@ -1,11 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import {
-  ChangeEvent,
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, HTMLAttributes, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Factions } from "../../../api/src/models/factions";
 import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
@@ -127,59 +122,34 @@ export function FilterSection({
   const values = getFilterValues(searchParams);
   const [searchString, setSearchString] = useState<string>("");
 
-  const [seasons, setSeasons] = useState<Season[]>([EMPTY_SEASON]);
   const [selectedSeason, setSelectedSeason] = useState<Season | undefined>(
     EMPTY_SEASON,
   );
+  const { data: seasons } = useQuery<Season[]>({
+    queryKey: ["seasons"],
+    queryFn: () => SeasonsService.getGetSeasons(),
+  });
+  if (seasons && seasons[0] !== EMPTY_SEASON) seasons.unshift(EMPTY_SEASON);
 
-  const [factions, setFactions] = useState<Faction[]>([EMPTY_FACTION]);
+  const { data: factions } = useQuery<Faction[]>({
+    queryKey: ["factions"],
+    queryFn: () => LeaderboardService.getGetFactions(),
+  });
+  if (factions && factions[0] !== EMPTY_FACTION)
+    factions.unshift(EMPTY_FACTION);
   const [selectedFaction, setSelectedFaction] = useState<Faction | undefined>(
     EMPTY_FACTION,
   );
 
-  const [formats, setFormats] = useState<string[]>([EMPTY_FORMAT]);
+  const { data: formats } = useQuery<string[]>({
+    queryKey: ["formats"],
+    queryFn: () => LeaderboardService.getGetFormats(),
+  });
+  if (formats && formats[0] !== EMPTY_FORMAT) formats.unshift(EMPTY_FORMAT);
+
   const [selectedFormat, setSelectedFormat] = useState<string | undefined>(
     EMPTY_FORMAT,
   );
-
-  const fetchFactions = useCallback(async () => {
-    LeaderboardService.getGetFactions().then((factions) => {
-      setFactions([EMPTY_FACTION, ...factions]);
-      for (const f of factions) {
-        if (values.faction === f.code) {
-          setSelectedFaction(f);
-        }
-      }
-    });
-  }, [values]);
-
-  const fetchSeasons = useCallback(async () => {
-    SeasonsService.getGetSeasons().then((seasons) => {
-      setSeasons([EMPTY_SEASON, ...seasons]);
-      if (values.seasonId !== undefined) {
-        setSelectedSeason(seasons[values.seasonId]);
-      }
-    });
-  }, [values]);
-
-  const fetchFormats = useCallback(async () => {
-    LeaderboardService.getGetFormats().then((formats) => {
-      setFormats([EMPTY_FORMAT, ...formats]);
-      for (const f of formats) {
-        if (values.format === f) {
-          setSelectedFormat(f);
-        }
-      }
-    });
-  }, [values]);
-
-  // fetches initial resources
-  useEffect(() => {
-    fetchSeasons().catch((e) => console.log(e));
-    fetchFactions().catch((e) => console.log(e));
-    fetchFormats().catch((e) => console.log(e));
-    return () => {};
-  }, [fetchFormats, fetchFactions, fetchSeasons]);
 
   useEffect(() => {
     // put a small debounce on the request since entering a value in the searchbar will trigger
@@ -187,7 +157,7 @@ export function FilterSection({
       onParamsChange(values);
     }, 200);
     return () => clearTimeout(getLeaderboard);
-  }, [onParamsChange, values]);
+  }, [searchParams]);
 
   const handleSeasonChange = (s: Season | undefined) => {
     if (s !== undefined && s.id >= 0) {
@@ -259,7 +229,7 @@ export function FilterSection({
     >
       <Select
         width={"w-full"}
-        items={seasons}
+        items={seasons || []}
         renderItem={(s) => {
           return s !== undefined && s.id >= 0
             ? `S${s.id} - ${s.name}`
@@ -271,7 +241,7 @@ export function FilterSection({
       />
       <Select
         width={"w-full"}
-        items={factions}
+        items={factions || []}
         selected={selectedFaction}
         renderItem={renderFactionItem}
         label={"Faction"}
@@ -279,7 +249,7 @@ export function FilterSection({
       />
       <Select
         width={"w-full"}
-        items={formats}
+        items={formats || []}
         renderItem={(f) => {
           return f;
         }}

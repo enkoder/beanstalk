@@ -152,9 +152,17 @@ export function Results() {
               </td>
               <td className={"py-2 align-middle"}>{Decks(result)}</td>
               <td className={"py-2 text-center"}>{formatPlacement(result)}</td>
-              <Tooltip as={"td"} panel={<text>Tooltip</text>}>
+              {result.is_valid ? (
                 <span>{result.points_earned.toFixed(2)}</span>
-              </Tooltip>
+              ) : (
+                <Tooltip
+                  as={"td"}
+                  className={"text-right"}
+                  panel={<text>Tooltip</text>}
+                >
+                  <span>{result.points_earned.toFixed(2)}</span>
+                </Tooltip>
+              )}
             </tr>
           ))}
         </tbody>

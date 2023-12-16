@@ -4,6 +4,7 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -28,16 +29,13 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [current, setCurrent] = useState<string>();
+  const { data: authUrl } = useQuery<string>({
+    queryKey: ["authUrl"],
+    queryFn: () => AuthService.getGetLoginUrl(),
+  });
 
   function handleLogin() {
-    AuthService.getGetLoginUrl()
-      .then(({ auth_url }) => {
-        window.location.assign(auth_url);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    return () => {};
+    if (authUrl) window.location.assign(authUrl);
   }
 
   const navigation: Navigation[] = [

@@ -13,7 +13,7 @@ import { OpenAPI } from "./client";
 import { Beans } from "./routes/Beans";
 import { Code } from "./routes/Code";
 import { Faq } from "./routes/Faq";
-import { Seasons, SeasonsLoader } from "./routes/Seasons";
+import { Seasons } from "./routes/Seasons";
 import { Sim } from "./routes/Sim";
 import { TournamentPage } from "./routes/TournamentPage";
 import { Leaderboard } from "./routes/leaderboard";
@@ -25,6 +25,7 @@ import useAuth, { AuthProvider } from "./useAuth";
 
 import "@fontsource/inter/400.css";
 import "@fontsource/jetbrains-mono/400.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./output.css";
 
 const getToken = async (): Promise<string> => {
@@ -121,7 +122,7 @@ const router = createBrowserRouter([
       { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },
-      { path: "/seasons", element: <Seasons />, loader: SeasonsLoader },
+      { path: "/seasons", element: <Seasons /> },
     ],
   },
 ]);
@@ -130,10 +131,14 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
+const queryClient = new QueryClient();
+
 root.render(
   <React.StrictMode>
     <body>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </body>
   </React.StrictMode>,
 );
