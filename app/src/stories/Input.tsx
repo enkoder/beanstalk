@@ -1,5 +1,5 @@
-import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {

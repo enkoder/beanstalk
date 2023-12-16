@@ -1,6 +1,6 @@
-import { Stars } from "./Stars";
 import { StoryObj } from "@storybook/react";
 import type { Meta } from "@storybook/react";
+import { Stars } from "./Stars";
 
 const meta = {
   title: "Beanstalk/Stars",

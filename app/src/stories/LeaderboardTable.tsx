@@ -1,9 +1,9 @@
+import { LeaderboardRow } from "../client";
 import {
   FilterSectionValues,
   getSearchParamsFromValues,
 } from "./FilterSection";
 import { Link } from "./Link";
-import { LeaderboardRow } from "../client";
 
 type LeaderboardProps = {
   leaderboard?: LeaderboardRow[];
@@ -40,29 +40,26 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
         </tr>
       </thead>
       <tbody>
-        {leaderboard &&
-          leaderboard
-            .filter((row) =>
-              row.user_name
-                ? row.user_name
-                    .toLowerCase()
-                    .includes(values.searchString?.toLowerCase() || "")
-                : false,
-            )
-            .map((row) => (
-              <tr className={"text-center odd:bg-slate-900 even:bg-slate-950"}>
-                <td className={"px-4 py-2"}>{row.rank}</td>
-                <th
-                  scope="row"
-                  className="whitespace-nowrap font-medium text-cyan-500"
-                >
-                  <Link to={getLinkToUserSearchParams(row)}>
-                    {row.user_name}
-                  </Link>
-                </th>
-                <td>{row.points.toFixed(2)}</td>
-              </tr>
-            ))}
+        {leaderboard
+          ?.filter((row) =>
+            row.user_name
+              ? row.user_name
+                  .toLowerCase()
+                  .includes(values.searchString?.toLowerCase() || "")
+              : false,
+          )
+          .map((row) => (
+            <tr className={"text-center odd:bg-slate-900 even:bg-slate-950"}>
+              <td className={"px-4 py-2"}>{row.rank}</td>
+              <th
+                scope="row"
+                className="whitespace-nowrap font-medium text-cyan-500"
+              >
+                <Link to={getLinkToUserSearchParams(row)}>{row.user_name}</Link>
+              </th>
+              <td>{row.points.toFixed(2)}</td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );

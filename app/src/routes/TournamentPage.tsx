@@ -1,14 +1,14 @@
-import { PageHeading } from "../stories/PageHeader";
-import { Result, Tournament, TournamentService } from "../client";
-import { Link } from "../stories/Link";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Result, Tournament, TournamentService } from "../client";
+import { Link } from "../stories/Link";
+import { PageHeading } from "../stories/PageHeader";
 
 type TournamentParams = {
   tournament: string;
 };
 
-export function Tournament() {
+export function TournamentPage() {
   const params = useParams<TournamentParams>();
   const [results, setResults] = useState<Result[]>([]);
   const [tournament, setTournament] = useState<Tournament>();
@@ -30,7 +30,7 @@ export function Tournament() {
     fetchResults(tournamentId).catch((e) => console.log(e));
     fetchTournament(tournamentId).catch((e) => console.log(e));
     return () => {};
-  }, [params.tournament]);
+  }, [params.tournament, fetchTournament, fetchResults]);
 
   return (
     <>

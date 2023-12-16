@@ -1,12 +1,12 @@
-import { PageHeading } from "../stories/PageHeader";
+import { FormEvent, useEffect, useState } from "react";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
   Tier,
 } from "../client";
-import { Select } from "../stories/Select";
 import { Input } from "../stories/Input";
-import { FormEvent, useEffect, useState } from "react";
+import { PageHeading } from "../stories/PageHeader";
+import { Select } from "../stories/Select";
 
 export function Sim() {
   const [selectedTier, setSelectedTier] = useState<Tier | undefined>();
@@ -52,7 +52,7 @@ export function Sim() {
           items={tiers}
           selected={selectedTier}
           renderItem={(t) => {
-            return t != undefined ? (
+            return t !== undefined ? (
               <div className={"flex flex-row justify-between"}>
                 <text>{t.name}</text>
                 <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
@@ -110,27 +110,23 @@ export function Sim() {
                   "break-words border-b-2 border-solid border-gray-300 px-4"
                 }
               >
-                Cumulative (
-                {pointsDistributionResponse &&
-                  pointsDistributionResponse.adjustedTotalPoints}
-                )
+                Cumulative ({pointsDistributionResponse?.adjustedTotalPoints})
               </th>
             </tr>
           </thead>
           <tbody>
-            {pointsDistributionResponse &&
-              pointsDistributionResponse.pointDistribution.map((row) => (
-                <tr
-                  key={row.placement}
-                  className={
-                    "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
-                  }
-                >
-                  <td>{row.placement}</td>
-                  <td>{row.points}</td>
-                  <td>{row.cumulative}</td>
-                </tr>
-              ))}
+            {pointsDistributionResponse?.pointDistribution.map((row) => (
+              <tr
+                key={row.placement}
+                className={
+                  "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+                }
+              >
+                <td>{row.placement}</td>
+                <td>{row.points}</td>
+                <td>{row.cumulative}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

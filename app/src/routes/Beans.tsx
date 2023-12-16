@@ -1,11 +1,11 @@
-import { PageHeading } from "../stories/PageHeader";
-import { Anchor } from "../stories/Anchor";
+import { faDownload, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // @ts-ignore
 import whitepaper from "../../assets/whitepaper.pdf";
-import { Sep } from "../stories/Sep";
+import { Anchor } from "../stories/Anchor";
 import { Link } from "../stories/Link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { PageHeading } from "../stories/PageHeader";
+import { Sep } from "../stories/Sep";
 
 type Section = {
   title: string;
@@ -78,7 +78,10 @@ const SECTIONS: Section[] = [
         tournament to win first, but doesn't create a huge separation between
         first and the rest of the players. We're coming for you{" "}
         <Link to={"/results/Sokka"}>
-          Sokka <FontAwesomeIcon className={"text-red-700"} icon={faHeart} />{" "}
+          Sokka <FontAwesomeIcon
+            className={"text-red-700"}
+            icon={faHeart}
+          />{" "}
         </Link>
         <Sep className={"mt-4"} />
         Head over to the{" "}
@@ -180,7 +183,7 @@ const SECTIONS: Section[] = [
         card with <Link to={"https://nullsignal.games/"}>NSG</Link>. Since it's
         such a fun tournament for the community, we've decided that there should
         be some bean action associated with it.
-        <Sep className={"mb-4"}></Sep>
+        <Sep className={"mb-4"} />
         To increase the stakes and ramp up the fun, the Intercontinental payout
         structure is winner takes all! You can find the current number of beans
         given to first place on the <Link to={"/code"}>Code</Link> page.

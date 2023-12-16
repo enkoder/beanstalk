@@ -1,6 +1,6 @@
-import { Input } from "./Input";
 import { StoryObj } from "@storybook/react";
 import type { Meta } from "@storybook/react";
+import { Input } from "./Input";
 
 const meta = {
   title: "Beanstalk/Input",

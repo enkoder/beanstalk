@@ -1,6 +1,6 @@
-import { Anchor } from "./Anchor";
-import { withRouter } from "storybook-addon-react-router-v6";
 import type { Meta, StoryObj } from "@storybook/react";
+import { withRouter } from "storybook-addon-react-router-v6";
+import { Anchor } from "./Anchor";
 
 const meta = {
   title: "Beanstalk/Anchor",

@@ -4,10 +4,9 @@
 /* eslint-disable */
 
 export type Faction = {
-    code: string;
-    color: string;
-    is_mini: boolean;
-    name: string;
-    side_code: string;
+  code: string;
+  color: string;
+  is_mini: boolean;
+  name: string;
+  side_code: string;
 };
-

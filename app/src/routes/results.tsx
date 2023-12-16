@@ -1,11 +1,11 @@
-import { Result, ResultsService, UserResultsResponse } from "../client";
-import { PageHeading } from "../stories/PageHeader";
-import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
-import { Link } from "../stories/Link";
-import { Tooltip } from "../stories/Tooltip";
+import { clsx } from "clsx";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { clsx } from "clsx";
+import { Result, ResultsService, UserResultsResponse } from "../client";
+import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
+import { Link } from "../stories/Link";
+import { PageHeading } from "../stories/PageHeader";
+import { Tooltip } from "../stories/Tooltip";
 
 type ResultsParams = {
   user: string;
@@ -135,7 +135,7 @@ export function Results() {
           {results?.results.map((result) => (
             <tr
               className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-              key={results.user_id + "/" + result.tournament_id}
+              key={`${results.user_id}/${result.tournament_id}`}
             >
               <td className={"whitespace-pre-wrap py-2"}>
                 <span>

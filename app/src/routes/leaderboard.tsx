@@ -1,3 +1,7 @@
+import { Transition } from "@headlessui/react";
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   LeaderboardRow,
   LeaderboardService,
@@ -11,12 +15,8 @@ import {
   getFilterValues,
   getSearchParamsFromValues,
 } from "../stories/FilterSection";
-import { PageHeading } from "../stories/PageHeader";
 import { Link } from "../stories/Link";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Transition } from "@headlessui/react";
+import { PageHeading } from "../stories/PageHeader";
 
 type ExpandedSectionProps = {
   results: UserResultsResponse | null;
@@ -38,34 +38,31 @@ export function ExpandedSection({ results }: ExpandedSectionProps) {
         }
       >
         <tbody>
-          {results &&
-            results.results.map((result) => (
-              <tr
-                className={"text-left"}
-                key={results.user_id + "/" + result.tournament_id}
-              >
-                <td className={"w-1/12 py-2"} />
-                <td className={"w-2/12 px-4 py-2"}>
-                  {formatPlacement(result)}
-                </td>
-                <td className={"w-8/12 whitespace-pre-wrap py-2"}>
-                  <span>
-                    <Link to={`/tournament/${result.tournament_id}`}>
-                      {result.tournament_name}
-                    </Link>
-                    <Link
-                      className={"pl-2 text-xs"}
-                      to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
-                    >
-                      (ABR)
-                    </Link>
-                  </span>
-                </td>
-                <td className={"w-2/12 pr-4 text-right"}>
-                  {result.points_earned.toFixed(2)}
-                </td>
-              </tr>
-            ))}
+          {results?.results.map((result) => (
+            <tr
+              className={"text-left"}
+              key={`${results.user_id}/${result.tournament_id}`}
+            >
+              <td className={"w-1/12 py-2"} />
+              <td className={"w-2/12 px-4 py-2"}>{formatPlacement(result)}</td>
+              <td className={"w-8/12 whitespace-pre-wrap py-2"}>
+                <span>
+                  <Link to={`/tournament/${result.tournament_id}`}>
+                    {result.tournament_name}
+                  </Link>
+                  <Link
+                    className={"pl-2 text-xs"}
+                    to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                  >
+                    (ABR)
+                  </Link>
+                </span>
+              </td>
+              <td className={"w-2/12 pr-4 text-right"}>
+                {result.points_earned.toFixed(2)}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
@@ -80,7 +77,7 @@ export function Leaderboard() {
   const [results, setResults] = useState<UserResultsResponse | null>(null);
 
   const onRowClick = (row: LeaderboardRow, rowNum: number) => {
-    if (rowNum == expandedRow) {
+    if (rowNum === expandedRow) {
       setExpandedRow(null);
     } else {
       setExpandedRow(rowNum);
@@ -126,7 +123,7 @@ export function Leaderboard() {
             <th
               scope="col"
               className={"w-1/12 border-b-2 border-solid border-gray-300 px-4"}
-            ></th>
+            />
             <th
               scope="col"
               className={"w-2/12 border-b-2 border-solid border-gray-300 px-4"}
@@ -152,66 +149,64 @@ export function Leaderboard() {
           </tr>
         </thead>
         <tbody>
-          {leaderboardRows &&
-            leaderboardRows
-              .filter((row) =>
-                row.user_name
-                  ? row.user_name
-                      .toLowerCase()
-                      .includes(values.searchString?.toLowerCase() || "")
-                  : false,
-              )
-              .map((row, i) => (
-                <>
-                  <tr
-                    className={
-                      "w-full odd:bg-slate-900 even:bg-slate-950 hover:text-cyan-500"
-                    }
-                    onClick={() => onRowClick(row, i)}
+          {leaderboardRows
+            ?.filter((row) =>
+              row.user_name
+                ? row.user_name
+                    .toLowerCase()
+                    .includes(values.searchString?.toLowerCase() || "")
+                : false,
+            )
+            .map((row, i) => (
+              <>
+                <tr
+                  className={
+                    "w-full odd:bg-slate-900 even:bg-slate-950 hover:text-cyan-500"
+                  }
+                  onKeyDown={() => onRowClick(row, i)}
+                  onClick={() => onRowClick(row, i)}
+                >
+                  <td>
+                    {expandedRow === i ? (
+                      <ChevronDownIcon
+                        className={"ml-4 h-5 w-5 text-cyan-400"}
+                      />
+                    ) : (
+                      <ChevronRightIcon className={"ml-4 h-5 w-5"} />
+                    )}
+                  </td>
+                  <td className={"px-4 py-2"}>{row.rank}</td>
+                  <th
+                    scope="row"
+                    className="whitespace-pre-wrap font-medium text-cyan-500"
                   >
-                    <td>
-                      {expandedRow == i ? (
-                        <ChevronDownIcon
-                          className={"ml-4 h-5 w-5 text-cyan-400"}
-                        />
-                      ) : (
-                        <ChevronRightIcon className={"ml-4 h-5 w-5"} />
-                      )}
-                    </td>
-                    <td className={"px-4 py-2"}>{row.rank}</td>
-                    <th
-                      scope="row"
-                      className="whitespace-pre-wrap font-medium text-cyan-500"
-                    >
-                      <Link to={getLinkToUserSearchParams(row)}>
-                        {row.user_name}
-                      </Link>
-                    </th>
-                    <td className={"pr-4 text-right"}>
-                      {row.points.toFixed(2)}
-                    </td>
-                  </tr>
-                  <Transition
-                    as={"tr"}
-                    show={expandedRow == i && results != null}
-                    className={
-                      "w-full border border-cyan-400 odd:bg-slate-900 even:bg-slate-950"
-                    }
-                    enter="transition-opacity duration-100"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="transition-opacity duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <td colSpan={5}>
-                      <div className={"w-full"}>
-                        <ExpandedSection results={results}></ExpandedSection>
-                      </div>
-                    </td>
-                  </Transition>
-                </>
-              ))}
+                    <Link to={getLinkToUserSearchParams(row)}>
+                      {row.user_name}
+                    </Link>
+                  </th>
+                  <td className={"pr-4 text-right"}>{row.points.toFixed(2)}</td>
+                </tr>
+                <Transition
+                  as={"tr"}
+                  show={expandedRow === i && results != null}
+                  className={
+                    "w-full border border-cyan-400 odd:bg-slate-900 even:bg-slate-950"
+                  }
+                  enter="transition-opacity duration-100"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="transition-opacity duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <td colSpan={5}>
+                    <div className={"w-full"}>
+                      <ExpandedSection results={results} />
+                    </div>
+                  </td>
+                </Transition>
+              </>
+            ))}
         </tbody>
       </table>
     </>

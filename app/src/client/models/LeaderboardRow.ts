@@ -4,10 +4,9 @@
 /* eslint-disable */
 
 export type LeaderboardRow = {
-    points: number;
-    rank: number;
-    user_id: number;
-    user_name?: string | null;
-    attended: number;
+  points: number;
+  rank: number;
+  user_id: number;
+  user_name?: string | null;
+  attended: number;
 };
-

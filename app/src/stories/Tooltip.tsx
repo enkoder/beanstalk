@@ -1,3 +1,5 @@
+import { Popover, Transition } from "@headlessui/react";
+import { clsx } from "clsx";
 import {
   ElementType,
   Fragment,
@@ -5,10 +7,8 @@ import {
   ReactNode,
   useState,
 } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import { twMerge } from "tailwind-merge";
-import { clsx } from "clsx";
 import { usePopper } from "react-popper";
+import { twMerge } from "tailwind-merge";
 
 type TooltipProps = HTMLAttributes<HTMLDivElement> & {
   as: ElementType;

@@ -3,6 +3,7 @@
   "files": {
     "ignore": [
       "app/**/*.js",
+      "app/src/client/**",
       "**/output.css",
       "spec.json",
       "node_modules",

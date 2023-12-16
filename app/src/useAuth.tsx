@@ -1,19 +1,20 @@
-import { AuthService, TokenResponse, User, UserService } from "./client";
+import { AxiosError } from "axios";
 import {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { AuthService, TokenResponse, User, UserService } from "./client";
 
 interface AuthContextType {
   user?: User | null;
   loading: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: any;
   login: (code: string) => void;
   logout: () => void;
@@ -28,11 +29,11 @@ export function AuthProvider({
   children: ReactNode;
 }): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const _storeTokens = (tokenResponse: TokenResponse) => {
     localStorage.setItem("access_token", tokenResponse.access_token);
@@ -46,7 +47,7 @@ export function AuthProvider({
     } catch (e) {
       const error = e as AxiosError;
       // Token is expired, let's try to refresh the token
-      if (error.status == 401) {
+      if (error.status === 401) {
         const refresh_token = localStorage.getItem("refresh_token");
         if (refresh_token) {
           const tokenResponse =
@@ -59,7 +60,7 @@ export function AuthProvider({
         }
       }
     }
-  }, []);
+  }, [_storeTokens]);
 
   // on first attempt, try to load the user or refresh the token
   useEffect(() => {
@@ -70,14 +71,14 @@ export function AuthProvider({
     return () => {
       setLoading(false);
     };
-  }, []);
+  }, [fetchUser]);
 
   // if the cookies change, store them in the local storage
   // Reset the error state if we change page
   useEffect(() => {
     if (error) setError(undefined);
     return () => {};
-  }, [location.pathname]);
+  }, [error]);
 
   // Flags the component loading state and posts the login data to the server.
   // An error means that the email/password combination is not valid.

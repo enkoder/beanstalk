@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 export enum Format {
-    STANDARD = 'standard',
-    STARTUP = 'startup',
-    ETERNAL = 'eternal',
+  STANDARD = "standard",
+  STARTUP = "startup",
+  ETERNAL = "eternal",
 }
