@@ -2,7 +2,7 @@ import { z } from "zod";
 import { TournamentTypes } from "../models/tournament.js";
 import { Format, Result, Tournament } from "../schema.js";
 
-async function gatherResponse(response: Response) {
+async function gatherResponse(response) {
   const { headers } = response;
   const contentType = headers.get("content-type") || "";
   if (contentType.includes("application/json")) {
