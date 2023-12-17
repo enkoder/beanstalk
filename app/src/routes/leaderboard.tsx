@@ -1,28 +1,37 @@
 import { Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useQuery } from "@tanstack/react-query";
+import { clsx } from "clsx";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   LeaderboardRow,
   LeaderboardService,
+  RankingConfig,
   Result,
   ResultsService,
+  User,
   UserResultsResponse,
 } from "../client";
 import {
   FilterSection,
-  FilterSectionValues,
   getFilterValues,
   getSearchParamsFromValues,
 } from "../stories/FilterSection";
 import { Link } from "../stories/Link";
 import { PageHeading } from "../stories/PageHeader";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../stories/Tooltip";
+import { capStr } from "../util";
 
 type ExpandedSectionProps = {
-  results: UserResultsResponse | null;
+  results: UserResultsResponse | undefined;
+  rankingConfig: RankingConfig | undefined;
 };
 
-export function ExpandedSection({ results }: ExpandedSectionProps) {
+export function ExpandedSection({
+  results,
+  rankingConfig,
+}: ExpandedSectionProps) {
   const formatPlacement = (r: Result) => {
     let retStr = `${r.rank_swiss} / ${r.players_count}`;
     if (r.rank_cut) {
@@ -39,29 +48,64 @@ export function ExpandedSection({ results }: ExpandedSectionProps) {
       >
         <tbody>
           {results?.results.map((result) => (
-            <tr
-              className={"text-left"}
-              key={`${results.user_id}/${result.tournament_id}`}
-            >
-              <td className={"w-1/12 py-2"} />
-              <td className={"w-2/12 px-4 py-2"}>{formatPlacement(result)}</td>
-              <td className={"w-8/12 whitespace-pre-wrap py-2"}>
-                <span>
-                  <Link to={`/tournament/${result.tournament_id}`}>
-                    {result.tournament_name}
-                  </Link>
-                  <Link
-                    className={"pl-2 text-xs"}
-                    to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+            <Tooltip placement={"right-end"}>
+              <TooltipTrigger asChild={true}>
+                <tr
+                  className={"text-left"}
+                  key={`${results.user_id}/${result.tournament_id}`}
+                >
+                  <td
+                    className={clsx(
+                      !result.is_valid && "text-gray-500",
+                      "w-2/12 px-4 py-2",
+                    )}
                   >
-                    (ABR)
-                  </Link>
-                </span>
-              </td>
-              <td className={"w-2/12 pr-4 text-right"}>
-                {result.points_earned.toFixed(2)}
-              </td>
-            </tr>
+                    {formatPlacement(result)}
+                  </td>
+                  <td className={"w-8/12 whitespace-pre-wrap py-2"}>
+                    <span>
+                      <Link
+                        className={clsx(!result.is_valid && "text-gray-500")}
+                        to={`/tournament/${result.tournament_id}`}
+                      >
+                        {result.tournament_name}
+                      </Link>
+                      <Link
+                        className={clsx(
+                          !result.is_valid && "text-gray-500",
+                          "pl-2 text-xs",
+                        )}
+                        to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                      >
+                        (ABR)
+                      </Link>
+                    </span>
+                  </td>
+                  <td
+                    className={clsx(
+                      !result.is_valid && "text-gray-500",
+                      "w-2/12 pr-4 text-right",
+                    )}
+                  >
+                    {result.points_earned.toFixed(2)}
+                  </td>
+                </tr>
+              </TooltipTrigger>
+              {!result.is_valid && rankingConfig && (
+                <TooltipContent
+                  className={
+                    "text-cyan-500 text-sm bg-gray-950 p-2 rounded-lg shadow-lg border-gray-600 border"
+                  }
+                >
+                  Limit{" "}
+                  {
+                    rankingConfig.tournament_configs[result.tournament_type]
+                      .tournament_limit
+                  }{" "}
+                  per {capStr(result.tournament_type)}
+                </TooltipContent>
+              )}
+            </Tooltip>
           ))}
         </tbody>
       </table>
@@ -70,37 +114,49 @@ export function ExpandedSection({ results }: ExpandedSectionProps) {
 }
 
 export function Leaderboard() {
-  const [leaderboardRows, setLeaderboardRows] = useState<LeaderboardRow[]>();
   const [searchParams] = useSearchParams();
   const values = getFilterValues(searchParams);
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const [results, setResults] = useState<UserResultsResponse | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const onRowClick = (row: LeaderboardRow, rowNum: number) => {
-    if (rowNum === expandedRow) {
-      setExpandedRow(null);
-    } else {
-      setExpandedRow(rowNum);
-    }
-    if (row.user_name) {
-      ResultsService.getGetUserResults(
-        row.user_name,
+  const { data: leaderboardRows } = useQuery<LeaderboardRow[]>({
+    queryKey: ["leaderboard", values.seasonId, values.faction, values.format],
+    queryFn: () =>
+      LeaderboardService.getGetLeaderboard(
         values.seasonId,
         values.faction,
         values.format,
-      ).then((results) => {
-        setResults(results);
-      });
-    }
-  };
+      ),
+  });
 
-  const getLeaderboard = (v: FilterSectionValues) => {
-    LeaderboardService.getGetLeaderboard(v.seasonId, v.faction, v.format).then(
-      (rows) => {
-        setLeaderboardRows(rows);
-        setExpandedRow(null);
-      },
-    );
+  const { data: results } = useQuery<UserResultsResponse>({
+    queryKey: [
+      "results",
+      selectedUser?.name,
+      values.seasonId,
+      values.faction,
+      values.format,
+    ],
+    queryFn: () =>
+      ResultsService.getGetUserResults(
+        selectedUser?.name || "",
+        values.seasonId,
+        values.faction,
+        values.format,
+      ),
+    enabled: selectedUser !== null,
+  });
+
+  const { data: rankingConfig } = useQuery<RankingConfig>({
+    queryKey: ["rankingConfig"],
+    queryFn: () => LeaderboardService.getGetRankingConfig(),
+  });
+
+  const onRowClick = (row: LeaderboardRow) => {
+    if (row.user_name === selectedUser?.name) {
+      setSelectedUser(null);
+    } else {
+      setSelectedUser({ name: row.user_name, id: row.user_id } as User);
+    }
   };
 
   const getLinkToUserSearchParams = (row: LeaderboardRow) => {
@@ -112,7 +168,7 @@ export function Leaderboard() {
   return (
     <>
       <PageHeading includeUnderline={true} text={"Leaderboard"} />
-      <FilterSection hasSearchBar={true} onParamChange={getLeaderboard} />
+      <FilterSection hasSearchBar={true} />
       <table
         className={
           "w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
@@ -157,17 +213,17 @@ export function Leaderboard() {
                     .includes(values.searchString?.toLowerCase() || "")
                 : false,
             )
-            .map((row, i) => (
+            .map((row) => (
               <>
                 <tr
                   className={
                     "w-full odd:bg-slate-900 even:bg-slate-950 hover:text-cyan-500"
                   }
-                  onKeyDown={() => onRowClick(row, i)}
-                  onClick={() => onRowClick(row, i)}
+                  onKeyDown={() => onRowClick(row)}
+                  onClick={() => onRowClick(row)}
                 >
                   <td>
-                    {expandedRow === i ? (
+                    {selectedUser?.name === row.user_name ? (
                       <ChevronDownIcon
                         className={"ml-4 h-5 w-5 text-cyan-400"}
                       />
@@ -188,7 +244,7 @@ export function Leaderboard() {
                 </tr>
                 <Transition
                   as={"tr"}
-                  show={expandedRow === i && results != null}
+                  show={selectedUser?.name === row.user_name && results != null}
                   className={
                     "w-full border border-cyan-400 odd:bg-slate-900 even:bg-slate-950"
                   }
@@ -201,7 +257,10 @@ export function Leaderboard() {
                 >
                   <td colSpan={5}>
                     <div className={"w-full"}>
-                      <ExpandedSection results={results} />
+                      <ExpandedSection
+                        results={results}
+                        rankingConfig={rankingConfig}
+                      />
                     </div>
                   </td>
                 </Transition>

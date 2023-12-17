@@ -7,13 +7,17 @@ import {
   Tournament,
   TournamentType,
   User,
-} from "../schema.js";
+} from "../schema";
 
 export function url({
   season,
   faction,
   format,
-}: { season?: Season; faction?: Faction; format?: Format }) {
+}: {
+  season?: Season;
+  faction?: Faction;
+  format?: Format;
+}) {
   const url = new URL("http://localhost:8787/api/leaderboard");
   if (season) {
     url.searchParams.append("seasonId", String(season.id));

@@ -2,10 +2,11 @@ import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking.js";
 import {
   Faction,
   Format,
+  RankingConfig,
   ResultsTable,
   TournamentType,
   UpdateResult,
-} from "../schema.d.js";
+} from "../schema.js";
 import { getDB } from "./db.js";
 
 export type ResultExpanded = ResultsTable & {
@@ -65,9 +66,7 @@ export async function getExpanded({
             .orderBy("tournaments.id", "asc"),
         )
         .as("count_for_tournament_type"),
-    ])
-    .orderBy("tournaments.type", "asc")
-    .orderBy("count_for_tournament_type", "asc");
+    ]);
 
   if (userId) {
     q = q.where("results.user_id", "=", userId);
@@ -99,7 +98,15 @@ export async function getExpanded({
     });
   }
 
-  return results;
+  const sortedResults: ResultExpanded[] = [];
+  for (const t in RankingConfig.tournament_configs) {
+    for (const r of results) {
+      if (r.tournament_type === t) {
+        sortedResults.push(r);
+      }
+    }
+  }
+  return sortedResults;
 }
 export async function insert(
   result: UpdateResult,

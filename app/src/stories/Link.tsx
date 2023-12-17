@@ -20,10 +20,10 @@ export function Link({
     <ReactRouterLink
       to={to}
       className={twMerge(
-        className,
         clsx(
           styleOnHover && "hover:font-bold hover:text-cyan-400 hover:underline",
           "text-cyan-500",
+          className,
         ),
       )}
       {...props}

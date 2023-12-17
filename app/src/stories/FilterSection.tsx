@@ -73,7 +73,6 @@ export const SEARCH_PARAM_NAME = "search";
 
 type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
   hasSearchBar: boolean;
-  onParamChange: (_: FilterSectionValues) => void;
 };
 
 export type FilterSectionValues = {
@@ -113,23 +112,19 @@ export function getSearchParamsFromValues(
   return sp;
 }
 
-export function FilterSection({
-  hasSearchBar,
-  onParamChange: onParamsChange,
-}: FilterSectionProps) {
+export function FilterSection({ hasSearchBar }: FilterSectionProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const values = getFilterValues(searchParams);
   const [searchString, setSearchString] = useState<string>("");
 
-  const [selectedSeason, setSelectedSeason] = useState<Season | undefined>(
-    EMPTY_SEASON,
-  );
   const { data: seasons } = useQuery<Season[]>({
     queryKey: ["seasons"],
     queryFn: () => SeasonsService.getGetSeasons(),
   });
   if (seasons && seasons[0] !== EMPTY_SEASON) seasons.unshift(EMPTY_SEASON);
+  const [selectedSeason, setSelectedSeason] = useState<Season | undefined>(
+    EMPTY_SEASON,
+  );
 
   const { data: factions } = useQuery<Faction[]>({
     queryKey: ["factions"],
@@ -152,12 +147,24 @@ export function FilterSection({
   );
 
   useEffect(() => {
-    // put a small debounce on the request since entering a value in the searchbar will trigger
-    const getLeaderboard = setTimeout(() => {
-      onParamsChange(values);
-    }, 200);
-    return () => clearTimeout(getLeaderboard);
-  }, [searchParams]);
+    if (seasons && values.seasonId !== undefined) {
+      setSelectedSeason(seasons[values.seasonId + 1]);
+    }
+    if (factions && values.faction !== undefined) {
+      for (const f of factions) {
+        if (values.faction === f.code) {
+          setSelectedFaction(f);
+        }
+      }
+    }
+    if (formats && values.format !== undefined) {
+      for (const f of formats) {
+        if (values.format === f) {
+          setSelectedFaction(f);
+        }
+      }
+    }
+  }, [values]);
 
   const handleSeasonChange = (s: Season | undefined) => {
     if (s !== undefined && s.id >= 0) {

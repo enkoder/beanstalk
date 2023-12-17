@@ -74,17 +74,24 @@ export const TournamentComponent = z
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 
-export const TierComponent = z
+export const RankingConfigComponent = z
   .object({
-    id: z.number(),
-    code: TournamentTypeComponent,
-    name: z.string(),
-    points: z.number(),
-    season: z.number().optional(),
-    type: TournamentTypeComponent.optional(),
+    min_players_to_be_legal: z.number(),
+    extra_points_per_person: z.number(),
+    percent_for_first_place: z.number(),
+    percent_receiving_points: z.number(),
+    tournament_configs: z.record(
+      TournamentTypeComponent,
+      z.object({
+        code: TournamentTypeComponent,
+        tournament_limit: z.number(),
+        name: z.string(),
+        points: z.number(),
+      }),
+    ),
   })
-  .openapi("Tier");
-export type TierComponentType = z.infer<typeof TierComponent>;
+  .openapi("RankingConfig");
+export type RankingConfigType = z.infer<typeof RankingConfigComponent>;
 
 export const FactionComponent = z
   .object({
@@ -310,14 +317,14 @@ export const GetLeaderboardSchema = {
   },
 };
 
-export const GetTiersSchema = {
+export const GetRankingConfigSchema = {
   tags: ["Leaderboard"],
   summary:
-    "Returns a list of supported tournament tiers and their point values",
+    "Returns an object containing configuration data for determining the leaderboard",
   responses: {
     "200": {
-      schema: z.array(TierComponent),
-      description: "Returns an array Tiers",
+      schema: RankingConfigComponent,
+      description: "Returns a RankingConfig object",
     },
   },
 };

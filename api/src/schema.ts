@@ -1,4 +1,13 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
+import {
+  EXTRA_POINTS_PER_PERSON,
+  MAX_TOURNAMENTS_PER_TYPE,
+  MIN_PLAYERS_TO_BE_LEGAL,
+  PERCENT_FOR_FIRST_PLACE,
+  PERCENT_RECEIVING_POINTS,
+  TOURNAMENT_POINTS,
+} from "./lib/ranking.js";
+import { RankingConfigType } from "./openapi.js";
 
 export type TournamentType =
   | "GNK / seasonal"
@@ -16,22 +25,45 @@ export type TournamentType =
   | "worlds championship"
   | "regional championship";
 
-export enum TournamentTypeEnum {
-  GNK = "GNK / seasonal",
-  Asynchronous = "asynchronous tournament",
-  CircuitBreaker = "circuit breaker",
-  CircuitOpener = "circuit opener",
-  Community = "community tournament",
-  Continental = "continental championship",
-  InfiniteRecursion = "infinite recursion",
-  Intercontinental = "intercontinental championship",
-  Nationals = "national championship",
-  Online = "online event",
-  StoreChamp = "store championship",
-  Team = "team tournament",
-  Worlds = "worlds championship",
-  Regionals = "regional championship",
-}
+export const RankingConfig = {
+  min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL,
+  extra_points_per_person: EXTRA_POINTS_PER_PERSON,
+  percent_for_first_place: PERCENT_FOR_FIRST_PLACE,
+  percent_receiving_points: PERCENT_RECEIVING_POINTS,
+  tournament_configs: {
+    "worlds championship": {
+      code: "worlds championship",
+      name: "Worlds",
+      points: TOURNAMENT_POINTS["worlds championship"],
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["worlds championship"],
+    },
+    "continental championship": {
+      code: "continental championship",
+      name: "Continentals",
+      points: TOURNAMENT_POINTS["continental championship"],
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
+    },
+    "intercontinental championship": {
+      code: "intercontinental championship",
+      name: "Interconts",
+      points: TOURNAMENT_POINTS["intercontinental championship"],
+      tournament_limit:
+        MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
+    },
+    "national championship": {
+      code: "national championship",
+      name: "Nationals",
+      points: TOURNAMENT_POINTS["national championship"],
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
+    },
+    "circuit opener": {
+      code: "circuit opener",
+      name: "Circuit Opener",
+      points: TOURNAMENT_POINTS["circuit opener"],
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit opener"],
+    },
+  },
+} as RankingConfigType;
 
 export type Format = "standard" | "startup" | "eternal";
 

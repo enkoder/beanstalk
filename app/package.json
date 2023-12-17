@@ -47,6 +47,7 @@
     "wrangler": "^3.20.0"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.4",
     "@fontsource/inter": "^5.0.16",
     "@fontsource/jetbrains-mono": "^5.0.18",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",

@@ -1,6 +1,6 @@
 // You can see this code on GitHub
 // https://github.com/enkoder/beanstalk/api/src/lib/ranking.ts
-import { TournamentType } from "../schema.d.js";
+import { TournamentType } from "../schema.js";
 
 // Sets the number of players who will be receiving any points. Defined as a percentage
 // of total players i.e. value of .5 implies half of the field will get points

@@ -1,118 +1,161 @@
-import { Popover, Transition } from "@headlessui/react";
-import { clsx } from "clsx";
 import {
-  ElementType,
-  Fragment,
-  HTMLAttributes,
-  ReactNode,
-  useState,
-} from "react";
-import { usePopper } from "react-popper";
-import { twMerge } from "tailwind-merge";
+  FloatingPortal,
+  Placement,
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useDismiss,
+  useFloating,
+  useFocus,
+  useHover,
+  useInteractions,
+  useMergeRefs,
+  useRole,
+} from "@floating-ui/react";
+import * as React from "react";
 
-type TooltipProps = HTMLAttributes<HTMLDivElement> & {
-  as: ElementType;
-  panel: ReactNode;
-  duration?: number;
+interface TooltipOptions {
+  initialOpen?: boolean;
+  placement?: Placement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function useTooltip({
+  initialOpen = false,
+  placement = "top",
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+}: TooltipOptions = {}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen);
+
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = setControlledOpen ?? setUncontrolledOpen;
+
+  const data = useFloating({
+    placement,
+    open,
+    onOpenChange: setOpen,
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(5),
+      flip({
+        crossAxis: placement.includes("-"),
+        fallbackAxisSideDirection: "start",
+        padding: 5,
+      }),
+      shift({ padding: 5 }),
+    ],
+  });
+
+  const context = data.context;
+
+  const hover = useHover(context, {
+    move: false,
+    enabled: controlledOpen == null,
+  });
+  const focus = useFocus(context, {
+    enabled: controlledOpen == null,
+  });
+  const dismiss = useDismiss(context);
+  const role = useRole(context, { role: "tooltip" });
+
+  const interactions = useInteractions([hover, focus, dismiss, role]);
+
+  return React.useMemo(
+    () => ({
+      open,
+      setOpen,
+      ...interactions,
+      ...data,
+    }),
+    [open, setOpen, interactions, data],
+  );
+}
+
+type ContextType = ReturnType<typeof useTooltip> | null;
+
+const TooltipContext = React.createContext<ContextType>(null);
+
+export const useTooltipContext = () => {
+  const context = React.useContext(TooltipContext);
+
+  if (context == null) {
+    throw new Error("Tooltip components must be wrapped in <Tooltip />");
+  }
+
+  return context;
 };
 
 export function Tooltip({
-  as,
-  panel,
-  duration = 200,
-  className,
   children,
-}: TooltipProps) {
-  const [t, setT] = useState<NodeJS.Timeout | null>(null);
-  // Popper positioning
-  const [buttonElement, setButtonElement] = useState<HTMLButtonElement | null>(
-    null,
-  );
-  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
-    null,
-  );
-  const { styles, attributes } = usePopper(buttonElement, popperElement, {
-    placement: "top",
-  });
-
-  const closePopover = () => {
-    if (!buttonElement) return;
-    return buttonElement.dispatchEvent(
-      new KeyboardEvent("keydown", {
-        key: "Escape",
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
-  };
-
-  const onMouseEnter = (open: boolean) => {
-    if (!buttonElement) return;
-    if (t) clearTimeout(t);
-    if (open) return;
-    return buttonElement.click();
-  };
-
-  const onMouseLeave = (open: boolean) => {
-    if (!open) return;
-    const timeout = setTimeout(() => closePopover(), duration);
-    setT(timeout);
-  };
-
+  ...options
+}: { children: React.ReactNode } & TooltipOptions) {
+  // This can accept any props as options, e.g. `placement`,
+  // or other positioning options.
+  const tooltip = useTooltip(options);
   return (
-    <Popover
-      as={as}
-      className={twMerge(
-        clsx(
-          className,
-          "relative h-full w-full z-100 rounded-lg bg-gray-900 text-sm text-cyan-400 shadow-sm",
-        ),
-      )}
-    >
-      {({ open }) => {
-        return (
-          <>
-            <div
-              className={"h-full w-full"}
-              onMouseLeave={onMouseLeave.bind(null, open)}
-            >
-              <Popover.Button
-                ref={setButtonElement}
-                onMouseEnter={onMouseEnter.bind(null, open)}
-                onMouseLeave={onMouseLeave.bind(null, open)}
-              >
-                {children}
-              </Popover.Button>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-200"
-                enterFrom="opacity-0 translate-y-1"
-                enterTo="opacity-100 translate-y-0"
-                leave="transition ease-in duration-150"
-                leaveFrom="opacity-100 translate-y-0"
-                leaveTo="opacity-0 translate-y-1"
-              >
-                <Popover.Panel
-                  ref={setPopperElement}
-                  style={styles.popper}
-                  {...attributes.popper}
-                  className={
-                    "z-100 rounded-lg bg-gray-900 text-sm text-cyan-400 shadow-sm"
-                  }
-                >
-                  <div
-                    className="overflow-hidden rounded-lg shadow-lg"
-                    onMouseEnter={onMouseEnter.bind(null, open)}
-                    onMouseLeave={onMouseLeave.bind(null, open)}
-                  >
-                    {panel}
-                  </div>
-                </Popover.Panel>
-              </Transition>
-            </div>
-          </>
-        );
-      }}
-    </Popover>
+    <TooltipContext.Provider value={tooltip}>
+      {children}
+    </TooltipContext.Provider>
   );
 }
+
+export const TooltipTrigger = React.forwardRef<
+  HTMLElement,
+  React.HTMLProps<HTMLElement> & { asChild?: boolean }
+>(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
+  const context = useTooltipContext();
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const childrenRef = (children as any).ref;
+  const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);
+
+  // `asChild` allows the user to pass any element as the anchor
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(
+      children,
+      context.getReferenceProps({
+        ref,
+        ...props,
+        ...children.props,
+        "data-state": context.open ? "open" : "closed",
+      }),
+    );
+  }
+
+  return (
+    <button
+      ref={ref}
+      type={"button"}
+      // The user can style the trigger based on the state
+      data-state={context.open ? "open" : "closed"}
+      {...context.getReferenceProps(props)}
+    >
+      {children}
+    </button>
+  );
+});
+
+export const TooltipContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement>
+>(function TooltipContent({ style, ...props }, propRef) {
+  const context = useTooltipContext();
+  const ref = useMergeRefs([context.refs.setFloating, propRef]);
+
+  if (!context.open) return null;
+
+  return (
+    <FloatingPortal>
+      <div
+        ref={ref}
+        style={{
+          ...context.floatingStyles,
+          ...style,
+        }}
+        {...context.getFloatingProps(props)}
+      />
+    </FloatingPortal>
+  );
+});

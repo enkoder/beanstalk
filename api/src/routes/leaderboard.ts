@@ -1,10 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
-import { ABRTournamentTypeFilter } from "../lib/abr.js";
-import {
-  TOURNAMENT_POINTS,
-  calculateTournamentPointDistribution,
-} from "../lib/ranking.js";
+import { calculateTournamentPointDistribution } from "../lib/ranking.js";
 import { Factions, getFactionFromCode } from "../models/factions.js";
 import * as Leaderboards from "../models/leaderboard.js";
 import { Formats } from "../models/tournament.js";
@@ -17,13 +13,16 @@ import {
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
   GetPointDistributionSchema,
-  GetTiersSchema,
+  GetRankingConfigSchema,
   LeaderboardRowComponent,
   LeaderboardRowComponentType,
-  TierComponent,
-  TierComponentType,
 } from "../openapi.js";
-import { FactionCode, Format, TournamentType } from "../schema.js";
+import {
+  FactionCode,
+  Format,
+  RankingConfig,
+  TournamentType,
+} from "../schema.js";
 import { RequestWithDB } from "../types.d.js";
 
 export class GetLeaderboard extends OpenAPIRoute {
@@ -89,42 +88,11 @@ export class GetPointDistribution extends OpenAPIRoute {
   }
 }
 
-export class GetTiers extends OpenAPIRoute {
-  static schema = GetTiersSchema;
+export class GetRankingConfig extends OpenAPIRoute {
+  static schema = GetRankingConfigSchema;
 
   async handle() {
-    // TODO: this is a mess, figure out a good data format for this
-    const tiers = [
-      {
-        id: ABRTournamentTypeFilter.WorldsChampionship,
-        code: "worlds championship",
-        name: "Worlds",
-        points: TOURNAMENT_POINTS["worlds championship"],
-        type: "worlds championship",
-      },
-      //{
-      //  id: ABRTournamentTypeFilter.ContinentalChampionship,
-      //  code: TournamentType.Continental,
-      //  name: "Conts",
-      //  points: TOURNAMENT_POINTS[TournamentType.Continental],
-      //  type: TournamentType.Continental,
-      //},
-      //{
-      //  id: ABRTournamentTypeFilter.NationalChampionship,
-      //  code: TournamentType.Nationals,
-      //  name: "Nats",
-      //  points: TOURNAMENT_POINTS[TournamentType.Nationals],
-      //  type: TournamentType.Nationals,
-      //},
-      //{
-      //  id: ABRTournamentTypeFilter.IntercontinentalChampionship,
-      //  code: TournamentType.Intercontinental,
-      //  name: "Interconts",
-      //  points: TOURNAMENT_POINTS[TournamentType.Intercontinental],
-      //  type: TournamentType.Intercontinental,
-      //},
-    ] as TierComponentType[];
-    return json(tiers.map((tier) => TierComponent.parse(tier)));
+    return json(RankingConfig);
   }
 }
 

@@ -22,7 +22,7 @@ import {
   GetFormats,
   GetLeaderboard,
   GetPointDistribution,
-  GetTiers,
+  GetRankingConfig,
 } from "./routes/leaderboard.js";
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
@@ -67,25 +67,21 @@ router
   .get("/auth/token", GetTokenFromCode)
   .get("/auth/refresh_token", RefreshToken)
 
-  // User
   .get("/users/@me", authenticatedUser, Me)
   .get("/users", GetUsers)
   .get("/users/:userID", GetUser)
   .get("/users/:user/results", GetUserResults)
 
-  // Leadard
   .get("/leaderboard", GetLeaderboard)
   .get("/point-distribution", GetPointDistribution)
   .get("/factions", GetFactions)
   .get("/formats", GetFormats)
 
-  // Seas
   .get("/seasons", GetSeasons)
   .get("/seasons/:seasonId/tournaments", GetSeasonTournaments)
 
-  // Tournt
   .get("/tournaments", GetTournaments)
-  .get("/tournaments/tiers", GetTiers)
+  .get("/tournaments/config", GetRankingConfig)
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
 
