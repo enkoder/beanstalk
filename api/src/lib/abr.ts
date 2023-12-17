@@ -1,4 +1,3 @@
-import { Response } from "@cloudflare/workers-types";
 import { z } from "zod";
 import { TournamentTypes } from "../models/tournament.js";
 import { Format, Result, Tournament } from "../schema.js";
