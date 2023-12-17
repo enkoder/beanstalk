@@ -1,26 +1,25 @@
-import { getDB, initDB } from "../models";
-import { Miniflare } from "miniflare";
+import * as fs from "fs";
 import { error } from "itty-router";
 import { CompiledQuery } from "kysely";
-import * as fs from "fs";
+import { Miniflare } from "miniflare";
+import { getDB, initDB } from "../models/db.js";
 
 let _mf: Miniflare | null = null;
 
 export function getMF() {
   if (_mf) {
     return _mf;
-  } else {
-    throw error(500, "Miniflare has not been initialized");
   }
+  throw error(500, "Miniflare has not been initialized");
 }
 
 export async function initMf() {
   console.log("Initializing Miniflare");
   _mf = new Miniflare({
     d1Databases: ["DB"],
-    script: "",
+    scriptPath: "./dist/index.js",
     modules: true,
-    modulesRules: [{ type: "ESModule", include: ["**/*.js"] }],
+    modulesRules: [{ type: "ESModule", include: ["**/*.ts"] }],
     verbose: true,
   });
 
@@ -57,7 +56,7 @@ async function applyMigrations() {
     const sqlFile = fs.readFileSync(`./migrations/${migration}`, "utf-8");
     for (const sql of sqlFile.split(";")) {
       const query = CompiledQuery.raw(sql.trim());
-      if (query.sql == "") {
+      if (query.sql === "") {
         continue;
       }
 

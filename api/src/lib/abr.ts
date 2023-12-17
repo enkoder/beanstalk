@@ -1,8 +1,8 @@
-import { Format, Tournament, TournamentType } from "../models/tournament";
-import { Result } from "../models/results";
 import { z } from "zod";
+import { TournamentTypes } from "../models/tournament.js";
+import { Format, Result, Tournament } from "../schema.js";
 
-async function gatherResponse(response: Response) {
+async function gatherResponse(response) {
   const { headers } = response;
   const contentType = headers.get("content-type") || "";
   if (contentType.includes("application/json")) {
@@ -13,19 +13,19 @@ async function gatherResponse(response: Response) {
 
 export enum ABRTournamentTypeFilter {
   GNK = 1,
-  StoreChampionship,
-  RegionalChampionship,
-  NationalChampionship,
-  WorldsChampionship,
-  Community,
-  OnlineEvent,
-  NonTournamentEvent,
-  ContinentalChampionship,
-  TeamTournament,
-  CircuitOpener,
-  Asynchronous,
-  CircuitBreaker,
-  IntercontinentalChampionship,
+  StoreChampionship = 2,
+  RegionalChampionship = 3,
+  NationalChampionship = 4,
+  WorldsChampionship = 5,
+  Community = 6,
+  OnlineEvent = 7,
+  NonTournamentEvent = 8,
+  ContinentalChampionship = 9,
+  TeamTournament = 10,
+  CircuitOpener = 11,
+  Asynchronous = 12,
+  CircuitBreaker = 13,
+  IntercontinentalChampionship = 14,
 }
 
 export const ABRTournament = z.object({
@@ -47,7 +47,7 @@ export const ABRTournament = z.object({
   // TODO: parse
   date: z.coerce.date(),
   // TODO: check enum
-  type: z.nativeEnum(TournamentType),
+  type: z.enum(TournamentTypes),
   // TODO: check enum
   format: z.string(),
   mwl: z.string(),
@@ -115,17 +115,18 @@ async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }
   const bodyStr = await gatherResponse(resp);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const body: any[] = JSON.parse(bodyStr);
 
   if (body.length) {
-    body.forEach((tournament) => {
+    for (const tournament of body) {
       try {
         retArr.push(ABRTournament.parse(tournament));
       } catch (error) {
         // TODO: do something with these parser errors
         console.log(error);
       }
-    });
+    }
   }
 
   return retArr;
@@ -172,17 +173,18 @@ export async function getEntries(
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }
   const bodyStr = await gatherResponse(resp);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const body: any[] = JSON.parse(bodyStr);
 
   if (body.length) {
-    body.forEach((entry) => {
+    for (const entry of body) {
       try {
         retArr.push(ABREntry.parse(entry));
       } catch (error) {
         // TODO: do something with these parser errors
         console.log(error);
       }
-    });
+    }
   }
   return retArr;
 }

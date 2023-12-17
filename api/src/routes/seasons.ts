@@ -1,14 +1,14 @@
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
+import * as Seasons from "../models/season.js";
+import * as Tournaments from "../models/tournament.js";
 import {
-  GetSeasonsSchema,
   GetSeasonTournamentsSchema,
+  GetSeasonsSchema,
   SeasonComponent,
   TournamentComponent,
-} from "../openapi";
-import { RequestWithDB } from "../types";
-import { Seasons } from "../models/season";
-import { Tournaments } from "../models/tournament";
-import { json } from "itty-router";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+} from "../openapi.js";
+import { RequestWithDB } from "../types.d.js";
 
 export class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;
@@ -23,7 +23,7 @@ export class GetSeasonTournaments extends OpenAPIRoute {
   static schema = GetSeasonTournamentsSchema;
 
   async handle(req: RequestWithDB) {
-    const seasonId = req.params!["seasonId"];
+    const seasonId = req.params?.seasonId;
     const tournaments = await Tournaments.getAllExpandedFromSeasonId(
       Number(seasonId),
     );

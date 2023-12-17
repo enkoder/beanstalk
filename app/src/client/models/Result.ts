@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 import type { Format } from './Format';
+import type { TournamentType } from './TournamentType';
 
 export type Result = {
     rank_swiss: number;
@@ -12,6 +13,7 @@ export type Result = {
     points_earned: number;
     tournament_id: number;
     tournament_name: string;
+    tournament_type: TournamentType;
     players_count: number;
     corp_deck_identity_id: number;
     corp_deck_identity_name?: string | null;
@@ -24,5 +26,7 @@ export type Result = {
     user_id: number;
     user_name: string;
     format: Format;
+    count_for_tournament_type: number;
+    is_valid: boolean;
 };
 

@@ -6,7 +6,7 @@ import type { Faction } from '../models/Faction';
 import type { Format } from '../models/Format';
 import type { GetPointDistributionResponse } from '../models/GetPointDistributionResponse';
 import type { LeaderboardRow } from '../models/LeaderboardRow';
-import type { Tier } from '../models/Tier';
+import type { RankingConfig } from '../models/RankingConfig';
 import type { TournamentType } from '../models/TournamentType';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -88,14 +88,14 @@ export class LeaderboardService {
     }
 
     /**
-     * Returns a list of supported tournament tiers and their point values
-     * @returns Tier Returns an array Tiers
+     * Returns an object containing configuration data for determining the leaderboard
+     * @returns RankingConfig Returns a RankingConfig object
      * @throws ApiError
      */
-    public static getGetTiers(): CancelablePromise<Array<Tier>> {
+    public static getGetRankingConfig(): CancelablePromise<RankingConfig> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/tournaments/tiers',
+            url: '/api/tournaments/config',
         });
     }
 

@@ -1,8 +1,35 @@
-import { Faction, Factions } from "../models/factions";
-import { Result } from "../models/results";
-import { Format, Tournament, TournamentType } from "../models/tournament";
-import { User } from "../models/user";
-import { Season } from "../models/season";
+import { Factions } from "../models/factions.js";
+import {
+  Faction,
+  Format,
+  Result,
+  Season,
+  Tournament,
+  TournamentType,
+  User,
+} from "../schema";
+
+export function url({
+  season,
+  faction,
+  format,
+}: {
+  season?: Season;
+  faction?: Faction;
+  format?: Format;
+}) {
+  const url = new URL("http://localhost:8787/api/leaderboard");
+  if (season) {
+    url.searchParams.append("seasonId", String(season.id));
+  }
+  if (faction) {
+    url.searchParams.append("factionCode", faction.code);
+  }
+  if (format) {
+    url.searchParams.append("format", format);
+  }
+  return url;
+}
 
 type ResultArgs = {
   tournament: Tournament;
@@ -12,7 +39,7 @@ type ResultArgs = {
   corpFaction?: Faction;
 };
 
-export function resultFactory({
+export function result({
   tournament,
   user,
   points,
@@ -44,20 +71,14 @@ type TournamentArgs = {
   format?: Format;
 };
 
-export function tournamentFactory({
-  id,
-  name,
-  season,
-  type,
-  format,
-}: TournamentArgs) {
+export function tournament({ id, name, season, type, format }: TournamentArgs) {
   return {
     id: id,
     name: name || "test name",
     concluded: 1,
     location: "location",
     format: format || "standard",
-    type: type || TournamentType.Worlds,
+    type: type || "worlds championship",
     players_count: 10,
     season_id: season?.id,
     date: "",
@@ -69,7 +90,7 @@ type UserArgs = {
   isAdmin?: number;
 };
 
-export function userFactory({ id, isAdmin }: UserArgs) {
+export function user({ id, isAdmin }: UserArgs) {
   return {
     id: id,
     name: `user${id} name`,
@@ -79,20 +100,12 @@ export function userFactory({ id, isAdmin }: UserArgs) {
   } as User;
 }
 
-export function usersFactory(num: number, startId: number = 0) {
-  const retArr: User[] = [];
-  for (let i = startId; i < num + startId; i++) {
-    retArr.push(userFactory({ id: i }));
-  }
-  return retArr;
-}
-
 type SeasonArgs = {
   id: number;
   endedAt?: string | null;
 };
 
-export function seasonFactory({ id, endedAt = null }: SeasonArgs) {
+export function season({ id, endedAt = null }: SeasonArgs) {
   return {
     id: id,
     name: `season${id} name`,

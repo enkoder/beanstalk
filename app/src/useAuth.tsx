@@ -1,7 +1,7 @@
-import { AuthService, TokenResponse, User, UserService } from "./client";
+import { AxiosError } from "axios";
 import {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -9,11 +9,12 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import { AuthService, TokenResponse, User, UserService } from "./client";
 
 interface AuthContextType {
   user?: User | null;
   loading: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: any;
   login: (code: string) => void;
   logout: () => void;
@@ -28,16 +29,17 @@ export function AuthProvider({
   children: ReactNode;
 }): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const _storeTokens = (tokenResponse: TokenResponse) => {
+  function _storeTokens(tokenResponse: TokenResponse) {
     localStorage.setItem("access_token", tokenResponse.access_token);
     localStorage.setItem("refresh_token", tokenResponse.refresh_token);
-  };
+  }
 
   const fetchUser = useCallback(async () => {
     try {
@@ -46,7 +48,7 @@ export function AuthProvider({
     } catch (e) {
       const error = e as AxiosError;
       // Token is expired, let's try to refresh the token
-      if (error.status == 401) {
+      if (error.status === 401) {
         const refresh_token = localStorage.getItem("refresh_token");
         if (refresh_token) {
           const tokenResponse =

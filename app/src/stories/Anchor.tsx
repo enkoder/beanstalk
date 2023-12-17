@@ -1,7 +1,7 @@
+import { HashtagIcon } from "@heroicons/react/24/solid";
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { HashtagIcon } from "@heroicons/react/24/solid";
 
 type AnchorProps = {
   id: string;

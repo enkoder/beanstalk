@@ -1,8 +1,8 @@
-import { HttpError } from "./errors";
-import { PrivateAccountInfo, PrivateAccountInfoType } from "../openapi";
+import { error } from "itty-router";
 import { parse } from "node-html-parser";
 import { z } from "zod";
-import { error } from "itty-router";
+import { PrivateAccountInfo, PrivateAccountInfoType } from "../openapi";
+import { HttpError } from "./errors";
 
 export const NRDBUser = z.object({
   name: z.string(),

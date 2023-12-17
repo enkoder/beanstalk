@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "lint": "biome check .",
     "build": "pnpm --stream -r run build",
     "start": "pnpm --stream -r run start",
     "start-api": "pnpm --filter api run start",
@@ -16,16 +17,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "^1.4.1",
     "@rspack/cli": "0.3.10",
     "@rspack/core": "0.3.10",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-prettier": "^5.0.1",
+    "@types/jest": "^29.5.11",
     "openapi-typescript-codegen": "^0.25.0",
-    "prettier": "^3.1.0",
-    "wrangler": "^3.19.0"
+    "wrangler": "^3.21.0"
   }
 }

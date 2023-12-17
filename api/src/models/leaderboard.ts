@@ -1,57 +1,56 @@
-import { getDB } from "./index";
-import { Faction } from "./factions";
-import { Format } from "./tournament";
+import { Faction, Format } from "../schema.js";
+import * as Results from "./results.js";
 
-export class Leaderboards {
-  public static async getExpanded({
-    seasonId,
-    faction,
-    format,
-  }: {
-    seasonId?: number;
-    faction?: Faction;
-    format?: Format;
-  }) {
-    const q = getDB()
-      .selectFrom((innerEb) => {
-        let q = innerEb
-          .selectFrom("results")
-          .select((eb) => [
-            "users.id as user_id",
-            "users.name as user_name",
-            eb.fn.sum<number>("results.points_earned").as("points"),
-            eb.fn.countAll<number>().as("attended"),
-            "tournaments.format as format",
-          ])
-          .innerJoin("users", "results.user_id", "users.id")
-          .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
-          .groupBy("user_id")
-          .orderBy(["points desc", "attended desc"]);
+type LeaderboardRow = {
+  points: number;
+  rank: number;
+  user_id: number;
+  user_name: string;
+  attended: number;
+};
 
-        // SeasonId can be 0 which is non-truthy
-        if (seasonId !== undefined) {
-          q = q.where("tournaments.season_id", "=", seasonId);
-        }
-        if (faction && faction.side_code == "corp") {
-          q = q.where("results.corp_deck_faction", "=", faction.code);
-        }
-        if (faction && faction.side_code == "runner") {
-          q = q.where("results.runner_deck_faction", "=", faction.code);
-        }
-        if (format) {
-          q = q.where("tournaments.format", "=", format);
-        }
+export async function getExpanded({
+  seasonId,
+  faction,
+  format,
+}: {
+  seasonId?: number;
+  faction?: Faction;
+  format?: Format;
+}): Promise<LeaderboardRow[]> {
+  const results = await Results.getExpanded({ seasonId, faction, format });
 
-        return q.as("inner");
-      })
-      .select(["user_id", "user_name", "points"])
-      .select((eb) =>
-        eb.fn
-          .agg<number>("ROW_NUMBER")
-          .over((ob) => ob.orderBy("points", "desc"))
-          .as("rank"),
-      );
+  const rows: Record<number, LeaderboardRow> = {};
+  for (const result of results) {
+    if (!(result.user_id in rows)) {
+      rows[result.user_id] = {
+        points: 0,
+        rank: 0,
+        user_id: result.user_id,
+        user_name: result.user_name,
+        attended: 0,
+      } as LeaderboardRow;
+    }
 
-    return await q.execute();
+    // sum up the points, only if the result is valid
+    if (result.is_valid) {
+      rows[result.user_id].points += result.points_earned;
+    }
+
+    rows[result.user_id].attended += 1;
   }
+
+  const sortedRows = Object.values(rows).sort((a, b) => {
+    if (a.points === b.points) {
+      return b.attended - a.attended;
+    }
+    return b.points - a.points;
+  });
+
+  for (let i = 0; i < sortedRows.length; i++) {
+    sortedRows[i].rank = i + 1;
+  }
+
+  // Sort up the rows by points and then attended as a tiebreaker
+  return sortedRows;
 }

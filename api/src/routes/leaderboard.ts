@@ -1,3 +1,9 @@
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
+import { calculateTournamentPointDistribution } from "../lib/ranking.js";
+import { Factions, getFactionFromCode } from "../models/factions.js";
+import * as Leaderboards from "../models/leaderboard.js";
+import { Formats } from "../models/tournament.js";
 import {
   FactionComponent,
   FactionComponentType,
@@ -7,33 +13,28 @@ import {
   GetLeaderboardSchema,
   GetPointDistributionResponseComponent,
   GetPointDistributionSchema,
-  GetTiersSchema,
+  GetRankingConfigSchema,
   LeaderboardRowComponent,
   LeaderboardRowComponentType,
-  TierComponent,
-} from "../openapi";
-import { RequestWithDB } from "../types";
+} from "../openapi.js";
 import {
-  calculateTournamentPointDistribution,
-  TOURNAMENT_POINTS,
-} from "../lib/ranking";
-import { Leaderboards } from "../models/leaderboard";
-import { Format, Formats, TournamentType } from "../models/tournament";
-import { ABRTournamentTypeFilter } from "../lib/abr";
-import { FactionCode, Factions, getFactionFromCode } from "../models/factions";
-import { json } from "itty-router";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+  FactionCode,
+  Format,
+  RankingConfig,
+  TournamentType,
+} from "../schema.js";
+import { RequestWithDB } from "../types.d.js";
 
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
   async handle(req: RequestWithDB) {
-    const seasonId = req.query!["seasonId"]
-      ? Number(req.query!["seasonId"])
+    const seasonId = req.query.seasonId
+      ? Number(req.query.seasonId)
       : undefined;
 
-    const factionCode = req.query!["factionCode"];
-    const format = req.query!["format"] as Format;
+    const factionCode = req.query.factionCode;
+    const format = req.query.format as Format;
 
     const faction = factionCode
       ? getFactionFromCode(factionCode as FactionCode)
@@ -57,9 +58,9 @@ export class GetPointDistribution extends OpenAPIRoute {
   static schema = GetPointDistributionSchema;
 
   async handle(req: RequestWithDB) {
-    const totalPoints = Number(req.query["totalPoints"]);
-    const numPlayers = Number(req.query["numPlayers"]);
-    const type = req.query["type"] as TournamentType;
+    const totalPoints = Number(req.query.totalPoints);
+    const numPlayers = Number(req.query.numPlayers);
+    const type = req.query.type as TournamentType;
 
     const { points, adjustedTotalPoints } =
       calculateTournamentPointDistribution(totalPoints, numPlayers, type);
@@ -87,42 +88,11 @@ export class GetPointDistribution extends OpenAPIRoute {
   }
 }
 
-export class GetTiers extends OpenAPIRoute {
-  static schema = GetTiersSchema;
+export class GetRankingConfig extends OpenAPIRoute {
+  static schema = GetRankingConfigSchema;
 
   async handle() {
-    // TODO: this is a mess, figure out a good data format for this
-    const tiers = [
-      {
-        id: ABRTournamentTypeFilter.WorldsChampionship,
-        code: TournamentType.Worlds,
-        name: "Worlds",
-        points: TOURNAMENT_POINTS[TournamentType.Worlds],
-        type: TournamentType.Worlds,
-      },
-      {
-        id: ABRTournamentTypeFilter.ContinentalChampionship,
-        code: TournamentType.Continental,
-        name: "Conts",
-        points: TOURNAMENT_POINTS[TournamentType.Continental],
-        type: TournamentType.Continental,
-      },
-      {
-        id: ABRTournamentTypeFilter.NationalChampionship,
-        code: TournamentType.Nationals,
-        name: "Nats",
-        points: TOURNAMENT_POINTS[TournamentType.Nationals],
-        type: TournamentType.Nationals,
-      },
-      {
-        id: ABRTournamentTypeFilter.IntercontinentalChampionship,
-        code: TournamentType.Intercontinental,
-        name: "Interconts",
-        points: TOURNAMENT_POINTS[TournamentType.Intercontinental],
-        type: TournamentType.Intercontinental,
-      },
-    ];
-    return json(tiers.map((tier) => TierComponent.parse(tier)));
+    return json(RankingConfig);
   }
 }
 

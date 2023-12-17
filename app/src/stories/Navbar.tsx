@@ -1,17 +1,18 @@
-import greenBeans from "../../assets/ai_beanstalk_royalties.jpeg";
-import useAuth from "../useAuth";
-import { AuthService } from "../client";
-import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
+import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import greenBeans from "../../assets/ai_beanstalk_royalties.jpeg";
+import { AuthService } from "../client";
+import useAuth from "../useAuth";
 
-export type Menu = {
+export type MenuItem = {
   name: string;
   onClick: () => void;
   needsUser: boolean;
@@ -28,16 +29,13 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [current, setCurrent] = useState<string>();
+  const { data: authUrl } = useQuery<string>({
+    queryKey: ["authUrl"],
+    queryFn: () => AuthService.getGetLoginUrl(),
+  });
 
   function handleLogin() {
-    AuthService.getGetLoginUrl()
-      .then(({ auth_url }) => {
-        window.location.assign(auth_url);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    return () => {};
+    if (authUrl) window.location.assign(authUrl);
   }
 
   const navigation: Navigation[] = [
@@ -49,7 +47,7 @@ export function Navbar() {
     { name: "FAQ", to: "/faq", isCurrent: false },
   ];
 
-  const menu: Menu[] = [
+  const menu: MenuItem[] = [
     {
       name: "Profile",
       needsUser: true,
@@ -71,7 +69,7 @@ export function Navbar() {
 
   useEffect(() => {
     for (const nav of navigation) {
-      if (location.pathname == nav.to) {
+      if (location.pathname === nav.to) {
         setCurrent(nav.to);
       }
     }
@@ -117,12 +115,12 @@ export function Navbar() {
                       <Link
                         to={item.to}
                         className={clsx(
-                          item.to == current
+                          item.to === current
                             ? "bg-gray-950 text-cyan-400"
                             : "text-gray-400 hover:bg-cyan-600 hover:text-gray-950",
                           "rounded-lg px-3 py-2",
                         )}
-                        aria-current={item.to == current ? "page" : undefined}
+                        aria-current={item.to === current ? "page" : undefined}
                       >
                         {item.name}
                       </Link>
@@ -154,7 +152,7 @@ export function Navbar() {
                           "h-8 w-8 ",
                         )}
                         aria-hidden={true}
-                      ></UserCircleIcon>
+                      />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -174,6 +172,7 @@ export function Navbar() {
                             <Menu.Item>
                               {({ active }) => (
                                 <button
+                                  type={"button"}
                                   onClick={menuItem.onClick}
                                   className={clsx(
                                     active
@@ -203,12 +202,12 @@ export function Navbar() {
                   as="a"
                   href={item.to}
                   className={clsx(
-                    item.to == current
+                    item.to === current
                       ? "bg-gray-950 text-cyan-400"
                       : "text-cyan-400 hover:bg-cyan-600 hover:text-gray-950",
                     "block rounded-md px-3 py-2 text-base font-medium",
                   )}
-                  aria-current={item.to == current ? "page" : undefined}
+                  aria-current={item.to === current ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>

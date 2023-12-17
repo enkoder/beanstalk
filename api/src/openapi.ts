@@ -1,11 +1,11 @@
-import { ABRTournamentTypeFilter } from "./lib/abr";
-import { Formats, TournamentType } from "./models/tournament";
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
+import { ABRTournamentTypeFilter } from "./lib/abr.js";
+import { Formats, TournamentTypes } from "./models/tournament.js";
 
 export const FormatComponent = z.enum(Formats).openapi("Format");
 export const TournamentTypeComponent = z
-  .nativeEnum(TournamentType)
+  .enum(TournamentTypes)
   .openapi("TournamentType");
 
 export const UserComponent = z
@@ -28,6 +28,7 @@ export const ResultComponent = z
     points_earned: z.number(),
     tournament_id: z.number(),
     tournament_name: z.string(),
+    tournament_type: TournamentTypeComponent,
     players_count: z.number(),
     corp_deck_identity_id: z.number(),
     corp_deck_identity_name: z.string().nullable().optional(),
@@ -40,6 +41,8 @@ export const ResultComponent = z
     user_id: z.number(),
     user_name: z.string(),
     format: FormatComponent,
+    count_for_tournament_type: z.number().default(0),
+    is_valid: z.boolean(),
   })
   .openapi("Result");
 export type ResultComponentType = z.infer<typeof ResultComponent>;
@@ -71,17 +74,24 @@ export const TournamentComponent = z
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 
-export const TierComponent = z
+export const RankingConfigComponent = z
   .object({
-    id: z.number(),
-    code: z.string(),
-    name: z.string(),
-    points: z.number(),
-    season: z.number().optional(),
-    type: TournamentTypeComponent.optional(),
+    min_players_to_be_legal: z.number(),
+    extra_points_per_person: z.number(),
+    percent_for_first_place: z.number(),
+    percent_receiving_points: z.number(),
+    tournament_configs: z.record(
+      TournamentTypeComponent,
+      z.object({
+        code: TournamentTypeComponent,
+        tournament_limit: z.number(),
+        name: z.string(),
+        points: z.number(),
+      }),
+    ),
   })
-  .openapi("Tier");
-export type TierComponentType = z.infer<typeof TierComponent>;
+  .openapi("RankingConfig");
+export type RankingConfigType = z.infer<typeof RankingConfigComponent>;
 
 export const FactionComponent = z
   .object({
@@ -100,6 +110,7 @@ export const LeaderboardRowComponent = z
     rank: z.number(),
     user_id: z.number(),
     user_name: z.coerce.string(),
+    attended: z.number(),
   })
   .openapi("LeaderboardRow");
 export type LeaderboardRowComponentType = z.infer<
@@ -188,7 +199,7 @@ export const GetOAuthLoginURLSchema = {
   responses: {
     "200": {
       description: "Object containing the auth_url",
-      schema: z.object({ auth_url: z.string() }),
+      schema: z.string(),
     },
   },
 };
@@ -306,14 +317,14 @@ export const GetLeaderboardSchema = {
   },
 };
 
-export const GetTiersSchema = {
+export const GetRankingConfigSchema = {
   tags: ["Leaderboard"],
   summary:
-    "Returns a list of supported tournament tiers and their point values",
+    "Returns an object containing configuration data for determining the leaderboard",
   responses: {
     "200": {
-      schema: z.array(TierComponent),
-      description: "Returns an array Tiers",
+      schema: RankingConfigComponent,
+      description: "Returns a RankingConfig object",
     },
   },
 };

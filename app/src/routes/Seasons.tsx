@@ -1,17 +1,16 @@
-import { Season, SeasonsService } from "../client";
-import { PageHeading } from "../stories/PageHeader";
-import { Link } from "../stories/Link";
-import { useLoaderData } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
-
-export async function SeasonsLoader() {
-  return SeasonsService.getGetSeasons();
-}
+import { Season, SeasonsService } from "../client";
+import { Link } from "../stories/Link";
+import { PageHeading } from "../stories/PageHeader";
 
 const DT_FORMAT = "MMMM DD YYYY";
 
 export function Seasons() {
-  const seasons = useLoaderData() as Season[];
+  const { data: seasons } = useQuery<Season[]>({
+    queryKey: ["seasons"],
+    queryFn: () => SeasonsService.getGetSeasons(),
+  });
 
   return (
     <>
@@ -56,27 +55,26 @@ export function Seasons() {
         </thead>
 
         <tbody>
-          {seasons &&
-            seasons.map((season) => (
-              <tr
-                className={
-                  "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
-                }
-              >
-                <td>{season.id}</td>
-                <td className={"px-4 py-2"}>
-                  <Link to={`/?season=${season.id}`}>{season.name}</Link>
-                </td>
-                <td className={"px-4 py-2"}>
-                  {moment(season.started_at).format(DT_FORMAT)}
-                </td>
-                <td className={"px-4 py-2"}>
-                  {season.ended_at
-                    ? moment(season.ended_at).format(DT_FORMAT)
-                    : "Active"}
-                </td>
-              </tr>
-            ))}
+          {seasons?.map((season) => (
+            <tr
+              className={
+                "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+              }
+            >
+              <td>{season.id}</td>
+              <td className={"px-4 py-2"}>
+                <Link to={`/?season=${season.id}`}>{season.name}</Link>
+              </td>
+              <td className={"px-4 py-2"}>
+                {moment(season.started_at).format(DT_FORMAT)}
+              </td>
+              <td className={"px-4 py-2"}>
+                {season.ended_at
+                  ? moment(season.ended_at).format(DT_FORMAT)
+                  : "Active"}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>

@@ -1,10 +1,18 @@
-import { Result, ResultsService, UserResultsResponse } from "../client";
-import { PageHeading } from "../stories/PageHeader";
-import { FilterSection, FilterSectionValues } from "../stories/FilterSection";
-import { Link } from "../stories/Link";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
+import { useParams, useSearchParams } from "react-router-dom";
+import {
+  LeaderboardService,
+  RankingConfig,
+  Result,
+  ResultsService,
+  type UserResultsResponse,
+} from "../client";
+import { FilterSection, getFilterValues } from "../stories/FilterSection";
+import { Link } from "../stories/Link";
+import { PageHeading } from "../stories/PageHeader";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../stories/Tooltip";
+import { capStr } from "../util";
 
 type ResultsParams = {
   user: string;
@@ -60,20 +68,25 @@ function Decks(result: Result) {
 
 export function Results() {
   const params = useParams<ResultsParams>();
-  const [results, setResults] = useState<UserResultsResponse>();
+  const [searchParams] = useSearchParams();
+  const values = getFilterValues(searchParams);
+  const user = params.user || "";
 
-  const getResults = (v: FilterSectionValues) => {
-    if (params.user) {
+  const { data: results } = useQuery<UserResultsResponse>({
+    queryKey: ["results", user, values.seasonId, values.faction, values.format],
+    queryFn: () =>
       ResultsService.getGetUserResults(
-        params.user,
-        v.seasonId,
-        v.faction,
-        v.format,
-      ).then((results) => {
-        setResults(results);
-      });
-    }
-  };
+        params.user || "",
+        values.seasonId,
+        values.faction,
+        values.format,
+      ),
+  });
+
+  const { data: rankingConfig } = useQuery<RankingConfig>({
+    queryKey: ["rankingConfig"],
+    queryFn: () => LeaderboardService.getGetRankingConfig(),
+  });
 
   const formatPlacement = (r: Result) => {
     let retStr = `${r.rank_swiss} / ${r.players_count}`;
@@ -104,7 +117,7 @@ export function Results() {
         )}
       </div>
 
-      <FilterSection hasSearchBar={false} onParamChange={getResults} />
+      <FilterSection hasSearchBar={false} />
 
       <table
         className={
@@ -131,34 +144,73 @@ export function Results() {
           </tr>
         </thead>
         <tbody>
-          {results &&
-            results.results.map((result) => (
-              <tr
-                className={"text-left odd:bg-slate-900 even:bg-slate-950"}
-                key={results.user_id + "/" + result.tournament_id}
-              >
-                <td className={"whitespace-pre-wrap py-2"}>
-                  <span>
-                    <Link to={`/tournament/${result.tournament_id}`}>
-                      {result.tournament_name}
-                    </Link>
-                    <Link
-                      className={"pl-2 text-xs"}
-                      to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+          {results?.results.map((result) => (
+            <>
+              <Tooltip placement={"right-end"}>
+                <TooltipTrigger asChild={true}>
+                  <tr
+                    className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+                    key={`${results.user_id}/${result.tournament_id}`}
+                  >
+                    <td className={"whitespace-pre-wrap py-2"}>
+                      <span>
+                        <Link
+                          className={clsx(!result.is_valid && "text-gray-500")}
+                          to={`/tournament/${result.tournament_id}`}
+                        >
+                          {result.tournament_name}
+                        </Link>
+                        <Link
+                          className={clsx(
+                            !result.is_valid && "text-gray-500",
+                            "pl-2 text-xs",
+                          )}
+                          to={`https://alwaysberunning.net/tournaments/${result.tournament_id}`}
+                        >
+                          (ABR)
+                        </Link>
+                      </span>
+                    </td>
+                    <td className={"py-2 align-middle"}>{Decks(result)}</td>
+                    <td
+                      className={clsx(
+                        !result.is_valid && "text-gray-500",
+                        "py-2 text-center",
+                      )}
                     >
-                      (ABR)
-                    </Link>
-                  </span>
-                </td>
-                <td className={"py-2 align-middle"}>{Decks(result)}</td>
-                <td className={"py-2 text-center"}>
-                  {formatPlacement(result)}
-                </td>
-                <td className={"py-2 text-right"}>
-                  {result.points_earned.toFixed(2)}
-                </td>
-              </tr>
-            ))}
+                      <span>{formatPlacement(result)}</span>
+                    </td>
+                    <td
+                      className={clsx(
+                        !result.is_valid && "text-gray-500",
+                        "py-2 text-right",
+                      )}
+                    >
+                      <span
+                        className={clsx(!result.is_valid && "text-gray-500")}
+                      >
+                        {result.points_earned.toFixed(2)}
+                      </span>
+                    </td>
+                  </tr>
+                </TooltipTrigger>
+                {!result.is_valid && rankingConfig && (
+                  <TooltipContent
+                    className={
+                      "text-cyan-500 text-sm bg-gray-950 p-2 rounded-lg shadow-lg border-gray-600 border"
+                    }
+                  >
+                    Limit{" "}
+                    {
+                      rankingConfig.tournament_configs[result.tournament_type]
+                        .tournament_limit
+                    }{" "}
+                    per {capStr(result.tournament_type)}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </>
+          ))}
         </tbody>
       </table>
     </>

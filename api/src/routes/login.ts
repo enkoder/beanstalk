@@ -1,16 +1,16 @@
-import { Env, RequestWithDB } from "../types";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
+import { json } from "itty-router";
+import { signPassword, verifyPassword } from "../lib/auth.js";
+import { errorResponse } from "../lib/errors";
+import * as Users from "../models/user.js";
 import {
   AuthLoginBody,
   AuthLoginSchema,
   AuthRegisterSchema,
   UserComponent,
 } from "../openapi";
-import { signPassword, verifyPassword } from "../lib/auth";
-import { errorResponse } from "../lib/errors";
-import { Users } from "../models/user";
-import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { json } from "itty-router";
+import { Env, RequestWithDB } from "../types.d.js";
 
 // Currently these views are unused as we are preferring NRDB auth only right now
 // We may want to eventually add a username & password auth flow again
@@ -18,7 +18,7 @@ import { json } from "itty-router";
 class AuthRegister extends OpenAPIRoute {
   static schema = AuthRegisterSchema;
 
-  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data: any) {
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = data.body;
     let user = await Users.getByEmail(body.email);
 
@@ -45,13 +45,8 @@ class AuthRegister extends OpenAPIRoute {
 class AuthLogin extends OpenAPIRoute {
   static schema = AuthLoginSchema;
 
-  async handle(
-    req: RequestWithDB,
-    env: Env,
-    _: ExecutionContext,
-    data: Record<string, any>,
-  ) {
-    const authLoginBody = AuthLoginBody.parse(data.body);
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext) {
+    const authLoginBody = AuthLoginBody.parse(req.body);
     const user = await Users.getByEmail(authLoginBody.email);
 
     if (!user) {

@@ -1,14 +1,16 @@
-import { PageHeading } from "../stories/PageHeader";
-// @ts-ignore
-import rankings from "../../../api/src/lib/ranking";
-import { Select } from "../stories/Select";
+import { useEffect, useState } from "react";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { useEffect, useState } from "react";
+// @ts-ignore
+import rankings from "../../../api/src/lib/ranking.ts";
+import { PageHeading } from "../stories/PageHeader";
+import { Select } from "../stories/Select";
 
 export function Code() {
   const [loading, setLoading] = useState<boolean>(true);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [themes, setThemes] = useState<any[]>([]);
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [selectedTheme, setSelectedTheme] = useState<any>();
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export function Code() {
         themes.push(theme);
       }
       setThemes(themes);
-      setSelectedTheme(styles["vscDarkPlus"]);
+      setSelectedTheme(styles.vscDarkPlus);
       setLoading(false);
     });
   }, []);

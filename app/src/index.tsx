@@ -1,30 +1,31 @@
-import { Leaderboard } from "./routes/leaderboard";
-import { Results } from "./routes/results";
-import { OpenAPI } from "./client";
-import useAuth, { AuthProvider } from "./useAuth";
-import { Faq } from "./routes/Faq";
-import { Beans } from "./routes/Beans";
-import { Seasons, SeasonsLoader } from "./routes/Seasons";
-import { Sim } from "./routes/Sim";
-import { Code } from "./routes/Code";
-import { Stars } from "./stories/Stars";
-import { PageHeading } from "./stories/PageHeader";
-import { Tournament } from "./routes/Tournament";
-import { Navbar } from "./stories/Navbar";
-import doggo from "../assets/doggo.png";
-import ReactDOM from "react-dom/client";
 import React, { useEffect } from "react";
+import ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
   Outlet,
-  redirect,
   RouterProvider,
+  createBrowserRouter,
+  redirect,
   useLocation,
   useOutletContext,
 } from "react-router-dom";
+import doggo from "../assets/doggo.png";
+import { OpenAPI } from "./client";
+import { Beans } from "./routes/Beans";
+import { Code } from "./routes/Code";
+import { Faq } from "./routes/Faq";
+import { Seasons } from "./routes/Seasons";
+import { Sim } from "./routes/Sim";
+import { TournamentPage } from "./routes/TournamentPage";
+import { Leaderboard } from "./routes/leaderboard";
+import { Results } from "./routes/results";
+import { Navbar } from "./stories/Navbar";
+import { PageHeading } from "./stories/PageHeader";
+import { Stars } from "./stories/Stars";
+import useAuth, { AuthProvider } from "./useAuth";
 
 import "@fontsource/inter/400.css";
 import "@fontsource/jetbrains-mono/400.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./output.css";
 
 const getToken = async (): Promise<string> => {
@@ -49,7 +50,7 @@ export function OAuth2Callback() {
       redirect("/");
     }
     return () => {};
-  }, [location.search]);
+  }, [login]);
 
   return <></>;
 }
@@ -78,7 +79,7 @@ export function useContentWidth() {
 }
 
 function Layout() {
-  const { pathname, hash, key } = useLocation();
+  const { hash } = useLocation();
 
   useEffect(() => {
     // https://stackoverflow.com/questions/40280369/use-anchors-with-react-router
@@ -93,7 +94,7 @@ function Layout() {
         }
       }, 0);
     }
-  }, [pathname, hash, key]); // do this on route change
+  }, [hash]); // do this on route change
 
   return (
     <AuthProvider>
@@ -116,12 +117,12 @@ const router = createBrowserRouter([
       { index: true, element: <Leaderboard /> },
       { path: "/faq", element: <Faq /> },
       { path: "/results/:user", element: <Results /> },
-      { path: "/tournament/:tournament", element: <Tournament /> },
+      { path: "/tournament/:tournament", element: <TournamentPage /> },
       { path: "/oauth/callback", element: <OAuth2Callback /> },
       { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },
-      { path: "/seasons", element: <Seasons />, loader: SeasonsLoader },
+      { path: "/seasons", element: <Seasons /> },
     ],
   },
 ]);
@@ -130,10 +131,14 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
+const queryClient = new QueryClient();
+
 root.render(
   <React.StrictMode>
     <body>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </body>
   </React.StrictMode>,
 );

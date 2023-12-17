@@ -1,5 +1,5 @@
-import { Select } from "./Select";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Select } from "./Select";
 
 const meta = {
   title: "Beanstalk/Select",

@@ -1,13 +1,13 @@
-import { PageHeading } from "../stories/PageHeader";
-import { Anchor } from "../stories/Anchor";
-// @ts-ignore
-import doggo from "../../assets/doggo.png";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // @ts-ignore
 import aiBeanstalk from "../../assets/ai_beanstalk_royalties.jpeg";
-import { Sep } from "../stories/Sep";
+// @ts-ignore
+import doggo from "../../assets/doggo.png";
+import { Anchor } from "../stories/Anchor";
 import { Link } from "../stories/Link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { PageHeading } from "../stories/PageHeader";
+import { Sep } from "../stories/Sep";
 
 type Question = {
   title: string;
@@ -131,17 +131,17 @@ const QUESTIONS: Question[] = [
       <p>
         My long term vision for the Beanstalk is to deliver a comprehensive
         seasonal ranking leaderboard for all online games played on{" "}
-        <Link to={"https//jinteki.net"}>jinteki.net</Link>
-        . The ranking system would be based on an ELO-like system similar to
-        Chess. Both ranked and unranked games would be recorded and logged,
-        affecting your current season ranking. I also envision access to
-        seasonal stats, all-time stats, and analytical tools for evaluating your
-        performance throughout your Netrunner career. Win/loss rate is a given,
-        but I would love to see a detailed analysis of your win rate against
-        specific IDs and factions, as well as win-loss rates against other
-        players. This is an ambitious goal, but I'm optimistic. I believe this
-        game has longevity, and I'm committed to creating an exciting experience
-        for the community to keep folks engaged and coming back for more.
+        <Link to={"https//jinteki.net"}>jinteki.net</Link>. The ranking system
+        would be based on an ELO-like system similar to Chess. Both ranked and
+        unranked games would be recorded and logged, affecting your current
+        season ranking. I also envision access to seasonal stats, all-time
+        stats, and analytical tools for evaluating your performance throughout
+        your Netrunner career. Win/loss rate is a given, but I would love to see
+        a detailed analysis of your win rate against specific IDs and factions,
+        as well as win-loss rates against other players. This is an ambitious
+        goal, but I'm optimistic. I believe this game has longevity, and I'm
+        committed to creating an exciting experience for the community to keep
+        folks engaged and coming back for more.
         <br />
         Can you climb the Beanstalk and reach #1 next season?!
       </p>
@@ -178,7 +178,7 @@ const QUESTIONS: Question[] = [
             className={"mb-8 mt-4"}
             src={doggo}
             alt={"I have no idea what I'm doing"}
-          ></img>
+          />
           This is the first website I have ever made. While it's been a project
           of passion and I'v learned a ton, it's still my first, so no doubt
           many things can be improved. I would love to learn from you!!

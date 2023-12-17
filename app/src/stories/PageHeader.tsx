@@ -1,6 +1,6 @@
+import { clsx } from "clsx";
 import { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
-import { clsx } from "clsx";
 
 type PageHeaderProps = HTMLAttributes<HTMLElement> & {
   text: string;

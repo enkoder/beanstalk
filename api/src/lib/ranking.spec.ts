@@ -1,5 +1,4 @@
-import { calculateTournamentPointDistribution } from "./ranking";
-import { TournamentType } from "../models/tournament";
+import { calculateTournamentPointDistribution } from "./ranking.js";
 
 test("calculate points", () => {
   const total = 100;
@@ -7,7 +6,7 @@ test("calculate points", () => {
   const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(
     total,
     num,
-    TournamentType.Nationals,
+    "national championship",
     0.2,
     0.5,
     20,
@@ -38,7 +37,7 @@ test("not enough players", () => {
   const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(
     total,
     num,
-    TournamentType.Worlds,
+    "worlds championship",
     0.2,
     0.5,
     20,
@@ -59,7 +58,7 @@ test("Intercontinentals", () => {
   const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(
     total,
     num,
-    TournamentType.Intercontinental,
+    "intercontinental championship",
     0.2,
     0.5,
     20,

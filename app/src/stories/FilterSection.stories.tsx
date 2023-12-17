@@ -1,6 +1,6 @@
-import { FilterSection } from "./FilterSection";
-import { withRouter } from "storybook-addon-react-router-v6";
 import type { Meta, StoryObj } from "@storybook/react";
+import { withRouter } from "storybook-addon-react-router-v6";
+import { FilterSection } from "./FilterSection";
 
 const meta = {
   title: "Beanstalk/FilterSection",
@@ -8,7 +8,7 @@ const meta = {
   decorators: [withRouter],
   render: ({ ...args }) => (
     <div className={"m-8"}>
-      <FilterSection hasSearchBar={false} {...args}></FilterSection>
+      <FilterSection hasSearchBar={false} {...args} />
     </div>
   ),
 } satisfies Meta<typeof FilterSection>;

@@ -1,24 +1,25 @@
-import { Env, IngestResultQueueMessage } from "./types";
 import {
   ABREntryType,
-  abrToResult,
-  abrToTournament,
   ABRTournamentType,
   ABRTournamentTypeFilter,
+  abrToResult,
+  abrToTournament,
   getEntries,
   getTournamentsByType,
   getTournamentsByUserId,
-} from "./lib/abr";
-import { initDB } from "./models";
-import { Tournament, Tournaments } from "./models/tournament";
-import { Result, Results } from "./models/results";
-import { User, Users } from "./models/user";
-import * as NRDB from "./lib/nrdb";
+} from "./lib/abr.js";
+import * as NRDB from "./lib/nrdb.js";
 import {
-  calculateTournamentPointDistribution,
   TOURNAMENT_POINTS,
-} from "./lib/ranking";
-import { Seasons } from "./models/season";
+  calculateTournamentPointDistribution,
+} from "./lib/ranking.js";
+import { initDB } from "./models/db.js";
+import * as Results from "./models/results.js";
+import * as Seasons from "./models/season.js";
+import * as Tournaments from "./models/tournament.js";
+import * as Users from "./models/user.js";
+import { Result, Tournament, User } from "./schema.js";
+import { Env, IngestResultQueueMessage } from "./types.d.js";
 
 enum Queues {
   IngestTournament = "ingest-tournament",
@@ -69,11 +70,11 @@ async function ingestEntry(
     await env.CARDS_KV.get(String(entry.corp_deck_identity_id)),
   );
 
-  const runner_deck_identity_name = runner_card["title"];
-  const runner_deck_faction = runner_card["faction_code"];
+  const runner_deck_identity_name = runner_card.title;
+  const runner_deck_faction = runner_card.faction_code;
 
-  const corp_deck_identity_name = corp_card["title"];
-  const corp_deck_faction = corp_card["faction_code"];
+  const corp_deck_identity_name = corp_card.title;
+  const corp_deck_faction = corp_card.faction_code;
 
   // this is a partial, be sure to add the extra stuff that isn't coming from abr
   return await Results.insert(
@@ -147,7 +148,7 @@ async function handleTournamentIngest(
   abrTournament: ABRTournamentType,
 ) {
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
-  const seasonId = seasons.length != 0 ? seasons[0].id : null;
+  const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
   const tournament = await Tournaments.insert(
     abrToTournament(abrTournament, seasonId),
@@ -193,7 +194,7 @@ export async function abrIngest(
 
   if (!abrTournaments) {
     throw new Error(
-      `abrIngest | Could not find ABR Tournaments from query and args`,
+      "abrIngest | Could not find ABR Tournaments from query and args",
     );
   }
 
@@ -202,8 +203,8 @@ export async function abrIngest(
   }
 }
 
-async function handleCardIngest(env: Env, card: any) {
-  await env.CARDS_KV.put(String(Number(card["code"])), JSON.stringify(card));
+async function handleCardIngest(env: Env, card) {
+  await env.CARDS_KV.put(String(Number(card.code)), JSON.stringify(card));
 }
 
 export async function handleQueue(
@@ -225,13 +226,11 @@ export async function handleQueue(
         await handleResultIngest(env, tournament, entry);
         break;
       }
-      case Queues.IngestResultDLQ:
-        {
-          const { tournament, entry } =
-            message.body as IngestResultQueueMessage;
-          await handleResultIngestDLQ(tournament, entry);
-        }
-        break;
+      case Queues.IngestResultDLQ: {
+        const { tournament, entry } = message.body as IngestResultQueueMessage;
+        await handleResultIngestDLQ(tournament, entry);
+      }
+      break;
       case Queues.IngestCard: {
         await handleCardIngest(env, message.body);
         break;

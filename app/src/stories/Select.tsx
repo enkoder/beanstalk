@@ -1,5 +1,5 @@
-import { Fragment, ReactNode } from "react";
 import { Listbox, Transition } from "@headlessui/react";
+import { Fragment, ReactNode } from "react";
 
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
@@ -57,7 +57,7 @@ export function Select<T>({
               <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-cyan-500 bg-gray-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {items.map((item, i) => (
                   <Listbox.Option
-                    key={i}
+                    key={String(i)}
                     className={({ active }) =>
                       clsx(
                         active ? "bg-gray-950 text-cyan-400" : "text-gray-400",

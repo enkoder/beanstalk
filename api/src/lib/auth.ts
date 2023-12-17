@@ -1,9 +1,8 @@
-import { errorResponse } from "./errors";
-import { getPrivateAccountInfo } from "./nrdb";
-import { Env, RequestWithDB } from "../types";
-import { Users } from "../models/user";
-import { PrivateAccountInfoType } from "../openapi";
-//import { decode, verify } from "@tsndr/cloudflare-worker-jwt";
+import * as Users from "../models/user.js";
+import { PrivateAccountInfoType } from "../openapi.js";
+import { Env, RequestWithDB } from "../types.d.js";
+import { errorResponse } from "./errors.js";
+import { getPrivateAccountInfo } from "./nrdb.js";
 
 export async function signPassword(
   key: string,
@@ -80,7 +79,7 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
   try {
     accountInfo = await getPrivateAccountInfo(access_token);
   } catch (e) {
-    if (e.statusCode == 401) {
+    if (e.statusCode === 401) {
       return errorResponse(401, "Authentication error");
     }
   }
@@ -111,7 +110,7 @@ export async function authenticatedUser(request: RequestWithDB, _: Env) {
   //}
   // user_id not null implies user is logged in
   request.user_id = user.id;
-  request.is_admin = user.is_admin;
+  request.is_admin = user.is_admin !== 0;
 }
 
 export async function adminOnly(request: RequestWithDB, _: Env) {

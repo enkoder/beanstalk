@@ -2,16 +2,17 @@
   "include": ["src/*"],
   "exclude": ["**/node_modules/*"],
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "module": "commonjs",
-    "types": [
-      "@cloudflare/workers-types",
-      "jest",
-      "jest-environment-miniflare/globals"
-    ],
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "lib": ["ESNext"]
+    "esModuleInterop": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "inlineSourceMap": true,
+    "resolveJsonModule": true,
+    "outDir": "../dist",
+    "lib": ["ESNext"],
+    "strict": false,
+    "types": ["node", "@cloudflare/workers-types", "jest"]
   }
 }

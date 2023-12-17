@@ -1,21 +1,21 @@
-import { RequestWithDB } from "../types";
-import { Tournaments } from "../models/tournament";
+import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { json } from "itty-router";
+import * as Results from "../models/results.js";
+import * as Tournaments from "../models/tournament.js";
 import {
   GetTournamentResultsSchema,
   GetTournamentSchema,
   GetTournamentsSchema,
   ResultComponent,
   TournamentComponent,
-} from "../openapi";
-import { Results } from "../models/results";
-import { json } from "itty-router";
-import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+} from "../openapi.js";
+import { RequestWithDB } from "../types.d.js";
 
 export class GetTournament extends OpenAPIRoute {
   static schema = GetTournamentSchema;
 
   async handle(req: RequestWithDB) {
-    const tournamentId = req.params!["tournamentId"];
+    const tournamentId = req.params?.tournamentId;
     const tournament = await Tournaments.get(Number(tournamentId));
     return json(TournamentComponent.parse(tournament));
   }
@@ -39,10 +39,10 @@ export class GetTournamentResults extends OpenAPIRoute {
   static schema = GetTournamentResultsSchema;
 
   async handle(req: RequestWithDB) {
-    const tournamentId = req.params!["tournamentId"];
-    const results = await Results.getByTournamentIdExpanded(
-      Number(tournamentId),
-    );
+    const tournamentId = req.params?.tournamentId;
+    const results = await Results.getExpanded({
+      tournamentId: Number(tournamentId),
+    });
     return json(
       results
         .sort((a, b) =>

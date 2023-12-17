@@ -1,7 +1,7 @@
-import { LeaderboardTable } from "./LeaderboardTable";
-import { LeaderboardResponse, LeaderboardRow } from "../client";
-import { withRouter } from "storybook-addon-react-router-v6";
 import type { Meta, StoryObj } from "@storybook/react";
+import { withRouter } from "storybook-addon-react-router-v6";
+import { LeaderboardResponse, LeaderboardRow } from "../client";
+import { LeaderboardTable } from "./LeaderboardTable";
 
 const meta = {
   title: "Beanstalk/Leaderboard",

@@ -12,12 +12,10 @@ export class AuthService {
 
     /**
      * Fetches the NRDB login url
-     * @returns any Object containing the auth_url
+     * @returns string Object containing the auth_url
      * @throws ApiError
      */
-    public static getGetLoginUrl(): CancelablePromise<{
-        auth_url: string;
-    }> {
+    public static getGetLoginUrl(): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/auth/login_url',

@@ -1,5 +1,20 @@
-import { Select } from "./Select";
-import { Input } from "./Input";
+import { useQuery } from "@tanstack/react-query";
+import { clsx } from "clsx";
+import { ChangeEvent, HTMLAttributes, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Factions } from "../../../api/src/models/factions";
+import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
+import NeutralCorpIcon from "../../assets/factions/NSG_AGENDA.svg";
+import AnarchIcon from "../../assets/factions/NSG_ANARCH.svg";
+import ApexIcon from "../../assets/factions/NSG_APEX.svg";
+import CrimIcon from "../../assets/factions/NSG_CRIMINAL.svg";
+import HbIcon from "../../assets/factions/NSG_HB.svg";
+import JintekiIcon from "../../assets/factions/NSG_JINTEKI.svg";
+import NeutralRunnerIcon from "../../assets/factions/NSG_LINK.svg";
+import NbnIcon from "../../assets/factions/NSG_NBN.svg";
+import ShaperIcon from "../../assets/factions/NSG_SHAPER.svg";
+import SunnyIcon from "../../assets/factions/NSG_SUNNY.svg";
+import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
 import {
   Faction,
   Format,
@@ -7,28 +22,8 @@ import {
   Season,
   SeasonsService,
 } from "../client";
-import { Factions } from "../../../api/src/models/factions";
-import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
-import SunnyIcon from "../../assets/factions/NSG_SUNNY.svg";
-import ApexIcon from "../../assets/factions/NSG_APEX.svg";
-import ShaperIcon from "../../assets/factions/NSG_SHAPER.svg";
-import CrimIcon from "../../assets/factions/NSG_CRIMINAL.svg";
-import AnarchIcon from "../../assets/factions/NSG_ANARCH.svg";
-import HbIcon from "../../assets/factions/NSG_HB.svg";
-import JintekiIcon from "../../assets/factions/NSG_JINTEKI.svg";
-import NbnIcon from "../../assets/factions/NSG_NBN.svg";
-import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
-import NeutralRunnerIcon from "../../assets/factions/NSG_LINK.svg";
-import NeutralCorpIcon from "../../assets/factions/NSG_AGENDA.svg";
-import { useSearchParams } from "react-router-dom";
-import {
-  ChangeEvent,
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { clsx } from "clsx";
+import { Input } from "./Input";
+import { Select } from "./Select";
 
 export const SEASON_PARAM_NAME = "season";
 const EMPTY_SEASON = {
@@ -47,6 +42,7 @@ const EMPTY_FACTION = {
 } as Faction;
 
 const ICON_SIZE = "h-6 w-6";
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const FACTION_ICONS: Record<string, any> = {
   [Factions.Adam.code]: (
     <AdamIcon className={ICON_SIZE} width={16} height={16} />
@@ -77,7 +73,6 @@ export const SEARCH_PARAM_NAME = "search";
 
 type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
   hasSearchBar: boolean;
-  onParamChange: (_: FilterSectionValues) => void;
 };
 
 export type FilterSectionValues = {
@@ -99,13 +94,13 @@ export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
 
 export function getSearchParamsFromValues(
   values: FilterSectionValues,
-  base: string = "",
+  base = "",
 ) {
   const sp = new URLSearchParams(base);
   if (values.searchString) {
     sp.set(SEARCH_PARAM_NAME, values.searchString);
   }
-  if (values.seasonId != undefined) {
+  if (values.seasonId !== undefined) {
     sp.set(SEASON_PARAM_NAME, String(values.seasonId));
   }
   if (values.format) {
@@ -117,79 +112,62 @@ export function getSearchParamsFromValues(
   return sp;
 }
 
-export function FilterSection({
-  hasSearchBar,
-  onParamChange: onParamsChange,
-}: FilterSectionProps) {
+export function FilterSection({ hasSearchBar }: FilterSectionProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const values = getFilterValues(searchParams);
   const [searchString, setSearchString] = useState<string>("");
 
-  const [seasons, setSeasons] = useState<Season[]>([EMPTY_SEASON]);
+  const { data: seasons } = useQuery<Season[]>({
+    queryKey: ["seasons"],
+    queryFn: () => SeasonsService.getGetSeasons(),
+  });
+  if (seasons && seasons[0] !== EMPTY_SEASON) seasons.unshift(EMPTY_SEASON);
   const [selectedSeason, setSelectedSeason] = useState<Season | undefined>(
     EMPTY_SEASON,
   );
 
-  const [factions, setFactions] = useState<Faction[]>([EMPTY_FACTION]);
+  const { data: factions } = useQuery<Faction[]>({
+    queryKey: ["factions"],
+    queryFn: () => LeaderboardService.getGetFactions(),
+  });
+  if (factions && factions[0] !== EMPTY_FACTION)
+    factions.unshift(EMPTY_FACTION);
   const [selectedFaction, setSelectedFaction] = useState<Faction | undefined>(
     EMPTY_FACTION,
   );
 
-  const [formats, setFormats] = useState<string[]>([EMPTY_FORMAT]);
+  const { data: formats } = useQuery<string[]>({
+    queryKey: ["formats"],
+    queryFn: () => LeaderboardService.getGetFormats(),
+  });
+  if (formats && formats[0] !== EMPTY_FORMAT) formats.unshift(EMPTY_FORMAT);
+
   const [selectedFormat, setSelectedFormat] = useState<string | undefined>(
     EMPTY_FORMAT,
   );
 
-  const fetchFactions = useCallback(async () => {
-    LeaderboardService.getGetFactions().then((factions) => {
-      setFactions([EMPTY_FACTION, ...factions]);
+  useEffect(() => {
+    if (seasons && values.seasonId !== undefined) {
+      setSelectedSeason(seasons[values.seasonId + 1]);
+    }
+    if (factions && values.faction !== undefined) {
       for (const f of factions) {
-        if (values.faction == f.code) {
+        if (values.faction === f.code) {
           setSelectedFaction(f);
         }
       }
-    });
-  }, []);
-
-  const fetchSeasons = useCallback(async () => {
-    SeasonsService.getGetSeasons().then((seasons) => {
-      setSeasons([EMPTY_SEASON, ...seasons]);
-      if (values.seasonId != undefined) {
-        setSelectedSeason(seasons[values.seasonId]);
-      }
-    });
-  }, []);
-
-  const fetchFormats = useCallback(async () => {
-    LeaderboardService.getGetFormats().then((formats) => {
-      setFormats([EMPTY_FORMAT, ...formats]);
+    }
+    if (formats && values.format !== undefined) {
       for (const f of formats) {
-        if (values.format == f) {
-          setSelectedFormat(f);
+        if (values.format === f) {
+          setSelectedFaction(f);
         }
       }
-    });
-  }, []);
-
-  // fetches initial resources
-  useEffect(() => {
-    fetchSeasons().catch((e) => console.log(e));
-    fetchFactions().catch((e) => console.log(e));
-    fetchFormats().catch((e) => console.log(e));
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    // put a small debounce on the request since entering a value in the searchbar will trigger
-    const getLeaderboard = setTimeout(() => {
-      onParamsChange(values);
-    }, 200);
-    return () => clearTimeout(getLeaderboard);
-  }, [searchParams]);
+    }
+  }, [values]);
 
   const handleSeasonChange = (s: Season | undefined) => {
-    if (s != undefined && s.id >= 0) {
+    if (s !== undefined && s.id >= 0) {
       searchParams.set(SEASON_PARAM_NAME, String(s.id));
     } else {
       searchParams.delete(SEASON_PARAM_NAME);
@@ -200,7 +178,7 @@ export function FilterSection({
   };
 
   const handleFactionChange = (f: Faction | undefined) => {
-    if (f != undefined && f.code) {
+    if (f?.code) {
       searchParams.set(FACTION_PARAM_NAME, f.code);
     } else {
       searchParams.delete(FACTION_PARAM_NAME);
@@ -211,7 +189,7 @@ export function FilterSection({
   };
 
   const handleFormatChange = (f: string | undefined) => {
-    if (f == EMPTY_FORMAT || f == undefined) {
+    if (f === EMPTY_FORMAT || f === undefined) {
       searchParams.delete(FORMAT_PARAM_NAME);
     } else {
       searchParams.set(FORMAT_PARAM_NAME, f);
@@ -236,15 +214,15 @@ export function FilterSection({
 
   const renderFactionItem = (f: Faction | undefined) => {
     let name = f ? f.name : "";
-    if (f && f == Factions.NeutralCorp) {
+    if (f && f === Factions.NeutralCorp) {
       name = "Neutral Corp";
     }
-    if (f && f == Factions.NeutralRunner) {
+    if (f && f === Factions.NeutralRunner) {
       name = "Neutral Runner";
     }
     return (
       <div className={"relative flex flex-row items-center"}>
-        {f != undefined && f.code in FACTION_ICONS && FACTION_ICONS[f?.code]}
+        {f !== undefined && f.code in FACTION_ICONS && FACTION_ICONS[f?.code]}
         <text className={"pl-2"}>{name}</text>
       </div>
     );
@@ -258,9 +236,11 @@ export function FilterSection({
     >
       <Select
         width={"w-full"}
-        items={seasons}
+        items={seasons || []}
         renderItem={(s) => {
-          return s != undefined && s.id >= 0 ? `S${s.id} - ${s.name}` : s?.name;
+          return s !== undefined && s.id >= 0
+            ? `S${s.id} - ${s.name}`
+            : s?.name;
         }}
         selected={selectedSeason}
         label={"Seasons"}
@@ -268,7 +248,7 @@ export function FilterSection({
       />
       <Select
         width={"w-full"}
-        items={factions}
+        items={factions || []}
         selected={selectedFaction}
         renderItem={renderFactionItem}
         label={"Faction"}
@@ -276,7 +256,7 @@ export function FilterSection({
       />
       <Select
         width={"w-full"}
-        items={formats}
+        items={formats || []}
         renderItem={(f) => {
           return f;
         }}

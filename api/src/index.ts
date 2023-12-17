@@ -1,4 +1,13 @@
-import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users";
+import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
+import type {
+  ExecutionContext,
+  Request as WorkerRequest,
+} from "@cloudflare/workers-types/experimental";
+import { createCors, error, json } from "itty-router";
+import { handleQueue, handleScheduled } from "./background.js";
+import { adminOnly, authenticatedUser } from "./lib/auth.js";
+import { errorResponse } from "./lib/errors.js";
+import { getDB, initDB } from "./models/db.js";
 import {
   ExportDB,
   IngestTournaments,
@@ -6,32 +15,23 @@ import {
   UpdateCards,
   UpdateTournamentSeasons,
   UpdateUsers,
-} from "./routes/admin";
-import { Env, RequestWithDB } from "./types";
-import { adminOnly, authenticatedUser } from "./lib/auth";
-import { errorResponse } from "./lib/errors";
+} from "./routes/admin.js";
+import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth.js";
 import {
   GetFactions,
   GetFormats,
   GetLeaderboard,
   GetPointDistribution,
-  GetTiers,
-} from "./routes/leaderboard";
-import { GetSeasons, GetSeasonTournaments } from "./routes/seasons";
-import { handleQueue, handleScheduled } from "./background";
-import { getDB, initDB } from "./models";
+  GetRankingConfig,
+} from "./routes/leaderboard.js";
+import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
   GetTournament,
   GetTournamentResults,
   GetTournaments,
-} from "./routes/tournament";
-import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth";
-import { createCors, error, json } from "itty-router";
-import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
-import type {
-  ExecutionContext,
-  Request as WorkerRequest,
-} from "@cloudflare/workers-types/experimental";
+} from "./routes/tournament.js";
+import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users.js";
+import { Env, RequestWithDB } from "./types.js";
 
 function withDB(request: RequestWithDB, env: Env): void {
   initDB(env.DB);
@@ -67,25 +67,21 @@ router
   .get("/auth/token", GetTokenFromCode)
   .get("/auth/refresh_token", RefreshToken)
 
-  // User
   .get("/users/@me", authenticatedUser, Me)
   .get("/users", GetUsers)
   .get("/users/:userID", GetUser)
   .get("/users/:user/results", GetUserResults)
 
-  // Leadard
   .get("/leaderboard", GetLeaderboard)
   .get("/point-distribution", GetPointDistribution)
   .get("/factions", GetFactions)
   .get("/formats", GetFormats)
 
-  // Seas
   .get("/seasons", GetSeasons)
   .get("/seasons/:seasonId/tournaments", GetSeasonTournaments)
 
-  // Tournt
   .get("/tournaments", GetTournaments)
-  .get("/tournaments/tiers", GetTiers)
+  .get("/tournaments/config", GetRankingConfig)
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
 
