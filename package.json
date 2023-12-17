@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "lint": "biome check .",
     "build": "pnpm --stream -r run build",
     "start": "pnpm --stream -r run start",
     "start-api": "pnpm --filter api run start",

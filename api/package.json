@@ -4,7 +4,6 @@
   "description": "",
   "exports": "./src/index.ts",
   "scripts": {
-    "lint": "biome check .",
     "test": "jest",
     "start": "wrangler dev --test-scheduled",
     "build": "wrangler build"
