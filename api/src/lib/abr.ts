@@ -111,7 +111,7 @@ const ABR_BASE_URL = "https://alwaysberunning.net/api";
 
 async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
   const retArr: ABRTournamentType[] = [];
-  const resp: Response = await fetch(url.toString());
+  const resp = await fetch(url.toString());
   if (!resp.ok) {
     throw new Error(`Error (${resp.status}): ${await resp.text()}`);
   }
