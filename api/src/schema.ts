@@ -145,8 +145,8 @@ export interface UsersTable {
 }
 
 export type User = Selectable<UsersTable>;
-type UpdateUser = Updateable<UsersTable>;
-type InsertUser = Insertable<UsersTable>;
+export type UpdateUser = Updateable<UsersTable>;
+export type InsertUser = Insertable<UsersTable>;
 
 export interface Database {
   users: UsersTable;

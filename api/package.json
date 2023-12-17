@@ -4,7 +4,7 @@
   "description": "",
   "exports": "./src/index.ts",
   "scripts": {
-    "lint": "eslint --fix src",
+    "lint": "biome check .",
     "test": "jest",
     "start": "wrangler dev --test-scheduled",
     "build": "wrangler build"
