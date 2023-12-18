@@ -8,6 +8,7 @@ const DT_FORMAT = "MMMM DD YYYY";
 
 export function Seasons() {
   const { data: seasons } = useQuery<Season[]>({
+    staleTime: 0,
     queryKey: ["seasons"],
     queryFn: () => SeasonsService.getGetSeasons(),
   });

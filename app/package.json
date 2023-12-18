@@ -55,7 +55,7 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@tanstack/react-query": "^5.14.1",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.5",
     "clsx": "^2.0.0",
     "init": "^0.1.2",
     "install": "^0.13.0",

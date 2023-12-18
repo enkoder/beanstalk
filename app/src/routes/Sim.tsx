@@ -1,35 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
-  Tier,
+  RankingConfig,
+  TournamentConfig,
 } from "../client";
 import { Input } from "../stories/Input";
 import { PageHeading } from "../stories/PageHeader";
 import { Select } from "../stories/Select";
 
 export function Sim() {
-  const [selectedTier, setSelectedTier] = useState<Tier | undefined>();
+  const [selectedTournamentConfig, setSelectedTournamentConfig] =
+    useState<TournamentConfig | null>(null);
   const [numPlayers, setNumPlayers] = useState<number>(32);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
-  const { data: tiers } = useQuery<Tier[]>({
-    queryKey: ["tiers"],
-    queryFn: () => LeaderboardService.getGetTiers(),
+  const { data: config } = useQuery<RankingConfig>({
+    queryKey: ["rankingConfig"],
+    queryFn: () => LeaderboardService.getGetRankingConfig(),
   });
-  React.useEffect(() => {
-    if (tiers) setSelectedTier(tiers[0]);
-  }, [tiers]);
+
+  useEffect(() => {
+    if (config)
+      setSelectedTournamentConfig(
+        config.tournament_configs["worlds championship"],
+      );
+  }, [config]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (selectedTier) {
+    if (config) {
       LeaderboardService.getGetPointDistribution(
-        selectedTier.points,
+        selectedTournamentConfig.points,
         numPlayers,
-        selectedTier.type,
+        selectedTournamentConfig.type,
       ).then((response) => {
         setPointsDistributionResponse(response);
       });
@@ -50,10 +56,10 @@ export function Sim() {
         <Select
           width={"w-full"}
           label={"Tournament / Beans"}
-          items={tiers || []}
-          selected={selectedTier}
+          items={Object.values(config?.tournament_configs || {})}
+          selected={selectedTournamentConfig}
           renderItem={(t) => {
-            return t !== undefined ? (
+            return t ? (
               <div className={"flex flex-row justify-between"}>
                 <text>{t.name}</text>
                 <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
@@ -64,7 +70,7 @@ export function Sim() {
               "Loading..."
             );
           }}
-          onChange={(t) => setSelectedTier(t)}
+          onChange={(t) => setSelectedTournamentConfig(t)}
         />
         <Input
           className={"h-12 w-full rounded-lg"}

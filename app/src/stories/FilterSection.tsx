@@ -160,7 +160,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     if (formats && values.format !== undefined) {
       for (const f of formats) {
         if (values.format === f) {
-          setSelectedFaction(f);
+          setSelectedFormat(f);
         }
       }
     }

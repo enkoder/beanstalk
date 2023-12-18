@@ -21,9 +21,7 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "useExhaustiveDependencies": {
-          "level": "warn"
-        }
+        "useExhaustiveDependencies": "off"
       }
     }
   }

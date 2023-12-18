@@ -43,18 +43,18 @@ export const RankingConfig = {
       points: TOURNAMENT_POINTS["continental championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
     },
+    "national championship": {
+      code: "national championship",
+      name: "Nationals",
+      points: TOURNAMENT_POINTS["national championship"],
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
+    },
     "intercontinental championship": {
       code: "intercontinental championship",
       name: "Interconts",
       points: TOURNAMENT_POINTS["intercontinental championship"],
       tournament_limit:
         MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
-    },
-    "national championship": {
-      code: "national championship",
-      name: "Nationals",
-      points: TOURNAMENT_POINTS["national championship"],
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
     },
     "circuit opener": {
       code: "circuit opener",

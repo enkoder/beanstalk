@@ -74,6 +74,16 @@ export const TournamentComponent = z
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 
+export const TournamentConfigComponent = z
+  .object({
+    code: TournamentTypeComponent,
+    tournament_limit: z.number(),
+    name: z.string(),
+    points: z.number(),
+  })
+  .openapi("TournamentConfig");
+export type TournamentConfigType = z.infer<typeof TournamentConfigComponent>;
+
 export const RankingConfigComponent = z
   .object({
     min_players_to_be_legal: z.number(),
@@ -82,12 +92,7 @@ export const RankingConfigComponent = z
     percent_receiving_points: z.number(),
     tournament_configs: z.record(
       TournamentTypeComponent,
-      z.object({
-        code: TournamentTypeComponent,
-        tournament_limit: z.number(),
-        name: z.string(),
-        points: z.number(),
-      }),
+      TournamentConfigComponent,
     ),
   })
   .openapi("RankingConfig");

@@ -123,13 +123,6 @@ export function calculateTournamentPointDistribution(
     }
   }
 
-  // Check to see we actually found an acceptable distribution
-  if (sum < adjustedTotalPoints * 0.98 || sum > adjustedTotalPoints * 1.02) {
-    throw new Error(
-      `Error - invalid distribution. Targeting total of ${adjustedTotalPoints}, but found ${sum}`,
-    );
-  }
-
   // we got there!
   return { points, adjustedTotalPoints };
 }

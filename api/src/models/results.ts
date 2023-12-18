@@ -72,6 +72,10 @@ export async function getExpanded({
     q = q.where("results.user_id", "=", userId);
   }
 
+  if (tournamentId) {
+    q = q.where("tournaments.id", "=", tournamentId);
+  }
+
   // SeasonId can be 0 which is non-truthy
   if (seasonId != null) {
     q = q.where("tournaments.season_id", "=", seasonId);
