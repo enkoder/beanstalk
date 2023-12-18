@@ -87,7 +87,10 @@ pnpm start-tailwind
 
 ### Tests
 
-You will not find many tests at the Beanstalk. But if you do want to run them locally, you can with.
+Be sure to write them! We use Miniflare locally to test the http handlers.
+Unfortunately, Miniflare requires a fully
+built and packaged app, so you need to run a full build prior to running the tests. You can run all the tests with the
+command below.
 
 ```shell
 pnpm -r test
@@ -102,7 +105,7 @@ like OAauth w/ NRDB which requires a specific client secret and token.
 mv api/.dev.vars.example api/.dev.vars
 ```
 
-### Linting
+### Linting, Formatting, and Import Order
 
 This repo has some pre-commits installed to help ensure the repo stays looking fresh. To install and
 setup pre-commit, run the following. If you are on Linux, you can install pre-commit w/ pip
@@ -112,16 +115,17 @@ brew install pre-commit
 pre-commit isntall
 ```
 
-We also expect to run eslint & tsc on the codebase to ensure a healthy and safe repo.
+We use [Biomejs](https://biomejs.dev/) as our linter & formatter. Install the BiomeJS plugin into your
+editor and you will get autoformatting out of the box. To run biome in your editor run
 
 ```shell
-pnpm -r lint
+pnpm lint
 ```
 
 ### IDE Configuration
 
-- Setup VSCode config
-- Setup Webstorm config
+VSCode workspace file is very minimal. All your really need to do is run `pnpm install` and ensure the
+Biome plugin is installed. Jest should also come ready out of the box.
 
 ### CI
 

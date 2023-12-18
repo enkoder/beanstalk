@@ -4,7 +4,7 @@
   "description": "",
   "exports": "./src/index.ts",
   "scripts": {
-    "test": "jest",
+    "test": "pnpm --filter api build && jest",
     "start": "wrangler dev --test-scheduled",
     "build": "wrangler build"
   },
