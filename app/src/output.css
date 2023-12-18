@@ -1519,6 +1519,10 @@ html {
     width: 2rem;
   }
 
+  .sm\:w-4\/6 {
+    width: 66.666667%;
+  }
+
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1557,6 +1561,10 @@ html {
 
   .md\:hidden {
     display: none;
+  }
+
+  .md\:w-3\/6 {
+    width: 50%;
   }
 
   .md\:items-stretch {
@@ -1598,6 +1606,14 @@ html {
 
   .lg\:w-10 {
     width: 2.5rem;
+  }
+
+  .lg\:w-2\/6 {
+    width: 33.333333%;
+  }
+
+  .lg\:w-3\/6 {
+    width: 50%;
   }
 
   .lg\:flex-row {

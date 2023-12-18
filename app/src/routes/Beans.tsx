@@ -120,8 +120,10 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-3/12"}>{capStr(tc.code)}</span>
-                    <span className={"w-2/12"}>{tc.points}</span>
+                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                      {capStr(tc.code)}
+                    </span>
+                    <span className={"w-1/6"}>{tc.points}</span>
                   </div>
                 </li>
               ))}
@@ -218,10 +220,10 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-3/12"}>{capStr(tc.code)}</span>
-                    <span className={"w-2/12"}>
-                      Limit {tc.tournament_limit}
+                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                      {capStr(tc.code)}
                     </span>
+                    <span className={"w-1/6"}>Limit {tc.tournament_limit}</span>
                   </div>
                 </li>
               ))}
