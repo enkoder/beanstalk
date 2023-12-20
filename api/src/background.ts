@@ -273,6 +273,10 @@ export async function handleScheduled(event: ScheduledEvent, env: Env) {
       );
       await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
 
+      console.log(
+        `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.CircuitOpener}`,
+      );
+      await abrIngest(env, null, ABRTournamentTypeFilter.CircuitOpener);
       break;
   }
 }

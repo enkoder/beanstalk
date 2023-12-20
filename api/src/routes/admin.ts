@@ -18,6 +18,7 @@ import * as Tournaments from "../models/tournament.js";
 import * as Users from "../models/user.js";
 import {
   ExportDBSchema,
+  IngestTournamentBody,
   IngestTournamentSchema,
   RerankSchema,
   UpdateCardsSchema,
@@ -35,7 +36,9 @@ export class Rerank extends OpenAPIRoute {
     for (const season of await Seasons.getAll()) {
       const tournaments = await Tournaments.getBySeasonId(season.id);
       for (const tournament of tournaments) {
-        const results = await Results.getByTournamentIdExpanded(tournament.id);
+        const results = await Results.getExpanded({
+          tournamentId: tournament.id,
+        });
 
         // Totally arbitrary
         if (results.length <= 6) {
@@ -83,8 +86,8 @@ export class UpdateUsers extends OpenAPIRoute {
 export class IngestTournaments extends OpenAPIRoute {
   static schema = IngestTournamentSchema;
 
-  async handle(req: RequestWithDB, env: Env, _: ExecutionContext) {
-    const body = IngestTournamentSchema.requestBody.parse(req.body);
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
+    const body = IngestTournamentBody.parse(data.body);
     await abrIngest(env, body.userId, body.tournamentType);
     return json({});
   }

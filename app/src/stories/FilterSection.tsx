@@ -164,6 +164,9 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         }
       }
     }
+    if (values.searchString) {
+      setSearchString(values.searchString);
+    }
   }, [values]);
 
   const handleSeasonChange = (s: Season | undefined) => {

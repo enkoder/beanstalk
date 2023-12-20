@@ -427,10 +427,11 @@ export const UpdateUsersSchema = {
   },
 };
 
-const IngestTournamentBody = z.object({
+export const IngestTournamentBody = z.object({
   userId: z.number().optional(),
   tournamentType: z.nativeEnum(ABRTournamentTypeFilter).optional(),
 });
+export type IngestTournamentBodyType = z.infer<typeof IngestTournamentBody>;
 
 export const IngestTournamentSchema = {
   tags: ["Admin"],

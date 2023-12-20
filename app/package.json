@@ -4,6 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
+    "lint": "pnpm --filter app tsc && pnpm --filter app biome check .",
     "start": "rspack serve",
     "build": "rspack build",
     "clean": "rspack clean",

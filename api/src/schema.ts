@@ -7,7 +7,7 @@ import {
   PERCENT_RECEIVING_POINTS,
   TOURNAMENT_POINTS,
 } from "./lib/ranking.js";
-import { RankingConfigType } from "./openapi.js";
+import { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
 export type TournamentType =
   | "GNK / seasonal"
@@ -36,32 +36,32 @@ export const RankingConfig = {
       name: "Worlds",
       points: TOURNAMENT_POINTS["worlds championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["worlds championship"],
-    },
+    } as TournamentConfigType,
     "continental championship": {
       code: "continental championship",
       name: "Continentals",
       points: TOURNAMENT_POINTS["continental championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
-    },
+    } as TournamentConfigType,
     "national championship": {
       code: "national championship",
       name: "Nationals",
       points: TOURNAMENT_POINTS["national championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
-    },
+    } as TournamentConfigType,
     "intercontinental championship": {
       code: "intercontinental championship",
       name: "Interconts",
       points: TOURNAMENT_POINTS["intercontinental championship"],
       tournament_limit:
         MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
-    },
+    } as TournamentConfigType,
     "circuit opener": {
       code: "circuit opener",
       name: "Circuit Opener",
       points: TOURNAMENT_POINTS["circuit opener"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit opener"],
-    },
+    } as TournamentConfigType,
   },
 } as RankingConfigType;
 

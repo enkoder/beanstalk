@@ -2,17 +2,17 @@
   "include": ["src/*"],
   "exclude": ["**/node_modules/*"],
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
     "esModuleInterop": true,
     "removeComments": true,
-    "sourceMap": true,
     "inlineSourceMap": true,
     "resolveJsonModule": true,
     "outDir": "../dist",
+    "skipLibCheck": true,
     "lib": ["ESNext"],
     "strict": false,
-    "types": ["node", "@cloudflare/workers-types", "jest"]
+    "types": ["@cloudflare/workers-types", "jest"]
   }
 }

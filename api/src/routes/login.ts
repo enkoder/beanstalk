@@ -45,8 +45,8 @@ class AuthRegister extends OpenAPIRoute {
 class AuthLogin extends OpenAPIRoute {
   static schema = AuthLoginSchema;
 
-  async handle(req: RequestWithDB, env: Env, _: ExecutionContext) {
-    const authLoginBody = AuthLoginBody.parse(req.body);
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
+    const authLoginBody = AuthLoginBody.parse(data.body);
     const user = await Users.getByEmail(authLoginBody.email);
 
     if (!user) {
