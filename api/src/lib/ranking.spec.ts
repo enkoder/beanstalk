@@ -1,8 +1,11 @@
-import { calculateTournamentPointDistribution } from "./ranking.js";
+import {
+  MIN_PLAYERS_TO_BE_LEGAL,
+  calculateTournamentPointDistribution,
+} from "./ranking.js";
 
 test("calculate points", () => {
   const total = 100;
-  const num = 12;
+  const num = MIN_PLAYERS_TO_BE_LEGAL;
   const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(
     total,
     num,
@@ -17,13 +20,13 @@ test("calculate points", () => {
   expect(adjustedTotalPoints).toBe(total + num * 20);
 
   let sum = 0;
-  for (let i = num / 2; i < points.length; i++) {
+  for (let i = Math.ceil(num / 2); i < points.length; i++) {
     sum += points[i];
   }
   expect(sum).toBe(0);
 
   sum = 0;
-  for (let i = 0; i < points.length / 2; i++) {
+  for (let i = 0; i < Math.ceil(points.length / 2); i++) {
     sum += points[i];
   }
   expect(
@@ -54,7 +57,7 @@ test("not enough players", () => {
 
 test("Intercontinentals", () => {
   const total = 100;
-  const num = 12;
+  const num = MIN_PLAYERS_TO_BE_LEGAL;
   const { points, adjustedTotalPoints } = calculateTournamentPointDistribution(
     total,
     num,

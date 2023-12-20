@@ -16,7 +16,7 @@ export const EXTRA_POINTS_PER_PERSON = 20;
 
 // Sets a baseline number of players a tournament must have in order to receive any points at all
 // This means that small tournaments are not eligible for point payouts
-export const MIN_PLAYERS_TO_BE_LEGAL = 12;
+export const MIN_PLAYERS_TO_BE_LEGAL = 13;
 
 // Defines the baseline point total per tournament type before the additional points per player is added
 export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
@@ -24,7 +24,7 @@ export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
   "continental championship": 2000,
   "national championship": 1000,
   "intercontinental championship": 200,
-  "circuit opener": 50,
+  "circuit opener": 0,
 };
 
 // Defines the number of tournaments a person can get points for
