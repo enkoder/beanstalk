@@ -26,6 +26,8 @@ export type Env = {
   NRDB_OAUTH_CLIENT_ID: string;
   NRDB_OAUTH_CLIENT_SECRET: string;
   REDIRECT_BASE_URL: string;
+  // Sentry
+  SENTRY_DSN: string;
 };
 
 //type CF = [env: Env, context: ExecutionContext]

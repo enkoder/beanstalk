@@ -1,9 +1,7 @@
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
-import type {
-  ExecutionContext,
-  Request as WorkerRequest,
-} from "@cloudflare/workers-types/experimental";
-import { createCors, error, json } from "itty-router";
+import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
+import { createCors, error } from "itty-router";
+import { RewriteFrames, Toucan } from "toucan-js";
 import { handleQueue, handleScheduled } from "./background.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
@@ -97,9 +95,27 @@ router
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));
 
+async function fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  const sentry = new Toucan({
+    dsn: env.SENTRY_DSN,
+    context: ctx,
+    request: request,
+    integrations: [new RewriteFrames({ root: "/" })],
+  });
+
+  try {
+    const resp = await router.handle(request, env, ctx);
+    return corsify(resp);
+  } catch (e) {
+    sentry.captureException(e);
+
+    console.log(e);
+    return error(e);
+  }
+}
+
 export default {
   queue: handleQueue,
   scheduled: handleScheduled,
-  fetch: (request: WorkerRequest, env: Env, ctx: ExecutionContext) =>
-    router.handle(request, env, ctx).then(json).then(corsify).catch(error),
+  fetch: fetch,
 };
