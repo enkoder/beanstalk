@@ -25,4 +25,4 @@ jobs:
         run: pnpm install
 
       - name: Check tailwind CSS was generated
-        run: pnpm --filter app exec tailwindcss -i ./src/input.css -o ./src/output.css
+        run: pnpm --filter app exec tailwindcss -i ./src/input.css -o ./src/output.css && git diff-files --quiet
