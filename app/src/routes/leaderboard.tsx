@@ -17,10 +17,10 @@ import {
   FilterSection,
   getFilterValues,
   getSearchParamsFromValues,
-} from "../stories/FilterSection";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../stories/Tooltip";
+} from "../components/FilterSection";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 import { capStr } from "../util";
 
 type ExpandedSectionProps = {

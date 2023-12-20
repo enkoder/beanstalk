@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import rankings from "../../../api/src/lib/ranking.ts";
-import { PageHeading } from "../stories/PageHeader";
-import { Select } from "../stories/Select";
+import { PageHeading } from "../components/PageHeader";
+import { Select } from "../components/Select";
 
 export function Code() {
   const [loading, setLoading] = useState<boolean>(true);

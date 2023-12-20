@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 // @ts-ignore
 import whitepaper from "../../assets/whitepaper.pdf";
 import { LeaderboardService, RankingConfig } from "../client";
-import { Anchor } from "../stories/Anchor";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
-import { Sep } from "../stories/Sep";
+import { Anchor } from "../components/Anchor";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
+import { Sep } from "../components/Sep";
 import { capStr } from "../util";
 
 type Section = {

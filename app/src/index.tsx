@@ -10,6 +10,9 @@ import {
 } from "react-router-dom";
 import doggo from "../assets/doggo.png";
 import { OpenAPI } from "./client";
+import { Navbar } from "./components/Navbar";
+import { PageHeading } from "./components/PageHeader";
+import { Stars } from "./components/Stars";
 import { Beans } from "./routes/Beans";
 import { Code } from "./routes/Code";
 import { Faq } from "./routes/Faq";
@@ -18,9 +21,6 @@ import { Sim } from "./routes/Sim";
 import { TournamentPage } from "./routes/TournamentPage";
 import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
-import { Navbar } from "./stories/Navbar";
-import { PageHeading } from "./stories/PageHeader";
-import { Stars } from "./stories/Stars";
 import useAuth, { AuthProvider } from "./useAuth";
 
 import "@fontsource/inter/400.css";

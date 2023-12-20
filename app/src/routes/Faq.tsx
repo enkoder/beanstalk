@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import aiBeanstalk from "../../assets/ai_beanstalk_royalties.jpeg";
 // @ts-ignore
 import doggo from "../../assets/doggo.png";
-import { Anchor } from "../stories/Anchor";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
-import { Sep } from "../stories/Sep";
+import { Anchor } from "../components/Anchor";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
+import { Sep } from "../components/Sep";
 
 type Question = {
   title: string;

@@ -34,9 +34,6 @@ The UI is built with modern [React](https://react.dev/) and [TailwindCSS](https:
 Various components and design system elements can be viewed and developed without needing the run the API and depend
 upon real data.
 
-_There's currently an issue with building Storybook with rspack, so don't expect much here until things are fully
-functional again._
-
 The Webapp is built using [rspack](https://www.rspack.dev/) which is a replacement for webpack written in Rust. It's
 crazy fast and only going to get so much better. Yes, this is a small app, but I wanted to try out the new hotness.
 

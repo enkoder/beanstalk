@@ -8,10 +8,10 @@ import {
   ResultsService,
   type UserResultsResponse,
 } from "../client";
-import { FilterSection, getFilterValues } from "../stories/FilterSection";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../stories/Tooltip";
+import { FilterSection, getFilterValues } from "../components/FilterSection";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 import { capStr } from "../util";
 
 type ResultsParams = {

@@ -6,9 +6,9 @@ import {
   RankingConfig,
   TournamentConfig,
 } from "../client";
-import { Input } from "../stories/Input";
-import { PageHeading } from "../stories/PageHeader";
-import { Select } from "../stories/Select";
+import { Input } from "../components/Input";
+import { PageHeading } from "../components/PageHeader";
+import { Select } from "../components/Select";
 
 export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
@@ -31,11 +31,11 @@ export function Sim() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (config) {
+    if (selectedTournamentConfig) {
       LeaderboardService.getGetPointDistribution(
         selectedTournamentConfig.points,
         numPlayers,
-        selectedTournamentConfig.type,
+        selectedTournamentConfig.code,
       ).then((response) => {
         setPointsDistributionResponse(response);
       });

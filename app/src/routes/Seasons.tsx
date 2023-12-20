@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { Season, SeasonsService } from "../client";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
 
 const DT_FORMAT = "MMMM DD YYYY";
 

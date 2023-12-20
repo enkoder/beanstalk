@@ -6,6 +6,5 @@ dist
 build
 api/.dev.vars
 !app/rspack.config.js
-storybook-static
 !app/postcss.config.js
 !ecosystem.config.js

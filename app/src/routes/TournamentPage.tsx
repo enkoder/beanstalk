@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Result, Tournament, TournamentService } from "../client";
-import { Link } from "../stories/Link";
-import { PageHeading } from "../stories/PageHeader";
+import { Link } from "../components/Link";
+import { PageHeading } from "../components/PageHeader";
 
 type TournamentParams = {
   tournament: string;

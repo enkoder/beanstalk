@@ -13,7 +13,6 @@
     "start-api": "pnpm exec pm2 start api",
     "start-app": "pnpm exec pm2 start app",
     "start-tailwind": "pnpm exec pm2 start tailwind",
-    "start-storybook": "pnpm --filter app run storybook",
     "spec": "curl http://0.0.0.0:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios"
   },
   "keywords": [],
