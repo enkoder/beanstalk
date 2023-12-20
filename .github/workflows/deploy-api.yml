@@ -33,7 +33,7 @@ jobs:
 
       - name: Deploy Source Maps
         run: |
-          VERSION=`sentry-cli releases propose-version`
+          VERSION=`pnpm --filter api exec sentry-cli releases propose-version`
           pnpm --filter api exec sentry-cli releases set-commits "$VERSION" --auto
           pnpm --filter api exec sentry-cli releases new "$VERSION"
           pnpm --filter api exec sentry-cli sourcemaps inject dist
