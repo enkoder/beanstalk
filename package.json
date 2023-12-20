@@ -8,6 +8,7 @@
     "lint": "pnpm --stream -r lint",
     "build": "pnpm --stream -r run build",
     "start": "pnpm exec pm2 start && pnpm exec pm2 monit",
+    "stop": "pnpm exec pm2 stop all",
     "logs": "pnpm exec pm2 logs",
     "status": "pnpm exec pm2 status",
     "start-api": "pnpm exec pm2 start api",
