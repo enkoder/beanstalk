@@ -187,18 +187,23 @@ export function Beans() {
         id: "minimum-players",
         content: (
           <p className={"pl-2"}>
-            This is arbitrarily set to {rankingConfig?.min_players_to_be_legal}{" "}
-            for now, but we will need to set an appropriate limit on number of
-            players. We'll see how this value changes over time, but it needs to
-            be small enough to keep things exciting for tournaments. The way we
-            make attempt to make this fair is by scaling beans off of the number
-            of players while also setting an appropriate baseline number of
-            beans. There are various nobs we can tweak over time and we will
-            re-examine this floor if necessary. If we see many smaller
-            tournaments like Nationals where too many beans are getting
-            distributed, we should raise this value and set a higher requirement
-            for beans. This could also insensitive local metas to recruit and
-            get more people to play!
+            In order to receive any beans for a tournament, there needs to be a
+            minimum of {rankingConfig?.min_players_to_be_legal} registered
+            players. This value was set because at a value less than{" "}
+            {rankingConfig?.min_players_to_be_legal} we would have needed to
+            raise the percent 1st place receives in order to hit 100% cumulative
+            bean distribution. This is completely solvable if we need to and
+            should keep an eye on how small and large tournaments feel over
+            time. It's really important that the difficulty of winning a large
+            tournament is fair relative to the overall bean distribution of
+            winning a small tournament. The way we make attempt to make this
+            fair is by scaling beans off of the number of players while also
+            setting an appropriate baseline number of beans. There are various
+            nobs we can tweak over time and we will re-examine this floor if
+            necessary. If we see many smaller tournaments like Nationals where
+            too many beans are getting distributed, we should raise this value
+            and set a higher requirement for beans. This could also insensitive
+            local metas to recruit and get more people to play!
           </p>
         ),
       },
