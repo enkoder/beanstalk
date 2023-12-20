@@ -147,11 +147,14 @@ export const TooltipTrigger = React.forwardRef<
 });
 
 type TooltipProps = HTMLProps<HTMLDivElement> & {
-  arrowStroke: string;
+  arrowClassName: string;
 };
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipProps>(
-  function TooltipContent({ arrowStroke, children, style, ...props }, propRef) {
+  function TooltipContent(
+    { arrowClassName, children, style, ...props },
+    propRef,
+  ) {
     const context = useTooltipContext();
     const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
@@ -178,7 +181,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipProps>(
         >
           {children}
           <FloatingArrow
-            className={`[&>path:first-of-type]:${arrowStroke}`}
+            className={arrowClassName}
             ref={context.arrowRef}
             context={context.context}
             style={{

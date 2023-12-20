@@ -198,7 +198,9 @@ export function Results() {
                   className={
                     "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
                   }
-                  arrowStroke={"stroke-gray-600"}
+                  arrowClassName={
+                    "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
+                  }
                 >
                   {!result.is_valid && rankingConfig ? (
                     <span>

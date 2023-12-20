@@ -634,10 +634,6 @@ html {
   margin: 1rem;
 }
 
-.m-8 {
-  margin: 2rem;
-}
-
 .mx-2 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -1118,6 +1114,22 @@ html {
 
 .fill-red-600 {
   fill: #dc2626;
+}
+
+.fill-white {
+  fill: #fff;
+}
+
+.fill-gray-500 {
+  fill: #6b7280;
+}
+
+.fill-gray-600 {
+  fill: #4b5563;
+}
+
+.fill-gray-950 {
+  fill: #030712;
 }
 
 .stroke-gray-600 {
@@ -1650,4 +1662,16 @@ html {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
+}
+
+.\[\&\>path\:first-of-type\]\:stroke-pink-500>path:first-of-type {
+  stroke: #ec4899;
+}
+
+.\[\&\>path\:first-of-type\]\:stroke-gray-600>path:first-of-type {
+  stroke: #4b5563;
+}
+
+.\[\&\>path\:last-of-type\]\:stroke-white>path:last-of-type {
+  stroke: #fff;
 }
