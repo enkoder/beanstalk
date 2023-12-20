@@ -73,16 +73,26 @@ project -> https://netrunner-beanstalk.sentry.io/issues/
 
 This project uses [pnpm](https://pnpm.io/) as it's package manager which is again, the new hotness. Symlinks ftw!
 
+There are number of systems that all need to be running in order to have a smooth developer experience and we
+use [PM2](https://pm2.keymetrics.io/) to help facilitate the local dev orchestration.
+
+- api: the cf worker api that uses the wrangler cli under the hood
+- app: the main React app that uses rspack to bundle and serve the webapp during development
+- tailwind: the CSS framework/utility we use to create automatically generated css
+- spec: Using the OpenAPI spec we codegen a client for the react app to use. This will run whenever openapi.ts changes.
+
 ```shell
 # Install pnpm however you'd like, then run the following
 pnpm install
 
-# To start the API and the UI run the following
+# To start all of the things run and open a PM2 monit view run
+pnpm start
+
+# To start individual sub-systems run the following
+pnpm start-tailwind
 pnpm start-api
 pnpm start-app
-
-# To start tailwind run the following
-pnpm start-tailwind
+pnpm spec
 ```
 
 ### Tests

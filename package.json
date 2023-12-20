@@ -7,11 +7,14 @@
   "scripts": {
     "lint": "pnpm --stream -r lint",
     "build": "pnpm --stream -r run build",
-    "start": "pnpm --stream -r run start",
-    "start-api": "pnpm --filter api run start",
-    "start-app": "pnpm --filter app run start",
+    "start": "pnpm exec pm2 start && pnpm exec pm2 monit",
+    "logs": "pnpm exec pm2 logs",
+    "status": "pnpm exec pm2 status",
+    "start-api": "pnpm exec pm2 start api",
+    "start-app": "pnpm exec pm2 start app",
+    "start-tailwind": "pnpm exec pm2 start tailwind",
     "start-storybook": "pnpm --filter app run storybook",
-    "start-tailwind": "pnpm --filter app exec tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+    "spec": "curl http://0.0.0.0:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +25,7 @@
     "@rspack/core": "0.3.10",
     "@types/jest": "^29.5.11",
     "openapi-typescript-codegen": "^0.25.0",
+    "pm2": "^5.3.0",
     "wrangler": "^3.21.0"
   }
 }
