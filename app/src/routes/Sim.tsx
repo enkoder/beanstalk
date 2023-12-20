@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { clsx } from "clsx";
 import { FormEvent, useEffect, useState } from "react";
+import { MIN_PLAYERS_TO_BE_LEGAL } from "../../../api/src/lib/ranking";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
@@ -13,7 +15,7 @@ import { Select } from "../components/Select";
 export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
     useState<TournamentConfig | null>(null);
-  const [numPlayers, setNumPlayers] = useState<number>(32);
+  const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
@@ -31,7 +33,7 @@ export function Sim() {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (selectedTournamentConfig) {
+    if (selectedTournamentConfig && numPlayers) {
       LeaderboardService.getGetPointDistribution(
         selectedTournamentConfig.points,
         numPlayers,
@@ -73,17 +75,26 @@ export function Sim() {
           onChange={(t) => setSelectedTournamentConfig(t)}
         />
         <Input
-          className={"h-12 w-full rounded-lg"}
+          className={clsx(
+            numPlayers === undefined && "border border-red-900",
+            "h-12 w-full rounded-lg",
+          )}
           label={"Number of Players"}
           type="number"
           id={"num-players"}
+          min={MIN_PLAYERS_TO_BE_LEGAL}
           value={numPlayers}
-          onChange={(e) => setNumPlayers(Number(e.target.value))}
+          onChange={(e) =>
+            setNumPlayers(
+              e.target.value !== "" ? Number(e.target.value) : undefined,
+            )
+          }
         />
         <button
-          className={
-            "mt-6 h-12 w-full rounded-lg border border-gray-600 bg-cyan-500 px-2 py-2 font-bold text-gray-950"
-          }
+          className={clsx(
+            numPlayers === undefined && "cursor-not-allowed bg-gray-500",
+            "focus mt-6 h-12 w-full rounded-lg border border-gray-600 bg-cyan-500 px-2 py-2 font-bold text-gray-950",
+          )}
           type="submit"
         >
           Run

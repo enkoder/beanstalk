@@ -19,8 +19,8 @@ export function Input({ label, id, type, className, ...props }: InputProps) {
       <div
         id={id}
         className={twMerge(
+          "relative flex h-full w-full cursor-default items-center border border-gray-600 bg-gray-900 py-1.5 pl-3 pr-2 text-left text-gray-400 shadow-sm sm:text-sm sm:leading-6",
           className,
-          "relative flex h-full w-full cursor-default items-center bg-gray-900 py-1.5 pl-3 pr-2 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
         )}
       >
         {type === "search" && (
