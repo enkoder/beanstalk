@@ -31,12 +31,14 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - name: Create Sentry release
-        uses: getsentry/action-release@v1
+      - name: Deploy Source Maps
+        run: |
+          VERSION=`sentry-cli releases propose-version`
+          pnpm --filter api exec sentry-cli releases set-commits "$VERSION" --auto
+          pnpm --filter api exec sentry-cli releases new "$VERSION"
+          pnpm --filter api exec sentry-cli sourcemaps inject dist
+          pnpm --filter api exec sentry-cli sourcemaps upload dist
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: "netrunner-beanstalk"
           SENTRY_PROJECT: "beanstalk-api"
-        with:
-          environment: production
-          sourcemaps: api/dist
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
