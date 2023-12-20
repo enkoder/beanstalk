@@ -36,7 +36,7 @@ export class GetUsers extends OpenAPIRoute {
   async handle(_: RequestWithDB) {
     // TODO: pagination
     const users = await Users.getAll();
-    if (users) {
+    if (!users) {
       throw new Error("No users in table??");
     }
 
