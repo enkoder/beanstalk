@@ -1116,6 +1116,10 @@ html {
   fill: #dc2626;
 }
 
+.stroke-gray-600 {
+  stroke: #4b5563;
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -1139,6 +1143,11 @@ html {
   padding-right: 1rem;
 }
 
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -1152,11 +1161,6 @@ html {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-}
-
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 .pb-1 {
@@ -1515,12 +1519,12 @@ html {
     height: 2rem;
   }
 
-  .sm\:w-8 {
-    width: 2rem;
-  }
-
   .sm\:w-4\/6 {
     width: 66.666667%;
+  }
+
+  .sm\:w-8 {
+    width: 2rem;
   }
 
   .sm\:grid-cols-2 {
@@ -1561,10 +1565,6 @@ html {
 
   .md\:hidden {
     display: none;
-  }
-
-  .md\:w-3\/6 {
-    width: 50%;
   }
 
   .md\:items-stretch {
@@ -1610,10 +1610,6 @@ html {
 
   .lg\:w-2\/6 {
     width: 33.333333%;
-  }
-
-  .lg\:w-3\/6 {
-    width: 50%;
   }
 
   .lg\:flex-row {

@@ -91,20 +91,25 @@ export function ExpandedSection({
                   </td>
                 </tr>
               </TooltipTrigger>
-              {!result.is_valid && rankingConfig && (
-                <TooltipContent
-                  className={
-                    "text-cyan-500 text-sm bg-gray-950 p-2 rounded-lg shadow-lg border-gray-600 border"
-                  }
-                >
-                  Limit{" "}
-                  {
-                    rankingConfig.tournament_configs[result.tournament_type]
-                      .tournament_limit
-                  }{" "}
-                  per {capStr(result.tournament_type)}
-                </TooltipContent>
-              )}
+              <TooltipContent
+                className={
+                  "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                }
+                arrowStroke={"stroke-gray-600"}
+              >
+                {!result.is_valid && rankingConfig ? (
+                  <span>
+                    Limit{" "}
+                    {
+                      rankingConfig.tournament_configs[result.tournament_type]
+                        .tournament_limit
+                    }{" "}
+                    per {capStr(result.tournament_type)}
+                  </span>
+                ) : (
+                  <span>{capStr(result.tournament_type)}</span>
+                )}
+              </TooltipContent>
             </Tooltip>
           ))}
         </tbody>

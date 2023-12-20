@@ -1,6 +1,8 @@
 import {
+  FloatingArrow,
   FloatingPortal,
   Placement,
+  arrow,
   autoUpdate,
   flip,
   offset,
@@ -14,6 +16,7 @@ import {
   useRole,
 } from "@floating-ui/react";
 import * as React from "react";
+import { HTMLProps, useRef } from "react";
 
 interface TooltipOptions {
   initialOpen?: boolean;
@@ -32,6 +35,7 @@ export function useTooltip({
 
   const open = controlledOpen ?? uncontrolledOpen;
   const setOpen = setControlledOpen ?? setUncontrolledOpen;
+  const arrowRef = useRef(null);
 
   const data = useFloating({
     placement,
@@ -46,6 +50,10 @@ export function useTooltip({
         padding: 5,
       }),
       shift({ padding: 5 }),
+      arrow({
+        padding: 10,
+        element: arrowRef,
+      }),
     ],
   });
 
@@ -69,8 +77,9 @@ export function useTooltip({
       setOpen,
       ...interactions,
       ...data,
+      arrowRef,
     }),
-    [open, setOpen, interactions, data],
+    [open, setOpen, interactions, data, arrowRef],
   );
 }
 
@@ -137,25 +146,52 @@ export const TooltipTrigger = React.forwardRef<
   );
 });
 
-export const TooltipContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLProps<HTMLDivElement>
->(function TooltipContent({ style, ...props }, propRef) {
-  const context = useTooltipContext();
-  const ref = useMergeRefs([context.refs.setFloating, propRef]);
+type TooltipProps = HTMLProps<HTMLDivElement> & {
+  arrowStroke: string;
+};
 
-  if (!context.open) return null;
+export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipProps>(
+  function TooltipContent({ arrowStroke, children, style, ...props }, propRef) {
+    const context = useTooltipContext();
+    const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
-  return (
-    <FloatingPortal>
-      <div
-        ref={ref}
-        style={{
-          ...context.floatingStyles,
-          ...style,
-        }}
-        {...context.getFloatingProps(props)}
-      />
-    </FloatingPortal>
-  );
-});
+    if (!context.open) return null;
+
+    const { x: arrowX, y: arrowY } = context.middlewareData.arrow ?? {};
+    const staticSide =
+      {
+        top: "bottom",
+        right: "left",
+        bottom: "top",
+        left: "right",
+      }[context.placement.split("-")[0]] ?? "";
+
+    return (
+      <FloatingPortal>
+        <div
+          ref={ref}
+          style={{
+            ...context.floatingStyles,
+            ...style,
+          }}
+          {...context.getFloatingProps(props)}
+        >
+          {children}
+          <FloatingArrow
+            className={`[&>path:first-of-type]:${arrowStroke}`}
+            ref={context.arrowRef}
+            context={context.context}
+            style={{
+              position: "absolute",
+              width: "20px",
+              height: "20px",
+              left: arrowX != null ? `${arrowX}px` : "",
+              top: arrowY != null ? `${arrowY}px` : "",
+              [staticSide]: "-20px",
+            }}
+          />
+        </div>
+      </FloatingPortal>
+    );
+  },
+);
