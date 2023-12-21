@@ -78,11 +78,10 @@ function logpushToLokiStreams(logPushEvent: LogPushEventType): StreamType[] {
     const event = logPushEvent.Event as FetchEventType;
     // Capture the fetch specific labels
     labels.method = event.Request.Method;
-    labels.url = event.Request.URL;
     labels.status = String(event.Response.Status);
 
     // just using the ray id as the message for fetch for now. Should format this to be something prettier
-    defaultMsg = event.RayID;
+    defaultMsg = `${event.Request.URL} ${event.RayID}`;
   } else if (logPushEvent.EventType === "queue") {
     const event = logPushEvent.Event as QueueType;
 
@@ -189,8 +188,8 @@ async function handleRequest(
   });
 
   const text = await response.text();
-  console.log(text);
   if (!response.ok) {
+    console.log(text);
     sentry.captureException(text);
     return error(400, text);
   }
