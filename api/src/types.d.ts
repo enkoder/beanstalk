@@ -28,6 +28,7 @@ export type Env = {
   REDIRECT_BASE_URL: string;
   // Sentry
   SENTRY_DSN: string;
+  SENTRY_RELEASE: string;
 };
 
 //type CF = [env: Env, context: ExecutionContext]

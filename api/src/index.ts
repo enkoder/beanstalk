@@ -98,6 +98,7 @@ router
 async function fetch(request: Request, env: Env, ctx: ExecutionContext) {
   const sentry = new Toucan({
     dsn: env.SENTRY_DSN,
+    release: env.SENTRY_RELEASE,
     context: ctx,
     request: request,
     integrations: [new RewriteFrames({ root: "/" })],

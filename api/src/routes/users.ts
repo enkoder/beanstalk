@@ -106,13 +106,7 @@ export class GetUserResults extends OpenAPIRoute {
       format: format,
       factionCode: faction?.code,
       rank: currentRank,
-      results: results.map((result) => {
-        try {
-          return ResultComponent.parse(result);
-        } catch (e) {
-          console.log(e);
-        }
-      }),
+      results: results.map((result) => ResultComponent.parse(result)),
     });
   }
 }
