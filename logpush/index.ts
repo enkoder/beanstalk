@@ -9,6 +9,7 @@ export type Env = {
   LOKI_CREDENTIALS: string;
   SHARED_TOKEN: string;
   SENTRY_DSN: string;
+  SENTRY_RELEASE: string;
 };
 
 // https://grafana.com/docs/loki/latest/reference/api/#push-log-entries-to-loki
@@ -139,6 +140,7 @@ async function handleRequest(
 
   const sentry = new Toucan({
     dsn: env.SENTRY_DSN,
+    release: env.SENTRY_RELEASE,
     context: ctx,
     request: request,
   });
