@@ -65,7 +65,7 @@ export const RankingConfig = {
   },
 } as RankingConfigType;
 
-export type Format = "standard" | "startup" | "eternal";
+export type Format = "standard" | "startup" | "eternal" | "other";
 
 export type ResultsTable = {
   tournament_id: number;

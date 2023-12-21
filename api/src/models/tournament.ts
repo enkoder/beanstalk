@@ -1,7 +1,7 @@
 import { Tournament, UpdateTournament } from "../schema.js";
 import { getDB } from "./db.js";
 
-export const Formats = ["standard", "startup", "eternal"] as const;
+export const Formats = ["standard", "startup", "eternal", "other"] as const;
 
 export const TournamentTypes = [
   "GNK / seasonal",
