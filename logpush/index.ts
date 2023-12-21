@@ -65,7 +65,10 @@ const LogPushEvent = z.object({
 });
 type LogPushEventType = z.infer<typeof LogPushEvent>;
 
-function logpushToLokiStreams(logPushEvent: LogPushEventType): StreamType[] {
+function logpushToLokiStreams(
+  logPushEvent: LogPushEventType,
+  sentry,
+): StreamType[] {
   const streams: StreamType[] = [];
 
   const labels: Record<string, string | number> = {};
@@ -88,6 +91,12 @@ function logpushToLokiStreams(logPushEvent: LogPushEventType): StreamType[] {
 
     // capture the queue specific labels
     labels.queue_name = event.QueueName;
+  } else {
+    sentry.captureException(
+      `Unknown event type ${logPushEvent.EventType} ${JSON.stringify(
+        logPushEvent,
+      )}`,
+    );
   }
 
   // Cloudflare batches up log messages, flatten them here
@@ -169,7 +178,7 @@ async function handleRequest(
     try {
       const logPushEvent = LogPushEvent.parse(data);
 
-      for (const stream of logpushToLokiStreams(logPushEvent)) {
+      for (const stream of logpushToLokiStreams(logPushEvent, sentry)) {
         streams.push(stream);
       }
     } catch (e) {
