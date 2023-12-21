@@ -4,7 +4,7 @@ node_modules/
 .wrangler
 dist
 build
-api/.dev.vars
+.dev.vars
 !app/rspack.config.js
 !app/postcss.config.js
 !ecosystem.config.js

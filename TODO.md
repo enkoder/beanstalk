@@ -26,5 +26,4 @@
 
 ## Infrastructure
 
-- Grafana for logs and metrics
-- Set up sentry to work
+- Add sentry error handling to background task
