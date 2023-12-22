@@ -178,6 +178,7 @@ async function handleResultIngest(
   const loggedData = {
     tournament_id: tournament.id,
     tournament_name: tournament.name,
+    tournament_type: tournament.type,
     user_name: abrEntry.user_name,
     user_name_import: abrEntry.user_import_name,
   };

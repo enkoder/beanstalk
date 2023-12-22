@@ -9,7 +9,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "worlds championship": 50,
     "continental championship": 50,
     "national championship": 50,
-    "intercontinental championship": 1,
+    "intercontinental championship": 0,
     "circuit opener": 100,
   };
 
@@ -30,8 +30,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "worlds championship": 60,
   "continental championship": 45,
   "national championship": 30,
-  // Winner take all! ~200 points for 1st place @ 12 person tournament
-  "intercontinental championship": 16.667,
+  "intercontinental championship": 0,
   "circuit opener": 15,
 };
 
@@ -42,7 +41,6 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
     "worlds championship": 32,
     "continental championship": 20,
     "national championship": 16,
-    // Winner take all! ~200 points for 1st place @ 12 person tournament
     "intercontinental championship": 12,
     "circuit opener": 10,
   };
@@ -58,10 +56,24 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "circuit opener": 5,
   };
 
+// Winner take all! ~200 points for 1st place @ 12 person tournament
+export const POINTS_FOR_INTERCONTS = 200;
+
 export function calculateTournamentPointDistribution(
   numPlayers: number,
   tournamentType?: TournamentType,
 ): { points: number[]; totalPoints: number } {
+  // winner take all!!
+  if (tournamentType === "intercontinental championship") {
+    return {
+      points: Array.from([
+        POINTS_FOR_INTERCONTS,
+        ...Array(numPlayers).fill(0).slice(1),
+      ]),
+      totalPoints: POINTS_FOR_INTERCONTS,
+    };
+  }
+
   const totalPoints = numPlayers * POINTS_PER_PLAYER[tournamentType];
 
   // Must have enough players to earn any points

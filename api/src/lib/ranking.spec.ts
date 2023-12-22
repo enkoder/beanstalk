@@ -3,6 +3,7 @@ import {
   MIN_PLAYERS_TO_BE_LEGAL,
   PERCENT_FOR_FIRST_PLACE,
   PERCENT_RECEIVING_POINTS,
+  POINTS_FOR_INTERCONTS,
   POINTS_PER_PLAYER,
   calculateTournamentPointDistribution,
 } from "./ranking.js";
@@ -68,7 +69,7 @@ test("not enough players", () => {
 test("Intercontinentals", () => {
   const type: TournamentType = "intercontinental championship";
   const num = MIN_PLAYERS_TO_BE_LEGAL[type];
-  const intendedTotal = POINTS_PER_PLAYER[type] * num;
+  const intendedTotal = POINTS_FOR_INTERCONTS;
   const { points, totalPoints } = calculateTournamentPointDistribution(
     num,
     type,
