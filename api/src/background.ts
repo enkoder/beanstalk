@@ -1,8 +1,4 @@
-import { ExecutionContext } from "@cloudflare/workers-types/experimental";
-import { Kysely } from "kysely";
-import { D1Dialect } from "kysely-d1";
-import { Toucan } from "toucan-js";
-import { ALS, g } from "./g.js";
+import { g } from "./g.js";
 import {
   ABREntryType,
   ABRTournamentType,
@@ -22,7 +18,7 @@ import * as Results from "./models/results.js";
 import * as Seasons from "./models/season.js";
 import * as Tournaments from "./models/tournament.js";
 import * as Users from "./models/user.js";
-import { Database, Result, Tournament, User } from "./schema.js";
+import { Result, Tournament, User } from "./schema.js";
 import { Env, IngestResultQueueMessage } from "./types.d.js";
 
 enum Queues {
@@ -31,6 +27,85 @@ enum Queues {
   IngestResult = "ingest-result",
   IngestResultDLQ = "ingest-result-dlq",
   IngestCard = "ingest-card",
+}
+
+const SUPPORTED_TOURNAMENT_TYPES: ABRTournamentTypeFilter[] = [
+  ABRTournamentTypeFilter.CircuitOpener,
+  ABRTournamentTypeFilter.WorldsChampionship,
+  ABRTournamentTypeFilter.NationalChampionship,
+  ABRTournamentTypeFilter.IntercontinentalChampionship,
+  ABRTournamentTypeFilter.ContinentalChampionship,
+];
+
+export async function processScheduledEvent(event: ScheduledEvent, env: Env) {
+  switch (event.cron) {
+    // Every day at midnight
+    case "0 0 * * *":
+      await publishAllTournamentIngest(env, "cron");
+      break;
+  }
+}
+
+export async function processQueueBatch(
+  batch: MessageBatch<ABRTournamentType | ABREntryType>,
+  env: Env,
+) {
+  for (const message of batch.messages) {
+    switch (batch.queue) {
+      case Queues.IngestTournament:
+        await handleTournamentIngest(env, message.body as ABRTournamentType);
+        break;
+      case Queues.IngestTournamentDLQ:
+        await handleTournamentIngestDLQ(message.body as ABRTournamentType);
+        break;
+      case Queues.IngestResult: {
+        const { tournament, entry } = message.body as IngestResultQueueMessage;
+        await handleResultIngest(env, tournament, entry);
+        break;
+      }
+      case Queues.IngestResultDLQ: {
+        const { tournament, entry } = message.body as IngestResultQueueMessage;
+        await handleResultIngestDLQ(tournament, entry);
+        break;
+      }
+      case Queues.IngestCard: {
+        await handleCardIngest(env, message.body);
+        break;
+      }
+    }
+  }
+}
+
+export async function publishAllTournamentIngest(
+  env: Env,
+  trigger: "api" | "cron",
+) {
+  const data = { publish: "tournament", trigger: trigger };
+  for (const type of SUPPORTED_TOURNAMENT_TYPES) {
+    try {
+      await publishIngestTournament(
+        env,
+        null,
+        ABRTournamentTypeFilter.IntercontinentalChampionship,
+      );
+      console.log(
+        JSON.stringify({
+          tournament_type: type,
+          status: "success",
+          ...data,
+        }),
+      );
+    } catch (e) {
+      g().sentry.captureException(e);
+      console.log(
+        JSON.stringify({
+          tournament_type: type,
+          status: "error",
+          ...data,
+        }),
+      );
+    }
+  }
 }
 
 async function ingestEntry(
@@ -186,7 +261,7 @@ async function handleResultIngestDLQ(
   );
 }
 
-export async function abrIngest(
+export async function publishIngestTournament(
   env: Env,
   userId?: number,
   tournamentTypeFilter?: ABRTournamentTypeFilter,
@@ -199,13 +274,6 @@ export async function abrIngest(
     abrTournaments = await getTournamentsByType(tournamentTypeFilter);
   }
 
-  if (!abrTournaments) {
-    const text =
-      "abrIngest | Could not find ABR Tournaments from query and args";
-    g().sentry.captureException(text);
-    throw new Error(text);
-  }
-
   for (const abrTournament of abrTournaments) {
     await env.INGEST_TOURNAMENT_Q.send(abrTournament, { contentType: "json" });
   }
@@ -213,112 +281,4 @@ export async function abrIngest(
 
 async function handleCardIngest(env: Env, card) {
   await env.CARDS_KV.put(String(Number(card.code)), JSON.stringify(card));
-}
-
-export async function handleQueue(
-  batch: MessageBatch<ABRTournamentType | ABREntryType>,
-  env: Env,
-  ctx: ExecutionContext,
-): Promise<void> {
-  const sentry = new Toucan({
-    dsn: env.SENTRY_DSN,
-    release: env.SENTRY_RELEASE,
-    context: ctx,
-  });
-
-  const db = new Kysely<Database>({
-    // @ts-ignore
-    dialect: new D1Dialect({ database: env.DB }),
-  });
-
-  return ALS.run({ sentry: sentry, db: db }, async () => {
-    for (const message of batch.messages) {
-      //console.log(`${batch.queue} | ${JSON.stringify(message)}`);
-      switch (batch.queue) {
-        case Queues.IngestTournament:
-          await handleTournamentIngest(env, message.body as ABRTournamentType);
-          break;
-        case Queues.IngestTournamentDLQ:
-          await handleTournamentIngestDLQ(message.body as ABRTournamentType);
-          break;
-        case Queues.IngestResult: {
-          const { tournament, entry } =
-            message.body as IngestResultQueueMessage;
-          await handleResultIngest(env, tournament, entry);
-          break;
-        }
-        case Queues.IngestResultDLQ: {
-          const { tournament, entry } =
-            message.body as IngestResultQueueMessage;
-          await handleResultIngestDLQ(tournament, entry);
-          break;
-        }
-        case Queues.IngestCard: {
-          await handleCardIngest(env, message.body);
-          break;
-        }
-      }
-    }
-  });
-}
-
-export async function handleScheduled(
-  event: ScheduledEvent,
-  env: Env,
-  ctx: ExecutionContext,
-) {
-  const sentry = new Toucan({
-    dsn: env.SENTRY_DSN,
-    release: env.SENTRY_RELEASE,
-    context: ctx,
-  });
-
-  const db = new Kysely<Database>({
-    // @ts-ignore
-    dialect: new D1Dialect({ database: env.DB }),
-  });
-
-  return ALS.run({ sentry: sentry, db: db }, async () => {
-    switch (event.cron) {
-      // Every day at midnight
-      case "0 0 * * *":
-        console.log(
-          `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.IntercontinentalChampionship}`,
-        );
-        await abrIngest(
-          env,
-          null,
-          ABRTournamentTypeFilter.IntercontinentalChampionship,
-        );
-
-        console.log(
-          `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.ContinentalChampionship}`,
-        );
-        await abrIngest(
-          env,
-          null,
-          ABRTournamentTypeFilter.ContinentalChampionship,
-        );
-
-        console.log(
-          `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.NationalChampionship}`,
-        );
-        await abrIngest(
-          env,
-          null,
-          ABRTournamentTypeFilter.NationalChampionship,
-        );
-
-        console.log(
-          `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.WorldsChampionship}`,
-        );
-        await abrIngest(env, null, ABRTournamentTypeFilter.WorldsChampionship);
-
-        console.log(
-          `CRON: abrIngest | tournamentType: ${ABRTournamentTypeFilter.CircuitOpener}`,
-        );
-        await abrIngest(env, null, ABRTournamentTypeFilter.CircuitOpener);
-        break;
-    }
-  });
 }

@@ -5,12 +5,14 @@ import { createCors, error } from "itty-router";
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
 import { RewriteFrames, Toucan } from "toucan-js";
-import { handleQueue, handleScheduled } from "./background.js";
+import { processQueueBatch, processScheduledEvent } from "./background.js";
 import { ALS } from "./g.js";
+import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
 import {
   ExportDB,
+  IngestTournament,
   IngestTournaments,
   Rerank,
   UpdateCards,
@@ -86,6 +88,7 @@ router
   .get("/admin/updateNRDBNames", UpdateUsers)
   .get("/admin/rerank", Rerank)
   .get("/admin/exportDB", ExportDB)
+  .post("/admin/ingestTournament", IngestTournament)
   .post("/admin/ingestTournaments", IngestTournaments)
   .post("/admin/updateCards", UpdateCards)
   .post("/admin/updateTournamentsSeason", UpdateTournamentSeasons)
@@ -93,7 +96,7 @@ router
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));
 
-async function fetch(request: Request, env: Env, ctx: ExecutionContext) {
+async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   const sentry = new Toucan({
     dsn: env.SENTRY_DSN,
     release: env.SENTRY_RELEASE,
@@ -128,8 +131,60 @@ async function fetch(request: Request, env: Env, ctx: ExecutionContext) {
   }
 }
 
+async function handleScheduled(
+  event: ScheduledEvent,
+  env: Env,
+  ctx: ExecutionContext,
+) {
+  const sentry = new Toucan({
+    dsn: env.SENTRY_DSN,
+    release: env.SENTRY_RELEASE,
+    context: ctx,
+  });
+
+  const db = new Kysely<Database>({
+    // @ts-ignore
+    dialect: new D1Dialect({ database: env.DB }),
+  });
+
+  // run while also setting the global context
+  return ALS.run({ sentry: sentry, db: db }, async () => {
+    try {
+      await processScheduledEvent(event, env);
+    } catch (e) {
+      sentry.captureException(e);
+    }
+  });
+}
+
+async function handleQueue(
+  batch: MessageBatch<ABRTournamentType | ABREntryType>,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<void> {
+  const sentry = new Toucan({
+    dsn: env.SENTRY_DSN,
+    release: env.SENTRY_RELEASE,
+    context: ctx,
+  });
+
+  const db = new Kysely<Database>({
+    // @ts-ignore
+    dialect: new D1Dialect({ database: env.DB }),
+  });
+
+  // run while also setting the global context
+  return ALS.run({ sentry: sentry, db: db }, async () => {
+    try {
+      await processQueueBatch(batch, env);
+    } catch (e) {
+      sentry.captureException(e);
+    }
+  });
+}
+
 export default {
   queue: handleQueue,
   scheduled: handleScheduled,
-  fetch: fetch,
+  fetch: handleFetch,
 };

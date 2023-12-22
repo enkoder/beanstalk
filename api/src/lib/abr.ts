@@ -74,6 +74,7 @@ export function abrToTournament(
     date: abr.date.toString(),
   };
 }
+
 export type ABRTournamentType = z.infer<typeof ABRTournament>;
 
 export const ABREntry = z.object({
@@ -107,6 +108,7 @@ export function abrToResult(abr: ABREntryType, { ...args }): Partial<Result> {
     ...args,
   };
 }
+
 const ABR_BASE_URL = "https://alwaysberunning.net/api";
 
 async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
@@ -121,12 +123,7 @@ async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
 
   if (body.length) {
     for (const tournament of body) {
-      try {
-        retArr.push(ABRTournament.parse(tournament));
-      } catch (error) {
-        g().sentry.captureException(error);
-        console.log(error);
-      }
+      retArr.push(ABRTournament.parse(tournament));
     }
   }
 

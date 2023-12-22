@@ -6,7 +6,10 @@ import {
 import { parseISO } from "date-fns";
 import { json } from "itty-router";
 import pLimit from "p-limit";
-import { abrIngest } from "../background.js";
+import {
+  publishAllTournamentIngest,
+  publishIngestTournament,
+} from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
 import {
   TOURNAMENT_POINTS,
@@ -20,6 +23,7 @@ import {
   ExportDBSchema,
   IngestTournamentBody,
   IngestTournamentSchema,
+  IngestTournamentsSchema,
   RerankSchema,
   UpdateCardsSchema,
   UpdateTournamentSeasonSchema,
@@ -81,12 +85,21 @@ export class UpdateUsers extends OpenAPIRoute {
   }
 }
 
-export class IngestTournaments extends OpenAPIRoute {
+export class IngestTournament extends OpenAPIRoute {
   static schema = IngestTournamentSchema;
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = IngestTournamentBody.parse(data.body);
-    await abrIngest(env, body.userId, body.tournamentType);
+    await publishIngestTournament(env, body.userId, body.tournamentType);
+    return json({});
+  }
+}
+
+export class IngestTournaments extends OpenAPIRoute {
+  static schema = IngestTournamentsSchema;
+
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext) {
+    await publishAllTournamentIngest(env, "api");
     return json({});
   }
 }

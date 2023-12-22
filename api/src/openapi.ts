@@ -446,6 +446,18 @@ export const IngestTournamentSchema = {
   },
 };
 
+export const IngestTournamentsSchema = {
+  tags: ["Admin"],
+  summary: "Triggers a background job to ingest all tournament data from ABR.",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates success on triggering ingestion.",
+    },
+  },
+};
+
 export const UpdateCardsSchema = {
   tags: ["Admin"],
   summary: "Fetches and updates the KV that stores the NRDB cards",
