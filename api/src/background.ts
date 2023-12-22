@@ -108,6 +108,13 @@ async function handleResultIngest(
   );
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
+  const loggedData = {
+    tournament_id: tournament.id,
+    tournament_name: tournament.name,
+    user_name: abrEntry.user_name,
+    user_name_import: abrEntry.user_import_name,
+  };
+
   try {
     const result = await ingestEntry(
       env,
@@ -115,34 +122,30 @@ async function handleResultIngest(
       tournament.id,
       points[placement - 1],
     );
+
     if (!result) {
       console.log(
-        [
-          `${Queues.IngestResult} | `,
-          "FAIL | ",
-          `user_id: ${abrEntry.user_id} | `,
-          `user_name: ${abrEntry.user_name} | `,
-          `user_import_name: ${abrEntry.user_import_name} | `,
-          `tournament_id: ${tournament.id} | `,
-          `tournament_name: ${tournament.name}`,
-        ].join(" "),
+        JSON.stringify({
+          status: "skip",
+          ...loggedData,
+        }),
       );
     } else {
       console.log(
-        [
-          `${Queues.IngestResult} | `,
-          "SUCCESS | ",
-          `user_id: ${result.user_id} | `,
-          `user_name: ${abrEntry.user_name} | `,
-          `user_import_name: ${abrEntry.user_import_name} | `,
-          `tournament_id: ${tournament.id} | `,
-          `tournament_name: ${tournament.name}`,
-        ].join(" "),
+        JSON.stringify({
+          status: "success",
+          ...loggedData,
+        }),
       );
     }
   } catch (e) {
     g().sentry.captureException(e);
-    console.log(`Error during ingestEntry tournament=${tournament.id}`);
+    console.log(
+      JSON.stringify({
+        status: "error",
+        ...loggedData,
+      }),
+    );
     throw e;
   }
 }
@@ -197,9 +200,10 @@ export async function abrIngest(
   }
 
   if (!abrTournaments) {
-    throw new Error(
-      "abrIngest | Could not find ABR Tournaments from query and args",
-    );
+    const text =
+      "abrIngest | Could not find ABR Tournaments from query and args";
+    g().sentry.captureException(text);
+    throw new Error(text);
   }
 
   for (const abrTournament of abrTournaments) {
