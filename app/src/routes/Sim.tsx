@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { FormEvent, useEffect, useState } from "react";
-import { MIN_PLAYERS_TO_BE_LEGAL } from "../../../api/src/lib/ranking";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
@@ -11,11 +10,13 @@ import {
 import { Input } from "../components/Input";
 import { PageHeading } from "../components/PageHeader";
 import { Select } from "../components/Select";
+import { Sep } from "../components/Sep";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 
 export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
     useState<TournamentConfig | null>(null);
-  const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
+  const [numPlayers, setNumPlayers] = useState<number | undefined>(16);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
@@ -35,7 +36,6 @@ export function Sim() {
     event.preventDefault();
     if (selectedTournamentConfig && numPlayers) {
       LeaderboardService.getGetPointDistribution(
-        selectedTournamentConfig.points,
         numPlayers,
         selectedTournamentConfig.code,
       ).then((response) => {
@@ -51,13 +51,14 @@ export function Sim() {
         breakdown of the bean distribution. Use this to figure out how many
         beans you'll get for your performance!
       </text>
+      <Sep className={"my-2 lg:my-4"} />
       <form
         className={"mb-4 flex flex-col gap-x-4 lg:flex-row lg:gap-4"}
         onSubmit={handleSubmit}
       >
         <Select
           width={"w-full"}
-          label={"Tournament / Beans"}
+          label={"Beans Per Player / % for 1st / Min Players"}
           items={Object.values(config?.tournament_configs || {})}
           selected={selectedTournamentConfig}
           renderItem={(t) => {
@@ -65,31 +66,63 @@ export function Sim() {
               <div className={"flex flex-row justify-between"}>
                 <text>{t.name}</text>
                 <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
-                  {t.points}
+                  {t.points_per_player} / {t.percent_for_first_place} /{" "}
+                  {t.min_players_to_be_legal}
                 </span>
               </div>
             ) : (
               "Loading..."
             );
           }}
-          onChange={(t) => setSelectedTournamentConfig(t)}
+          onChange={(t) => {
+            setSelectedTournamentConfig(t);
+            if (t?.code === "intercontinental championship") {
+              setNumPlayers(12);
+            }
+          }}
         />
-        <Input
-          className={clsx(
-            numPlayers === undefined && "border border-red-900",
-            "h-12 w-full rounded-lg",
+        <Tooltip placement={"bottom"}>
+          <TooltipTrigger className={"w-full"}>
+            <Input
+              className={clsx(
+                numPlayers === undefined && "border border-red-900",
+                "h-12 w-full rounded-lg",
+              )}
+              disabled={
+                selectedTournamentConfig?.code ===
+                "intercontinental championship"
+              }
+              label={"Number of Players"}
+              type="number"
+              id={"num-players"}
+              value={
+                selectedTournamentConfig?.code ===
+                "intercontinental championship"
+                  ? 12
+                  : numPlayers
+              }
+              onChange={(e) =>
+                setNumPlayers(
+                  e.target.value !== "" ? Number(e.target.value) : undefined,
+                )
+              }
+            />
+          </TooltipTrigger>
+          {selectedTournamentConfig?.code ===
+            "intercontinental championship" && (
+            <TooltipContent
+              className={
+                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+              }
+              arrowClassName={
+                "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
+              }
+            >
+              <span>Intercontinentals has a fixed number of 12 players</span>
+            </TooltipContent>
           )}
-          label={"Number of Players"}
-          type="number"
-          id={"num-players"}
-          min={MIN_PLAYERS_TO_BE_LEGAL}
-          value={numPlayers}
-          onChange={(e) =>
-            setNumPlayers(
-              e.target.value !== "" ? Number(e.target.value) : undefined,
-            )
-          }
-        />
+        </Tooltip>
+
         <button
           className={clsx(
             numPlayers === undefined && "cursor-not-allowed bg-gray-500",
@@ -128,7 +161,8 @@ export function Sim() {
                   "break-words border-b-2 border-solid border-gray-300 px-4"
                 }
               >
-                Cumulative ({pointsDistributionResponse?.adjustedTotalPoints})
+                Cumulative ({pointsDistributionResponse?.totalPoints.toFixed(2)}
+                )
               </th>
             </tr>
           </thead>

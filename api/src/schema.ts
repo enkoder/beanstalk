@@ -1,11 +1,9 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
-  EXTRA_POINTS_PER_PERSON,
   MAX_TOURNAMENTS_PER_TYPE,
   MIN_PLAYERS_TO_BE_LEGAL,
   PERCENT_FOR_FIRST_PLACE,
-  PERCENT_RECEIVING_POINTS,
-  TOURNAMENT_POINTS,
+  POINTS_PER_PLAYER,
 } from "./lib/ranking.js";
 import { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
@@ -26,41 +24,51 @@ export type TournamentType =
   | "regional championship";
 
 export const RankingConfig = {
-  min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL,
-  extra_points_per_person: EXTRA_POINTS_PER_PERSON,
-  percent_for_first_place: PERCENT_FOR_FIRST_PLACE,
-  percent_receiving_points: PERCENT_RECEIVING_POINTS,
   tournament_configs: {
     "worlds championship": {
       code: "worlds championship",
       name: "Worlds",
-      points: TOURNAMENT_POINTS["worlds championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["worlds championship"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["worlds championship"],
+      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["worlds championship"],
+      points_per_player: POINTS_PER_PLAYER["worlds championship"],
     } as TournamentConfigType,
     "continental championship": {
       code: "continental championship",
       name: "Continentals",
-      points: TOURNAMENT_POINTS["continental championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
+      min_players_to_be_legal:
+        MIN_PLAYERS_TO_BE_LEGAL["continental championship"],
+      percent_for_first_place:
+        PERCENT_FOR_FIRST_PLACE["continental championship"],
+      points_per_player: POINTS_PER_PLAYER["continental championship"],
     } as TournamentConfigType,
     "national championship": {
       code: "national championship",
       name: "Nationals",
-      points: TOURNAMENT_POINTS["national championship"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["national championship"],
+      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["national championship"],
+      points_per_player: POINTS_PER_PLAYER["national championship"],
     } as TournamentConfigType,
     "intercontinental championship": {
       code: "intercontinental championship",
       name: "Interconts",
-      points: TOURNAMENT_POINTS["intercontinental championship"],
       tournament_limit:
         MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
+      min_players_to_be_legal:
+        MIN_PLAYERS_TO_BE_LEGAL["intercontinental championship"],
+      percent_for_first_place:
+        PERCENT_FOR_FIRST_PLACE["intercontinental championship"],
+      points_per_player: POINTS_PER_PLAYER["intercontinental championship"],
     } as TournamentConfigType,
     "circuit opener": {
       code: "circuit opener",
       name: "Circuit Opener",
-      points: TOURNAMENT_POINTS["circuit opener"],
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit opener"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit opener"],
+      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["circuit opener"],
+      points_per_player: POINTS_PER_PLAYER["circuit opener"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;
@@ -96,6 +104,7 @@ export interface SeasonsTable {
   started_at: string;
   ended_at: string | null;
 }
+
 export type Season = Selectable<SeasonsTable>;
 export type InsertSeason = Insertable<SeasonsTable>;
 
@@ -132,6 +141,7 @@ export interface TournamentsTable {
   season_id: number | null;
   date: string | null;
 }
+
 export type Tournament = Selectable<TournamentsTable>;
 export type UpdateTournament = Updateable<TournamentsTable>;
 export type InsertTournament = Insertable<TournamentsTable>;

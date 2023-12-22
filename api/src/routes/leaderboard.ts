@@ -58,24 +58,26 @@ export class GetPointDistribution extends OpenAPIRoute {
   static schema = GetPointDistributionSchema;
 
   async handle(req: RequestWithDB) {
-    const totalPoints = Number(req.query.totalPoints);
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
 
-    const { points, adjustedTotalPoints } =
-      calculateTournamentPointDistribution(totalPoints, numPlayers, type);
+    const { points, totalPoints } = calculateTournamentPointDistribution(
+      numPlayers,
+      type,
+    );
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {
-      cumulative.push(((accum + value) / adjustedTotalPoints) * 100.0);
+      cumulative.push(
+        totalPoints !== 0 ? ((accum + value) / totalPoints) * 100.0 : 0,
+      );
       return accum + value;
     }, 0);
 
+    console.log(cumulative);
     return json(
       GetPointDistributionResponseComponent.parse({
-        currentTargetTopPercentage: 20,
-        currentTargetPointPercentageForTop: 80,
-        adjustedTotalPoints: adjustedTotalPoints,
+        totalPoints: totalPoints,
         pointDistribution: points.map((value, index) => {
           return {
             placement: index + 1,
@@ -98,6 +100,7 @@ export class GetRankingConfig extends OpenAPIRoute {
 
 export class GetFactions extends OpenAPIRoute {
   static schema = GetFactionsSchema;
+
   async handle() {
     const factions: FactionComponentType[] = [];
     for (const faction in Factions) {
@@ -109,6 +112,7 @@ export class GetFactions extends OpenAPIRoute {
 
 export class GetFormats extends OpenAPIRoute {
   static schema = GetFormatSchema;
+
   async handle() {
     const formats: Format[] = [];
     for (const format of Formats) {

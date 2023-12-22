@@ -11,10 +11,7 @@ import {
   publishIngestTournament,
 } from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
-import {
-  TOURNAMENT_POINTS,
-  calculateTournamentPointDistribution,
-} from "../lib/ranking.js";
+import { calculateTournamentPointDistribution } from "../lib/ranking.js";
 import * as Results from "../models/results.js";
 import * as Seasons from "../models/season.js";
 import * as Tournaments from "../models/tournament.js";
@@ -50,8 +47,8 @@ export class Rerank extends OpenAPIRoute {
         }
 
         const { points } = calculateTournamentPointDistribution(
-          TOURNAMENT_POINTS[tournament.type],
           results.length,
+          tournament.type,
         );
 
         for (let i = 0; i < results.length; i++) {

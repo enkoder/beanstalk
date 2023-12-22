@@ -7,4 +7,5 @@ export enum Format {
     STANDARD = 'standard',
     STARTUP = 'startup',
     ETERNAL = 'eternal',
+    OTHER = 'other',
 }

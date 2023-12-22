@@ -54,7 +54,7 @@ export class AdminService {
      * @returns any Empty object indicates success on triggering ingestion.
      * @throws ApiError
      */
-    public static postIngestTournaments(
+    public static postIngestTournament(
         requestBody?: {
             userId?: number;
             tournamentType?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
@@ -62,9 +62,21 @@ export class AdminService {
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/admin/ingestTournaments',
+            url: '/api/admin/ingestTournament',
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * Triggers a background job to ingest all tournament data from ABR.
+     * @returns any Empty object indicates success on triggering ingestion.
+     * @throws ApiError
+     */
+    public static postIngestTournaments(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/admin/ingestTournaments',
         });
     }
 

@@ -10,10 +10,7 @@ import {
   getTournamentsByUserId,
 } from "./lib/abr.js";
 import * as NRDB from "./lib/nrdb.js";
-import {
-  TOURNAMENT_POINTS,
-  calculateTournamentPointDistribution,
-} from "./lib/ranking.js";
+import { calculateTournamentPointDistribution } from "./lib/ranking.js";
 import * as Results from "./models/results.js";
 import * as Seasons from "./models/season.js";
 import * as Tournaments from "./models/tournament.js";
@@ -83,11 +80,7 @@ export async function publishAllTournamentIngest(
   const data = { publish: "tournament", trigger: trigger };
   for (const type of SUPPORTED_TOURNAMENT_TYPES) {
     try {
-      await publishIngestTournament(
-        env,
-        null,
-        ABRTournamentTypeFilter.IntercontinentalChampionship,
-      );
+      await publishIngestTournament(env, null, type);
       console.log(
         JSON.stringify({
           tournament_type: type,
@@ -177,7 +170,6 @@ async function handleResultIngest(
 ) {
   // Being explicit, even though defaults are supplied
   const { points } = calculateTournamentPointDistribution(
-    TOURNAMENT_POINTS[tournament.type],
     tournament.players_count,
     tournament.type,
   );

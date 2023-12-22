@@ -7,8 +7,10 @@ import type { TournamentType } from './TournamentType';
 
 export type TournamentConfig = {
     code: TournamentType;
-    tournament_limit: number;
     name: string;
-    points: number;
+    tournament_limit: number;
+    min_players_to_be_legal: number;
+    percent_for_first_place: number;
+    points_per_player: number;
 };
 

@@ -77,19 +77,17 @@ export type TournamentComponentType = z.infer<typeof TournamentComponent>;
 export const TournamentConfigComponent = z
   .object({
     code: TournamentTypeComponent,
-    tournament_limit: z.number(),
     name: z.string(),
-    points: z.number(),
+    tournament_limit: z.number(),
+    min_players_to_be_legal: z.number(),
+    percent_for_first_place: z.number(),
+    points_per_player: z.number(),
   })
   .openapi("TournamentConfig");
 export type TournamentConfigType = z.infer<typeof TournamentConfigComponent>;
 
 export const RankingConfigComponent = z
   .object({
-    min_players_to_be_legal: z.number(),
-    extra_points_per_person: z.number(),
-    percent_for_first_place: z.number(),
-    percent_receiving_points: z.number(),
     tournament_configs: z.record(
       TournamentTypeComponent,
       TournamentConfigComponent,
@@ -143,9 +141,7 @@ export type PrivateAccountInfoType = z.infer<typeof PrivateAccountInfo>;
 
 export const GetPointDistributionResponseComponent = z
   .object({
-    currentTargetTopPercentage: z.number(),
-    currentTargetPointPercentageForTop: z.number(),
-    adjustedTotalPoints: z.number(),
+    totalPoints: z.number(),
     pointDistribution: z.array(
       z.object({
         placement: z.number(),
@@ -360,7 +356,6 @@ export const GetPointDistributionSchema = {
   tags: ["Leaderboard"],
   summary: "Tool to show distribution of points from various given parameters",
   parameters: {
-    totalPoints: Query(z.coerce.number()),
     numPlayers: Query(z.coerce.number()),
     type: Query(TournamentTypeComponent.optional()),
   },

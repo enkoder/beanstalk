@@ -3,29 +3,49 @@
 import { TournamentType } from "../schema.js";
 
 // Sets the number of players who will be receiving any points. Defined as a percentage
-// of total players i.e. value of .5 implies half of the field will get points
-export const PERCENT_RECEIVING_POINTS = 0.5;
+// of total players i.e. value of 50 implies half of the field will get points
+export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
+  {
+    "worlds championship": 100,
+    "continental championship": 100,
+    "national championship": 100,
+    "intercontinental championship": 1,
+    "circuit opener": 100,
+  };
 
 // Sets the percentage of the total adjusted point total first place receives
-// i.e. 0.15 implies that first place will get 15% of the total available points for that tournament
-export const PERCENT_FOR_FIRST_PLACE = 0.15;
+// i.e. 15 implies that first place will get 15% of the total available points for that tournament
+export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
+  {
+    "worlds championship": 10,
+    "continental championship": 15,
+    "national championship": 15,
+    "intercontinental championship": 100,
+    "circuit opener": 30,
+  };
 
-// Defines how many additional points are added per player to the total available point
+// Defines how many points are added per player to the total available point
 // This is used to increase the overall payout for large tournaments
-export const EXTRA_POINTS_PER_PERSON = 20;
+export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
+  "worlds championship": 50,
+  "continental championship": 40,
+  "national championship": 30,
+  // ~200 points for 1st place @ 12 person tournament
+  "intercontinental championship": 16.667,
+  "circuit opener": 10,
+};
 
 // Sets a baseline number of players a tournament must have in order to receive any points at all
 // This means that small tournaments are not eligible for point payouts
-export const MIN_PLAYERS_TO_BE_LEGAL = 13;
-
-// Defines the baseline point total per tournament type before the additional points per player is added
-export const TOURNAMENT_POINTS: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 4000,
-  "continental championship": 2000,
-  "national championship": 1000,
-  "intercontinental championship": 200,
-  "circuit opener": 0,
-};
+export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
+  {
+    "worlds championship": 32,
+    "continental championship": 16,
+    "national championship": 16,
+    // ~200 points for 1st place @ 12 person tournament
+    "intercontinental championship": 12,
+    "circuit opener": 10,
+  };
 
 // Defines the number of tournaments a person can get points for
 // We take the top values if a person attends more than the defined max
@@ -41,49 +61,43 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
 /**
  * Given the various input params, calculates the point distribution for a tournament.
  *
- * @param totalPoints Baseline number of total points the tournament will distribute amongst players
  * @param numPlayers Total number of players in the tournament
- * @param firstPlacePercentage Flat percentage of points first place receives from the adjusted total point pool
- * @param percentReceivingPoints Percentage of the field that should receive any points
- * @param extraPointsPerPerson Extra points to add to the total point pool per person
  * @param tournamentType Type of tournament which is used to conditionally change the payout structure
  */
 export function calculateTournamentPointDistribution(
-  totalPoints: number,
   numPlayers: number,
   tournamentType?: TournamentType,
-  firstPlacePercentage: number = PERCENT_FOR_FIRST_PLACE,
-  percentReceivingPoints: number = PERCENT_RECEIVING_POINTS,
-  extraPointsPerPerson: number = EXTRA_POINTS_PER_PERSON,
-) {
+): { points: number[]; totalPoints: number } {
+  const totalPoints = numPlayers * POINTS_PER_PLAYER[tournamentType];
+
   // Interconts is winner take all!!
-  if (tournamentType === "intercontinental championship") {
-    return {
-      points: Array.from([totalPoints, ...Array(numPlayers).fill(0).slice(1)]),
-      adjustedTotalPoints: totalPoints,
-    };
-  }
+  //if (tournamentType === "intercontinental championship") {
+  //  return {
+  //    points: Array.from([totalPoints, ...Array(numPlayers).fill(0).slice(1)]),
+  //    totalPoints: totalPoints,
+  //  };
+  //}
 
   // Must have enough players to earn any points
-  if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL) {
+  if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL[tournamentType]) {
     return {
       points: Array(numPlayers).fill(0),
-      adjustedTotalPoints: totalPoints,
+      totalPoints: 0,
     };
   }
 
   let points: number[] = [];
   let sum = 0;
 
-  // Adjust the total point pool based upon the total number of players
-  const adjustedTotalPoints = totalPoints + numPlayers * extraPointsPerPerson;
-
   // Limit the number of point winners to be based upon the given arg
-  const totalWinners = Math.ceil(numPlayers * percentReceivingPoints);
+  const totalWinners = Math.ceil(
+    (numPlayers * PERCENT_RECEIVING_POINTS[tournamentType]) / 100,
+  );
 
   // Calculate the number of points going to first place. This value sets the starting place
   // for the exponential decaying distribution.
-  const firstPlacePoints = adjustedTotalPoints * firstPlacePercentage;
+  const firstPlacePoints =
+    (totalPoints * PERCENT_FOR_FIRST_PLACE[tournamentType]) / 100;
 
   // Binary search - find an acceptable value for alpha that hits the sweet spot where
   // the payout distribution matches our adjusted total points.
@@ -116,7 +130,7 @@ export function calculateTournamentPointDistribution(
     }
 
     // Adjust binary search params for next iteration
-    if (sum > adjustedTotalPoints) {
+    if (sum > totalPoints) {
       lower = alpha;
     } else {
       upper = alpha;
@@ -124,5 +138,5 @@ export function calculateTournamentPointDistribution(
   }
 
   // we got there!
-  return { points, adjustedTotalPoints };
+  return { points, totalPoints };
 }
