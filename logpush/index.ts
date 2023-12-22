@@ -67,7 +67,7 @@ type LogPushEventType = z.infer<typeof LogPushEvent>;
 
 function logpushToLokiStreams(
   logPushEvent: LogPushEventType,
-  sentry,
+  sentry: Toucan,
 ): StreamType[] {
   const streams: StreamType[] = [];
 

@@ -1,3 +1,4 @@
+import { g } from "../g.js";
 import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking.js";
 import {
   Faction,
@@ -7,7 +8,6 @@ import {
   TournamentType,
   UpdateResult,
 } from "../schema.js";
-import { getDB } from "./db.js";
 
 export type ResultExpanded = ResultsTable & {
   players_count: number;
@@ -28,15 +28,15 @@ type GetExpandedOptions = {
 };
 
 export async function get(user_id: number, tournament_id: number) {
-  return await getDB()
-    .selectFrom("results")
+  return await g()
+    .db.selectFrom("results")
     .selectAll()
     .where("user_id", "=", user_id)
     .where("tournament_id", "=", tournament_id)
     .executeTakeFirst();
 }
 export async function getAll() {
-  return await getDB().selectFrom("results").selectAll().execute();
+  return await g().db.selectFrom("results").selectAll().execute();
 }
 
 export async function getExpanded({
@@ -46,8 +46,8 @@ export async function getExpanded({
   faction = null,
   format = null,
 }: GetExpandedOptions): Promise<ResultExpanded[]> {
-  let q = getDB()
-    .selectFrom("results")
+  let q = g()
+    .db.selectFrom("results")
     .selectAll()
     .innerJoin("users", "users.id", "results.user_id")
     .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
@@ -116,8 +116,8 @@ export async function insert(
   result: UpdateResult,
   overwriteOnConflict = false,
 ) {
-  return await getDB()
-    .insertInto("results")
+  return await g()
+    .db.insertInto("results")
     .values(result)
     .onConflict((oc) => {
       if (overwriteOnConflict) {
@@ -133,8 +133,8 @@ export async function update(
   user_id: number,
   result: UpdateResult,
 ) {
-  return await getDB()
-    .updateTable("results")
+  return await g()
+    .db.updateTable("results")
     .set(result)
     .where("tournament_id", "=", tournament_id)
     .where("user_id", "=", user_id)
@@ -143,8 +143,8 @@ export async function update(
 }
 
 export async function getBySeasonId(season_id: number) {
-  return getDB()
-    .selectFrom("results")
+  return g()
+    .db.selectFrom("results")
     .innerJoin("tournaments", "results.tournament_id", "tournaments.id")
     .selectAll("results")
     .where("tournaments.season_id", "=", season_id)

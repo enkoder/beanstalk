@@ -1,5 +1,7 @@
 import { IRequest } from "itty-router";
 import { Kysely } from "kysely";
+import { Miniflare } from "miniflare";
+import { Toucan } from "toucan-js";
 import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
 import { Database, Tournament } from "./schema.js";
 
@@ -39,3 +41,9 @@ export type RequestWithDB = {
   user_id: number | null;
   is_admin: boolean | null;
 } & IRequest;
+
+export type G = {
+  db: Kysely<Database>;
+  sentry?: Toucan;
+  mf?: Miniflare;
+};

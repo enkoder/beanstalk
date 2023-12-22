@@ -13,6 +13,6 @@
     "skipLibCheck": true,
     "lib": ["ESNext"],
     "strict": false,
-    "types": ["@cloudflare/workers-types", "jest"]
+    "types": ["@cloudflare/workers-types", "jest", "@types/node"]
   }
 }

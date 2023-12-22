@@ -1,8 +1,8 @@
 name = "beanstalk-api"
 main = "src/index.ts"
-node_compat = true
 compatibility_date = "2023-10-08"
 logpush = true
+compatibility_flags = ["nodejs_compat"]
 
 kv_namespaces = [
     { binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" }

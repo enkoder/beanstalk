@@ -22,8 +22,9 @@
 
 ## Dev Experience
 
-- Add license
+- Figure out why biome doesn't always autoformat from webstorm
 
 ## Infrastructure
 
-- Add sentry error handling to background task
+- Add structured logging to background task
+- Visualize tournament ingestion % 

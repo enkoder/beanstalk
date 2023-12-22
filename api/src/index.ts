@@ -1,11 +1,14 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { createCors, error } from "itty-router";
+import { Kysely } from "kysely";
+import { D1Dialect } from "kysely-d1";
 import { RewriteFrames, Toucan } from "toucan-js";
 import { handleQueue, handleScheduled } from "./background.js";
+import { ALS } from "./g.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
-import { getDB, initDB } from "./models/db.js";
 import {
   ExportDB,
   IngestTournaments,
@@ -29,12 +32,8 @@ import {
   GetTournaments,
 } from "./routes/tournament.js";
 import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users.js";
-import { Env, RequestWithDB } from "./types.js";
-
-function withDB(request: RequestWithDB, env: Env): void {
-  initDB(env.DB);
-  request.db = getDB();
-}
+import { Database } from "./schema.js";
+import { Env } from "./types.js";
 
 const router = OpenAPIRouter({
   base: "/api",
@@ -59,7 +58,6 @@ const { preflight, corsify } = createCors({
 router
   // un-authed endpoints
   .all("*", preflight)
-  .all("/*", withDB)
 
   .get("/auth/login_url", GetLoginUrl)
   .get("/auth/token", GetTokenFromCode)
@@ -104,8 +102,23 @@ async function fetch(request: Request, env: Env, ctx: ExecutionContext) {
     integrations: [new RewriteFrames({ root: "/" })],
   });
 
+  const db = new Kysely<Database>({
+    // @ts-ignore
+    dialect: new D1Dialect({ database: env.DB }),
+    //log(event) {
+    //  if (event.level === "query") {
+    //    console.log(event.query.sql);
+    //    console.log(event.query.parameters);
+    //  }
+    //},
+  });
+
+  const handle = ALS.run({ sentry: sentry, db: db }, () =>
+    AsyncLocalStorage.bind(router.handle),
+  );
+
   try {
-    const resp = await router.handle(request, env, ctx);
+    const resp = await handle(request, env, ctx);
     return corsify(resp);
   } catch (e) {
     sentry.captureException(e);

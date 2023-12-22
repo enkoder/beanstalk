@@ -1,3 +1,4 @@
+import { g } from "../g";
 import { Factions } from "../models/factions.js";
 import * as Leaderboard from "../models/leaderboard.js";
 import * as Results from "../models/results.js";
@@ -9,15 +10,16 @@ import {
   LeaderboardRowComponentType,
 } from "../openapi.js";
 import * as Factories from "./factories.js";
-import { getMF, initMf, wipeDB } from "./setup.js";
+import { applyMigrations, initG, wipeDB } from "./setup";
 
 describe("leaderboard", () => {
   beforeAll(async () => {
-    await initMf();
+    await initG();
+    await applyMigrations();
   });
 
   afterAll(async () => {
-    await getMF().dispose();
+    await g().mf.dispose();
   });
 
   beforeEach(async () => {
@@ -36,7 +38,7 @@ describe("leaderboard", () => {
       Factories.result({ tournament: t, user: u, points: 100 }),
     );
 
-    const response = await getMF().dispatchFetch(Factories.url({}));
+    const response = await g().mf.dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
     expect(rows.length).toEqual(1);
@@ -55,7 +57,7 @@ describe("leaderboard", () => {
       Factories.result({ tournament: t, user: u1, points: 100 }),
     );
 
-    const response = await getMF().dispatchFetch(Factories.url({}));
+    const response = await g().mf.dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
     expect(rows[0].rank).toEqual(1);
@@ -83,7 +85,7 @@ describe("leaderboard", () => {
       Factories.result({ tournament: t2, user: u1, points: 0 }),
     );
 
-    const response = await getMF().dispatchFetch(Factories.url({}));
+    const response = await g().mf.dispatchFetch(Factories.url({}));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
     expect(rows[0].rank).toEqual(1);
@@ -115,7 +117,7 @@ describe("leaderboard", () => {
       Factories.result({ tournament: t1, user: u1, points: 50 }),
     );
 
-    const response = await getMF().dispatchFetch(Factories.url({ season: s0 }));
+    const response = await g().mf.dispatchFetch(Factories.url({ season: s0 }));
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
     expect(rows.length).toEqual(1);
@@ -147,7 +149,7 @@ describe("leaderboard", () => {
       }),
     );
 
-    const response = await getMF().dispatchFetch(
+    const response = await g().mf.dispatchFetch(
       Factories.url({
         faction: Factions.HaasBioroid,
       }),
@@ -227,14 +229,14 @@ describe("leaderboard", () => {
     );
 
     // First check that across all-time, no season filter, we use all results
-    let response = await getMF().dispatchFetch(Factories.url({}));
+    let response = await g().mf.dispatchFetch(Factories.url({}));
     let rows = (await response.json()) as LeaderboardRowComponentType[];
     expect(rows.length).toEqual(1);
     expect(rows[0].user_id).toEqual(u0.id);
     expect(rows[0].points).toEqual(200);
 
     // Now check that we only use the single continental tournament
-    response = await getMF().dispatchFetch(Factories.url({ season: s0 }));
+    response = await g().mf.dispatchFetch(Factories.url({ season: s0 }));
     rows = (await response.json()) as LeaderboardRowComponentType[];
     expect(rows.length).toEqual(1);
     expect(rows[0].user_id).toEqual(u0.id);

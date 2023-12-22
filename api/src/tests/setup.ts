@@ -1,47 +1,38 @@
 import * as fs from "fs";
-import { error } from "itty-router";
-import { CompiledQuery } from "kysely";
+import { CompiledQuery, Kysely } from "kysely";
+import { D1Dialect } from "kysely-d1";
 import { Miniflare } from "miniflare";
-import { getDB, initDB } from "../models/db.js";
+import { g, initTestG } from "../g";
+import { Database } from "../schema";
 
-let _mf: Miniflare | null = null;
-
-export function getMF() {
-  if (_mf) {
-    return _mf;
-  }
-  throw error(500, "Miniflare has not been initialized");
-}
-
-export async function initMf() {
-  console.log("Initializing Miniflare");
-  _mf = new Miniflare({
+export async function initG() {
+  console.log("Initializing Global State");
+  const mf = new Miniflare({
     d1Databases: ["DB"],
     scriptPath: "./dist/index.js",
     modules: true,
     modulesRules: [{ type: "ESModule", include: ["**/*.ts"] }],
     verbose: true,
+    compatibilityFlags: ["nodejs_compat"],
   });
 
-  const db = await _mf.getD1Database("DB");
-  initDB(db);
+  const db = new Kysely<Database>({
+    dialect: new D1Dialect({ database: await mf.getD1Database("DB") }),
+  });
 
-  await applyMigrations();
-
-  return _mf;
+  initTestG({ db: db, mf: mf });
 }
 
 export async function wipeDB() {
-  const db = getDB();
+  const db = g().db;
   await db.deleteFrom("results").execute();
   await db.deleteFrom("tournaments").execute();
   await db.deleteFrom("users").execute();
   await db.deleteFrom("seasons").execute();
 }
 
-async function applyMigrations() {
+export async function applyMigrations() {
   console.log("Applying Migrations");
-  //const parser = new Parser();
   const migrations: string[] = [];
   for (const file of fs.readdirSync("./migrations")) {
     if (file.endsWith(".sql")) {
@@ -49,7 +40,7 @@ async function applyMigrations() {
     }
   }
 
-  const db = getDB();
+  const db = g().db;
   migrations.sort();
 
   for (const migration of migrations) {

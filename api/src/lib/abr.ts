@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { g } from "../g.js";
 import { TournamentTypes } from "../models/tournament.js";
 import { Format, Result, Tournament } from "../schema.js";
 
@@ -123,7 +124,7 @@ async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
       try {
         retArr.push(ABRTournament.parse(tournament));
       } catch (error) {
-        // TODO: do something with these parser errors
+        g().sentry.captureException(error);
         console.log(error);
       }
     }
@@ -181,7 +182,7 @@ export async function getEntries(
       try {
         retArr.push(ABREntry.parse(entry));
       } catch (error) {
-        // TODO: do something with these parser errors
+        g().sentry.captureException(error);
         console.log(error);
       }
     }

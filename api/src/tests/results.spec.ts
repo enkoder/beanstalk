@@ -1,17 +1,19 @@
+import { g } from "../g";
 import * as Results from "../models/results.js";
 import * as Seasons from "../models/season.js";
 import * as Tournaments from "../models/tournament.js";
 import * as Users from "../models/user.js";
 import { result, season, tournament, user } from "./factories.js";
-import { getMF, initMf, wipeDB } from "./setup.js";
+import { applyMigrations, initG, wipeDB } from "./setup";
 
 describe("results", () => {
   beforeAll(async () => {
-    await initMf();
+    await initG();
+    await applyMigrations();
   });
 
   afterAll(async () => {
-    await getMF().dispose();
+    await g().mf.dispose();
   });
 
   beforeEach(async () => {

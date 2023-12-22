@@ -73,11 +73,9 @@ export class UpdateUsers extends OpenAPIRoute {
   async handle(_: RequestWithDB) {
     const users = await Users.getAllWithoutName();
     for (let i = 0; i < users.length; i++) {
-      console.log(JSON.stringify(users[i]));
       const user = await Users.update(users[i].id, {
         name: await getNameFromId(users[i].id),
       });
-      console.log(JSON.stringify(user));
     }
     return json({});
   }
@@ -107,7 +105,6 @@ export class UpdateCards extends OpenAPIRoute {
       index += 100;
     }
 
-    console.log(chunkedCards.length);
     await Promise.all(
       chunkedCards.map((chunk) =>
         limit(() =>
