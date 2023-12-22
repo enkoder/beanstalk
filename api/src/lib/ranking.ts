@@ -13,7 +13,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "circuit opener": 100,
   };
 
-// Sets the percentage of the total adjusted point total first place receives
+// Sets the percentage of the total point 1st place will receive
 // i.e. 15 implies that first place will get 15% of the total available points for that tournament
 export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
   {
@@ -24,8 +24,8 @@ export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
     "circuit opener": 30,
   };
 
-// Defines how many points are added per player to the total available point
-// This is used to increase the overall payout for large tournaments
+// Defines how many points are added per player registered to the tournament
+// Used to scale the number of points for large tournaments
 export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "worlds championship": 60,
   "continental championship": 45,
@@ -35,8 +35,8 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "circuit opener": 15,
 };
 
-// Sets a baseline number of players a tournament must have in order to receive any points at all
-// This means that small tournaments are not eligible for point payouts
+// Sets a baseline number of players a tournament must have in order to distribute any points at all
+// This means that small tournaments are not eligible for payouts
 export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
   {
     "worlds championship": 32,
@@ -47,7 +47,7 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
     "circuit opener": 10,
   };
 
-// Defines the number of tournaments a person can get points for
+// Defines the max number of tournaments a person can get points for
 // We take the top values if a person attends more than the defined max
 export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
   {
@@ -58,12 +58,6 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "circuit opener": 5,
   };
 
-/**
- * Given the various input params, calculates the point distribution for a tournament.
- *
- * @param numPlayers Total number of players in the tournament
- * @param tournamentType Type of tournament which is used to conditionally change the payout structure
- */
 export function calculateTournamentPointDistribution(
   numPlayers: number,
   tournamentType?: TournamentType,

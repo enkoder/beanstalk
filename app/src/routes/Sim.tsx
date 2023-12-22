@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import React, { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   GetPointDistributionResponse,
   LeaderboardService,
@@ -16,7 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
     useState<TournamentConfig | null>(null);
-  const [numPlayers, setNumPlayers] = useState<number | undefined>(16);
+  const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
