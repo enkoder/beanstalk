@@ -6,9 +6,9 @@ import { TournamentType } from "../schema.js";
 // of total players i.e. value of 50 implies half of the field will get points
 export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
   {
-    "worlds championship": 100,
-    "continental championship": 100,
-    "national championship": 100,
+    "worlds championship": 50,
+    "continental championship": 50,
+    "national championship": 50,
     "intercontinental championship": 1,
     "circuit opener": 100,
   };
@@ -18,7 +18,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
 export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
   {
     "worlds championship": 10,
-    "continental championship": 15,
+    "continental championship": 12,
     "national championship": 15,
     "intercontinental championship": 100,
     "circuit opener": 30,
@@ -27,12 +27,12 @@ export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
 // Defines how many points are added per player to the total available point
 // This is used to increase the overall payout for large tournaments
 export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 50,
-  "continental championship": 40,
+  "worlds championship": 60,
+  "continental championship": 45,
   "national championship": 30,
-  // ~200 points for 1st place @ 12 person tournament
+  // Winner take all! ~200 points for 1st place @ 12 person tournament
   "intercontinental championship": 16.667,
-  "circuit opener": 10,
+  "circuit opener": 15,
 };
 
 // Sets a baseline number of players a tournament must have in order to receive any points at all
@@ -40,9 +40,9 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
 export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
   {
     "worlds championship": 32,
-    "continental championship": 16,
+    "continental championship": 20,
     "national championship": 16,
-    // ~200 points for 1st place @ 12 person tournament
+    // Winner take all! ~200 points for 1st place @ 12 person tournament
     "intercontinental championship": 12,
     "circuit opener": 10,
   };
@@ -69,14 +69,6 @@ export function calculateTournamentPointDistribution(
   tournamentType?: TournamentType,
 ): { points: number[]; totalPoints: number } {
   const totalPoints = numPlayers * POINTS_PER_PLAYER[tournamentType];
-
-  // Interconts is winner take all!!
-  //if (tournamentType === "intercontinental championship") {
-  //  return {
-  //    points: Array.from([totalPoints, ...Array(numPlayers).fill(0).slice(1)]),
-  //    totalPoints: totalPoints,
-  //  };
-  //}
 
   // Must have enough players to earn any points
   if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL[tournamentType]) {

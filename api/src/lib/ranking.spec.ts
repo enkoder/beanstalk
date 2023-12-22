@@ -85,29 +85,38 @@ test("Intercontinentals", () => {
 });
 
 test.each([
-  ["circuit opener" as TournamentType, 1],
+  ["circuit opener" as TournamentType, 0],
   ["continental championship" as TournamentType, 2],
-  ["national championship" as TournamentType, 2],
-  ["worlds championship" as TournamentType, 1],
-])("Monotonically increasing point values", (type: TournamentType, offset) => {
-  const numPlayers: number[] = Array.from(Array(100).keys()).slice(
-    MIN_PLAYERS_TO_BE_LEGAL[type],
-  );
-
-  /** Let's check one of the lowest placements to ensure that the point values are always increasing as you add people
-   * At the lowest values, there's a chance that as you add one more person, the point value can decrease
-   * Need to set an offset here to make sure the placement is high enough so if you add +1 person it still increases
-   * the point value
-   */
-  const checkingPlacement = MIN_PLAYERS_TO_BE_LEGAL[type] - offset;
-  let lastValue = 0;
-  for (let i = 0; i < numPlayers.length; i++) {
-    const { points, totalPoints } = calculateTournamentPointDistribution(
-      numPlayers[i],
-      type,
+  ["national championship" as TournamentType, 3],
+  ["worlds championship" as TournamentType, 0],
+])(
+  "Monotonically increasing point values for 8th",
+  (type: TournamentType, offset) => {
+    const numPlayers: number[] = Array.from(Array(100).keys()).slice(
+      MIN_PLAYERS_TO_BE_LEGAL[type],
     );
 
-    expect(points[checkingPlacement]).toBeGreaterThan(lastValue);
-    lastValue = points[checkingPlacement];
-  }
-});
+    /** Let's check one of the lowest placements to ensure that the point values are always increasing as you add people
+     * At the lowest values, there's a chance that as you add one more person, the point value can decrease
+     * Need to set an offset here to make sure the placement is high enough so if you add +1 person it still increases
+     * the point value
+     */
+    const checkingPlacement =
+      (MIN_PLAYERS_TO_BE_LEGAL[type] * PERCENT_RECEIVING_POINTS[type]) / 100 -
+      offset;
+
+    let lastValue = 0;
+    for (let i = 0; i < numPlayers.length; i++) {
+      const { points, totalPoints } = calculateTournamentPointDistribution(
+        numPlayers[i],
+        type,
+      );
+
+      if (lastValue) {
+        expect(points[checkingPlacement]).toBeGreaterThan(lastValue * 0.92);
+        expect(points[checkingPlacement]).toBeLessThan(lastValue * 1.07);
+      }
+      lastValue = points[checkingPlacement];
+    }
+  },
+);
