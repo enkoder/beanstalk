@@ -1,8 +1,10 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
   BASELINE_POINTS,
+  BOTTOM_THRESHOLD,
   MAX_TOURNAMENTS_PER_TYPE,
   MIN_PLAYERS_TO_BE_LEGAL,
+  PERCENT_RECEIVING_POINTS,
   POINTS_PER_PLAYER,
 } from "./lib/ranking.js";
 import { RankingConfigType, TournamentConfigType } from "./openapi.js";
@@ -24,6 +26,7 @@ export type TournamentType =
   | "regional championship";
 
 export const RankingConfig = {
+  bottom_threshold: BOTTOM_THRESHOLD,
   tournament_configs: {
     "worlds championship": {
       code: "worlds championship",
@@ -32,6 +35,7 @@ export const RankingConfig = {
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["worlds championship"],
       points_per_player: POINTS_PER_PLAYER["worlds championship"],
       baseline_points: BASELINE_POINTS["worlds championship"],
+      percent_receiving_points: PERCENT_RECEIVING_POINTS["worlds championship"],
     } as TournamentConfigType,
     "continental championship": {
       code: "continental championship",
@@ -41,6 +45,8 @@ export const RankingConfig = {
         MIN_PLAYERS_TO_BE_LEGAL["continental championship"],
       points_per_player: POINTS_PER_PLAYER["continental championship"],
       baseline_points: BASELINE_POINTS["continental championship"],
+      percent_receiving_points:
+        PERCENT_RECEIVING_POINTS["continental championship"],
     } as TournamentConfigType,
     "national championship": {
       code: "national championship",
@@ -49,6 +55,8 @@ export const RankingConfig = {
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["national championship"],
       points_per_player: POINTS_PER_PLAYER["national championship"],
       baseline_points: BASELINE_POINTS["national championship"],
+      percent_receiving_points:
+        PERCENT_RECEIVING_POINTS["national championship"],
     } as TournamentConfigType,
     "intercontinental championship": {
       code: "intercontinental championship",
@@ -59,6 +67,8 @@ export const RankingConfig = {
         MIN_PLAYERS_TO_BE_LEGAL["intercontinental championship"],
       points_per_player: POINTS_PER_PLAYER["intercontinental championship"],
       baseline_points: BASELINE_POINTS["intercontinental championship"],
+      percent_receiving_points:
+        PERCENT_RECEIVING_POINTS["intercontinental championship"],
     } as TournamentConfigType,
     "circuit opener": {
       code: "circuit opener",
@@ -67,6 +77,7 @@ export const RankingConfig = {
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit opener"],
       points_per_player: POINTS_PER_PLAYER["circuit opener"],
       baseline_points: BASELINE_POINTS["circuit opener"],
+      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit opener"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;

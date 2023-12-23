@@ -6,6 +6,7 @@
 import type { TournamentConfig } from './TournamentConfig';
 
 export type RankingConfig = {
+    bottom_threshold: number;
     tournament_configs: Record<string, TournamentConfig>;
 };
 

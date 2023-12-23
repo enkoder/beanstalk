@@ -82,12 +82,14 @@ export const TournamentConfigComponent = z
     min_players_to_be_legal: z.number(),
     baseline_points: z.number(),
     points_per_player: z.number(),
+    percent_receiving_points: z.number(),
   })
   .openapi("TournamentConfig");
 export type TournamentConfigType = z.infer<typeof TournamentConfigComponent>;
 
 export const RankingConfigComponent = z
   .object({
+    bottom_threshold: z.number(),
     tournament_configs: z.record(
       TournamentTypeComponent,
       TournamentConfigComponent,

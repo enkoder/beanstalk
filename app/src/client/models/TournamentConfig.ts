@@ -12,5 +12,6 @@ export type TournamentConfig = {
     min_players_to_be_legal: number;
     baseline_points: number;
     points_per_player: number;
+    percent_receiving_points: number;
 };
 
