@@ -16,7 +16,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
 // Defines how many points are added per player registered to the tournament
 // Used to scale the number of points for large tournaments
 export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 3,
+  "worlds championship": 2,
   "continental championship": 2,
   "national championship": 2,
   "intercontinental championship": 0,
@@ -24,7 +24,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
 };
 
 export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 400,
+  "worlds championship": 500,
   "continental championship": 250,
   "national championship": 100,
   "intercontinental championship": 200,
