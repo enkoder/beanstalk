@@ -8,29 +8,26 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
   {
     "worlds championship": 50,
     "continental championship": 50,
-    "national championship": 50,
-    "intercontinental championship": 0,
-    "circuit opener": 100,
-  };
-
-// Sets the percentage of the total point 1st place will receive
-// i.e. 15 implies that first place will get 15% of the total available points for that tournament
-export const PERCENT_FOR_FIRST_PLACE: Partial<Record<TournamentType, number>> =
-  {
-    "worlds championship": 10,
-    "continental championship": 12,
-    "national championship": 15,
+    "national championship": 66,
     "intercontinental championship": 100,
-    "circuit opener": 30,
+    "circuit opener": 100,
   };
 
 // Defines how many points are added per player registered to the tournament
 // Used to scale the number of points for large tournaments
 export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 60,
-  "continental championship": 45,
-  "national championship": 30,
+  "worlds championship": 3,
+  "continental championship": 2,
+  "national championship": 2,
   "intercontinental championship": 0,
+  "circuit opener": 1,
+};
+
+export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
+  "worlds championship": 400,
+  "continental championship": 250,
+  "national championship": 100,
+  "intercontinental championship": 200,
   "circuit opener": 15,
 };
 
@@ -38,11 +35,11 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
 // This means that small tournaments are not eligible for payouts
 export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
   {
-    "worlds championship": 32,
-    "continental championship": 20,
+    "worlds championship": 8,
+    "continental championship": 8,
     "national championship": 16,
-    "intercontinental championship": 12,
-    "circuit opener": 10,
+    "intercontinental championship": 8,
+    "circuit opener": 8,
   };
 
 // Defines the max number of tournaments a person can get points for
@@ -56,25 +53,15 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "circuit opener": 5,
   };
 
-// Winner take all! ~200 points for 1st place @ 12 person tournament
-export const POINTS_FOR_INTERCONTS = 200;
+export const BOTTOM_THRESHOLD = 1;
 
 export function calculateTournamentPointDistribution(
   numPlayers: number,
   tournamentType?: TournamentType,
 ): { points: number[]; totalPoints: number } {
-  // winner take all!!
-  if (tournamentType === "intercontinental championship") {
-    return {
-      points: Array.from([
-        POINTS_FOR_INTERCONTS,
-        ...Array(numPlayers).fill(0).slice(1),
-      ]),
-      totalPoints: POINTS_FOR_INTERCONTS,
-    };
-  }
-
-  const totalPoints = numPlayers * POINTS_PER_PLAYER[tournamentType];
+  const pointsForFirst =
+    numPlayers * POINTS_PER_PLAYER[tournamentType] +
+    BASELINE_POINTS[tournamentType];
 
   // Must have enough players to earn any points
   if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL[tournamentType]) {
@@ -85,54 +72,28 @@ export function calculateTournamentPointDistribution(
   }
 
   let points: number[] = [];
-  let sum = 0;
+  let totalPoints = 0;
 
   // Limit the number of point winners to be based upon the given arg
   const totalWinners = Math.ceil(
     (numPlayers * PERCENT_RECEIVING_POINTS[tournamentType]) / 100,
   );
 
-  // Calculate the number of points going to first place. This value sets the starting place
-  // for the exponential decaying distribution.
-  const firstPlacePoints =
-    (totalPoints * PERCENT_FOR_FIRST_PLACE[tournamentType]) / 100;
+  // Start low and ramp up the percentage for first place until we hit the sweet spot
+  let ratio = 0.99;
 
-  // Binary search - find an acceptable value for alpha that hits the sweet spot where
-  // the payout distribution matches our adjusted total points.
-  let lower = 0;
-  let upper = 3;
+  // Outer loop conditions that iterates over the first place percentage until we find a smooth fit
+  while (points.length === 0 || points[totalWinners - 1] > BOTTOM_THRESHOLD) {
+    points = [pointsForFirst];
+    totalPoints = pointsForFirst;
 
-  // Sets a target threshold for margin for error while performing the binary search
-  // meaning when our upper and lower are within this threshold, we've found our
-  // ideal distribution. Making this smaller makes the distribution more precise but
-  // involves more work.
-  const threshold = 0.001;
-
-  while (upper - lower > threshold) {
-    const alpha = (upper + lower) / 2;
-    points = [];
-    sum = 0;
-
-    for (let i = 1; i <= numPlayers; i++) {
-      let pointsAtIndex = 0;
-      // Only the top % gets points, starting with an index of 1, hence <= totalWinners
-      if (i <= totalWinners) {
-        // Calculates the point value for the given alpha at the given index
-        // This is the function that generates the slope and exponential decaying values
-        // of the payout structure.
-        pointsAtIndex = firstPlacePoints / i ** alpha;
-      }
-
+    for (let i = 1; i < numPlayers; i++) {
+      const pointsAtIndex = i < totalWinners ? points[i - 1] * ratio : 0;
       points.push(pointsAtIndex);
-      sum += pointsAtIndex;
+      totalPoints += pointsAtIndex;
     }
 
-    // Adjust binary search params for next iteration
-    if (sum > totalPoints) {
-      lower = alpha;
-    } else {
-      upper = alpha;
-    }
+    ratio -= 0.0001;
   }
 
   // we got there!

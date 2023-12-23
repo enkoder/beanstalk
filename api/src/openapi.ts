@@ -80,7 +80,7 @@ export const TournamentConfigComponent = z
     name: z.string(),
     tournament_limit: z.number(),
     min_players_to_be_legal: z.number(),
-    percent_for_first_place: z.number(),
+    baseline_points: z.number(),
     points_per_player: z.number(),
   })
   .openapi("TournamentConfig");

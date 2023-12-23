@@ -58,7 +58,7 @@ export function Sim() {
       >
         <Select
           width={"w-full"}
-          label={"Beans Per Player / % for 1st / Min Players"}
+          label={"Beans Per Player / Baseline Beans / Min Players"}
           items={Object.values(config?.tournament_configs || {})}
           selected={selectedTournamentConfig}
           renderItem={(t) => {
@@ -66,7 +66,7 @@ export function Sim() {
               <div className={"flex flex-row justify-between"}>
                 <text>{t.name}</text>
                 <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
-                  {t.points_per_player} / {t.percent_for_first_place} /{" "}
+                  {t.points_per_player} / {t.baseline_points} /{" "}
                   {t.min_players_to_be_legal}
                 </span>
               </div>

@@ -1,8 +1,8 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
+  BASELINE_POINTS,
   MAX_TOURNAMENTS_PER_TYPE,
   MIN_PLAYERS_TO_BE_LEGAL,
-  PERCENT_FOR_FIRST_PLACE,
   POINTS_PER_PLAYER,
 } from "./lib/ranking.js";
 import { RankingConfigType, TournamentConfigType } from "./openapi.js";
@@ -30,8 +30,8 @@ export const RankingConfig = {
       name: "Worlds",
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["worlds championship"],
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["worlds championship"],
-      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["worlds championship"],
       points_per_player: POINTS_PER_PLAYER["worlds championship"],
+      baseline_points: BASELINE_POINTS["worlds championship"],
     } as TournamentConfigType,
     "continental championship": {
       code: "continental championship",
@@ -39,17 +39,16 @@ export const RankingConfig = {
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
       min_players_to_be_legal:
         MIN_PLAYERS_TO_BE_LEGAL["continental championship"],
-      percent_for_first_place:
-        PERCENT_FOR_FIRST_PLACE["continental championship"],
       points_per_player: POINTS_PER_PLAYER["continental championship"],
+      baseline_points: BASELINE_POINTS["continental championship"],
     } as TournamentConfigType,
     "national championship": {
       code: "national championship",
       name: "Nationals",
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["national championship"],
-      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["national championship"],
       points_per_player: POINTS_PER_PLAYER["national championship"],
+      baseline_points: BASELINE_POINTS["national championship"],
     } as TournamentConfigType,
     "intercontinental championship": {
       code: "intercontinental championship",
@@ -58,17 +57,16 @@ export const RankingConfig = {
         MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
       min_players_to_be_legal:
         MIN_PLAYERS_TO_BE_LEGAL["intercontinental championship"],
-      percent_for_first_place:
-        PERCENT_FOR_FIRST_PLACE["intercontinental championship"],
       points_per_player: POINTS_PER_PLAYER["intercontinental championship"],
+      baseline_points: BASELINE_POINTS["intercontinental championship"],
     } as TournamentConfigType,
     "circuit opener": {
       code: "circuit opener",
       name: "Circuit Opener",
       tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit opener"],
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit opener"],
-      percent_for_first_place: PERCENT_FOR_FIRST_PLACE["circuit opener"],
       points_per_player: POINTS_PER_PLAYER["circuit opener"],
+      baseline_points: BASELINE_POINTS["circuit opener"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;

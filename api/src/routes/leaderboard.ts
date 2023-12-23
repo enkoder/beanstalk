@@ -74,7 +74,6 @@ export class GetPointDistribution extends OpenAPIRoute {
       return accum + value;
     }, 0);
 
-    console.log(cumulative);
     return json(
       GetPointDistributionResponseComponent.parse({
         totalPoints: totalPoints,
