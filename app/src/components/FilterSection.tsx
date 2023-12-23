@@ -67,7 +67,6 @@ const FACTION_ICONS: Record<string, any> = {
 };
 
 export const FORMAT_PARAM_NAME = "formatCode";
-const EMPTY_FORMAT = "Format Filter...";
 
 export const SEARCH_PARAM_NAME = "search";
 
@@ -88,7 +87,8 @@ export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
     ? Number(sp.get(SEASON_PARAM_NAME))
     : undefined;
   const faction = sp.get(FACTION_PARAM_NAME) || undefined;
-  const format = (sp.get(FORMAT_PARAM_NAME) as Format) || undefined;
+  // Default to standard format
+  const format = (sp.get(FORMAT_PARAM_NAME) as Format) || "standard";
   return { searchString, seasonId, format, faction };
 }
 
@@ -140,10 +140,9 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     queryKey: ["formats"],
     queryFn: () => LeaderboardService.getGetFormats(),
   });
-  if (formats && formats[0] !== EMPTY_FORMAT) formats.unshift(EMPTY_FORMAT);
 
   const [selectedFormat, setSelectedFormat] = useState<string | undefined>(
-    EMPTY_FORMAT,
+    "standard",
   );
 
   useEffect(() => {
@@ -192,11 +191,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
   };
 
   const handleFormatChange = (f: string | undefined) => {
-    if (f === EMPTY_FORMAT || f === undefined) {
-      searchParams.delete(FORMAT_PARAM_NAME);
-    } else {
-      searchParams.set(FORMAT_PARAM_NAME, f);
-    }
+    if (f) searchParams.set(FORMAT_PARAM_NAME, f);
 
     setSearchParams(searchParams);
     setSelectedFormat(f);

@@ -8,9 +8,9 @@ export interface SelectProps<T> {
   width: string;
   label?: string;
   items: T[];
-  renderItem: (o: T | null) => ReactNode;
-  selected: T | null;
-  onChange: (o: T | null) => void;
+  renderItem: (o: T | undefined) => ReactNode;
+  selected: T | undefined;
+  onChange: (o: T | undefined) => void;
 }
 
 export function Select<T>({
