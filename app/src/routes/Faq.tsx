@@ -109,6 +109,23 @@ const QUESTIONS: Question[] = [
     ),
   },
   {
+    title: "How do I opt-out?",
+    id: "opt-out",
+    content: (
+      <p>
+        If you would like to opt-out of Beanstalk and not show up on the
+        leaderboard, you can toggle the setting on your profile page. To
+        opt-out, you need to log-in via our Netrunnerdb OAuth flow (top right)
+        and then update your profile by flipping the enabled toggle and clicking
+        the submit button. Refresh your browser and double check to see that
+        your name is no longer on the leaderboard.
+        <Sep className={"mt-4"} />
+        You can opt-in at anytime by flipping the toggle and submitting the
+        changes.
+      </p>
+    ),
+  },
+  {
     title: "What's the origin story of Beanstalk",
     id: "origin-story",
     content: (
