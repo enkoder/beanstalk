@@ -35,6 +35,7 @@ export async function get(user_id: number, tournament_id: number) {
     .where("tournament_id", "=", tournament_id)
     .executeTakeFirst();
 }
+
 export async function getAll() {
   return await g().db.selectFrom("results").selectAll().execute();
 }
@@ -66,7 +67,9 @@ export async function getExpanded({
             .orderBy("tournaments.id", "asc"),
         )
         .as("count_for_tournament_type"),
-    ]);
+    ])
+    // Only fetch users who have not opted out
+    .where("users.disabled", "=", 0);
 
   if (userId) {
     q = q.where("results.user_id", "=", userId);
@@ -112,6 +115,7 @@ export async function getExpanded({
   }
   return sortedResults;
 }
+
 export async function insert(
   result: UpdateResult,
   overwriteOnConflict = false,
@@ -128,6 +132,7 @@ export async function insert(
     .returningAll()
     .executeTakeFirst();
 }
+
 export async function update(
   tournament_id: number,
   user_id: number,

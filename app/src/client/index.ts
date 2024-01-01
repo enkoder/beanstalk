@@ -18,6 +18,7 @@ export type { TokenResponse } from './models/TokenResponse';
 export type { Tournament } from './models/Tournament';
 export type { TournamentConfig } from './models/TournamentConfig';
 export { TournamentType } from './models/TournamentType';
+export type { UpdateUser } from './models/UpdateUser';
 export type { User } from './models/User';
 export type { UserResultsResponse } from './models/UserResultsResponse';
 

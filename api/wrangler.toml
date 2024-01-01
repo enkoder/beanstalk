@@ -10,6 +10,7 @@ kv_namespaces = [
 
 [vars]
 SENTRY_RELEASE = ''
+IS_TEST = false
 
 [triggers]
 # Every day at midnight

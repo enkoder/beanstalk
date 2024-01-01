@@ -1,4 +1,5 @@
 import { Factions } from "../models/factions.js";
+import { PrivateAccountInfo } from "../openapi";
 import {
   Faction,
   Format,
@@ -9,7 +10,18 @@ import {
   User,
 } from "../schema";
 
-export function url({
+const TEST_TOKEN = "test token";
+
+export function urlMe() {
+  return new URL("http://localhost:8787/api/users/@me");
+}
+
+export function authedOptions(method: string, body?: string) {
+  const headers = { Authorization: `Bearer ${TEST_TOKEN}` };
+  return { method: method, headers: headers, body: body };
+}
+
+export function urlLeaderboard({
   season,
   faction,
   format,
@@ -112,4 +124,14 @@ export function season({ id, endedAt = null }: SeasonArgs) {
     started_at: "",
     ended_at: endedAt,
   } as Season;
+}
+
+export function getPrivateAccountInfo(u: User) {
+  return PrivateAccountInfo.parse({
+    id: u.id,
+    username: u.name,
+    email: u.email,
+    reputation: 0,
+    sharing: false,
+  });
 }

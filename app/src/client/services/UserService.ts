@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { UpdateUser } from '../models/UpdateUser';
 import type { User } from '../models/User';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -19,6 +20,23 @@ export class UserService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/@me',
+        });
+    }
+
+    /**
+     * Updates your profile
+     * @param requestBody
+     * @returns User Your updated user profile
+     * @throws ApiError
+     */
+    public static patchPatchMe(
+        requestBody?: UpdateUser,
+    ): CancelablePromise<User> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/api/users/@me',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 

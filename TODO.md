@@ -19,6 +19,8 @@
 ## Root
 
 - Admin views
+- Opt out settings
+- Tournament Tags
 
 ## Dev Experience
 
@@ -27,4 +29,5 @@
 ## Infrastructure
 
 - Add structured logging to background task
-- Visualize tournament ingestion % 
+- Visualize tournament ingestion %
+- Move to Honeycomb for o11y

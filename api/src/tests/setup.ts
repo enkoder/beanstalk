@@ -5,7 +5,7 @@ import { Miniflare } from "miniflare";
 import { g, initTestG } from "../g";
 import { Database } from "../schema";
 
-export async function initG() {
+export async function initG(loggedInUser = 0) {
   console.log("Initializing Global State");
   const mf = new Miniflare({
     d1Databases: ["DB"],
@@ -14,6 +14,10 @@ export async function initG() {
     modulesRules: [{ type: "ESModule", include: ["**/*.ts"] }],
     verbose: true,
     compatibilityFlags: ["nodejs_compat"],
+    bindings: {
+      LOGGED_IN_USER_ID: loggedInUser,
+      IS_TEST: true,
+    },
   });
 
   const db = new Kysely<Database>({
