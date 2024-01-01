@@ -161,6 +161,7 @@ export interface UsersTable {
   email: string | null;
   password: string | null;
   is_admin: number;
+  disabled: number;
 }
 
 export type User = Selectable<UsersTable>;

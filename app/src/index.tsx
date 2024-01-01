@@ -27,6 +27,7 @@ import "@fontsource/inter/400.css";
 import "@fontsource/jetbrains-mono/400.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./output.css";
+import { Profile } from "./routes/Profile";
 
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
@@ -131,6 +132,7 @@ const router = createBrowserRouter([
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },
       { path: "/seasons", element: <Seasons /> },
+      { path: "/@me", element: <Profile /> },
     ],
   },
 ]);

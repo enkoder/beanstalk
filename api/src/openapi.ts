@@ -13,12 +13,27 @@ export const UserComponent = z
     id: z.number({ description: "User ID" }),
     name: z.string({ description: "User name" }).nullable(),
     email: z.string({ description: "User email" }).nullable(),
+    disabled: z.coerce.boolean({
+      description: "Flag indicating if the user has opted-out",
+    }),
     is_admin: z.coerce.boolean({
       description: "Flag indicating that the user is an Admin user",
     }),
   })
   .openapi("User");
 export type UserComponentType = z.infer<typeof UserComponent>;
+
+export const UpdateUserComponent = z
+  .object({
+    email: z.string({ description: "User email" }).optional(),
+    disabled: z.coerce
+      .boolean({
+        description: "Flag indicating if the user has opted-out",
+      })
+      .optional(),
+  })
+  .openapi("UpdateUser");
+export type UpdateUserComponentType = z.infer<typeof UpdateUserComponent>;
 
 export const ResultComponent = z
   .object({
@@ -191,6 +206,19 @@ export const MeSchema = {
   responses: {
     "200": {
       description: "Your own user profile",
+      schema: UserComponent,
+    },
+  },
+};
+
+export const PatchMeSchema = {
+  tags: ["User"],
+  summary: "Updates your profile",
+  security: [{ bearerAuth: [] }],
+  requestBody: UpdateUserComponent,
+  responses: {
+    "200": {
+      description: "Your updated user profile",
       schema: UserComponent,
     },
   },

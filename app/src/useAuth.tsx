@@ -66,9 +66,11 @@ export function AuthProvider({
   // on first attempt, try to load the user or refresh the token
   useEffect(() => {
     setLoading(true);
-    fetchUser().catch((e) => {
-      setError(e);
-    });
+    fetchUser()
+      .catch((e) => {
+        setError(e);
+      })
+      .finally(() => setLoading(false));
     return () => {
       setLoading(false);
     };

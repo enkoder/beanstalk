@@ -3,26 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type User = {
-    /**
-     * User ID
-     */
-    id: number;
-    /**
-     * User name
-     */
-    name: string | null;
+export type UpdateUser = {
     /**
      * User email
      */
-    email: string | null;
+    email?: string;
     /**
      * Flag indicating if the user has opted-out
      */
     disabled?: boolean | null;
-    /**
-     * Flag indicating that the user is an Admin user
-     */
-    is_admin?: boolean | null;
 };
 

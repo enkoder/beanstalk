@@ -52,6 +52,13 @@ export function Navbar() {
       name: "Profile",
       needsUser: true,
       onClick: () => {
+        navigate("/@me");
+      },
+    },
+    {
+      name: "Your Results",
+      needsUser: true,
+      onClick: () => {
         navigate(`/results/${user?.name}`);
       },
     },

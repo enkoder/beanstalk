@@ -33,7 +33,13 @@ import {
   GetTournamentResults,
   GetTournaments,
 } from "./routes/tournament.js";
-import { GetUser, GetUserResults, GetUsers, Me } from "./routes/users.js";
+import {
+  GetUser,
+  GetUserResults,
+  GetUsers,
+  Me,
+  PatchMe,
+} from "./routes/users.js";
 import { Database } from "./schema.js";
 import { Env } from "./types.js";
 
@@ -66,6 +72,7 @@ router
   .get("/auth/refresh_token", RefreshToken)
 
   .get("/users/@me", authenticatedUser, Me)
+  .patch("/users/@me", authenticatedUser, PatchMe)
   .get("/users", GetUsers)
   .get("/users/:userID", GetUser)
   .get("/users/:user/results", GetUserResults)

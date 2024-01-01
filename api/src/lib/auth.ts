@@ -69,23 +69,30 @@ export async function verifyPassword(
 //  return decode(token);
 //}
 
-export async function authenticatedUser(request: RequestWithDB, _: Env) {
+export async function authenticatedUser(request: RequestWithDB, env: Env) {
   const access_token = getBearer(request);
   if (!access_token) {
     return errorResponse(401, "No token");
   }
 
+  const isTestMode = env.IS_TEST && env.LOGGED_IN_USER_ID !== null;
+
   let accountInfo: PrivateAccountInfoType;
   try {
-    accountInfo = await getPrivateAccountInfo(access_token);
+    // Bypass checking NRDB when running tests
+    if (!isTestMode) {
+      accountInfo = await getPrivateAccountInfo(access_token);
+    }
   } catch (e) {
     if (e.statusCode === 401) {
       return errorResponse(401, "Authentication error");
     }
   }
 
-  let user = await Users.getById(accountInfo.id);
-  if (!user) {
+  let user = await Users.getById(
+    !isTestMode ? accountInfo.id : env.LOGGED_IN_USER_ID,
+  );
+  if (!user && !isTestMode) {
     user = await Users.insert({
       name: accountInfo.username,
       id: accountInfo.id,

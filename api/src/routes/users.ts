@@ -1,4 +1,5 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
+import { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
 import { getFactionFromCode } from "../models/factions.js";
@@ -11,11 +12,13 @@ import {
   GetUserSchema,
   GetUsersSchema,
   MeSchema,
+  PatchMeSchema,
   ResultComponent,
+  UpdateUserComponentType,
   UserComponent,
 } from "../openapi.js";
 import { FactionCode, Format } from "../schema.js";
-import { RequestWithDB } from "../types.d.js";
+import { Env, RequestWithDB } from "../types.d.js";
 
 export class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;
@@ -50,6 +53,24 @@ export class Me extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const user = await Users.getById(Number(req.user_id));
     return json(UserComponent.parse(user));
+  }
+}
+
+export class PatchMe extends OpenAPIRoute {
+  static schema = PatchMeSchema;
+
+  async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
+    const body = data.body as UpdateUserComponentType;
+
+    const user = await Users.getById(Number(req.user_id));
+    if (body.email !== undefined) {
+      user.email = body.email;
+    }
+    if (body.disabled !== undefined) {
+      user.disabled = Number(body.disabled);
+    }
+
+    return json(UserComponent.parse(await Users.update(user.id, user)));
   }
 }
 

@@ -12,6 +12,8 @@ export type IngestResultQueueMessage = {
 
 // declare what's available in our env
 export type Env = {
+  IS_TEST: boolean;
+  LOGGED_IN_USER_ID: number | null;
   DB: D1Database;
   BACKUP_BUCKET: R2Bucket;
   INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
