@@ -10,9 +10,10 @@ type LeaderboardRow = {
   attended: number;
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class Leaderboard {
   @traceDeco
-  async getExpanded({
+  public static async getExpanded({
     seasonId,
     faction,
     format,

@@ -1,6 +1,6 @@
 import { g } from "../g";
 import { Factions } from "../models/factions.js";
-import * as Leaderboard from "../models/leaderboard.js";
+import { Leaderboard } from "../models/leaderboard";
 import * as Results from "../models/results.js";
 import * as Seasons from "../models/season.js";
 import * as Tournaments from "../models/tournament.js";
