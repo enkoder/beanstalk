@@ -8,9 +8,6 @@ kv_namespaces = [
     { binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" }
 ]
 
-[env.production]
-vars = { ENVIRONMENT = "production" }
-
 [vars]
 SENTRY_RELEASE = ""
 IS_TEST = false
@@ -69,3 +66,63 @@ binding = "INGEST_CARD_Q"
 queue = "ingest-card"
 max_batch_size = 5
 max_batch_timeout = 30
+
+# DEV Env - You need to copy/paste these unfortunately
+[env.dev.vars]
+SENTRY_RELEASE = ""
+IS_TEST = false
+ENVIRONMENT = "dev"
+
+[[env.dev.kv_namespaces]]
+binding = "CARDS_KV"
+id = "6c729db14d8e4dd093522abc3ac96310"
+
+[[env.dev.queues.producers]]
+queue = "ingest-tournament"
+binding = "INGEST_TOURNAMENT_Q"
+
+[[env.dev.queues.consumers]]
+queue = "ingest-tournament"
+dead_letter_queue = "ingest-tournament-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.dev.queues.consumers]]
+queue = "ingest-tournament-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.dev.queues.producers]]
+queue = "ingest-result"
+binding = "INGEST_RESULT_Q"
+
+[[env.dev.queues.consumers]]
+queue = "ingest-result"
+dead_letter_queue = "ingest-result-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.dev.queues.consumers]]
+queue = "ingest-result-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.dev.queues.producers]]
+queue = "ingest-card"
+binding = "INGEST_CARD_Q"
+
+[[env.dev.queues.consumers]]
+queue = "ingest-card"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.dev.d1_databases]]
+binding = "DB"
+database_name = "beanstalk-api"
+database_id = "c2f0d824-a702-42b0-a708-70a50760461c"
+migrations_table = "migrations"
+migrations_dir = "migrations"
+
+[[env.dev.r2_buckets]]
+binding = 'BACKUP_BUCKET'
+bucket_name = 'beanstalk-backup-bucket'
