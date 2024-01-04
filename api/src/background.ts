@@ -1,3 +1,4 @@
+import { trace as otel } from "@opentelemetry/api";
 import { g } from "./g.js";
 import {
   ABREntryType,
@@ -227,6 +228,7 @@ async function handleResultIngest(
     user_name_import: abrEntry.user_import_name,
   };
 
+  const span = otel.getActiveSpan();
   try {
     const result = await ingestEntry(
       env,
@@ -236,6 +238,7 @@ async function handleResultIngest(
     );
 
     if (!result) {
+      span.setAttribute("ingest_status", "skip");
       console.log(
         JSON.stringify({
           status: "skip",
@@ -243,6 +246,7 @@ async function handleResultIngest(
         }),
       );
     } else {
+      span.setAttribute("ingest_status", "success");
       console.log(
         JSON.stringify({
           status: "success",
@@ -252,6 +256,7 @@ async function handleResultIngest(
     }
   } catch (e) {
     g().sentry.captureException(e);
+    span.setAttribute("ingest_status", "error");
     console.log(
       JSON.stringify({
         status: "error",

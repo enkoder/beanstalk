@@ -104,6 +104,7 @@ export class GetRankingConfig extends OpenAPIRoute {
 export class GetFactions extends OpenAPIRoute {
   static schema = GetFactionsSchema;
 
+  @traceDeco("GetFactions")
   async handle() {
     const factions: FactionComponentType[] = [];
     for (const faction in Factions) {
