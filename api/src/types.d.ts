@@ -33,6 +33,8 @@ export type Env = {
   // Sentry
   SENTRY_DSN: string;
   SENTRY_RELEASE: string;
+  // Honeycomb
+  HONEYCOMB_API_KEY: string;
 };
 
 //type CF = [env: Env, context: ExecutionContext]

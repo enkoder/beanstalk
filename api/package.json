@@ -15,6 +15,7 @@
   "type": "module",
   "dependencies": {
     "@cloudflare/itty-router-openapi": "^1.0.6",
+    "@microlabs/otel-cf-workers": "1.0.0-rc.15",
     "@nora-soderlund/cloudflare-d1-backups": "^1.2.0",
     "@sentry/cli": "^2.23.1",
     "@tsndr/cloudflare-worker-jwt": "^2.3.2",

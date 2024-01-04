@@ -1,6 +1,11 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
+import {
+  ResolveConfigFn,
+  Trigger,
+  instrument,
+} from "@microlabs/otel-cf-workers";
 import { createCors, error } from "itty-router";
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
@@ -190,8 +195,24 @@ async function handleQueue(
   });
 }
 
-export default {
-  queue: handleQueue,
-  scheduled: handleScheduled,
-  fetch: handleFetch,
+const config: ResolveConfigFn = (env: Env, _: Trigger) => {
+  return {
+    exporter: {
+      url: "https://api.honeycomb.io/v1/traces",
+      headers: { "x-honeycomb-team": env.HONEYCOMB_API_KEY },
+    },
+    service: {
+      name: "beanstalk-api",
+      version: env.SENTRY_RELEASE,
+    },
+  };
 };
+
+export default instrument(
+  {
+    queue: handleQueue,
+    scheduled: handleScheduled,
+    fetch: handleFetch,
+  },
+  config,
+);
