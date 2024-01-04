@@ -14,7 +14,7 @@ vars = { ENVIRONMENT = "production" }
 [vars]
 SENTRY_RELEASE = ""
 IS_TEST = false
-ENVIRONMENT = "dev"
+ENVIRONMENT = "production"
 
 [triggers]
 # Every day at midnight

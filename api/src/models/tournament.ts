@@ -23,7 +23,7 @@ export const TournamentTypes = [
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Tournaments {
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async get(id: number): Promise<Tournament> {
     return await g()
       .db.selectFrom("tournaments")
@@ -32,12 +32,12 @@ export class Tournaments {
       .executeTakeFirst();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getAll(): Promise<Tournament[]> {
     return await g().db.selectFrom("tournaments").selectAll().execute();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getBySeasonId(season_id: number): Promise<Tournament[]> {
     return g()
       .db.selectFrom("tournaments")
@@ -46,7 +46,7 @@ export class Tournaments {
       .execute();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getCountFromIds(ids: number[]): Promise<number> {
     const sql = g()
       .db.selectFrom("tournaments")
@@ -56,7 +56,7 @@ export class Tournaments {
     return count;
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getAllExpanded() {
     return await g()
       .db.selectFrom("tournaments")
@@ -66,7 +66,7 @@ export class Tournaments {
       .execute();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getAllExpandedFromSeasonId(
     seasonId: number,
   ): Promise<Tournament[]> {
@@ -79,7 +79,7 @@ export class Tournaments {
       .execute();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async getAllIds(): Promise<number[]> {
     const results = await g()
       .db.selectFrom("tournaments")
@@ -88,7 +88,7 @@ export class Tournaments {
     return results.map((row) => row.id);
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async update(
     tournament: UpdateTournament,
   ): Promise<Tournament> {
@@ -100,7 +100,7 @@ export class Tournaments {
       .executeTakeFirst();
   }
 
-  @traceDeco
+  @traceDeco("Tournaments")
   public static async insert(
     tournament: UpdateTournament,
     overwriteOnConflict = true,

@@ -1,3 +1,4 @@
+import { Tracer } from "@opentelemetry/api";
 import { IRequest } from "itty-router";
 import { Kysely } from "kysely";
 import { Miniflare } from "miniflare";
@@ -51,4 +52,5 @@ export type G = {
   db: Kysely<Database>;
   sentry?: Toucan;
   mf?: Miniflare;
+  tracer?: Tracer;
 };

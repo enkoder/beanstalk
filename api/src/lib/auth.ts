@@ -24,6 +24,7 @@ export async function signPassword(
   );
 
   // Taken from https://bradyjoslin.com/blog/hmac-sig-webcrypto/
+  // @ts-ignore
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
 }
 

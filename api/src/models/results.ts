@@ -43,7 +43,7 @@ export async function getAll() {
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Results {
-  @traceDeco
+  @traceDeco("Results")
   public static async getExpanded({
     userId = null,
     tournamentId = null,
@@ -121,7 +121,7 @@ export class Results {
     return sortedResults;
   }
 
-  @traceDeco
+  @traceDeco("Results")
   public static async insert(
     result: UpdateResult,
     overwriteOnConflict = false,
@@ -139,7 +139,7 @@ export class Results {
       .executeTakeFirst();
   }
 
-  @traceDeco
+  @traceDeco("Results")
   public static async update(
     tournament_id: number,
     user_id: number,
@@ -154,7 +154,7 @@ export class Results {
       .executeTakeFirst();
   }
 
-  @traceDeco
+  @traceDeco("Results")
   public static async getBySeasonId(season_id: number) {
     return g()
       .db.selectFrom("results")

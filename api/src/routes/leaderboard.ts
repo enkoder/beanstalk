@@ -29,7 +29,7 @@ import { RequestWithDB } from "../types.d.js";
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
-  @traceDeco
+  @traceDeco("Leaderboard")
   async handle(req: RequestWithDB) {
     const seasonId = req.query.seasonId
       ? Number(req.query.seasonId)
