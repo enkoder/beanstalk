@@ -30,9 +30,9 @@ export function traceDeco(
   // biome-ignore lint/suspicious/noExplicitAny: can be anything
   descriptor.value = function (...args: any[]) {
     const tracer = _trace.getTracer("beanstalk");
-    return tracer.startActiveSpan(name, (span) => {
+    return tracer.startActiveSpan(name, async (span) => {
       try {
-        return originalMethod.apply(this, args);
+        return await originalMethod.apply(this, args);
       } finally {
         span.end();
       }
