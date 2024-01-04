@@ -6,6 +6,7 @@ import {
   Trigger,
   instrument,
 } from "@microlabs/otel-cf-workers";
+import { trace as _trace } from "@opentelemetry/api";
 import { createCors, error } from "itty-router";
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
@@ -129,7 +130,9 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
     //},
   });
 
-  const handle = ALS.run({ sentry: sentry, db: db }, () =>
+  const tracer = _trace.getTracer("beanstalk");
+
+  const handle = ALS.run({ sentry: sentry, db: db, tracer: tracer }, () =>
     AsyncLocalStorage.bind(router.handle),
   );
 
@@ -163,8 +166,10 @@ async function handleScheduled(
     dialect: new D1Dialect({ database: env.DB }),
   });
 
+  const tracer = _trace.getTracer("beanstalk");
+
   // run while also setting the global context
-  return ALS.run({ sentry: sentry, db: db }, async () => {
+  return ALS.run({ sentry: sentry, db: db, tracer: tracer }, async () => {
     try {
       await trace(
         "processScheduledEvent",
@@ -192,8 +197,10 @@ async function handleQueue(
     dialect: new D1Dialect({ database: env.DB }),
   });
 
+  const tracer = _trace.getTracer("beanstalk");
+
   // run while also setting the global context
-  return ALS.run({ sentry: sentry, db: db }, async () => {
+  return ALS.run({ sentry: sentry, db: db, tracer: tracer }, async () => {
     try {
       await trace(
         "processQueueBatch",
@@ -220,7 +227,7 @@ const config: ResolveConfigFn = (env: Env, _: Trigger) => {
     },
     sampling: {
       // by setting the ratio to 0, we effectively stop traces from being sent in development
-      headSampler: { acceptRemote: true, ratio: shouldSample ? 0.5 : 0 },
+      headSampler: { acceptRemote: true, ratio: shouldSample ? 1 : 0 },
     },
   };
 };

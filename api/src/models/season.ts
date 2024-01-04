@@ -4,12 +4,12 @@ import { InsertSeason, Season } from "../schema.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Seasons {
-  @traceDeco
+  @traceDeco("Season")
   public static async getAll() {
     return await g().db.selectFrom("seasons").selectAll().execute();
   }
 
-  @traceDeco
+  @traceDeco("Season")
   public static async getFromId(id: number) {
     return await g()
       .db.selectFrom("seasons")
@@ -18,7 +18,7 @@ export class Seasons {
       .executeTakeFirst();
   }
 
-  @traceDeco
+  @traceDeco("Season")
   public static async getFromTimestamp(timestamp: string): Promise<Season[]> {
     const sql = g()
       .db.selectFrom("seasons")
@@ -34,7 +34,7 @@ export class Seasons {
     return await sql.execute();
   }
 
-  @traceDeco
+  @traceDeco("Season")
   public static async insert(user: InsertSeason): Promise<Season> {
     return await g()
       .db.insertInto("seasons")

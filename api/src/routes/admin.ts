@@ -12,6 +12,7 @@ import {
 } from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
 import { calculateTournamentPointDistribution } from "../lib/ranking.js";
+import { trace, traceDeco } from "../lib/tracer.js";
 import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
 import { Tournaments } from "../models/tournament.js";
@@ -87,7 +88,15 @@ export class IngestTournament extends OpenAPIRoute {
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = IngestTournamentBody.parse(data.body);
-    await publishIngestTournament(env, body.userId, body.tournamentType);
+    await trace(
+      "publishIngestTournament",
+      () => publishIngestTournament(env, body.userId, body.tournamentType),
+      {
+        trigger: "api",
+        tournament_type: body.tournamentType,
+        user_id: body.userId,
+      },
+    );
     return json({});
   }
 }
@@ -96,7 +105,11 @@ export class IngestTournaments extends OpenAPIRoute {
   static schema = IngestTournamentsSchema;
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext) {
-    await publishAllTournamentIngest(env, "api");
+    await trace(
+      "publishAllTournamentIngest",
+      () => publishAllTournamentIngest(env, "api"),
+      { trigger: "api" },
+    );
     return json({});
   }
 }
@@ -104,6 +117,7 @@ export class IngestTournaments extends OpenAPIRoute {
 export class UpdateCards extends OpenAPIRoute {
   static schema = UpdateCardsSchema;
 
+  @traceDeco("UpdateCards")
   async handle(req: RequestWithDB, env: Env) {
     const limit = pLimit(5);
 

@@ -1,46 +1,70 @@
-import { SpanStatusCode, trace as _trace } from "@opentelemetry/api";
+import {
+  Attributes,
+  SpanStatusCode,
+  trace as _trace,
+} from "@opentelemetry/api";
+import { g } from "../g.js";
 
-export function trace<T>(name: string, fn: () => T | Promise<T>): Promise<T> {
-  const tracer = _trace.getTracer("beanstalk");
-  return tracer.startActiveSpan(name, async (span) => {
+export async function trace<T>(
+  name: string,
+  fn: () => T | Promise<T>,
+  attributes?: Attributes,
+) {
+  const t = g()?.tracer ? g().tracer : _trace.getTracer("beanstalk");
+  return t.startActiveSpan(name, async (span) => {
+    if (attributes) span.setAttributes(attributes);
     try {
-      return await fn();
+      const retVal = await fn();
+
+      span.setStatus({
+        code: SpanStatusCode.OK,
+      });
+
+      return retVal;
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
         message: e?.message,
       });
-
-      throw e;
     } finally {
-      span.setStatus({
-        code: SpanStatusCode.OK,
-      });
       span.end();
     }
   });
 }
 
-export function traceDeco(
-  // biome-ignore lint/suspicious/noExplicitAny: target is a class, no clue the type
-  target: any,
-  propertyKey: string,
-  descriptor: PropertyDescriptor,
-) {
-  const name = `${target.constructor.name}.${propertyKey}`;
-  const originalMethod = descriptor.value;
+export function traceDeco(prefix: string) {
+  return (
+    // biome-ignore lint/complexity/noBannedTypes: This is an object
+    target: Object,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) => {
+    const name = `${prefix}.${propertyKey}`;
+    const originalMethod = descriptor.value;
 
-  // biome-ignore lint/suspicious/noExplicitAny: can be anything
-  descriptor.value = function (...args: any[]) {
-    const tracer = _trace.getTracer("beanstalk");
-    return tracer.startActiveSpan(name, async (span) => {
-      try {
-        return await originalMethod.apply(this, args);
-      } finally {
-        span.end();
-      }
-    });
+    // biome-ignore lint/suspicious/noExplicitAny: can be anything
+    descriptor.value = async function (...args: any[]) {
+      const t = g()?.tracer ? g().tracer : _trace.getTracer("beanstalk");
+      return t.startActiveSpan(name, async (span) => {
+        try {
+          const retVal = await originalMethod.apply(this, args);
+
+          span.setStatus({
+            code: SpanStatusCode.OK,
+          });
+
+          return retVal;
+        } catch (e) {
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: e?.message,
+          });
+        } finally {
+          span.end();
+        }
+      });
+    };
+
+    return descriptor;
   };
-
-  return descriptor;
 }

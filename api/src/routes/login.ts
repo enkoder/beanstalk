@@ -3,6 +3,7 @@ import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { json } from "itty-router";
 import { signPassword, verifyPassword } from "../lib/auth.js";
 import { errorResponse } from "../lib/errors";
+import { traceDeco } from "../lib/tracer";
 import { Users } from "../models/user.js";
 import {
   AuthLoginBody,
@@ -18,6 +19,7 @@ import { Env, RequestWithDB } from "../types.d.js";
 class AuthRegister extends OpenAPIRoute {
   static schema = AuthRegisterSchema;
 
+  @traceDeco("AuthRegister")
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = data.body;
     let user = await Users.getByEmail(body.email);
@@ -45,6 +47,7 @@ class AuthRegister extends OpenAPIRoute {
 class AuthLogin extends OpenAPIRoute {
   static schema = AuthLoginSchema;
 
+  @traceDeco("AuthLogin")
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const authLoginBody = AuthLoginBody.parse(data.body);
     const user = await Users.getByEmail(authLoginBody.email);

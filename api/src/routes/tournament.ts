@@ -1,5 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
+import { traceDeco } from "../lib/tracer.js";
 import { Results } from "../models/results.js";
 import { Tournaments } from "../models/tournament.js";
 import {
@@ -14,6 +15,7 @@ import { RequestWithDB } from "../types.d.js";
 export class GetTournament extends OpenAPIRoute {
   static schema = GetTournamentSchema;
 
+  @traceDeco("GetTournament")
   async handle(req: RequestWithDB) {
     const tournamentId = req.params?.tournamentId;
     const tournament = await Tournaments.get(Number(tournamentId));
@@ -24,6 +26,7 @@ export class GetTournament extends OpenAPIRoute {
 export class GetTournaments extends OpenAPIRoute {
   static schema = GetTournamentsSchema;
 
+  @traceDeco("GetTournaments")
   async handle(_: RequestWithDB) {
     const tournaments = await Tournaments.getAllExpanded();
 
@@ -38,6 +41,7 @@ export class GetTournaments extends OpenAPIRoute {
 export class GetTournamentResults extends OpenAPIRoute {
   static schema = GetTournamentResultsSchema;
 
+  @traceDeco("GetTournamentResults")
   async handle(req: RequestWithDB) {
     const tournamentId = req.params?.tournamentId;
     const results = await Results.getExpanded({

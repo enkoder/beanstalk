@@ -11,6 +11,7 @@ import {
 } from "./lib/abr.js";
 import * as NRDB from "./lib/nrdb.js";
 import { calculateTournamentPointDistribution } from "./lib/ranking.js";
+import { trace } from "./lib/tracer.js";
 import { Results } from "./models/results.js";
 import { Seasons } from "./models/season.js";
 import { Tournaments } from "./models/tournament.js";
@@ -38,7 +39,11 @@ export async function processScheduledEvent(event: ScheduledEvent, env: Env) {
   switch (event.cron) {
     // Every day at midnight
     case "0 0 * * *":
-      await publishAllTournamentIngest(env, "cron");
+      await trace(
+        "publishAllTournamentIngest",
+        () => publishAllTournamentIngest(env, "cron"),
+        { cron: event.cron, trigger: "cron" },
+      );
       break;
   }
 }
@@ -49,24 +54,63 @@ export async function processQueueBatch(
 ) {
   for (const message of batch.messages) {
     switch (batch.queue) {
-      case Queues.IngestTournament:
-        await handleTournamentIngest(env, message.body as ABRTournamentType);
+      case Queues.IngestTournament: {
+        const tournament = message.body as ABRTournamentType;
+        await trace(
+          "handleTournamentIngest",
+          () => handleTournamentIngest(env, tournament),
+          {
+            queue: Queues.IngestTournament,
+            tournament_title: tournament.title,
+            tournament_id: tournament.id,
+          },
+        );
         break;
+      }
       case Queues.IngestTournamentDLQ:
-        await handleTournamentIngestDLQ(message.body as ABRTournamentType);
+        await trace(
+          "handleTournamentIngestDLQ",
+          () => handleTournamentIngestDLQ(message.body as ABRTournamentType),
+          {
+            queue: Queues.IngestTournamentDLQ,
+          },
+        );
         break;
       case Queues.IngestResult: {
         const { tournament, entry } = message.body as IngestResultQueueMessage;
-        await handleResultIngest(env, tournament, entry);
+        await trace(
+          "handleResultIngest",
+          () => handleResultIngest(env, tournament, entry),
+          {
+            queue: Queues.IngestResult,
+            tournament_id: tournament.id,
+            tournament_name: tournament.name,
+            tournament_type: tournament.type,
+            user_name: entry.user_name,
+            user_name_import: entry.user_import_name,
+          },
+        );
         break;
       }
       case Queues.IngestResultDLQ: {
         const { tournament, entry } = message.body as IngestResultQueueMessage;
-        await handleResultIngestDLQ(tournament, entry);
+        await trace(
+          "handleResultIngestDLQ",
+          () => handleResultIngestDLQ(tournament, entry),
+          {
+            queue: Queues.IngestResultDLQ,
+          },
+        );
         break;
       }
       case Queues.IngestCard: {
-        await handleCardIngest(env, message.body);
+        await trace(
+          "handleCardIngest",
+          () => handleCardIngest(env, message.body),
+          {
+            queue: Queues.IngestCard,
+          },
+        );
         break;
       }
     }
