@@ -2,6 +2,7 @@ import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
+import { traceDeco } from "../lib/tracer.js";
 import { getFactionFromCode } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard.js";
 import { Results } from "../models/results.js";
@@ -23,6 +24,7 @@ import { Env, RequestWithDB } from "../types.d.js";
 export class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;
 
+  @traceDeco("GetUser")
   async handle(req: RequestWithDB) {
     const user = await Users.getById(Number(req.params?.userID));
 
@@ -36,6 +38,7 @@ export class GetUser extends OpenAPIRoute {
 export class GetUsers extends OpenAPIRoute {
   static schema = GetUsersSchema;
 
+  @traceDeco("GetUsers")
   async handle(_: RequestWithDB) {
     // TODO: pagination
     const users = await Users.getAll();
@@ -50,6 +53,7 @@ export class GetUsers extends OpenAPIRoute {
 export class Me extends OpenAPIRoute {
   static schema = MeSchema;
 
+  @traceDeco("Me")
   async handle(req: RequestWithDB) {
     const user = await Users.getById(Number(req.user_id));
     return json(UserComponent.parse(user));
@@ -59,6 +63,7 @@ export class Me extends OpenAPIRoute {
 export class PatchMe extends OpenAPIRoute {
   static schema = PatchMeSchema;
 
+  @traceDeco("PatchMe")
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
     const body = data.body as UpdateUserComponentType;
 

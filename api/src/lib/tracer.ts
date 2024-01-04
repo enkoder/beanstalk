@@ -12,6 +12,7 @@ export async function trace<T>(
 ) {
   const t = g()?.tracer ? g().tracer : _trace.getTracer("beanstalk");
   return t.startActiveSpan(name, async (span) => {
+    if (attributes) span.setAttributes(attributes);
     try {
       const retVal = await fn();
 

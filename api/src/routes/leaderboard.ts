@@ -59,6 +59,7 @@ export class GetLeaderboard extends OpenAPIRoute {
 export class GetPointDistribution extends OpenAPIRoute {
   static schema = GetPointDistributionSchema;
 
+  @traceDeco("GetPointsDistribution")
   async handle(req: RequestWithDB) {
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
@@ -94,6 +95,7 @@ export class GetPointDistribution extends OpenAPIRoute {
 export class GetRankingConfig extends OpenAPIRoute {
   static schema = GetRankingConfigSchema;
 
+  @traceDeco("GetRankingConfig")
   async handle() {
     return json(RankingConfig);
   }
@@ -114,6 +116,7 @@ export class GetFactions extends OpenAPIRoute {
 export class GetFormats extends OpenAPIRoute {
   static schema = GetFormatSchema;
 
+  @traceDeco("GetFormats")
   async handle() {
     const formats: Format[] = [];
     for (const format of Formats) {
