@@ -206,6 +206,8 @@ async function handleQueue(
 }
 
 const config: ResolveConfigFn = (env: Env, _: Trigger) => {
+  const shouldSample = env.ENVIRONMENT === "production";
+
   return {
     exporter: {
       url: "https://api.honeycomb.io/v1/traces",
@@ -215,6 +217,10 @@ const config: ResolveConfigFn = (env: Env, _: Trigger) => {
       namespace: "beanstalk",
       name: "beanstalk",
       version: env.SENTRY_RELEASE,
+    },
+    sampling: {
+      // by setting the ratio to 0, we effectively stop traces from being sent in development
+      headSampler: { acceptRemote: true, ratio: shouldSample ? 0.5 : 0 },
     },
   };
 };

@@ -12,10 +12,10 @@ import {
 } from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
 import { calculateTournamentPointDistribution } from "../lib/ranking.js";
-import * as Results from "../models/results.js";
-import * as Seasons from "../models/season.js";
-import * as Tournaments from "../models/tournament.js";
-import * as Users from "../models/user.js";
+import { Results } from "../models/results.js";
+import { Seasons } from "../models/season.js";
+import { Tournaments } from "../models/tournament.js";
+import { Users } from "../models/user.js";
 import {
   ExportDBSchema,
   IngestTournamentBody,

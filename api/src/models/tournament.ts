@@ -1,4 +1,5 @@
 import { g } from "../g.js";
+import { traceDeco } from "../lib/tracer.js";
 import { Tournament, UpdateTournament } from "../schema.js";
 
 export const Formats = ["standard", "startup", "eternal", "other"] as const;
@@ -20,84 +21,100 @@ export const TournamentTypes = [
   "regional championship",
 ] as const;
 
-export async function get(id: number): Promise<Tournament> {
-  return await g()
-    .db.selectFrom("tournaments")
-    .selectAll()
-    .where("id", "=", id)
-    .executeTakeFirst();
-}
+// biome-ignore lint/complexity/noStaticOnlyClass:
+export class Tournaments {
+  @traceDeco
+  public static async get(id: number): Promise<Tournament> {
+    return await g()
+      .db.selectFrom("tournaments")
+      .selectAll()
+      .where("id", "=", id)
+      .executeTakeFirst();
+  }
 
-export async function getAll(): Promise<Tournament[]> {
-  return await g().db.selectFrom("tournaments").selectAll().execute();
-}
+  @traceDeco
+  public static async getAll(): Promise<Tournament[]> {
+    return await g().db.selectFrom("tournaments").selectAll().execute();
+  }
 
-export async function getBySeasonId(season_id: number): Promise<Tournament[]> {
-  return g()
-    .db.selectFrom("tournaments")
-    .selectAll()
-    .where("tournaments.season_id", "=", season_id)
-    .execute();
-}
+  @traceDeco
+  public static async getBySeasonId(season_id: number): Promise<Tournament[]> {
+    return g()
+      .db.selectFrom("tournaments")
+      .selectAll()
+      .where("tournaments.season_id", "=", season_id)
+      .execute();
+  }
 
-export async function getCountFromIds(ids: number[]): Promise<number> {
-  const sql = g()
-    .db.selectFrom("tournaments")
-    .select((eb) => [eb.fn.countAll<number>().as("count")])
-    .where("id", "in", ids);
-  const { count } = await sql.executeTakeFirst();
-  return count;
-}
-export async function getAllExpanded() {
-  return await g()
-    .db.selectFrom("tournaments")
-    .innerJoin("seasons", "seasons.id", "tournaments.season_id")
-    .selectAll()
-    .select(["seasons.id as season_id", "seasons.name as season_name"])
-    .execute();
-}
+  @traceDeco
+  public static async getCountFromIds(ids: number[]): Promise<number> {
+    const sql = g()
+      .db.selectFrom("tournaments")
+      .select((eb) => [eb.fn.countAll<number>().as("count")])
+      .where("id", "in", ids);
+    const { count } = await sql.executeTakeFirst();
+    return count;
+  }
 
-export async function getAllExpandedFromSeasonId(
-  seasonId: number,
-): Promise<Tournament[]> {
-  return await g()
-    .db.selectFrom("tournaments")
-    .innerJoin("seasons", "seasons.id", "tournaments.season_id")
-    .selectAll("tournaments")
-    .select(["seasons.name as season_name"])
-    .where("season_id", "=", seasonId)
-    .execute();
-}
+  @traceDeco
+  public static async getAllExpanded() {
+    return await g()
+      .db.selectFrom("tournaments")
+      .innerJoin("seasons", "seasons.id", "tournaments.season_id")
+      .selectAll()
+      .select(["seasons.id as season_id", "seasons.name as season_name"])
+      .execute();
+  }
 
-export async function getAllIds(): Promise<number[]> {
-  const results = await g().db.selectFrom("tournaments").select("id").execute();
-  return results.map((row) => row.id);
-}
+  @traceDeco
+  public static async getAllExpandedFromSeasonId(
+    seasonId: number,
+  ): Promise<Tournament[]> {
+    return await g()
+      .db.selectFrom("tournaments")
+      .innerJoin("seasons", "seasons.id", "tournaments.season_id")
+      .selectAll("tournaments")
+      .select(["seasons.name as season_name"])
+      .where("season_id", "=", seasonId)
+      .execute();
+  }
 
-export async function update(
-  tournament: UpdateTournament,
-): Promise<Tournament> {
-  return await g()
-    .db.updateTable("tournaments")
-    .where("id", "=", tournament.id)
-    .set(tournament)
-    .returningAll()
-    .executeTakeFirst();
-}
+  @traceDeco
+  public static async getAllIds(): Promise<number[]> {
+    const results = await g()
+      .db.selectFrom("tournaments")
+      .select("id")
+      .execute();
+    return results.map((row) => row.id);
+  }
 
-export async function insert(
-  tournament: UpdateTournament,
-  overwriteOnConflict = true,
-): Promise<Tournament> {
-  return await g()
-    .db.insertInto("tournaments")
-    .values(tournament)
-    .onConflict((oc) => {
-      if (overwriteOnConflict) {
-        return oc.column("id").doUpdateSet(tournament);
-      }
-      return oc.column("id").doNothing();
-    })
-    .returningAll()
-    .executeTakeFirst();
+  @traceDeco
+  public static async update(
+    tournament: UpdateTournament,
+  ): Promise<Tournament> {
+    return await g()
+      .db.updateTable("tournaments")
+      .where("id", "=", tournament.id)
+      .set(tournament)
+      .returningAll()
+      .executeTakeFirst();
+  }
+
+  @traceDeco
+  public static async insert(
+    tournament: UpdateTournament,
+    overwriteOnConflict = true,
+  ): Promise<Tournament> {
+    return await g()
+      .db.insertInto("tournaments")
+      .values(tournament)
+      .onConflict((oc) => {
+        if (overwriteOnConflict) {
+          return oc.column("id").doUpdateSet(tournament);
+        }
+        return oc.column("id").doNothing();
+      })
+      .returningAll()
+      .executeTakeFirst();
+  }
 }

@@ -13,6 +13,9 @@ export function trace<T>(name: string, fn: () => T | Promise<T>): Promise<T> {
 
       throw e;
     } finally {
+      span.setStatus({
+        code: SpanStatusCode.OK,
+      });
       span.end();
     }
   });

@@ -1,7 +1,7 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
-import * as Seasons from "../models/season.js";
-import * as Tournaments from "../models/tournament.js";
+import { Seasons } from "../models/season.js";
+import { Tournaments } from "../models/tournament.js";
 import {
   GetSeasonTournamentsSchema,
   GetSeasonsSchema,

@@ -12,6 +12,7 @@ export type IngestResultQueueMessage = {
 
 // declare what's available in our env
 export type Env = {
+  ENVIRONMENT: string;
   IS_TEST: boolean;
   LOGGED_IN_USER_ID: number | null;
   DB: D1Database;

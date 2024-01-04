@@ -1,6 +1,6 @@
 import { traceDeco } from "../lib/tracer.js";
 import { Faction, Format } from "../schema.js";
-import * as Results from "./results.js";
+import { Results } from "./results.js";
 
 type LeaderboardRow = {
   points: number;
