@@ -1,8 +1,8 @@
 import { g } from "../g";
-import * as Results from "../models/results.js";
-import * as Seasons from "../models/season.js";
-import * as Tournaments from "../models/tournament.js";
-import * as Users from "../models/user.js";
+import { Results } from "../models/results";
+import { Seasons } from "../models/season";
+import { Tournaments } from "../models/tournament";
+import { Users } from "../models/user";
 import { result, season, tournament, user } from "./factories.js";
 import { applyMigrations, initG, wipeDB } from "./setup";
 

@@ -8,9 +8,13 @@ kv_namespaces = [
     { binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" }
 ]
 
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
 [vars]
-SENTRY_RELEASE = ''
+SENTRY_RELEASE = ""
 IS_TEST = false
+ENVIRONMENT = "dev"
 
 [triggers]
 # Every day at midnight

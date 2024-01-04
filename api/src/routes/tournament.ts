@@ -1,7 +1,7 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
-import * as Results from "../models/results.js";
-import * as Tournaments from "../models/tournament.js";
+import { Results } from "../models/results.js";
+import { Tournaments } from "../models/tournament.js";
 import {
   GetTournamentResultsSchema,
   GetTournamentSchema,

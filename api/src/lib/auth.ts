@@ -1,4 +1,4 @@
-import * as Users from "../models/user.js";
+import { Users } from "../models/user.js";
 import { PrivateAccountInfoType } from "../openapi.js";
 import { Env, RequestWithDB } from "../types.d.js";
 import { errorResponse } from "./errors.js";

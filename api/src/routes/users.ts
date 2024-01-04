@@ -4,9 +4,9 @@ import { json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
 import { getFactionFromCode } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard.js";
-import * as Results from "../models/results.js";
-import * as Seasons from "../models/season.js";
-import * as Users from "../models/user.js";
+import { Results } from "../models/results.js";
+import { Seasons } from "../models/season.js";
+import { Users } from "../models/user.js";
 import {
   GetUserResultsSchema,
   GetUserSchema,

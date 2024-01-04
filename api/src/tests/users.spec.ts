@@ -1,5 +1,5 @@
 import { g } from "../g";
-import * as Users from "../models/user";
+import { Users } from "../models/user";
 import { UserComponentType } from "../openapi";
 import * as Factories from "./factories";
 import { applyMigrations, initG, wipeDB } from "./setup";

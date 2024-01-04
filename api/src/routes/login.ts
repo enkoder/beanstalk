@@ -3,7 +3,7 @@ import { JwtPayload, sign } from "@tsndr/cloudflare-worker-jwt";
 import { json } from "itty-router";
 import { signPassword, verifyPassword } from "../lib/auth.js";
 import { errorResponse } from "../lib/errors";
-import * as Users from "../models/user.js";
+import { Users } from "../models/user.js";
 import {
   AuthLoginBody,
   AuthLoginSchema,
