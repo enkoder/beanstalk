@@ -3,7 +3,7 @@ import { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
 import { getFactionFromCode } from "../models/factions.js";
-import * as Leaderboards from "../models/leaderboard.js";
+import { Leaderboard } from "../models/leaderboard.js";
 import * as Results from "../models/results.js";
 import * as Seasons from "../models/season.js";
 import * as Users from "../models/user.js";
@@ -109,7 +109,7 @@ export class GetUserResults extends OpenAPIRoute {
     });
 
     let currentRank = 0;
-    for (const row of await Leaderboards.getExpanded({
+    for (const row of await Leaderboard.getExpanded({
       seasonId,
       faction,
       format,

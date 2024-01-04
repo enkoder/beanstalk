@@ -1,8 +1,9 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
 import { calculateTournamentPointDistribution } from "../lib/ranking.js";
+import { traceDeco } from "../lib/tracer.js";
 import { Factions, getFactionFromCode } from "../models/factions.js";
-import * as Leaderboards from "../models/leaderboard.js";
+import { Leaderboard } from "../models/leaderboard.js";
 import { Formats } from "../models/tournament.js";
 import {
   FactionComponent,
@@ -28,6 +29,7 @@ import { RequestWithDB } from "../types.d.js";
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
 
+  @traceDeco
   async handle(req: RequestWithDB) {
     const seasonId = req.query.seasonId
       ? Number(req.query.seasonId)
@@ -41,7 +43,7 @@ export class GetLeaderboard extends OpenAPIRoute {
       : undefined;
 
     const rows: LeaderboardRowComponentType[] = [];
-    const results = await Leaderboards.getExpanded({
+    const results = await new Leaderboard().getExpanded({
       seasonId,
       faction,
       format,

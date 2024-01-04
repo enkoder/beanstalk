@@ -15,6 +15,7 @@ import { ALS } from "./g.js";
 import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
+import { trace } from "./lib/tracer.js";
 import {
   ExportDB,
   IngestTournament,
@@ -133,7 +134,10 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   );
 
   try {
-    const resp = await handle(request, env, ctx);
+    const resp = await trace(
+      "handleFetch",
+      async () => await handle(request, env, ctx),
+    );
     return corsify(resp);
   } catch (e) {
     sentry.captureException(e);
@@ -162,7 +166,10 @@ async function handleScheduled(
   // run while also setting the global context
   return ALS.run({ sentry: sentry, db: db }, async () => {
     try {
-      await processScheduledEvent(event, env);
+      await trace(
+        "processScheduledEvent",
+        async () => await processScheduledEvent(event, env),
+      );
     } catch (e) {
       sentry.captureException(e);
     }
@@ -188,7 +195,10 @@ async function handleQueue(
   // run while also setting the global context
   return ALS.run({ sentry: sentry, db: db }, async () => {
     try {
-      await processQueueBatch(batch, env);
+      await trace(
+        "processQueueBatch",
+        async () => await processQueueBatch(batch, env),
+      );
     } catch (e) {
       sentry.captureException(e);
     }
@@ -202,7 +212,8 @@ const config: ResolveConfigFn = (env: Env, _: Trigger) => {
       headers: { "x-honeycomb-team": env.HONEYCOMB_API_KEY },
     },
     service: {
-      name: "beanstalk-api",
+      namespace: "beanstalk",
+      name: "beanstalk",
       version: env.SENTRY_RELEASE,
     },
   };
