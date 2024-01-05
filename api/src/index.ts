@@ -36,6 +36,12 @@ import {
 } from "./routes/leaderboard.js";
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
+  GetTags,
+  GetTournamentTags,
+  InsertTags,
+  InsertTournamentTags,
+} from "./routes/tags.js";
+import {
   GetTournament,
   GetTournamentResults,
   GetTournaments,
@@ -66,7 +72,7 @@ router.registry.registerComponent("securitySchemes", "bearerAuth", {
 
 const { preflight, corsify } = createCors({
   origins: ["*"],
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
   headers: { "Access-Control-Allow-Credentials": true },
 });
 
@@ -94,8 +100,13 @@ router
 
   .get("/tournaments", GetTournaments)
   .get("/tournaments/config", GetRankingConfig)
+  .get("/tournaments/tags", GetTournamentTags)
+  .put("/tournaments/tags", authenticatedUser, InsertTournamentTags)
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
+
+  .get("/tags", GetTags)
+  .put("/tags", authenticatedUser, InsertTags)
 
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)
@@ -122,12 +133,12 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   const db = new Kysely<Database>({
     // @ts-ignore
     dialect: new D1Dialect({ database: env.DB }),
-    //log(event) {
-    //  if (event.level === "query") {
-    //    console.log(event.query.sql);
-    //    console.log(event.query.parameters);
-    //  }
-    //},
+    log(event) {
+      if (event.level === "query") {
+        console.log(event.query.sql);
+        console.log(event.query.parameters);
+      }
+    },
   });
 
   const tracer = _trace.getTracer("beanstalk");

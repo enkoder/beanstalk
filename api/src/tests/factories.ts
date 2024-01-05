@@ -5,7 +5,9 @@ import {
   Format,
   Result,
   Season,
+  Tag,
   Tournament,
+  TournamentTag,
   TournamentType,
   User,
 } from "../schema";
@@ -14,6 +16,14 @@ const TEST_TOKEN = "test token";
 
 export function urlMe() {
   return new URL("http://localhost:8787/api/users/@me");
+}
+
+export function urlTournamentTags() {
+  return new URL("http://localhost:8787/api/tournaments/tags");
+}
+
+export function urlTags() {
+  return new URL("http://localhost:8787/api/tags");
 }
 
 export function authedOptions(method: string, body?: string) {
@@ -134,4 +144,30 @@ export function getPrivateAccountInfo(u: User) {
     reputation: 0,
     sharing: false,
   });
+}
+
+type TagArgs = {
+  name: string;
+  normalized?: string;
+  user: User;
+};
+
+export function tag({ name, normalized, user }: TagArgs) {
+  return {
+    name: name,
+    normalized: normalized || "",
+    owner_id: user.id,
+  } as Tag;
+}
+
+type TournamentTagArgs = {
+  tournament: Tournament;
+  tag: Tag;
+};
+
+export function tournament_tag({ tournament, tag }: TournamentTagArgs) {
+  return {
+    tag_id: tag.id,
+    tournament_id: tournament.id,
+  } as TournamentTag;
 }

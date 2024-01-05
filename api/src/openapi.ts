@@ -172,6 +172,51 @@ export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
 
+export const TournamentTagComponent = z
+  .object({
+    tournament_id: z.number(),
+    tag_id: z.number(),
+  })
+  .openapi("TournamentTag");
+export type TournamentTagComponentType = z.infer<typeof TournamentTagComponent>;
+
+export const GetTournamentTagsResponseComponent = z
+  .object({
+    tag_id: z.number(),
+    tag_name: z.string(),
+    tag_normalized: z.string(),
+    owner_id: z.number(),
+    owner_name: z.string(),
+    count: z.number(),
+  })
+  .openapi("GetTournamentTagsResponseComponent");
+export type GetTournamentTagsResponseComponentType = z.infer<
+  typeof GetTournamentTagsResponseComponent
+>;
+
+export const GetTagsResponseComponent = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    normalized: z.string(),
+    owner_id: z.number(),
+    owner_name: z.string(),
+  })
+  .openapi("GetTagsResponseComponent");
+export type GetTagsResponseComponentType = z.infer<
+  typeof GetTagsResponseComponent
+>;
+
+export const TagComponent = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    normalized: z.string(),
+    owner_id: z.number(),
+  })
+  .openapi("TagComponent");
+export type TagComponentType = z.infer<typeof TagComponent>;
+
 export const GetUserSchema = {
   tags: ["User"],
   summary: "Gets a single user",
@@ -348,6 +393,69 @@ export const GetLeaderboardSchema = {
   },
 };
 
+export const GetTournamentTagsSchema = {
+  tags: ["Tags"],
+  summary:
+    "Gets the list of tags with a count of tournaments associated with that tag",
+  responses: {
+    "200": {
+      schema: z.array(GetTournamentTagsResponseComponent),
+      description:
+        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
+    },
+  },
+};
+
+export const InsertTournamentTagBody = z.object({
+  tag_id: z.number(),
+  tournament_id: z.number(),
+});
+export type InsertTournamentTagBodyType = z.infer<
+  typeof InsertTournamentTagBody
+>;
+
+export const InsertTournamentTagsSchema = {
+  tags: ["Tags"],
+  summary: "Inserts a tournament tag",
+  requestBody: InsertTournamentTagBody,
+  responses: {
+    "200": {
+      schema: TournamentTagComponent,
+      description:
+        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
+    },
+  },
+};
+
+export const GetTagsSchema = {
+  tags: ["Tags"],
+  summary:
+    "Gets the list of tags with a count of tournaments associated with that tag",
+  responses: {
+    "200": {
+      schema: z.array(GetTournamentTagsResponseComponent),
+      description:
+        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
+    },
+  },
+};
+
+export const InsertTagBody = z.object({
+  tag_name: z.string(),
+});
+export type InsertTagBodyType = z.infer<typeof InsertTagBody>;
+
+export const InsertTagsSchema = {
+  tags: ["Tags"],
+  summary: "Inserts a tag",
+  requestBody: InsertTagBody,
+  responses: {
+    "200": {
+      schema: TagComponent,
+      description: "Returns the inserted tag",
+    },
+  },
+};
 export const GetRankingConfigSchema = {
   tags: ["Leaderboard"],
   summary:
