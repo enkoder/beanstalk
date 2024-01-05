@@ -26,6 +26,7 @@ type GetExpandedOptions = {
   seasonId?: number | null;
   faction?: Faction | null;
   format?: Format | null;
+  tags?: string[] | null;
 };
 
 export async function get(user_id: number, tournament_id: number) {
@@ -50,12 +51,35 @@ export class Results {
     seasonId = null,
     faction = null,
     format = null,
+    tags = null,
   }: GetExpandedOptions): Promise<ResultExpanded[]> {
     let q = g()
-      .db.selectFrom("results")
+      .db.with("filteredResults", (db) => {
+        let results = db.selectFrom("results").selectAll();
+        if (tags) {
+          results = results
+            .innerJoin(
+              "tournament_tags",
+              "tournament_tags.tournament_id",
+              "results.tournament_id",
+            )
+            .innerJoin(
+              "tags",
+              "tournament_tags.tournament_id",
+              "tournament_tags.tournament_id",
+            )
+            .where("tags.normalized", "in", tags);
+        }
+        return results;
+      })
+      .selectFrom("filteredResults")
       .selectAll()
-      .innerJoin("users", "users.id", "results.user_id")
-      .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
+      .innerJoin("users", "users.id", "filteredResults.user_id")
+      .innerJoin(
+        "tournaments",
+        "tournaments.id",
+        "filteredResults.tournament_id",
+      )
       .select((eb) => [
         "users.name as user_name",
         "tournaments.type as tournament_type",
@@ -66,8 +90,8 @@ export class Results {
           .agg<number>("rank")
           .over((ob) =>
             ob
-              .partitionBy(["results.user_id", "tournaments.type"])
-              .orderBy("results.points_earned", "desc")
+              .partitionBy(["filteredResults.user_id", "tournaments.type"])
+              .orderBy("filteredResults.points_earned", "desc")
               .orderBy("tournaments.id", "asc"),
           )
           .as("count_for_tournament_type"),
@@ -76,7 +100,7 @@ export class Results {
       .where("users.disabled", "=", 0);
 
     if (userId) {
-      q = q.where("results.user_id", "=", userId);
+      q = q.where("filteredResults.user_id", "=", userId);
     }
 
     if (tournamentId) {
@@ -88,10 +112,10 @@ export class Results {
       q = q.where("tournaments.season_id", "=", seasonId);
     }
     if (faction && faction.side_code === "runner") {
-      q = q.where("results.runner_deck_faction", "=", faction.code);
+      q = q.where("filteredResults.runner_deck_faction", "=", faction.code);
     }
     if (faction && faction.side_code === "corp") {
-      q = q.where("results.corp_deck_faction", "=", faction.code);
+      q = q.where("filteredResults.corp_deck_faction", "=", faction.code);
     }
     if (format) {
       q = q.where("tournaments.format", "=", format);

@@ -3,6 +3,7 @@ import { Factions } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard";
 import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
+import { Tags, TournamentTags } from "../models/tags";
 import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
 import {
@@ -244,6 +245,55 @@ describe("leaderboard", () => {
     rows = (await response.json()) as LeaderboardRowComponentType[];
     expect(rows.length).toEqual(1);
     expect(rows[0].user_id).toEqual(u0.id);
+    expect(rows[0].points).toEqual(100);
+  });
+
+  test("check tags filter", async () => {
+    const u0 = await Users.insert(Factories.user({ id: 0 }));
+    const u1 = await Users.insert(Factories.user({ id: 1 }));
+
+    const t0 = await Tournaments.insert(Factories.tournament({ id: 0 }));
+    const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
+    const t2 = await Tournaments.insert(Factories.tournament({ id: 2 }));
+
+    const tag = await Tags.insert(Factories.tag({ name: "tag", user: u0 }));
+
+    const tt0 = await TournamentTags.insert(
+      Factories.tournament_tag({ tournament: t0, tag: tag }),
+    );
+    const tt2 = await TournamentTags.insert(
+      Factories.tournament_tag({ tournament: t2, tag: tag }),
+    );
+
+    await Results.insert(
+      Factories.result({
+        tournament: t0,
+        user: u0,
+        points: 100,
+      }),
+    );
+    await Results.insert(
+      Factories.result({
+        tournament: t1,
+        user: u0,
+        points: 100,
+      }),
+    );
+    await Results.insert(
+      Factories.result({
+        tournament: t2,
+        user: u1,
+        points: 100,
+      }),
+    );
+
+    const rows = await Leaderboard.getExpanded({
+      tags: ["tag"],
+    });
+
+    expect(rows.length).toEqual(2);
+    expect(rows[0].user_id).toEqual(u0.id);
+    // User0 attended two tournaments, but only two of the three tourneys are returned
     expect(rows[0].points).toEqual(100);
   });
 });

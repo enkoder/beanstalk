@@ -383,6 +383,7 @@ export const GetLeaderboardSchema = {
     seasonId: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
+    tags: Query(z.string().optional()),
   },
   responses: {
     "200": {

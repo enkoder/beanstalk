@@ -1,4 +1,5 @@
 import { Factions } from "../models/factions.js";
+import { Tags } from "../models/tags";
 import { PrivateAccountInfo } from "../openapi";
 import {
   Faction,
@@ -155,7 +156,7 @@ type TagArgs = {
 export function tag({ name, normalized, user }: TagArgs) {
   return {
     name: name,
-    normalized: normalized || "",
+    normalized: normalized || Tags.normalizeName(name),
     owner_id: user.id,
   } as Tag;
 }
