@@ -21,18 +21,25 @@ import {
   LeaderboardService,
   Season,
   SeasonsService,
+  Tag,
+  TagsService,
 } from "../client";
+import ComboBox from "./ComboBox";
 import { Input } from "./Input";
 import { Select } from "./Select";
 
 export const SEASON_PARAM_NAME = "season";
+export const FORMAT_PARAM_NAME = "formatCode";
+export const TAGS_PARAM_NAME = "tags";
+export const SEARCH_PARAM_NAME = "search";
+export const FACTION_PARAM_NAME = "factionCode";
+
 const EMPTY_SEASON = {
   id: -1,
   name: "Season Filter...",
   started_at: "",
 } as Season;
 
-export const FACTION_PARAM_NAME = "factionCode";
 const EMPTY_FACTION = {
   code: "",
   color: "",
@@ -66,10 +73,6 @@ const FACTION_ICONS: Record<string, any> = {
   ),
 };
 
-export const FORMAT_PARAM_NAME = "formatCode";
-
-export const SEARCH_PARAM_NAME = "search";
-
 type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
   hasSearchBar: boolean;
 };
@@ -79,6 +82,7 @@ export type FilterSectionValues = {
   seasonId?: number;
   format?: Format;
   faction?: string;
+  tags?: string[];
 };
 
 export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
@@ -89,7 +93,8 @@ export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
   const faction = sp.get(FACTION_PARAM_NAME) || undefined;
   // Default to standard format
   const format = (sp.get(FORMAT_PARAM_NAME) as Format) || "standard";
-  return { searchString, seasonId, format, faction };
+  const tags = (sp.getAll(TAGS_PARAM_NAME) as string[]) || [];
+  return { searchString, seasonId, format, faction, tags };
 }
 
 export function getSearchParamsFromValues(
@@ -108,6 +113,9 @@ export function getSearchParamsFromValues(
   }
   if (values.faction) {
     sp.set(FACTION_PARAM_NAME, values.faction);
+  }
+  for (const tag of values.tags || []) {
+    sp.append(TAGS_PARAM_NAME, tag);
   }
   return sp;
 }
@@ -145,6 +153,12 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     "standard",
   );
 
+  const { data: tags } = useQuery<Tag[]>({
+    queryKey: ["tags"],
+    queryFn: () => TagsService.getGetTags(),
+  });
+  const [selectedTags, setSelectedTags] = useState<Tag[] | undefined>([]);
+
   useEffect(() => {
     if (seasons && values.seasonId !== undefined) {
       setSelectedSeason(seasons[values.seasonId + 1]);
@@ -165,6 +179,17 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     }
     if (values.searchString) {
       setSearchString(values.searchString);
+    }
+    if (tags && values.tags !== undefined && values.tags.length > 0) {
+      const foundTags: Tag[] = [];
+      for (const tag of tags || []) {
+        for (const spTag of values.tags) {
+          if (tag.normalized === spTag) {
+            foundTags.push(tag);
+          }
+        }
+      }
+      setSelectedTags(foundTags);
     }
   }, [values]);
 
@@ -195,6 +220,18 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
 
     setSearchParams(searchParams);
     setSelectedFormat(f);
+  };
+
+  const handleTagsChange = (tags: Tag[] | undefined) => {
+    searchParams.delete(TAGS_PARAM_NAME);
+    if (tags?.length) {
+      for (const tag of tags || []) {
+        searchParams.append(TAGS_PARAM_NAME, tag.normalized);
+      }
+    }
+
+    setSearchParams(searchParams);
+    setSelectedTags(tags);
   };
 
   const handleSearchStringChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -261,6 +298,20 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         selected={selectedFormat}
         label={"Format"}
         onChange={handleFormatChange}
+      />
+      <ComboBox
+        width={"w-full"}
+        items={tags || []}
+        selected={selectedTags}
+        renderItem={(tag) => tag?.name}
+        label={"Tags"}
+        onChange={handleTagsChange}
+        itemFilter={(tag, query) =>
+          tag?.normalized.includes(query.replace(/\s+/g, "").toLowerCase()) ||
+          false
+        }
+        itemToString={(tag) => tag?.name || ""}
+        placeholder="Tag Filter..."
       />
       {hasSearchBar && (
         <Input

@@ -73,13 +73,21 @@ export function Results() {
   const user = params.user || "";
 
   const { data: results } = useQuery<UserResultsResponse>({
-    queryKey: ["results", user, values.seasonId, values.faction, values.format],
+    queryKey: [
+      "results",
+      user,
+      values.seasonId,
+      values.faction,
+      values.format,
+      values.tags,
+    ],
     queryFn: () =>
       ResultsService.getGetUserResults(
         params.user || "",
         values.seasonId,
         values.faction,
         values.format,
+        values.tags,
       ),
   });
 

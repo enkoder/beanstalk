@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "jota0222.multi-formatter",
+    "biomejs.biome",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

@@ -55,19 +55,20 @@ export class Results {
   }: GetExpandedOptions): Promise<ResultExpanded[]> {
     let q = g()
       .db.with("filteredResults", (db) => {
-        let results = db.selectFrom("results").selectAll();
+        let results = db.selectFrom("results").selectAll("results");
         if (tags) {
           results = results
-            .innerJoin(
+            .leftJoin(
               "tournament_tags",
-              "tournament_tags.tournament_id",
               "results.tournament_id",
+              "tournament_tags.tournament_id",
             )
-            .innerJoin(
+            .leftJoin(
               "tags",
-              "tournament_tags.tournament_id",
+              "results.tournament_id",
               "tournament_tags.tournament_id",
             )
+            .distinct()
             .where("tags.normalized", "in", tags);
         }
         return results;

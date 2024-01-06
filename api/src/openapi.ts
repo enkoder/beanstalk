@@ -189,7 +189,7 @@ export const GetTournamentTagsResponseComponent = z
     owner_name: z.string(),
     count: z.number(),
   })
-  .openapi("GetTournamentTagsResponseComponent");
+  .openapi("GetTournamentTagsResponse");
 export type GetTournamentTagsResponseComponentType = z.infer<
   typeof GetTournamentTagsResponseComponent
 >;
@@ -202,7 +202,7 @@ export const GetTagsResponseComponent = z
     owner_id: z.number(),
     owner_name: z.string(),
   })
-  .openapi("GetTagsResponseComponent");
+  .openapi("GetTagsResponse");
 export type GetTagsResponseComponentType = z.infer<
   typeof GetTagsResponseComponent
 >;
@@ -214,7 +214,7 @@ export const TagComponent = z
     normalized: z.string(),
     owner_id: z.number(),
   })
-  .openapi("TagComponent");
+  .openapi("Tag");
 export type TagComponentType = z.infer<typeof TagComponent>;
 
 export const GetUserSchema = {
@@ -383,7 +383,7 @@ export const GetLeaderboardSchema = {
     seasonId: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
-    tags: Query(z.string().optional()),
+    tags: Query(z.string().or(z.array(z.string())).optional()),
   },
   responses: {
     "200": {
@@ -434,7 +434,7 @@ export const GetTagsSchema = {
     "Gets the list of tags with a count of tournaments associated with that tag",
   responses: {
     "200": {
-      schema: z.array(GetTournamentTagsResponseComponent),
+      schema: z.array(TagComponent),
       description:
         "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
     },
@@ -641,6 +641,7 @@ export const GetUserResultsSchema = {
     season: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
+    tags: Query(z.string().or(z.array(z.string())).optional()),
   },
   responses: {
     "200": {
