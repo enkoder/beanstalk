@@ -1,11 +1,12 @@
 import { g } from "../g";
+import { Tags, TournamentTags } from "../models/tags";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import {
   GetTagsResponseComponentType,
-  GetTournamentTagsResponseComponentType,
   TagComponentType,
   TournamentTagComponentType,
+  TournamentTagsExpandedComponent,
 } from "../openapi";
 import * as Factories from "./factories";
 import { applyMigrations, initG, wipeDB } from "./setup";
@@ -74,7 +75,7 @@ describe("tags", () => {
 
     expect(getTTsResponse.status).toBe(200);
     const tts =
-      (await getTTsResponse.json()) as GetTournamentTagsResponseComponentType[];
+      (await getTTsResponse.json()) as TournamentTagsExpandedComponent[];
 
     expect(tts.length).toBe(1);
     expect(tts[0].count).toBe(1);
@@ -82,5 +83,41 @@ describe("tags", () => {
     expect(tts[0].tag_id).toBe(tag.id);
     expect(tts[0].tag_normalized).toBe(normalized);
     expect(tts[0].tag_name).toBe(name);
+  });
+
+  test("Check OwnerId filter", async () => {
+    // adds two users
+    const u0 = await Users.insert(Factories.user({ id: 0 }));
+    const u1 = await Users.insert(Factories.user({ id: 1 }));
+    const t0 = await Tournaments.insert(Factories.tournament({ id: 0 }));
+    const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
+    const tag0 = await Tags.insert(Factories.tag({ name: "name0", user: u0 }));
+    const tag1 = await Tags.insert(Factories.tag({ name: "name1", user: u1 }));
+    const tt0 = await TournamentTags.insert(
+      Factories.tournament_tag({
+        tag: tag0,
+        tournament: t0,
+      }),
+    );
+    await TournamentTags.insert(
+      Factories.tournament_tag({
+        tag: tag1,
+        tournament: t1,
+      }),
+    );
+
+    const getTTsResponse = await g().mf.dispatchFetch(
+      Factories.urlTournamentTags(u0.id),
+    );
+
+    expect(getTTsResponse.status).toBe(200);
+    const tts =
+      (await getTTsResponse.json()) as TournamentTagsExpandedComponent[];
+
+    // Ensure there's only one tag returned, and that it's the right owner
+    expect(tts.length).toBe(1);
+    expect(tts[0].count).toBe(1);
+    expect(tts[0].owner_id).toBe(u0.id);
+    expect(tts[0].tag_id).toBe(tag0.id);
   });
 });

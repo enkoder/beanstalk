@@ -41,8 +41,8 @@ export class Tags {
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class TournamentTags {
   @traceDeco("TournamentTags")
-  public static async getAllWithCount() {
-    return await g()
+  public static async getAllWithCount(owner_id?: number) {
+    let q = g()
       .db.selectFrom("tournament_tags")
       .selectAll()
       .innerJoin("tags", "tags.id", "tournament_tags.tag_id")
@@ -62,8 +62,13 @@ export class TournamentTags {
       .select((eb) => {
         return eb.fn.count<number>("tags.id").as("count");
       })
-      .groupBy(["tags.id"])
-      .execute();
+      .groupBy(["tags.id"]);
+
+    if (owner_id !== undefined) {
+      q = q.where("users.id", "=", owner_id);
+    }
+
+    return await q.execute();
   }
 
   @traceDeco("TournamentTags")

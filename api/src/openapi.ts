@@ -180,7 +180,7 @@ export const TournamentTagComponent = z
   .openapi("TournamentTag");
 export type TournamentTagComponentType = z.infer<typeof TournamentTagComponent>;
 
-export const GetTournamentTagsResponseComponent = z
+export const TournamentTagExpandedComponent = z
   .object({
     tag_id: z.number(),
     tag_name: z.string(),
@@ -189,9 +189,9 @@ export const GetTournamentTagsResponseComponent = z
     owner_name: z.string(),
     count: z.number(),
   })
-  .openapi("GetTournamentTagsResponse");
-export type GetTournamentTagsResponseComponentType = z.infer<
-  typeof GetTournamentTagsResponseComponent
+  .openapi("TournamentTagExpanded");
+export type TournamentTagsExpandedComponent = z.infer<
+  typeof TournamentTagExpandedComponent
 >;
 
 export const GetTagsResponseComponent = z
@@ -398,9 +398,12 @@ export const GetTournamentTagsSchema = {
   tags: ["Tags"],
   summary:
     "Gets the list of tags with a count of tournaments associated with that tag",
+  parameters: {
+    owner_id: Query(z.coerce.number().optional()),
+  },
   responses: {
     "200": {
-      schema: z.array(GetTournamentTagsResponseComponent),
+      schema: z.array(TournamentTagExpandedComponent),
       description:
         "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
     },

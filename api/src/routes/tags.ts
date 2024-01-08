@@ -7,7 +7,6 @@ import { Users } from "../models/user.js";
 import {
   GetTagsResponseComponent,
   GetTagsSchema,
-  GetTournamentTagsResponseComponent,
   GetTournamentTagsSchema,
   InsertTagBodyType,
   InsertTagsSchema,
@@ -15,6 +14,7 @@ import {
   InsertTournamentTagsSchema,
   TagComponent,
   TournamentTagComponent,
+  TournamentTagExpandedComponent,
 } from "../openapi.js";
 import { InsertTag, TournamentTag } from "../schema.js";
 import { RequestWithDB } from "../types.js";
@@ -23,11 +23,15 @@ export class GetTournamentTags extends OpenAPIRoute {
   static schema = GetTournamentTagsSchema;
 
   @traceDeco("GetTournamentTags")
-  async handle(req: RequestWithDB) {
-    const results = await TournamentTags.getAllWithCount();
-    console.log(JSON.stringify(results));
+  async handle(req: RequestWithDB, _env: Env, _ctx: ExecutionContext) {
+    const owner_id = req.query.owner_id
+      ? Number(req.query.owner_id)
+      : undefined;
+
+    console.log(JSON.stringify(owner_id));
+    const results = await TournamentTags.getAllWithCount(owner_id);
     return json(
-      results.map((result) => GetTournamentTagsResponseComponent.parse(result)),
+      results.map((result) => TournamentTagExpandedComponent.parse(result)),
     );
   }
 }

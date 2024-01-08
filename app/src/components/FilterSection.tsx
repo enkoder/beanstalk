@@ -269,6 +269,18 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         "z-1 grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
       }
     >
+      {hasSearchBar && (
+        <Input
+          width={"w-full"}
+          className={"h-12 rounded-lg"}
+          label={"Search"}
+          type={"search"}
+          placeholder="Search"
+          onChange={handleSearchStringChange}
+          value={searchString}
+          data-name={SEARCH_PARAM_NAME}
+        />
+      )}
       <Select
         width={"w-full"}
         items={seasons || []}
@@ -313,17 +325,6 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         itemToString={(tag) => tag?.name || ""}
         placeholder="Tag Filter..."
       />
-      {hasSearchBar && (
-        <Input
-          className={"h-12 w-full rounded-lg"}
-          label={"Search"}
-          type={"search"}
-          placeholder="Search"
-          onChange={handleSearchStringChange}
-          value={searchString}
-          data-name={SEARCH_PARAM_NAME}
-        />
-      )}
     </div>
   );
 }

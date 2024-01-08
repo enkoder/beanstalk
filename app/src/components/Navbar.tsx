@@ -41,6 +41,7 @@ export function Navbar() {
   const navigation: Navigation[] = [
     { name: "Leaderboard", to: "/", isCurrent: true },
     //{ name: "Seasons", to: "/seasons", isCurrent: false },
+    { name: "Tags", to: "/tags", isCurrent: false },
     { name: "Beans", to: "/beans", isCurrent: false },
     { name: "Code", to: "/code", isCurrent: false },
     { name: "Sim", to: "/sim", isCurrent: false },

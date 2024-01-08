@@ -19,8 +19,13 @@ export function urlMe() {
   return new URL("http://localhost:8787/api/users/@me");
 }
 
-export function urlTournamentTags() {
-  return new URL("http://localhost:8787/api/tournaments/tags");
+export function urlTournamentTags(owner_id?: number) {
+  const url = new URL("http://localhost:8787/api/tournaments/tags");
+  if (owner_id !== undefined) {
+    url.searchParams.append("owner_id", String(owner_id));
+  }
+  console.log(url);
+  return url;
 }
 
 export function urlTags() {

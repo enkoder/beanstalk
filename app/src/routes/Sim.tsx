@@ -75,7 +75,7 @@ export function Sim() {
             );
           }}
           onChange={(t) => {
-            setSelectedTournamentConfig(t);
+            if (t) setSelectedTournamentConfig(t);
             if (t?.code === "intercontinental championship") {
               setNumPlayers(12);
             }
