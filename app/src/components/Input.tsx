@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
-  type: HTMLInputTypeAttribute;
+  type?: HTMLInputTypeAttribute;
   width: string;
 };
 

@@ -5,6 +5,8 @@ import { traceDeco } from "../lib/tracer.js";
 import { Tags, TournamentTags } from "../models/tags.js";
 import { Users } from "../models/user.js";
 import {
+  DeleteTagBodyType,
+  DeleteTagsSchema,
   GetTagsResponseComponent,
   GetTagsSchema,
   GetTournamentTagsSchema,
@@ -28,7 +30,6 @@ export class GetTournamentTags extends OpenAPIRoute {
       ? Number(req.query.owner_id)
       : undefined;
 
-    console.log(JSON.stringify(owner_id));
     const results = await TournamentTags.getAllWithCount(owner_id);
     return json(
       results.map((result) => TournamentTagExpandedComponent.parse(result)),
@@ -62,7 +63,12 @@ export class GetTags extends OpenAPIRoute {
 
   @traceDeco("GetTags")
   async handle(req: RequestWithDB) {
-    const results = await Tags.getAllExpanded();
+    const owner_id = req.query.owner_id
+      ? Number(req.query.owner_id)
+      : undefined;
+
+    console.log(owner_id);
+    const results = await Tags.getAllExpanded(owner_id);
     return json(
       results.map((result) => GetTagsResponseComponent.parse(result)),
     );
@@ -93,5 +99,22 @@ export class InsertTags extends OpenAPIRoute {
     }
 
     return json(TagComponent.parse(tag));
+  }
+}
+
+export class DeleteTag extends OpenAPIRoute {
+  static schema = DeleteTagsSchema;
+
+  @traceDeco("DeleteTag")
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
+    const body = data.body as DeleteTagBodyType;
+
+    try {
+      await Tags.delete(body.tag_id);
+    } catch (e) {
+      console.log(e);
+    }
+
+    return json({});
   }
 }

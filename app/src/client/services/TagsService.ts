@@ -52,13 +52,19 @@ export class TagsService {
 
     /**
      * Gets the list of tags with a count of tournaments associated with that tag
+     * @param ownerId
      * @returns Tag Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
      * @throws ApiError
      */
-    public static getGetTags(): CancelablePromise<Array<Tag>> {
+    public static getGetTags(
+        ownerId?: number | null,
+    ): CancelablePromise<Array<Tag>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/tags',
+            query: {
+                'owner_id': ownerId,
+            },
         });
     }
 
@@ -75,6 +81,25 @@ export class TagsService {
     ): CancelablePromise<Tag> {
         return __request(OpenAPI, {
             method: 'PUT',
+            url: '/api/tags',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * Deletes a tag
+     * @param requestBody
+     * @returns any Empty object indicates deleted tag
+     * @throws ApiError
+     */
+    public static deleteDeleteTag(
+        requestBody?: {
+            tag_id: number;
+        },
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
             url: '/api/tags',
             body: requestBody,
             mediaType: 'application/json',

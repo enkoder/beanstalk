@@ -36,6 +36,7 @@ import {
 } from "./routes/leaderboard.js";
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
+  DeleteTag,
   GetTags,
   GetTournamentTags,
   InsertTags,
@@ -107,6 +108,7 @@ router
 
   .get("/tags", GetTags)
   .put("/tags", authenticatedUser, InsertTags)
+  .delete("/tags", authenticatedUser, DeleteTag)
 
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)

@@ -435,6 +435,9 @@ export const GetTagsSchema = {
   tags: ["Tags"],
   summary:
     "Gets the list of tags with a count of tournaments associated with that tag",
+  parameters: {
+    owner_id: Query(z.coerce.number().optional()),
+  },
   responses: {
     "200": {
       schema: z.array(TagComponent),
@@ -460,6 +463,24 @@ export const InsertTagsSchema = {
     },
   },
 };
+
+export const DeleteTagBody = z.object({
+  tag_id: z.number(),
+});
+export type DeleteTagBodyType = z.infer<typeof DeleteTagBody>;
+
+export const DeleteTagsSchema = {
+  tags: ["Tags"],
+  summary: "Deletes a tag",
+  requestBody: DeleteTagBody,
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates deleted tag",
+    },
+  },
+};
+
 export const GetRankingConfigSchema = {
   tags: ["Leaderboard"],
   summary:

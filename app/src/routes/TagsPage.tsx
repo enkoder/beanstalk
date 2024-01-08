@@ -32,7 +32,6 @@ export function TagsPage() {
     ) || [];
 
   useEffect(() => {
-    console.log("user", user, loading, switchEnabled);
     refetch().catch((e) => console.log(e));
   }, [user, loading, switchEnabled]);
 

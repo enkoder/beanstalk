@@ -13,17 +13,19 @@ export class Tags {
   }
 
   @traceDeco("Tags")
-  public static async getAllExpanded() {
-    return await g()
+  public static async getAllExpanded(owner_id?: number) {
+    let q = g()
       .db.selectFrom("tags")
       .selectAll()
       .innerJoin("users", "tags.owner_id", "users.id")
-      .select([
-        "tags.name as name",
-        "users.name as owner_name",
-        "users.id as owner_id",
-      ])
-      .execute();
+      .selectAll("tags")
+      .select(["users.name as owner_name", "users.id as owner_id"]);
+
+    if (owner_id !== undefined) {
+      q = q.where("users.id", "=", owner_id);
+    }
+
+    return await q.execute();
   }
 
   @traceDeco("Tags")
@@ -35,6 +37,11 @@ export class Tags {
       .onConflict((oc) => oc.column("normalized").doNothing())
       .returningAll()
       .executeTakeFirst();
+  }
+
+  @traceDeco("Tags")
+  public static async delete(tag_id: number) {
+    return await g().db.deleteFrom("tags").where("id", "=", tag_id).execute();
   }
 }
 
