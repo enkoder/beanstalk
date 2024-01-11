@@ -1,5 +1,8 @@
 {
-  "include": ["src/*"],
+  "include": [
+    "src/*",
+    "../node_modules/.pnpm/@nora-soderlund+cloudflare-d1-backups@1.2.0/node_modules/@nora-soderlund/cloudflare-d1-backups/example/global.d.ts"
+  ],
   "exclude": ["**/node_modules/*"],
   "compilerOptions": {
     "module": "NodeNext",

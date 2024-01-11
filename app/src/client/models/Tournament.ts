@@ -13,7 +13,7 @@ export type Tournament = {
     format: string;
     type: string;
     season_id: number | null;
-    season_name?: string;
-    season_tier?: string;
+    season_name?: string | null;
+    season_tier?: string | null;
 };
 

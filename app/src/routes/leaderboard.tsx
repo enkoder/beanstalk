@@ -126,12 +126,19 @@ export function Leaderboard() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const { data: leaderboardRows } = useQuery<LeaderboardRow[]>({
-    queryKey: ["leaderboard", values.seasonId, values.faction, values.format],
+    queryKey: [
+      "leaderboard",
+      values.seasonId,
+      values.faction,
+      values.format,
+      values.tags,
+    ],
     queryFn: () =>
       LeaderboardService.getGetLeaderboard(
         values.seasonId,
         values.faction,
         values.format,
+        values.tags,
       ),
   });
 
@@ -142,6 +149,7 @@ export function Leaderboard() {
       values.seasonId,
       values.faction,
       values.format,
+      values.tags,
     ],
     queryFn: () =>
       ResultsService.getGetUserResults(
@@ -149,6 +157,7 @@ export function Leaderboard() {
         values.seasonId,
         values.faction,
         values.format,
+        values.tags,
       ),
     enabled: selectedUser !== null,
   });

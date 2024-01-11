@@ -29,6 +29,9 @@ export async function initG(loggedInUser = 0) {
 
 export async function wipeDB() {
   const db = g().db;
+  // tournament_tags first due to fk
+  await db.deleteFrom("tournament_tags").execute();
+  await db.deleteFrom("tags").execute();
   await db.deleteFrom("results").execute();
   await db.deleteFrom("tournaments").execute();
   await db.deleteFrom("users").execute();

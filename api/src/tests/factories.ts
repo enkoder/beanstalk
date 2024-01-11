@@ -1,11 +1,14 @@
 import { Factions } from "../models/factions.js";
+import { Tags } from "../models/tags";
 import { PrivateAccountInfo } from "../openapi";
 import {
   Faction,
   Format,
   Result,
   Season,
+  Tag,
   Tournament,
+  TournamentTag,
   TournamentType,
   User,
 } from "../schema";
@@ -14,6 +17,28 @@ const TEST_TOKEN = "test token";
 
 export function urlMe() {
   return new URL("http://localhost:8787/api/users/@me");
+}
+
+export function urlTags({
+  tag,
+  owner,
+  tournamentsUrl = false,
+}: { tag?: Tag; owner?: User; tournamentsUrl?: boolean }) {
+  const base = "http://localhost:8787/api/tags";
+  let url: URL;
+  if (tag && tournamentsUrl) {
+    url = new URL(`${base}/${tag.id}/tournament`);
+  } else if (tag) {
+    url = new URL(`${base}/${tag.id}`);
+  } else {
+    url = new URL(base);
+  }
+
+  if (owner !== undefined) {
+    url.searchParams.append("owner_id", String(owner.id));
+  }
+
+  return url;
 }
 
 export function authedOptions(method: string, body?: string) {
@@ -134,4 +159,30 @@ export function getPrivateAccountInfo(u: User) {
     reputation: 0,
     sharing: false,
   });
+}
+
+type TagArgs = {
+  name: string;
+  normalized?: string;
+  user: User;
+};
+
+export function tag({ name, normalized, user }: TagArgs) {
+  return {
+    name: name,
+    normalized: normalized || Tags.normalizeName(name),
+    owner_id: user.id,
+  } as Tag;
+}
+
+type TournamentTagArgs = {
+  tournament: Tournament;
+  tag: Tag;
+};
+
+export function tournament_tag({ tournament, tag }: TournamentTagArgs) {
+  return {
+    tag_id: tag.id,
+    tournament_id: tournament.id,
+  } as TournamentTag;
 }

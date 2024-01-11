@@ -18,21 +18,28 @@ import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
 import {
   Faction,
   Format,
+  GetTagsResponse,
   LeaderboardService,
   Season,
   SeasonsService,
+  TagsService,
 } from "../client";
+import ComboBox from "./ComboBox";
 import { Input } from "./Input";
 import { Select } from "./Select";
 
 export const SEASON_PARAM_NAME = "season";
+export const FORMAT_PARAM_NAME = "formatCode";
+export const TAGS_PARAM_NAME = "tags";
+export const SEARCH_PARAM_NAME = "search";
+export const FACTION_PARAM_NAME = "factionCode";
+
 const EMPTY_SEASON = {
   id: -1,
   name: "Season Filter...",
   started_at: "",
 } as Season;
 
-export const FACTION_PARAM_NAME = "factionCode";
 const EMPTY_FACTION = {
   code: "",
   color: "",
@@ -66,10 +73,6 @@ const FACTION_ICONS: Record<string, any> = {
   ),
 };
 
-export const FORMAT_PARAM_NAME = "formatCode";
-
-export const SEARCH_PARAM_NAME = "search";
-
 type FilterSectionProps = HTMLAttributes<HTMLDivElement> & {
   hasSearchBar: boolean;
 };
@@ -79,6 +82,7 @@ export type FilterSectionValues = {
   seasonId?: number;
   format?: Format;
   faction?: string;
+  tags?: string[];
 };
 
 export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
@@ -89,7 +93,8 @@ export function getFilterValues(sp: URLSearchParams): FilterSectionValues {
   const faction = sp.get(FACTION_PARAM_NAME) || undefined;
   // Default to standard format
   const format = (sp.get(FORMAT_PARAM_NAME) as Format) || "standard";
-  return { searchString, seasonId, format, faction };
+  const tags = (sp.getAll(TAGS_PARAM_NAME) as string[]) || [];
+  return { searchString, seasonId, format, faction, tags };
 }
 
 export function getSearchParamsFromValues(
@@ -108,6 +113,9 @@ export function getSearchParamsFromValues(
   }
   if (values.faction) {
     sp.set(FACTION_PARAM_NAME, values.faction);
+  }
+  for (const tag of values.tags || []) {
+    sp.append(TAGS_PARAM_NAME, tag);
   }
   return sp;
 }
@@ -145,6 +153,13 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     "standard",
   );
 
+  const { data: tags } = useQuery<GetTagsResponse[]>({
+    queryKey: ["tags"],
+    queryFn: () => TagsService.getGetTags(),
+  });
+
+  const [selectedTags, setSelectedTags] = useState<GetTagsResponse[]>([]);
+
   useEffect(() => {
     if (seasons && values.seasonId !== undefined) {
       setSelectedSeason(seasons[values.seasonId + 1]);
@@ -165,6 +180,22 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     }
     if (values.searchString) {
       setSearchString(values.searchString);
+    }
+    if (tags && values.tags !== undefined) {
+      if (!(selectedTags || []).length) {
+        const foundTags: GetTagsResponse[] = [];
+        for (const spTag of values.tags) {
+          for (const tag of tags || []) {
+            if (tag.normalized === spTag) {
+              foundTags.push(tag);
+            }
+          }
+        }
+
+        if (foundTags.length) {
+          setSelectedTags(foundTags.concat(selectedTags || []));
+        }
+      }
     }
   }, [values]);
 
@@ -195,6 +226,19 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
 
     setSearchParams(searchParams);
     setSelectedFormat(f);
+  };
+
+  const handleTagsChange = (tags: GetTagsResponse[]) => {
+    searchParams.delete(TAGS_PARAM_NAME);
+    if (tags?.length) {
+      for (const tag of tags || []) {
+        searchParams.append(TAGS_PARAM_NAME, tag.normalized);
+      }
+    }
+
+    console.log(tags);
+    setSearchParams(searchParams);
+    setSelectedTags(tags);
   };
 
   const handleSearchStringChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -232,6 +276,18 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         "z-1 grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
       }
     >
+      {hasSearchBar && (
+        <Input
+          width={"w-full"}
+          className={"h-12 rounded-lg"}
+          label={"Search"}
+          type={"search"}
+          placeholder="Search"
+          onChange={handleSearchStringChange}
+          value={searchString}
+          data-name={SEARCH_PARAM_NAME}
+        />
+      )}
       <Select
         width={"w-full"}
         items={seasons || []}
@@ -262,17 +318,21 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         label={"Format"}
         onChange={handleFormatChange}
       />
-      {hasSearchBar && (
-        <Input
-          className={"h-12 w-full rounded-lg"}
-          label={"Search"}
-          type={"search"}
-          placeholder="Search"
-          onChange={handleSearchStringChange}
-          value={searchString}
-          data-name={SEARCH_PARAM_NAME}
-        />
-      )}
+      <ComboBox
+        width={"w-full"}
+        items={tags || []}
+        selected={selectedTags}
+        renderItem={(tag) => tag?.name}
+        label={"Tags"}
+        onChange={handleTagsChange}
+        preProcess={(items, query) =>
+          items.filter((tag) => tag?.normalized.includes(query.toLowerCase()))
+        }
+        itemToString={(tags) => (tags || []).map((tag) => tag.name).join(",")}
+        placeholder="Tag Filter..."
+        multiple={true}
+        nullable={true}
+      />
     </div>
   );
 }

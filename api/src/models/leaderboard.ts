@@ -17,12 +17,19 @@ export class Leaderboard {
     seasonId,
     faction,
     format,
+    tags,
   }: {
     seasonId?: number;
     faction?: Faction;
     format?: Format;
+    tags?: string[];
   }): Promise<LeaderboardRow[]> {
-    const results = await Results.getExpanded({ seasonId, faction, format });
+    const results = await Results.getExpanded({
+      seasonId,
+      faction,
+      format,
+      tags,
+    });
 
     const rows: Record<number, LeaderboardRow> = {};
     for (const result of results) {

@@ -168,9 +168,28 @@ export type User = Selectable<UsersTable>;
 export type UpdateUser = Updateable<UsersTable>;
 export type InsertUser = Insertable<UsersTable>;
 
+export interface TagsTable {
+  id: Generated<number>;
+  name: string;
+  normalized: string;
+  owner_id: number;
+}
+export type Tag = Selectable<TagsTable>;
+export type InsertTag = Insertable<TagsTable>;
+
+export interface TournamentTagsTable {
+  id: Generated<number>;
+  tournament_id: number;
+  tag_id: number;
+}
+export type TournamentTag = Selectable<TournamentTagsTable>;
+export type InsertTournamentTag = Insertable<TournamentTagsTable>;
+
 export interface Database {
   users: UsersTable;
   seasons: SeasonsTable;
   tournaments: TournamentsTable;
   results: ResultsTable;
+  tags: TagsTable;
+  tournament_tags: TournamentTagsTable;
 }

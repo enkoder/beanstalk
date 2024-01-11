@@ -97,6 +97,12 @@ export class GetUserResults extends OpenAPIRoute {
       ? getFactionFromCode(factionCode as FactionCode)
       : undefined;
 
+    const tags = Array.isArray(req.query.tags)
+      ? (req.query.tags as string[])
+      : req.query.tags
+        ? [req.query.tags]
+        : null;
+
     let seasonName: string = undefined;
     let seasonId: number = undefined;
 
@@ -111,6 +117,7 @@ export class GetUserResults extends OpenAPIRoute {
       seasonId: seasonId,
       faction: faction,
       format: format,
+      tags: tags,
     });
 
     let currentRank = 0;

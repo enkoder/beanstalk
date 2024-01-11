@@ -17,6 +17,7 @@ export class ResultsService {
      * @param season
      * @param factionCode
      * @param format
+     * @param tags
      * @returns UserResultsResponse Gets a list of all results for the given user and supplied filters
      * @throws ApiError
      */
@@ -25,6 +26,7 @@ export class ResultsService {
         season?: number | null,
         factionCode?: string,
         format?: Format,
+        tags?: (string | Array<string>),
     ): CancelablePromise<UserResultsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -36,6 +38,7 @@ export class ResultsService {
                 'season': season,
                 'factionCode': factionCode,
                 'format': format,
+                'tags': tags,
             },
         });
     }

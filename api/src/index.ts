@@ -36,6 +36,14 @@ import {
 } from "./routes/leaderboard.js";
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
+  DeleteTag,
+  DeleteTagTournament,
+  GetTagTournaments,
+  GetTags,
+  InsertTagTournament,
+  InsertTags,
+} from "./routes/tags.js";
+import {
   GetTournament,
   GetTournamentResults,
   GetTournaments,
@@ -66,7 +74,7 @@ router.registry.registerComponent("securitySchemes", "bearerAuth", {
 
 const { preflight, corsify } = createCors({
   origins: ["*"],
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
   headers: { "Access-Control-Allow-Credentials": true },
 });
 
@@ -96,6 +104,17 @@ router
   .get("/tournaments/config", GetRankingConfig)
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
+
+  .get("/tags", GetTags)
+  .put("/tags", authenticatedUser, InsertTags)
+  .delete("/tags/:tag_id", authenticatedUser, DeleteTag)
+  .put("/tags/:tag_id/tournament", authenticatedUser, InsertTagTournament)
+  .get("/tags/:tag_id/tournament", GetTagTournaments)
+  .delete(
+    "/tags/:tag_id/tournament/:tag_tournament_id",
+    authenticatedUser,
+    DeleteTagTournament,
+  )
 
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)

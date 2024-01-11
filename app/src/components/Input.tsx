@@ -1,15 +1,24 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { clsx } from "clsx";
 import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
-  type: HTMLInputTypeAttribute;
+  type?: HTMLInputTypeAttribute;
+  width: string;
 };
 
-export function Input({ label, id, type, className, ...props }: InputProps) {
+export function Input({
+  label,
+  id,
+  type,
+  width,
+  className,
+  ...props
+}: InputProps) {
   return (
-    <div className={"flex w-full flex-col text-gray-200"}>
+    <div className={clsx(width, "flex flex-col text-gray-200")}>
       <text
         className={"block pl-4 text-sm font-medium leading-6 text-gray-400"}
       >

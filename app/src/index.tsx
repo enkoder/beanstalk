@@ -16,8 +16,8 @@ import { Stars } from "./components/Stars";
 import { Beans } from "./routes/Beans";
 import { Code } from "./routes/Code";
 import { Faq } from "./routes/Faq";
-import { Seasons } from "./routes/Seasons";
 import { Sim } from "./routes/Sim";
+import { TagsPage } from "./routes/TagsPage";
 import { TournamentPage } from "./routes/TournamentPage";
 import { Leaderboard } from "./routes/leaderboard";
 import { Results } from "./routes/results";
@@ -131,7 +131,8 @@ const router = createBrowserRouter([
       { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },
       { path: "/code", element: <Code /> },
-      { path: "/seasons", element: <Seasons /> },
+      //{ path: "/seasons", element: <Seasons /> },
+      { path: "/tags", element: <TagsPage /> },
       { path: "/@me", element: <Profile /> },
     ],
   },

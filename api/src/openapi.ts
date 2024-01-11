@@ -83,8 +83,8 @@ export const TournamentComponent = z
     format: z.string(),
     type: z.string(),
     season_id: z.number().nullable(),
-    season_name: z.string().optional(),
-    season_tier: z.string().optional(),
+    season_name: z.string().nullable().optional(),
+    season_tier: z.string().nullable().optional(),
   })
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
@@ -171,6 +171,38 @@ export const GetPointDistributionResponseComponent = z
 export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
+
+export const TagTournamentComponent = z
+  .object({
+    tournament_id: z.number(),
+    tag_id: z.number(),
+  })
+  .openapi("TagTournament");
+export type TournamentTagComponentType = z.infer<typeof TagTournamentComponent>;
+
+export const GetTagsResponseComponent = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    normalized: z.string(),
+    owner_id: z.number(),
+    owner_name: z.string(),
+    count: z.number(),
+  })
+  .openapi("GetTagsResponse");
+export type GetTagsResponseComponentType = z.infer<
+  typeof GetTagsResponseComponent
+>;
+
+export const TagComponent = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    normalized: z.string(),
+    owner_id: z.number(),
+  })
+  .openapi("Tag");
+export type TagComponentType = z.infer<typeof TagComponent>;
 
 export const GetUserSchema = {
   tags: ["User"],
@@ -338,12 +370,122 @@ export const GetLeaderboardSchema = {
     seasonId: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
+    tags: Query(z.string().or(z.array(z.string())).optional()),
   },
   responses: {
     "200": {
       schema: z.array(LeaderboardRowComponent),
       description:
         "Returns a array of rows compromising the full leaderboard for the given season",
+    },
+  },
+};
+
+export const InsertTournamentTagBody = z.object({
+  tournament_id: z.number(),
+});
+export type InsertTagTournamentBodyType = z.infer<
+  typeof InsertTournamentTagBody
+>;
+
+export const InsertTagTournamentSchema = {
+  tags: ["Tags"],
+  summary: "Inserts a tournament tag",
+  requestBody: InsertTournamentTagBody,
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID you are using to tag the given tournament",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: TagTournamentComponent,
+      description:
+        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
+    },
+  },
+};
+
+export const GetTagsSchema = {
+  tags: ["Tags"],
+  summary:
+    "Gets the list of tags with a count of tournaments associated with that tag",
+  parameters: {
+    owner_id: Query(z.coerce.number().optional()),
+  },
+  responses: {
+    "200": {
+      schema: z.array(GetTagsResponseComponent),
+      description:
+        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
+    },
+  },
+};
+
+export const InsertTagBody = z.object({
+  tag_name: z.string(),
+});
+export type InsertTagBodyType = z.infer<typeof InsertTagBody>;
+
+export const InsertTagSchema = {
+  tags: ["Tags"],
+  summary: "Inserts a tag",
+  requestBody: InsertTagBody,
+  responses: {
+    "201": {
+      schema: TagComponent,
+      description: "Returns the inserted tag",
+    },
+  },
+};
+
+export const DeleteTagsSchema = {
+  tags: ["Tags"],
+  summary: "Deletes a tag",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates deleted tag",
+    },
+  },
+};
+
+export const GetTagTournamentsSchema = {
+  tags: ["Tags"],
+  summary: "Gets a list of tag tournaments",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: z.array(TagTournamentComponent),
+      description: "List of tag tournaments",
+    },
+  },
+};
+
+export const DeleteTagTournamentsSchema = {
+  tags: ["Tags"],
+  summary: "Deletes the given tag tournament",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+    tag_tournament_id: Path(Number, {
+      description: "Tag Tournament ID",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: {},
+      description: "Empty object indicating tag tournament was deleted",
     },
   },
 };
@@ -532,6 +674,7 @@ export const GetUserResultsSchema = {
     season: Query(z.coerce.number().optional()),
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
+    tags: Query(z.string().or(z.array(z.string())).optional()),
   },
   responses: {
     "200": {

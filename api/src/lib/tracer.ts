@@ -61,6 +61,7 @@ export function traceDeco(prefix: string) {
             code: SpanStatusCode.ERROR,
             message: e?.message,
           });
+          throw e;
         } finally {
           span.end();
         }

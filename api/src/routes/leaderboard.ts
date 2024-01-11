@@ -42,11 +42,18 @@ export class GetLeaderboard extends OpenAPIRoute {
       ? getFactionFromCode(factionCode as FactionCode)
       : undefined;
 
+    const tags = Array.isArray(req.query.tags)
+      ? (req.query.tags as string[])
+      : req.query.tags
+        ? [req.query.tags]
+        : null;
+
     const rows: LeaderboardRowComponentType[] = [];
     const results = await Leaderboard.getExpanded({
       seasonId,
       faction,
       format,
+      tags,
     });
     for (const result of results) {
       rows.push(LeaderboardRowComponent.parse(result));
@@ -59,8 +66,7 @@ export class GetLeaderboard extends OpenAPIRoute {
 export class GetPointDistribution extends OpenAPIRoute {
   static schema = GetPointDistributionSchema;
 
-  @traceDeco("GetPointsDistribution")
-  async handle(req: RequestWithDB) {
+  @traceDeco("GetPointsDistribution") async handle(req: RequestWithDB) {
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
 

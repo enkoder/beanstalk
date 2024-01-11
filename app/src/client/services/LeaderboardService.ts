@@ -20,6 +20,7 @@ export class LeaderboardService {
      * @param seasonId
      * @param factionCode
      * @param format
+     * @param tags
      * @returns LeaderboardRow Returns a array of rows compromising the full leaderboard for the given season
      * @throws ApiError
      */
@@ -27,6 +28,7 @@ export class LeaderboardService {
         seasonId?: number | null,
         factionCode?: string,
         format?: Format,
+        tags?: (string | Array<string>),
     ): CancelablePromise<Array<LeaderboardRow>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -35,6 +37,7 @@ export class LeaderboardService {
                 'seasonId': seasonId,
                 'factionCode': factionCode,
                 'format': format,
+                'tags': tags,
             },
         });
     }

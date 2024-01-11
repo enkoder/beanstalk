@@ -75,7 +75,7 @@ export function Sim() {
             );
           }}
           onChange={(t) => {
-            setSelectedTournamentConfig(t);
+            if (t) setSelectedTournamentConfig(t);
             if (t?.code === "intercontinental championship") {
               setNumPlayers(12);
             }
@@ -84,9 +84,10 @@ export function Sim() {
         <Tooltip placement={"bottom"}>
           <TooltipTrigger className={"w-full"}>
             <Input
+              width={"w-full"}
               className={clsx(
                 numPlayers === undefined && "border border-red-900",
-                "h-12 w-full rounded-lg",
+                "h-12 rounded-lg",
               )}
               disabled={
                 selectedTournamentConfig?.code ===

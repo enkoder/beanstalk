@@ -31,3 +31,7 @@
 - Add structured logging to background task
 - Visualize tournament ingestion %
 - Move to Honeycomb for o11y
+
+## Database
+
+- Do something about the timestamps. Use unix time?
