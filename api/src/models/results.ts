@@ -58,16 +58,12 @@ export class Results {
         let results = db.selectFrom("results").selectAll("results");
         if (tags) {
           results = results
-            .leftJoin(
+            .innerJoin(
               "tournament_tags",
               "results.tournament_id",
               "tournament_tags.tournament_id",
             )
-            .leftJoin(
-              "tags",
-              "results.tournament_id",
-              "tournament_tags.tournament_id",
-            )
+            .innerJoin("tags", "tags.id", "tournament_tags.tag_id")
             .distinct()
             .where("tags.normalized", "in", tags);
         }

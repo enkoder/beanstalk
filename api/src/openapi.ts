@@ -83,8 +83,8 @@ export const TournamentComponent = z
     format: z.string(),
     type: z.string(),
     season_id: z.number().nullable(),
-    season_name: z.string().optional(),
-    season_tier: z.string().optional(),
+    season_name: z.string().nullable().optional(),
+    season_tier: z.string().nullable().optional(),
   })
   .openapi("Tournament");
 export type TournamentComponentType = z.infer<typeof TournamentComponent>;
@@ -172,27 +172,13 @@ export type GetPointDistributionResponseComponentType = z.infer<
   typeof GetPointDistributionResponseComponent
 >;
 
-export const TournamentTagComponent = z
+export const TagTournamentComponent = z
   .object({
     tournament_id: z.number(),
     tag_id: z.number(),
   })
-  .openapi("TournamentTag");
-export type TournamentTagComponentType = z.infer<typeof TournamentTagComponent>;
-
-export const TournamentTagExpandedComponent = z
-  .object({
-    tag_id: z.number(),
-    tag_name: z.string(),
-    tag_normalized: z.string(),
-    owner_id: z.number(),
-    owner_name: z.string(),
-    count: z.number(),
-  })
-  .openapi("TournamentTagExpanded");
-export type TournamentTagsExpandedComponent = z.infer<
-  typeof TournamentTagExpandedComponent
->;
+  .openapi("TagTournament");
+export type TournamentTagComponentType = z.infer<typeof TagTournamentComponent>;
 
 export const GetTagsResponseComponent = z
   .object({
@@ -201,6 +187,7 @@ export const GetTagsResponseComponent = z
     normalized: z.string(),
     owner_id: z.number(),
     owner_name: z.string(),
+    count: z.number(),
   })
   .openapi("GetTagsResponse");
 export type GetTagsResponseComponentType = z.infer<
@@ -394,37 +381,25 @@ export const GetLeaderboardSchema = {
   },
 };
 
-export const GetTournamentTagsSchema = {
-  tags: ["Tags"],
-  summary:
-    "Gets the list of tags with a count of tournaments associated with that tag",
-  parameters: {
-    owner_id: Query(z.coerce.number().optional()),
-  },
-  responses: {
-    "200": {
-      schema: z.array(TournamentTagExpandedComponent),
-      description:
-        "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
-    },
-  },
-};
-
 export const InsertTournamentTagBody = z.object({
-  tag_id: z.number(),
   tournament_id: z.number(),
 });
-export type InsertTournamentTagBodyType = z.infer<
+export type InsertTagTournamentBodyType = z.infer<
   typeof InsertTournamentTagBody
 >;
 
-export const InsertTournamentTagsSchema = {
+export const InsertTagTournamentSchema = {
   tags: ["Tags"],
   summary: "Inserts a tournament tag",
   requestBody: InsertTournamentTagBody,
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID you are using to tag the given tournament",
+    }),
+  },
   responses: {
     "200": {
-      schema: TournamentTagComponent,
+      schema: TagTournamentComponent,
       description:
         "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
     },
@@ -440,7 +415,7 @@ export const GetTagsSchema = {
   },
   responses: {
     "200": {
-      schema: z.array(TagComponent),
+      schema: z.array(GetTagsResponseComponent),
       description:
         "Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag",
     },
@@ -452,31 +427,65 @@ export const InsertTagBody = z.object({
 });
 export type InsertTagBodyType = z.infer<typeof InsertTagBody>;
 
-export const InsertTagsSchema = {
+export const InsertTagSchema = {
   tags: ["Tags"],
   summary: "Inserts a tag",
   requestBody: InsertTagBody,
   responses: {
-    "200": {
+    "201": {
       schema: TagComponent,
       description: "Returns the inserted tag",
     },
   },
 };
 
-export const DeleteTagBody = z.object({
-  tag_id: z.number(),
-});
-export type DeleteTagBodyType = z.infer<typeof DeleteTagBody>;
-
 export const DeleteTagsSchema = {
   tags: ["Tags"],
   summary: "Deletes a tag",
-  requestBody: DeleteTagBody,
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+  },
   responses: {
     "200": {
       schema: z.object({}),
       description: "Empty object indicates deleted tag",
+    },
+  },
+};
+
+export const GetTagTournamentsSchema = {
+  tags: ["Tags"],
+  summary: "Gets a list of tag tournaments",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: z.array(TagTournamentComponent),
+      description: "List of tag tournaments",
+    },
+  },
+};
+
+export const DeleteTagTournamentsSchema = {
+  tags: ["Tags"],
+  summary: "Deletes the given tag tournament",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+    tag_tournament_id: Path(Number, {
+      description: "Tag Tournament ID",
+    }),
+  },
+  responses: {
+    "200": {
+      schema: {},
+      description: "Empty object indicating tag tournament was deleted",
     },
   },
 };

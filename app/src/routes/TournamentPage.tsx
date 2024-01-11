@@ -26,9 +26,14 @@ export function TournamentPage() {
     <>
       <PageHeading text={"Tournament"} includeUnderline={true} />
       {tournament && (
-        <text className={"my-4 text-xl text-gray-400"}>
-          {`${tournament.name} - ${tournament.players_count} Players`}
-        </text>
+        <div className={"flex flex-row mt-2 text-lg"}>
+          <Link to={`https://alwaysberunning.net/tournaments/${tournament.id}`}>
+            {tournament.name}
+          </Link>
+          <span className={"my-4 ml-auto text-gray-400"}>
+            {`${tournament.players_count} Players`}
+          </span>
+        </div>
       )}
 
       <div className={"overflow-auto whitespace-nowrap text-lg"}>

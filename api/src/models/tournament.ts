@@ -60,8 +60,8 @@ export class Tournaments {
   public static async getAllExpanded() {
     return await g()
       .db.selectFrom("tournaments")
-      .innerJoin("seasons", "seasons.id", "tournaments.season_id")
-      .selectAll()
+      .leftJoin("seasons", "tournaments.season_id", "seasons.id")
+      .selectAll("tournaments")
       .select(["seasons.id as season_id", "seasons.name as season_name"])
       .execute();
   }

@@ -309,15 +309,20 @@ export async function publishIngestTournament(
   tournamentTypeFilter?: ABRTournamentTypeFilter,
 ) {
   // fetch and insert the tournament row
-  let abrTournaments: ABRTournamentType[] = null;
+  let abrTournaments: ABRTournamentType[] = [];
   if (userId) {
     abrTournaments = await getTournamentsByUserId(userId);
   } else if (tournamentTypeFilter) {
     abrTournaments = await getTournamentsByType(tournamentTypeFilter);
   }
 
-  for (const abrTournament of abrTournaments) {
-    await env.INGEST_TOURNAMENT_Q.send(abrTournament, { contentType: "json" });
+  // 100 is the limit for batch sizes
+  const chunkSize = 100;
+  for (let i = 0; i < abrTournaments.length; i += chunkSize) {
+    const chunkedTournaments = abrTournaments.slice(i, i + chunkSize);
+    await env.INGEST_TOURNAMENT_Q.sendBatch(
+      chunkedTournaments.map((t) => ({ body: t, contentType: "json" })),
+    );
   }
 }
 

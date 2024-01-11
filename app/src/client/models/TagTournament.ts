@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TournamentTag = {
+export type TagTournament = {
     tournament_id: number;
     tag_id: number;
 };

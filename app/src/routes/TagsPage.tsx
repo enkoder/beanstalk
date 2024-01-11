@@ -2,7 +2,7 @@ import { Switch } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { TagsService, TournamentTagExpanded } from "../client";
+import { GetTagsResponse, TagsService } from "../client";
 import { Input } from "../components/Input";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
@@ -16,19 +16,18 @@ export function TagsPage() {
 
   const { user, loading } = useAuth();
 
-  const { data: tournament_tags, refetch } = useQuery<TournamentTagExpanded[]>({
+  const { data: tags, refetch } = useQuery<GetTagsResponse[]>({
     staleTime: 0,
     queryKey: ["tournament_tags", user, switchEnabled],
-    queryFn: () =>
-      TagsService.getGetTournamentTags(switchEnabled ? user?.id : undefined),
+    queryFn: () => TagsService.getGetTags(switchEnabled ? user?.id : undefined),
     enabled: false,
   });
 
-  const filteredTournamentTags =
-    tournament_tags?.filter(
-      (tt) =>
-        tt.tag_name.includes(tagInputString) ||
-        tt.tag_normalized.includes(tagInputString),
+  const filteredTags =
+    tags?.filter(
+      (tag) =>
+        tag.name.includes(tagInputString) ||
+        tag.normalized.includes(tagInputString),
     ) || [];
 
   useEffect(() => {
@@ -73,7 +72,7 @@ export function TagsPage() {
           <TooltipTrigger asChild={true}>
             <div className={"text-xg mb-4 ml-auto flex flex-row"}>
               {switchEnabled ? (
-                <span className={"pr-4"}>Tags owned by you</span>
+                <span className={"pr-4"}>Your Tags</span>
               ) : (
                 <span className={"pr-4"}>All Tags</span>
               )}
@@ -140,19 +139,19 @@ export function TagsPage() {
         </thead>
 
         <tbody>
-          {filteredTournamentTags?.map((tt) => (
+          {filteredTags?.map((tag) => (
             <tr
               className={
                 "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
               }
             >
               <td>
-                <Link to={`/?tags=${tt.tag_normalized}`}>{tt.tag_name}</Link>
+                <Link to={`/?tags=${tag.normalized}`}>{tag.name}</Link>
               </td>
               <td className={"px-4 py-2"}>
-                <Link to={`/results/${tt.owner_name}`}>{tt.owner_name}</Link>
+                <Link to={`/results/${tag.owner_name}`}>{tag.owner_name}</Link>
               </td>
-              <td className={"px-4 py-2"}>{tt.count}</td>
+              <td className={"px-4 py-2"}>{tag.count}</td>
             </tr>
           ))}
         </tbody>

@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { GetTagsResponse } from '../models/GetTagsResponse';
 import type { Tag } from '../models/Tag';
-import type { TournamentTag } from '../models/TournamentTag';
-import type { TournamentTagExpanded } from '../models/TournamentTagExpanded';
+import type { TagTournament } from '../models/TagTournament';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -15,50 +15,12 @@ export class TagsService {
     /**
      * Gets the list of tags with a count of tournaments associated with that tag
      * @param ownerId
-     * @returns TournamentTagExpanded Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
-     * @throws ApiError
-     */
-    public static getGetTournamentTags(
-        ownerId?: number | null,
-    ): CancelablePromise<Array<TournamentTagExpanded>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/tournaments/tags',
-            query: {
-                'owner_id': ownerId,
-            },
-        });
-    }
-
-    /**
-     * Inserts a tournament tag
-     * @param requestBody
-     * @returns TournamentTag Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
-     * @throws ApiError
-     */
-    public static putInsertTournamentTags(
-        requestBody?: {
-            tag_id: number;
-            tournament_id: number;
-        },
-    ): CancelablePromise<TournamentTag> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/tournaments/tags',
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-
-    /**
-     * Gets the list of tags with a count of tournaments associated with that tag
-     * @param ownerId
-     * @returns Tag Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
+     * @returns GetTagsResponse Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
      * @throws ApiError
      */
     public static getGetTags(
         ownerId?: number | null,
-    ): CancelablePromise<Array<Tag>> {
+    ): CancelablePromise<Array<GetTagsResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/tags',
@@ -89,20 +51,82 @@ export class TagsService {
 
     /**
      * Deletes a tag
-     * @param requestBody
+     * @param tagId
      * @returns any Empty object indicates deleted tag
      * @throws ApiError
      */
     public static deleteDeleteTag(
-        requestBody?: {
-            tag_id: number;
-        },
+        tagId: number,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/tags',
+            url: '/api/tags/{tag_id}',
+            path: {
+                'tag_id': tagId,
+            },
+        });
+    }
+
+    /**
+     * Inserts a tournament tag
+     * @param tagId
+     * @param requestBody
+     * @returns TagTournament Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
+     * @throws ApiError
+     */
+    public static putInsertTagTournament(
+        tagId: number,
+        requestBody?: {
+            tournament_id: number;
+        },
+    ): CancelablePromise<TagTournament> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/tags/{tag_id}/tournament',
+            path: {
+                'tag_id': tagId,
+            },
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+
+    /**
+     * Gets a list of tag tournaments
+     * @param tagId
+     * @returns TagTournament List of tag tournaments
+     * @throws ApiError
+     */
+    public static getGetTagTournaments(
+        tagId: number,
+    ): CancelablePromise<Array<TagTournament>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/tags/{tag_id}/tournament',
+            path: {
+                'tag_id': tagId,
+            },
+        });
+    }
+
+    /**
+     * Deletes the given tag tournament
+     * @param tagId
+     * @param tagTournamentId
+     * @returns any Empty object indicating tag tournament was deleted
+     * @throws ApiError
+     */
+    public static deleteDeleteTagTournament(
+        tagId: number,
+        tagTournamentId: number,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/tags/{tag_id}/tournament/{tag_tournament_id}',
+            path: {
+                'tag_id': tagId,
+                'tag_tournament_id': tagTournamentId,
+            },
         });
     }
 

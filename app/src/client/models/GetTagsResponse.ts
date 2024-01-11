@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TournamentTagExpanded = {
-    tag_id: number;
-    tag_name: string;
-    tag_normalized: string;
+export type GetTagsResponse = {
+    id: number;
+    name: string;
+    normalized: string;
     owner_id: number;
     owner_name: string;
     count: number;

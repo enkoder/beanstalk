@@ -3,7 +3,7 @@ import { Factions } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard";
 import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
-import { Tags, TournamentTags } from "../models/tags";
+import { Tags } from "../models/tags";
 import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
 import {
@@ -258,10 +258,10 @@ describe("leaderboard", () => {
 
     const tag = await Tags.insert(Factories.tag({ name: "tag", user: u0 }));
 
-    const tt0 = await TournamentTags.insert(
+    const tt0 = await Tags.insertTagTournament(
       Factories.tournament_tag({ tournament: t0, tag: tag }),
     );
-    const tt2 = await TournamentTags.insert(
+    const tt2 = await Tags.insertTagTournament(
       Factories.tournament_tag({ tournament: t2, tag: tag }),
     );
 

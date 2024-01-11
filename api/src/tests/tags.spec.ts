@@ -1,13 +1,13 @@
 import { g } from "../g";
-import { Tags, TournamentTags } from "../models/tags";
+import { Tags } from "../models/tags";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
 import {
   GetTagsResponseComponentType,
   TagComponentType,
   TournamentTagComponentType,
-  TournamentTagsExpandedComponent,
 } from "../openapi";
+import { Tag } from "../schema";
 import * as Factories from "./factories";
 import { applyMigrations, initG, wipeDB } from "./setup";
 
@@ -34,55 +34,57 @@ describe("tags", () => {
 
     // insert initial tag
     const insertTagResponse = await g().mf.dispatchFetch(
-      Factories.urlTags(),
+      Factories.urlTags({}),
       Factories.authedOptions("PUT", JSON.stringify({ tag_name: name })),
     );
     expect(insertTagResponse.status).toBe(200);
-    const tag = (await insertTagResponse.json()) as TagComponentType;
-    expect(tag.name).toBe(name);
-    expect(tag.normalized).toBe(normalized);
-    expect(tag.owner_id).toBe(0);
+    const tagComponent = (await insertTagResponse.json()) as TagComponentType;
+    expect(tagComponent.name).toBe(name);
+    expect(tagComponent.normalized).toBe(normalized);
+    expect(tagComponent.owner_id).toBe(0);
+
+    const tag = {
+      id: tagComponent.id,
+      name: tagComponent.name,
+      normalized: tagComponent.normalized,
+      owner_id: tagComponent.owner_id,
+    } as Tag;
 
     // Check tag was created
-    const getTagResponse = await g().mf.dispatchFetch(Factories.urlTags());
-    expect(getTagResponse.status).toBe(200);
-    const tags =
-      (await getTagResponse.json()) as GetTagsResponseComponentType[];
+    let getTagsResponse = await g().mf.dispatchFetch(Factories.urlTags({}));
+    expect(getTagsResponse.status).toBe(200);
+    let tags = (await getTagsResponse.json()) as GetTagsResponseComponentType[];
 
     expect(tags.length).toBe(1);
     expect(tags[0].owner_id).toBe(u.id);
     expect(tags[0].owner_name).toBe(u.name);
     expect(tags[0].name).toBe(name);
     expect(tags[0].normalized).toBe(normalized);
+    expect(tags[0].count).toBe(0);
 
     // insert tournament tag
     const insertTTResponse = await g().mf.dispatchFetch(
-      Factories.urlTournamentTags(),
-      Factories.authedOptions(
-        "PUT",
-        JSON.stringify({ tournament_id: t.id, tag_id: tag.id }),
-      ),
+      Factories.urlTags({ tag: tag, tournamentsUrl: true }),
+      Factories.authedOptions("PUT", JSON.stringify({ tournament_id: t.id })),
     );
+
     expect(insertTTResponse.status).toBe(200);
     const tt = (await insertTTResponse.json()) as TournamentTagComponentType;
     expect(tt.tournament_id).toBe(t.id);
     expect(tt.tag_id).toBe(tag.id);
 
-    // Check tournament tags
-    const getTTsResponse = await g().mf.dispatchFetch(
-      Factories.urlTournamentTags(),
-    );
+    // Check tags has count
+    getTagsResponse = await g().mf.dispatchFetch(Factories.urlTags({}));
 
-    expect(getTTsResponse.status).toBe(200);
-    const tts =
-      (await getTTsResponse.json()) as TournamentTagsExpandedComponent[];
+    expect(getTagsResponse.status).toBe(200);
+    tags = (await getTagsResponse.json()) as GetTagsResponseComponentType[];
 
-    expect(tts.length).toBe(1);
-    expect(tts[0].count).toBe(1);
-    expect(tts[0].owner_id).toBe(u.id);
-    expect(tts[0].tag_id).toBe(tag.id);
-    expect(tts[0].tag_normalized).toBe(normalized);
-    expect(tts[0].tag_name).toBe(name);
+    expect(tags.length).toBe(1);
+    expect(tags[0].count).toBe(1);
+    expect(tags[0].owner_id).toBe(u.id);
+    expect(tags[0].id).toBe(tag.id);
+    expect(tags[0].normalized).toBe(normalized);
+    expect(tags[0].name).toBe(name);
   });
 
   test("Check OwnerId filter", async () => {
@@ -93,31 +95,30 @@ describe("tags", () => {
     const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
     const tag0 = await Tags.insert(Factories.tag({ name: "name0", user: u0 }));
     const tag1 = await Tags.insert(Factories.tag({ name: "name1", user: u1 }));
-    const tt0 = await TournamentTags.insert(
+    const tt0 = await Tags.insertTagTournament(
       Factories.tournament_tag({
         tag: tag0,
         tournament: t0,
       }),
     );
-    await TournamentTags.insert(
+    await Tags.insertTagTournament(
       Factories.tournament_tag({
         tag: tag1,
         tournament: t1,
       }),
     );
 
-    const getTTsResponse = await g().mf.dispatchFetch(
-      Factories.urlTournamentTags(u0.id),
+    const getTagsResponse = await g().mf.dispatchFetch(
+      Factories.urlTags({ owner: u0 }),
     );
-
-    expect(getTTsResponse.status).toBe(200);
-    const tts =
-      (await getTTsResponse.json()) as TournamentTagsExpandedComponent[];
+    expect(getTagsResponse.status).toBe(200);
+    const tags =
+      (await getTagsResponse.json()) as GetTagsResponseComponentType[];
 
     // Ensure there's only one tag returned, and that it's the right owner
-    expect(tts.length).toBe(1);
-    expect(tts[0].count).toBe(1);
-    expect(tts[0].owner_id).toBe(u0.id);
-    expect(tts[0].tag_id).toBe(tag0.id);
+    expect(tags.length).toBe(1);
+    expect(tags[0].count).toBe(1);
+    expect(tags[0].owner_id).toBe(u0.id);
+    expect(tags[0].id).toBe(tag0.id);
   });
 });

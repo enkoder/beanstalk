@@ -37,10 +37,11 @@ import {
 import { GetSeasonTournaments, GetSeasons } from "./routes/seasons.js";
 import {
   DeleteTag,
+  DeleteTagTournament,
+  GetTagTournaments,
   GetTags,
-  GetTournamentTags,
+  InsertTagTournament,
   InsertTags,
-  InsertTournamentTags,
 } from "./routes/tags.js";
 import {
   GetTournament,
@@ -101,14 +102,19 @@ router
 
   .get("/tournaments", GetTournaments)
   .get("/tournaments/config", GetRankingConfig)
-  .get("/tournaments/tags", GetTournamentTags)
-  .put("/tournaments/tags", authenticatedUser, InsertTournamentTags)
   .get("/tournaments/:tournamentId", GetTournament)
   .get("/tournaments/:tournamentId/results", GetTournamentResults)
 
   .get("/tags", GetTags)
   .put("/tags", authenticatedUser, InsertTags)
-  .delete("/tags", authenticatedUser, DeleteTag)
+  .delete("/tags/:tag_id", authenticatedUser, DeleteTag)
+  .put("/tags/:tag_id/tournament", authenticatedUser, InsertTagTournament)
+  .get("/tags/:tag_id/tournament", GetTagTournaments)
+  .delete(
+    "/tags/:tag_id/tournament/:tag_tournament_id",
+    authenticatedUser,
+    DeleteTagTournament,
+  )
 
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)
@@ -135,12 +141,12 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   const db = new Kysely<Database>({
     // @ts-ignore
     dialect: new D1Dialect({ database: env.DB }),
-    //log(event) {
-    //  if (event.level === "query") {
-    //    console.log(event.query.sql);
-    //    console.log(event.query.parameters);
-    //  }
-    //},
+    log(event) {
+      if (event.level === "query") {
+        console.log(event.query.sql);
+        console.log(event.query.parameters);
+      }
+    },
   });
 
   const tracer = _trace.getTracer("beanstalk");

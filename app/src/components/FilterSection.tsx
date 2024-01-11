@@ -18,10 +18,10 @@ import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
 import {
   Faction,
   Format,
+  GetTagsResponse,
   LeaderboardService,
   Season,
   SeasonsService,
-  Tag,
   TagsService,
 } from "../client";
 import ComboBox from "./ComboBox";
@@ -153,11 +153,12 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     "standard",
   );
 
-  const { data: tags } = useQuery<Tag[]>({
+  const { data: tags } = useQuery<GetTagsResponse[]>({
     queryKey: ["tags"],
     queryFn: () => TagsService.getGetTags(),
   });
-  const [selectedTags, setSelectedTags] = useState<Tag[] | undefined>([]);
+
+  const [selectedTags, setSelectedTags] = useState<GetTagsResponse[]>([]);
 
   useEffect(() => {
     if (seasons && values.seasonId !== undefined) {
@@ -180,16 +181,21 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     if (values.searchString) {
       setSearchString(values.searchString);
     }
-    if (tags && values.tags !== undefined && values.tags.length > 0) {
-      const foundTags: Tag[] = [];
-      for (const tag of tags || []) {
+    if (tags && values.tags !== undefined) {
+      if (!(selectedTags || []).length) {
+        const foundTags: GetTagsResponse[] = [];
         for (const spTag of values.tags) {
-          if (tag.normalized === spTag) {
-            foundTags.push(tag);
+          for (const tag of tags || []) {
+            if (tag.normalized === spTag) {
+              foundTags.push(tag);
+            }
           }
         }
+
+        if (foundTags.length) {
+          setSelectedTags(foundTags.concat(selectedTags || []));
+        }
       }
-      setSelectedTags(foundTags);
     }
   }, [values]);
 
@@ -222,7 +228,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     setSelectedFormat(f);
   };
 
-  const handleTagsChange = (tags: Tag[] | undefined) => {
+  const handleTagsChange = (tags: GetTagsResponse[]) => {
     searchParams.delete(TAGS_PARAM_NAME);
     if (tags?.length) {
       for (const tag of tags || []) {
@@ -230,6 +236,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
       }
     }
 
+    console.log(tags);
     setSearchParams(searchParams);
     setSelectedTags(tags);
   };
@@ -318,12 +325,13 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         renderItem={(tag) => tag?.name}
         label={"Tags"}
         onChange={handleTagsChange}
-        itemFilter={(tag, query) =>
-          tag?.normalized.includes(query.replace(/\s+/g, "").toLowerCase()) ||
-          false
+        preProcess={(items, query) =>
+          items.filter((tag) => tag?.normalized.includes(query.toLowerCase()))
         }
-        itemToString={(tag) => tag?.name || ""}
+        itemToString={(tags) => (tags || []).map((tag) => tag.name).join(",")}
         placeholder="Tag Filter..."
+        multiple={true}
+        nullable={true}
       />
     </div>
   );

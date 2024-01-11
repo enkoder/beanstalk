@@ -84,9 +84,10 @@ export function Sim() {
         <Tooltip placement={"bottom"}>
           <TooltipTrigger className={"w-full"}>
             <Input
+              width={"w-full"}
               className={clsx(
                 numPlayers === undefined && "border border-red-900",
-                "h-12 w-full rounded-lg",
+                "h-12 rounded-lg",
               )}
               disabled={
                 selectedTournamentConfig?.code ===

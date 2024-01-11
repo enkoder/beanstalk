@@ -31,9 +31,7 @@ export class GetTournaments extends OpenAPIRoute {
     const tournaments = await Tournaments.getAllExpanded();
 
     return json(
-      tournaments.map((tournament) => {
-        TournamentComponent.parse(tournament);
-      }),
+      tournaments.map((tournament) => TournamentComponent.parse(tournament)),
     );
   }
 }

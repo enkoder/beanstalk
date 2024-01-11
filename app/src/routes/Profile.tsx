@@ -5,16 +5,153 @@ import { clsx } from "clsx";
 import { FormEvent, useEffect, useState } from "react";
 import {
   AuthService,
-  Tag,
+  GetTagsResponse,
+  TagTournament,
   TagsService,
-  TournamentTagExpanded,
+  Tournament,
+  TournamentService,
   User,
   UserService,
 } from "../client";
+import ComboBox from "../components/ComboBox";
 import { Input } from "../components/Input";
 import { Link } from "../components/Link";
+import { Modal } from "../components/Modal";
 import { PageHeading } from "../components/PageHeader";
+import { Sep } from "../components/Sep";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 import useAuth from "../useAuth";
+import { setDiff } from "../util";
+
+type TagTournamentsModalProps = {
+  tagResponse: GetTagsResponse | null;
+  onClose: () => void;
+};
+
+export function TagTournamentsModal({
+  tagResponse,
+  onClose,
+}: TagTournamentsModalProps) {
+  const { data: tournaments } = useQuery<Tournament[]>({
+    queryKey: ["tournaments"],
+    queryFn: () => TournamentService.getGetTournaments(),
+    enabled: tagResponse !== null,
+  });
+
+  const { data: tagTournaments, refetch: refetchTagTournaments } = useQuery<
+    TagTournament[]
+  >({
+    queryKey: ["tag_tournaments", tagResponse?.id],
+    queryFn: () => TagsService.getGetTagTournaments(tagResponse?.id || -1),
+    enabled: tagResponse !== null,
+  });
+
+  const taggedTournaments: Tournament[] = [];
+  for (const tt of tagTournaments || []) {
+    for (const tournament of tournaments || []) {
+      if (tournament.id === tt.tournament_id)
+        taggedTournaments.push(tournament);
+    }
+  }
+
+  const [selectedTournaments, setSelectedTournaments] = useState<Tournament[]>(
+    [],
+  );
+
+  useEffect(() => {
+    setSelectedTournaments(taggedTournaments);
+  }, [tagTournaments]);
+
+  const newTournaments = Array.from(
+    setDiff(selectedTournaments, taggedTournaments).values(),
+  );
+  console.log(newTournaments);
+
+  const description =
+    newTournaments === null
+      ? `Select tournament below to add ${tagResponse?.name} tag to`
+      : newTournaments.map((t: Tournament) => t.name).join(",");
+
+  const handleDeleteTagTournament = async (t: Tournament) => {
+    if (tagResponse) {
+      await TagsService.deleteDeleteTagTournament(tagResponse.id, t.id);
+      await refetchTagTournaments();
+    }
+  };
+
+  const handleAddTagTournament = async () => {
+    if (tagResponse && newTournaments && newTournaments.length) {
+      await Promise.all(
+        newTournaments.map((t) =>
+          TagsService.putInsertTagTournament(tagResponse.id, {
+            tournament_id: t.id,
+          }),
+        ),
+      );
+      await refetchTagTournaments();
+    }
+  };
+
+  return (
+    <Modal
+      title={`Tag: ${tagResponse?.name}`}
+      description={description}
+      isOpen={tagResponse !== null}
+      onClose={onClose}
+    >
+      <div className={"flex flex-col text-gray-400"}>
+        <div className={"flex flex-row gap-2"}>
+          <ComboBox
+            placeholder={"Tournament Name"}
+            width={"w-full"}
+            items={tournaments || []}
+            onChange={(t) => setSelectedTournaments(t)}
+            renderItem={(t) => t?.name}
+            selected={selectedTournaments}
+            preProcess={(items, query) =>
+              items
+                .sort((a, b) => (a.name < b.name ? -1 : 1))
+                .filter((t) =>
+                  t?.name.toLowerCase().includes(query.toLowerCase()),
+                )
+            }
+            multiple={true}
+            nullable={true}
+          />
+          <button
+            type={"submit"}
+            className={clsx(
+              newTournaments.length > 0
+                ? "bg-cyan-500 text-gray-950"
+                : "bg-gray-900 text-gray-400",
+              "w-28 rounded-lg border border-gray-600 px-2 py-2 font-bold",
+            )}
+            onClick={async () => await handleAddTagTournament()}
+            disabled={newTournaments.length === 0}
+          >
+            Add Tags
+          </button>
+        </div>
+        <Sep className={"my-2"} />
+        <ul className={"my-2 ml-4 list-inside list-none"}>
+          {taggedTournaments.map((t) => (
+            <li>
+              <div className={"flex flex-row"}>
+                <span>
+                  <Link to={`/tournament/${t.id}`}>{t.name}</Link>
+                </span>
+                <TrashIcon
+                  className={"h-6 w-6 cursor-pointer text-red-800 ml-auto"}
+                  onClick={async () => await handleDeleteTagTournament(t)}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Modal>
+  );
+}
 
 export function Profile() {
   const { user, loading } = useAuth();
@@ -26,33 +163,24 @@ export function Profile() {
 
   const [tagInputString, setTagInputString] = useState<string>("");
 
-  const { data: tags, refetch: refetch_tags } = useQuery<Tag[]>({
+  const { data: tags, refetch } = useQuery<GetTagsResponse[]>({
     staleTime: 0,
     queryKey: ["tags"],
     queryFn: () => TagsService.getGetTags(user?.id),
     enabled: false,
   });
 
-  const { data: tournament_tags, refetch: refetch_tt } = useQuery<
-    TournamentTagExpanded[]
-  >({
-    staleTime: 0,
-    queryKey: ["tournament_tags", user],
-    queryFn: () => TagsService.getGetTournamentTags(user?.id),
-    enabled: false,
-  });
-
   useEffect(() => {
     if (!loading && user) {
-      refetch_tags().catch((e) => console.log(e));
-      refetch_tt().catch((e) => console.log(e));
+      refetch().catch((e) => console.log(e));
     }
   }, [user, loading]);
 
-  const tagAlreadyExists = tournament_tags?.some(
-    (tt) => tt.tag_name === tagInputString,
-  );
+  const tagAlreadyExists = tags?.some((tag) => tag.name === tagInputString);
 
+  const [clickedTag, setClickedTag] = useState<GetTagsResponse | undefined>();
+
+  // Login state
   const { data: authUrl } = useQuery<string>({
     queryKey: ["authUrl"],
     queryFn: () => AuthService.getGetLoginUrl(),
@@ -101,25 +229,21 @@ export function Profile() {
 
   const handleCreateTag = async () => {
     await TagsService.putInsertTags({ tag_name: tagInputString });
-    await refetch_tags();
-    await refetch_tt();
+    await refetch();
   };
 
   const handleDeleteTag = async (tag_id: number) => {
-    await TagsService.deleteDeleteTag({ tag_id: tag_id });
-    await refetch_tags();
-    await refetch_tt();
+    await TagsService.deleteDeleteTag(tag_id);
+    await refetch();
   };
 
-  const getCountFromTag = (tag: Tag) => {
-    for (const tt of tournament_tags || []) {
-      if (tag.normalized === tt.tag_normalized) return tt.count;
-    }
-    return 0;
+  const handleCloseModal = async () => {
+    setClickedTag(undefined);
+    await refetch();
   };
 
   return (
-    <div className="mx-auto flex max-w-sm flex-col text-gray-400 lg:max-w-lg">
+    <div className="mx-auto flex flex-col text-gray-400 max-w-xl">
       <PageHeading includeUnderline={true} text={"Profile"} />
 
       {!user && !loading ? (
@@ -185,7 +309,11 @@ export function Profile() {
         </form>
       )}
 
-      <PageHeading includeUnderline={true} text={"Tags"} className={"my-4"} />
+      <PageHeading
+        includeUnderline={true}
+        text={"Your Tags"}
+        className={"my-4"}
+      />
 
       <div className={"flex flex-row gap-4"}>
         <Input
@@ -243,18 +371,59 @@ export function Profile() {
                 "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
               }
             >
-              <Link to={`/?tags=${tag.normalized}`}>{tag.name}</Link>
-              <td className={"px-4 py-2"}>{getCountFromTag(tag)}</td>
+              <td>
+                <button
+                  className={"w-24 rounded-lg bg-cyan-600 p-1 text-gray-950"}
+                  type={"button"}
+                  onClick={() => setClickedTag(tag)}
+                >
+                  {tag.name}
+                </button>
+              </td>
+              <td className={"px-4 py-2"}>{tag.count}</td>
               <td className={"w-6"}>
-                <TrashIcon
-                  className={"h-6 w-6 cursor-pointer text-red-800"}
-                  onClick={() => handleDeleteTag(tag.id)}
-                />
+                <Tooltip placement={"bottom"}>
+                  <TooltipTrigger className={"w-full"}>
+                    <TrashIcon
+                      className={clsx(
+                        tag.count === 0
+                          ? "cursor-pointer text-red-800"
+                          : "cursor-default text-gray-400",
+                        "h-6 w-6",
+                      )}
+                      onClick={
+                        tag.count === 0
+                          ? async () => await handleDeleteTag(tag.id)
+                          : undefined
+                      }
+                    />
+                  </TooltipTrigger>
+                  {tag.count !== 0 && (
+                    <TooltipContent
+                      className={
+                        "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                      }
+                      arrowClassName={
+                        "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
+                      }
+                    >
+                      Delete tagged tournaments by clicking the button to the
+                      left
+                    </TooltipContent>
+                  )}
+                </Tooltip>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {clickedTag && (
+        <TagTournamentsModal
+          tagResponse={clickedTag}
+          onClose={async () => await handleCloseModal()}
+        />
+      )}
     </div>
   );
 }

@@ -1,43 +1,51 @@
-import { Combobox, Transition } from "@headlessui/react";
+import { Combobox, ComboboxProps, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { Fragment, ReactNode, useState } from "react";
 
-export interface ComboBoxProps<T> {
+type Nullable = true;
+type Tag = "div";
+
+type BaseProps<T> = {
   width: string;
   label?: string;
-  items: T[];
-  renderItem: (o: T | undefined) => ReactNode | string;
-  itemFilter: (o: T | undefined, query: string) => boolean;
-  itemToString: (o: T | undefined) => string;
-  selected: T[] | undefined;
-  onChange: (o: T[] | undefined) => void;
   placeholder: string;
-}
+  items: T[];
+  renderItem: (v: T | null) => ReactNode | string;
+  preProcess: (items: T[], query: string) => T[];
+};
+
+type SingleComboxProps<T> = BaseProps<T> &
+  ComboboxProps<T, Nullable, false, Tag> & {
+    onChange: (value: T | null) => void;
+    selected: T | null;
+    itemToString?: (value: T | null) => string;
+    multiple: false;
+  };
+
+type MultiComboboxProps<T> = BaseProps<T> &
+  ComboboxProps<T, Nullable, true, Tag> & {
+    onChange: (value: T[]) => void;
+    selected: T[];
+    itemToString?: (value: T[]) => string;
+    multiple: true;
+  };
 
 export default function ComboBox<T>({
   width,
   label,
   items,
   renderItem,
-  itemFilter,
+  preProcess,
   itemToString,
   selected,
   onChange,
   placeholder,
-}: ComboBoxProps<T>) {
+  multiple,
+}: SingleComboxProps<T> | MultiComboboxProps<T>) {
   const [query, setQuery] = useState("");
 
-  const filteredItems =
-    query === "" ? items : items.filter((item) => itemFilter(item, query));
-
-  const inputDisplayValue = (item_or_items: T | T[]) => {
-    if (Array.isArray(item_or_items)) {
-      return item_or_items.map((item) => itemToString(item)).join(",");
-    }
-
-    return String(itemToString(item_or_items));
-  };
+  const filteredItems = preProcess(items, query);
 
   return (
     <Combobox
@@ -45,7 +53,8 @@ export default function ComboBox<T>({
       className={width}
       value={selected}
       onChange={onChange}
-      multiple
+      // @ts-ignore
+      multiple={multiple}
     >
       {({ open }) => (
         <>
@@ -61,8 +70,10 @@ export default function ComboBox<T>({
                 width,
                 "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pl-3 pr-10 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
               )}
-              displayValue={(item_or_items: T | T[]) =>
-                inputDisplayValue(item_or_items)
+              displayValue={
+                itemToString
+                  ? (value: T & T[]) => itemToString(value)
+                  : undefined
               }
               onChange={(event) => setQuery(event.target.value)}
               placeholder={placeholder}

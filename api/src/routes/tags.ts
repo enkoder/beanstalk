@@ -2,59 +2,44 @@ import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { error, json } from "itty-router";
 import { traceDeco } from "../lib/tracer.js";
-import { Tags, TournamentTags } from "../models/tags.js";
+import { Tags } from "../models/tags.js";
 import { Users } from "../models/user.js";
 import {
-  DeleteTagBodyType,
+  DeleteTagTournamentsSchema,
   DeleteTagsSchema,
+  GetTagTournamentsSchema,
   GetTagsResponseComponent,
   GetTagsSchema,
-  GetTournamentTagsSchema,
   InsertTagBodyType,
-  InsertTagsSchema,
-  InsertTournamentTagBodyType,
-  InsertTournamentTagsSchema,
+  InsertTagSchema,
+  InsertTagTournamentBodyType,
+  InsertTagTournamentSchema,
   TagComponent,
-  TournamentTagComponent,
-  TournamentTagExpandedComponent,
+  TagTournamentComponent,
 } from "../openapi.js";
 import { InsertTag, TournamentTag } from "../schema.js";
 import { RequestWithDB } from "../types.js";
 
-export class GetTournamentTags extends OpenAPIRoute {
-  static schema = GetTournamentTagsSchema;
+export class InsertTagTournament extends OpenAPIRoute {
+  static schema = InsertTagTournamentSchema;
 
-  @traceDeco("GetTournamentTags")
-  async handle(req: RequestWithDB, _env: Env, _ctx: ExecutionContext) {
-    const owner_id = req.query.owner_id
-      ? Number(req.query.owner_id)
-      : undefined;
-
-    const results = await TournamentTags.getAllWithCount(owner_id);
-    return json(
-      results.map((result) => TournamentTagExpandedComponent.parse(result)),
-    );
-  }
-}
-
-export class InsertTournamentTags extends OpenAPIRoute {
-  static schema = InsertTournamentTagsSchema;
-
-  @traceDeco("InsertTournamentTags")
+  @traceDeco("InsertTagTournament")
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
-    const body = data.body as InsertTournamentTagBodyType;
+    const body = data.body as InsertTagTournamentBodyType;
+    const tag_id = Number(req.params?.tag_id);
 
     const tournament_tag = {
-      tag_id: body.tag_id,
+      tag_id: tag_id,
       tournament_id: body.tournament_id,
     } as TournamentTag;
-    const tt = await TournamentTags.insert(tournament_tag);
+
+    const tt = await Tags.insertTagTournament(tournament_tag);
 
     if (!tt) {
-      return error(400, "TournamentTag already exists");
+      return error(400, "TagTournament already exists");
     }
 
-    return json(TournamentTagComponent.parse(tournament_tag));
+    return json(TagTournamentComponent.parse(tt));
   }
 }
 
@@ -67,7 +52,6 @@ export class GetTags extends OpenAPIRoute {
       ? Number(req.query.owner_id)
       : undefined;
 
-    console.log(owner_id);
     const results = await Tags.getAllExpanded(owner_id);
     return json(
       results.map((result) => GetTagsResponseComponent.parse(result)),
@@ -76,9 +60,9 @@ export class GetTags extends OpenAPIRoute {
 }
 
 export class InsertTags extends OpenAPIRoute {
-  static schema = InsertTagsSchema;
+  static schema = InsertTagSchema;
 
-  @traceDeco("InsertTags")
+  @traceDeco("InsertTag")
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = data.body as InsertTagBodyType;
     const user = await Users.getById(req.user_id);
@@ -98,7 +82,7 @@ export class InsertTags extends OpenAPIRoute {
       return error(400, "Tag already exists");
     }
 
-    return json(TagComponent.parse(tag));
+    return json(TagComponent.parse(tag), { status: 201 });
   }
 }
 
@@ -106,15 +90,38 @@ export class DeleteTag extends OpenAPIRoute {
   static schema = DeleteTagsSchema;
 
   @traceDeco("DeleteTag")
-  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
-    const body = data.body as DeleteTagBodyType;
+  async handle(req: RequestWithDB) {
+    const tag_id = Number(req.params.tag_id);
 
     try {
-      await Tags.delete(body.tag_id);
+      await Tags.delete(tag_id);
     } catch (e) {
-      console.log(e);
+      error(400, `Could not delete tag ${tag_id}`);
     }
 
+    return json({});
+  }
+}
+
+export class GetTagTournaments extends OpenAPIRoute {
+  static schema = GetTagTournamentsSchema;
+
+  @traceDeco("GetTags")
+  async handle(req: RequestWithDB) {
+    const tag_id = Number(req.params.tag_id);
+    const results = await Tags.getTagTournaments(tag_id);
+    return json(results.map((result) => TagTournamentComponent.parse(result)));
+  }
+}
+
+export class DeleteTagTournament extends OpenAPIRoute {
+  static schema = DeleteTagTournamentsSchema;
+
+  @traceDeco("GetTags")
+  async handle(req: RequestWithDB) {
+    const tag_id = Number(req.params.tag_id);
+    const tag_tournament_id = Number(req.params.tag_tournament_id);
+    const results = await Tags.deleteTagTournament(tag_id, tag_tournament_id);
     return json({});
   }
 }

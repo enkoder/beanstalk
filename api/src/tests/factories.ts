@@ -19,17 +19,26 @@ export function urlMe() {
   return new URL("http://localhost:8787/api/users/@me");
 }
 
-export function urlTournamentTags(owner_id?: number) {
-  const url = new URL("http://localhost:8787/api/tournaments/tags");
-  if (owner_id !== undefined) {
-    url.searchParams.append("owner_id", String(owner_id));
+export function urlTags({
+  tag,
+  owner,
+  tournamentsUrl = false,
+}: { tag?: Tag; owner?: User; tournamentsUrl?: boolean }) {
+  const base = "http://localhost:8787/api/tags";
+  let url: URL;
+  if (tag && tournamentsUrl) {
+    url = new URL(`${base}/${tag.id}/tournament`);
+  } else if (tag) {
+    url = new URL(`${base}/${tag.id}`);
+  } else {
+    url = new URL(base);
   }
-  console.log(url);
-  return url;
-}
 
-export function urlTags() {
-  return new URL("http://localhost:8787/api/tags");
+  if (owner !== undefined) {
+    url.searchParams.append("owner_id", String(owner.id));
+  }
+
+  return url;
 }
 
 export function authedOptions(method: string, body?: string) {

@@ -109,6 +109,41 @@ const QUESTIONS: Question[] = [
     ),
   },
   {
+    title: "How can I create custom leaderboards?",
+    id: "tags",
+    content: (
+      <p>
+        Beanstalk has a <Link to={"/tags"}>Tag</Link> feature that enables users
+        to create custom leaderboards. An example could be a tag for your local
+        or regional tournaments to create a leaderboard amongst your immediate
+        community. Another example could be a tag for a custom tournament format
+        like a monthly snake draft tournament. The sky is the limit here!
+        <Sep className={"mt-4"} />
+        To create a tag and tag tournaments, log in via NRDB Oauth and click on
+        your profile. Your profile UI should be intuitive enough, but here's
+        some details about the tagging feature.
+        <ul className={"my-2 ml-4 list-inside list-disc"}>
+          <li>
+            Tags are owned by a single user and only the tag owner can tag
+            tournaments.
+          </li>
+          <li>
+            All tags are public information and can be viewed at the{" "}
+            <Link to={"/tags"}>Tags</Link> page.
+          </li>
+          <li>
+            On the leaderboard, you can select multiple tags and filters,
+            creating unique leaderboard rankings.
+          </li>
+          <li>
+            In order to delete a tag, you must remove every tournament with that
+            tag.
+          </li>
+        </ul>
+      </p>
+    ),
+  },
+  {
     title: "How do I opt-out?",
     id: "opt-out",
     content: (
