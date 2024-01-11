@@ -65,7 +65,7 @@ export async function processQueueBatch(
       case Queues.IngestTournament: {
         const tournament = message.body as ABRTournamentType;
 
-        if (tournament.id in DISALLOW_TOURNAMENT_ID) {
+        if (DISALLOW_TOURNAMENT_ID.includes(tournament.id)) {
           break;
         }
 
@@ -295,7 +295,7 @@ async function handleTournamentIngest(
   });
 
   const existingTournament = await Tournaments.get(tournamentBlob.id);
-  if (existingTournament.fingerprint === fingerprint) {
+  if (existingTournament && existingTournament.fingerprint === fingerprint) {
     console.log(`skipping ${existingTournament.name} due to fingerprint match`);
     return;
   }

@@ -88,7 +88,6 @@ export class IngestTournament extends OpenAPIRoute {
 
   async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
     const body = IngestTournamentBody.parse(data.body);
-    console.log(JSON.stringify(body));
     await trace(
       "publishIngestTournament",
       () => publishIngestTournament(env, body.userId, body.tournamentType),

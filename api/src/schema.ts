@@ -79,6 +79,15 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["circuit opener"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit opener"],
     } as TournamentConfigType,
+    "circuit breaker": {
+      code: "circuit breaker",
+      name: "Circuit Breaker",
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit breaker"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit breaker"],
+      points_per_player: POINTS_PER_PLAYER["circuit breaker"],
+      baseline_points: BASELINE_POINTS["circuit breaker"],
+      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
+    } as TournamentConfigType,
   },
 } as RankingConfigType;
 
