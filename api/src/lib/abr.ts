@@ -72,6 +72,7 @@ export function abrToTournament(
     players_count: abr.players_count,
     season_id: seasonId,
     date: abr.date.toString(),
+    fingerprint: "",
   };
 }
 

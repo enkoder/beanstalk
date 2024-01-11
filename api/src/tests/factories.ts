@@ -119,6 +119,7 @@ export function tournament({ id, name, season, type, format }: TournamentArgs) {
     players_count: 10,
     season_id: season?.id,
     date: "",
+    fingerprint: "",
   } as Tournament;
 }
 
