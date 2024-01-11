@@ -1,4 +1,5 @@
 import { trace as otel } from "@opentelemetry/api";
+import objectHash from "object-hash";
 import { g } from "./g.js";
 import {
   ABREntryType,
@@ -274,12 +275,25 @@ async function handleTournamentIngest(
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
   const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
+  const tournamentBlob = abrToTournament(abrTournament, seasonId);
+  const entries = await getEntries(tournamentBlob.id);
+  const fingerprint = objectHash({
+    tournament: tournamentBlob,
+    season_id: seasonId,
+    entries: entries,
+  });
+
+  const existingTournament = await Tournaments.get(tournamentBlob.id);
+  if (existingTournament.fingerprint === fingerprint) {
+    console.log(`skipping ${existingTournament.name} due to fingerprint match`);
+    return;
+  }
+
   const tournament = await Tournaments.insert(
-    abrToTournament(abrTournament, seasonId),
+    { ...tournamentBlob, fingerprint: fingerprint },
     true,
   );
 
-  const entries = await getEntries(tournament.id);
   for (const entry of entries) {
     await env.INGEST_RESULT_Q.send({ tournament: tournament, entry: entry });
   }

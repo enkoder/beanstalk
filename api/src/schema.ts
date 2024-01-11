@@ -149,6 +149,7 @@ export interface TournamentsTable {
   players_count: number;
   season_id: number | null;
   date: string | null;
+  fingerprint: string | null;
 }
 
 export type Tournament = Selectable<TournamentsTable>;
