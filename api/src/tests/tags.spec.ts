@@ -37,7 +37,7 @@ describe("tags", () => {
       Factories.urlTags({}),
       Factories.authedOptions("PUT", JSON.stringify({ tag_name: name })),
     );
-    expect(insertTagResponse.status).toBe(200);
+    expect(insertTagResponse.status).toBe(201);
     const tagComponent = (await insertTagResponse.json()) as TagComponentType;
     expect(tagComponent.name).toBe(name);
     expect(tagComponent.normalized).toBe(normalized);

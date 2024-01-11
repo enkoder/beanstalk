@@ -141,12 +141,12 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   const db = new Kysely<Database>({
     // @ts-ignore
     dialect: new D1Dialect({ database: env.DB }),
-    log(event) {
-      if (event.level === "query") {
-        console.log(event.query.sql);
-        console.log(event.query.parameters);
-      }
-    },
+    //log(event) {
+    //  if (event.level === "query") {
+    //    console.log(event.query.sql);
+    //    console.log(event.query.parameters);
+    //  }
+    //},
   });
 
   const tracer = _trace.getTracer("beanstalk");
