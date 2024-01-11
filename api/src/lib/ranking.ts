@@ -11,6 +11,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "national championship": 66,
     "intercontinental championship": 100,
     "circuit opener": 100,
+    "circuit breaker": 50,
   };
 
 // Defines how many points are added per player registered to the tournament
@@ -21,6 +22,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "national championship": 2,
   "intercontinental championship": 0,
   "circuit opener": 1,
+  "circuit breaker": 2,
 };
 
 export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
@@ -29,6 +31,7 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
   "national championship": 100,
   "intercontinental championship": 200,
   "circuit opener": 15,
+  "circuit breaker": 100,
 };
 
 // Sets a baseline number of players a tournament must have in order to distribute any points at all
@@ -40,6 +43,7 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
     "national championship": 16,
     "intercontinental championship": 8,
     "circuit opener": 8,
+    "circuit breaker": 8,
   };
 
 // Defines the max number of tournaments a person can get points for
@@ -51,6 +55,7 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "national championship": 3,
     "intercontinental championship": 1,
     "circuit opener": 5,
+    "circuit breaker": 1,
   };
 
 export const BOTTOM_THRESHOLD = 1;

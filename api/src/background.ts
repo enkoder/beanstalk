@@ -21,6 +21,11 @@ import { Users } from "./models/user.js";
 import { Result, Tournament, User } from "./schema.js";
 import { Env, IngestResultQueueMessage } from "./types.d.js";
 
+const DISALLOW_TOURNAMENT_ID = [
+  // circuit opener selected as circuit breaker
+  3694,
+];
+
 enum Queues {
   IngestTournament = "ingest-tournament",
   IngestTournamentDLQ = "ingest-tournament-dlq",
@@ -31,6 +36,7 @@ enum Queues {
 
 const SUPPORTED_TOURNAMENT_TYPES: ABRTournamentTypeFilter[] = [
   ABRTournamentTypeFilter.CircuitOpener,
+  ABRTournamentTypeFilter.CircuitBreaker,
   ABRTournamentTypeFilter.WorldsChampionship,
   ABRTournamentTypeFilter.NationalChampionship,
   ABRTournamentTypeFilter.IntercontinentalChampionship,
@@ -58,6 +64,11 @@ export async function processQueueBatch(
     switch (batch.queue) {
       case Queues.IngestTournament: {
         const tournament = message.body as ABRTournamentType;
+
+        if (tournament.id in DISALLOW_TOURNAMENT_ID) {
+          break;
+        }
+
         await trace(
           "handleTournamentIngest",
           () => handleTournamentIngest(env, tournament),
