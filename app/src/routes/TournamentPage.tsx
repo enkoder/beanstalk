@@ -26,7 +26,7 @@ export function TournamentPage() {
     <>
       <PageHeading text={"Tournament"} includeUnderline={true} />
       {tournament && (
-        <div className={"flex flex-row mt-2 text-lg"}>
+        <div className={"flex flex-row mt-2 text-lg items-center"}>
           <Link to={`https://alwaysberunning.net/tournaments/${tournament.id}`}>
             {tournament.name}
           </Link>

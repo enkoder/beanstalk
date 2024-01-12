@@ -183,7 +183,13 @@ export function Leaderboard() {
 
   return (
     <>
-      <PageHeading includeUnderline={true} text={"Leaderboard"} />
+      <PageHeading includeUnderline={true} text={"Leaderboard"}>
+        {leaderboardRows && (
+          <h1 className={"text-gray-500 text-xl"}>
+            {leaderboardRows.length} Players
+          </h1>
+        )}
+      </PageHeading>
       <FilterSection hasSearchBar={true} />
       <table
         className={

@@ -1,3 +1,5 @@
+import { Disclosure } from "@headlessui/react";
+import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import { ChangeEvent, HTMLAttributes, useEffect, useState } from "react";
@@ -270,7 +272,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     );
   };
 
-  return (
+  const filters = (
     <div
       className={
         "z-1 grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
@@ -334,5 +336,36 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         nullable={true}
       />
     </div>
+  );
+
+  return (
+    <>
+      <Disclosure
+        as={"div"}
+        className={"block sm:hidden mt-4 border border-gray-700 rounded-lg"}
+      >
+        {({ open }) => (
+          <>
+            <Disclosure.Button
+              className={clsx(
+                open ? "rounded-t-lg" : "rounded-lg",
+                "flex w-full justify-between bg-gray-900 px-4 py-2 text-left text-md font-medium text-cyan-400 hover:bg-cyan-600 hover:text-gray-950 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500",
+              )}
+            >
+              <span>Filters</span>
+              <ChevronUpIcon
+                className={clsx(open && "rotate-180 transform", "h-5 w-5")}
+              />
+            </Disclosure.Button>
+
+            <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
+              {filters}
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+
+      <div className={"hidden sm:block"}>{filters}</div>
+    </>
   );
 }
