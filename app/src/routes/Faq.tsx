@@ -289,8 +289,9 @@ export function Faq() {
               alt={"I have no idea what I'm doing"}
             />
             This is the first website I have ever made. While it's been a
-            project of passion and I'v learned a ton, it's still my first, so no
-            doubt many things can be improved. I would love to learn from you!!
+            project of passion and I've learned a ton, it's still my first, so
+            no doubt many things can be improved. I would love to learn from
+            you!!
             <br />
           </p>
           <div className={"mb-8 mt-4"}>
