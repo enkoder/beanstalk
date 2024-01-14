@@ -17,6 +17,7 @@ export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
     useState<TournamentConfig | null>(null);
   const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
+  const [cutTo, setCutTo] = useState<number | undefined>(8);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
@@ -38,6 +39,7 @@ export function Sim() {
       LeaderboardService.getGetPointDistribution(
         numPlayers,
         selectedTournamentConfig.code,
+        cutTo,
       ).then((response) => {
         setPointsDistributionResponse(response);
       });
@@ -52,37 +54,53 @@ export function Sim() {
         beans you'll get for your performance!
       </text>
       <Sep className={"my-2 lg:my-4"} />
+
       <form
         className={"mb-4 flex flex-col gap-x-4 lg:flex-row lg:gap-4"}
         onSubmit={handleSubmit}
       >
-        <Select
-          width={"w-full"}
-          label={"Beans Per Player / Baseline Beans / Min Players"}
-          items={Object.values(config?.tournament_configs || {})}
-          selected={selectedTournamentConfig}
-          renderItem={(t) => {
-            return t ? (
-              <div className={"flex flex-row justify-between"}>
-                <text>{t.name}</text>
-                <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
-                  {t.points_per_player} / {t.baseline_points} /{" "}
-                  {t.min_players_to_be_legal}
-                </span>
-              </div>
-            ) : (
-              "Loading..."
-            );
-          }}
-          onChange={(t) => {
-            if (t) setSelectedTournamentConfig(t);
-            if (t?.code === "intercontinental championship") {
-              setNumPlayers(12);
+        <Tooltip placement={"top"}>
+          <TooltipTrigger className={"w-full text-left"}>
+            <Select
+              width={"w-full"}
+              label={"Tournament Type"}
+              items={Object.values(config?.tournament_configs || {})}
+              selected={selectedTournamentConfig}
+              renderItem={(t) => {
+                return t ? (
+                  <div className={"flex flex-row justify-between"}>
+                    <text>{t.name}</text>
+                    <span className="absolute inset-y-0 right-10 ml-3 flex items-center pr-2">
+                      {t.points_per_player} / {t.baseline_points} /{" "}
+                      {t.min_players_to_be_legal}
+                    </span>
+                  </div>
+                ) : (
+                  "Loading..."
+                );
+              }}
+              onChange={(t) => {
+                if (t) setSelectedTournamentConfig(t);
+                if (t?.code === "intercontinental championship") {
+                  setNumPlayers(12);
+                }
+              }}
+            />
+          </TooltipTrigger>
+          <TooltipContent
+            className={
+              "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
             }
-          }}
-        />
+            arrowClassName={
+              "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
+            }
+          >
+            <span>Beans Per Player / Baseline Beans / Min Players</span>
+          </TooltipContent>
+        </Tooltip>
+
         <Tooltip placement={"bottom"}>
-          <TooltipTrigger className={"w-full"}>
+          <TooltipTrigger className={"w-full text-left"}>
             <Input
               width={"w-full"}
               className={clsx(
@@ -124,11 +142,23 @@ export function Sim() {
           )}
         </Tooltip>
 
+        <Input
+          width={"w-full"}
+          className={"h-12 rounded-lg"}
+          label={"Cut To"}
+          value={cutTo}
+          type="number"
+          id={"cut-to"}
+          onChange={(e) =>
+            setCutTo(e.target.value !== "" ? Number(e.target.value) : undefined)
+          }
+        />
         <button
           className={clsx(
             numPlayers === undefined && "cursor-not-allowed bg-gray-500",
             "focus mt-6 h-12 w-full rounded-lg border border-gray-600 bg-cyan-500 px-2 py-2 font-bold text-gray-950",
           )}
+          disabled={numPlayers === undefined}
           type="submit"
         >
           Run
@@ -162,13 +192,12 @@ export function Sim() {
                   "break-words border-b-2 border-solid border-gray-300 px-4"
                 }
               >
-                Cumulative ({pointsDistributionResponse?.totalPoints.toFixed(2)}
-                )
+                Cumulative %
               </th>
             </tr>
           </thead>
           <tbody>
-            {pointsDistributionResponse?.pointDistribution.map((row) => (
+            {pointsDistributionResponse?.pointDistribution.map((row, i) => (
               <tr
                 key={row.placement}
                 className={
@@ -176,7 +205,11 @@ export function Sim() {
                 }
               >
                 <td>{row.placement}</td>
-                <td>{row.points}</td>
+                <td>
+                  {row.points}{" "}
+                  {i < pointsDistributionResponse.cutPoints.length &&
+                    `(${pointsDistributionResponse.cutPoints[i].toFixed(2)})`}
+                </td>
                 <td>{row.cumulative}</td>
               </tr>
             ))}

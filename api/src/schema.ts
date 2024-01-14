@@ -1,11 +1,11 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
   BASELINE_POINTS,
-  BOTTOM_THRESHOLD,
   MAX_TOURNAMENTS_PER_TYPE,
   MIN_PLAYERS_TO_BE_LEGAL,
   PERCENT_RECEIVING_POINTS,
   POINTS_PER_PLAYER,
+  SWISS_BOTTOM_THRESHOLD,
 } from "./lib/ranking.js";
 import { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
@@ -26,7 +26,7 @@ export type TournamentType =
   | "regional championship";
 
 export const RankingConfig = {
-  bottom_threshold: BOTTOM_THRESHOLD,
+  bottom_threshold: SWISS_BOTTOM_THRESHOLD,
   tournament_configs: {
     "worlds championship": {
       code: "worlds championship",
@@ -159,6 +159,7 @@ export interface TournamentsTable {
   season_id: number | null;
   date: string | null;
   fingerprint: string | null;
+  cutTo: number | null;
 }
 
 export type Tournament = Selectable<TournamentsTable>;

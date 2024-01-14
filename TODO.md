@@ -1,5 +1,7 @@
 # TODO
 
+## Beans
+
 ## UI Things
 
 - Get design help from someone who knows what they are doing
@@ -9,28 +11,28 @@
 ## Data Ingestion
 
 - Actually do something with the DLQ
-- Fingerprint contents of NRDB tournament so we can quickly skip if nothing has changed
+- Add bypass fingerprint skipping when triggered by api
 
 ## Misc
 
 - Ensure the app unfurls properly w/ og tags
 - GLC Discord bot to flex on your friends
+- Cache img assets on CF CDN
 
 ## Root
 
 - Admin views
-- Opt out settings
-- Tournament Tags
 
 ## Dev Experience
 
 - Figure out why biome doesn't always autoformat from webstorm
+- Move to an npm based precommit so you dont need a python dependency
+- Do I actually like PM2?
 
 ## Infrastructure
 
-- Add structured logging to background task
 - Visualize tournament ingestion %
-- Move to Honeycomb for o11y
+- Get rid of logpush and grafana
 
 ## Database
 

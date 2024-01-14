@@ -103,8 +103,9 @@ export function Faq() {
           The ranking algorithm is very likely going to change over time. Based
           upon feedback from the community, I believe we can continue to improve
           the fairness, transparency, and best representation of bean payout
-          that maps to Netrunner. Treat this current season, more of a beta
-          period while we observe how a full competitive season plays out.
+          that correctly represents the Netrunner tournament experience. Treat
+          this current season, more of a beta period while we observe how a full
+          competitive season plays out.
           <Sep className={"mt-4"} />
           If, and when, the bean algorithm changes, there will be very clear
           communication about what changed and why. If you have ideas on how to

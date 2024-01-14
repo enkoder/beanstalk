@@ -159,6 +159,7 @@ export type PrivateAccountInfoType = z.infer<typeof PrivateAccountInfo>;
 export const GetPointDistributionResponseComponent = z
   .object({
     totalPoints: z.number(),
+    cutPoints: z.array(z.number()),
     pointDistribution: z.array(
       z.object({
         placement: z.number(),
@@ -530,6 +531,7 @@ export const GetPointDistributionSchema = {
   parameters: {
     numPlayers: Query(z.coerce.number()),
     type: Query(TournamentTypeComponent.optional()),
+    cutTo: Query(z.coerce.number().optional()),
   },
   responses: {
     "200": {

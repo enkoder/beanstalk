@@ -106,9 +106,17 @@ type TournamentArgs = {
   name?: string;
   type?: TournamentType;
   format?: Format;
+  cutTo?: number;
 };
 
-export function tournament({ id, name, season, type, format }: TournamentArgs) {
+export function tournament({
+  id,
+  name,
+  season,
+  type,
+  format,
+  cutTo,
+}: TournamentArgs) {
   return {
     id: id,
     name: name || "test name",
@@ -120,6 +128,7 @@ export function tournament({ id, name, season, type, format }: TournamentArgs) {
     season_id: season?.id,
     date: "",
     fingerprint: "",
+    cutTo: cutTo || null,
   } as Tournament;
 }
 

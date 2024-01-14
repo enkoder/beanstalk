@@ -12,14 +12,19 @@ import {
   getTournamentsByUserId,
 } from "./lib/abr.js";
 import * as NRDB from "./lib/nrdb.js";
-import { calculateTournamentPointDistribution } from "./lib/ranking.js";
+import { calculatePointDistribution } from "./lib/ranking.js";
 import { trace } from "./lib/tracer.js";
 import { Results } from "./models/results.js";
 import { Seasons } from "./models/season.js";
 import { Tournaments } from "./models/tournament.js";
 import { Users } from "./models/user.js";
 import { Result, Tournament, User } from "./schema.js";
-import { Env, IngestResultQueueMessage } from "./types.d.js";
+import {
+  Env,
+  IngestResultQueueMessage,
+  IngestTournamentQueueMessage,
+  TriggerType,
+} from "./types.d.js";
 
 const DISALLOW_TOURNAMENT_ID = [
   // circuit opener selected as circuit breaker
@@ -63,15 +68,17 @@ export async function processQueueBatch(
   for (const message of batch.messages) {
     switch (batch.queue) {
       case Queues.IngestTournament: {
-        const tournament = message.body as ABRTournamentType;
+        const ingestTournamentMessage =
+          message.body as IngestTournamentQueueMessage;
 
+        const tournament = ingestTournamentMessage.tournament;
         if (DISALLOW_TOURNAMENT_ID.includes(tournament.id)) {
           break;
         }
 
         await trace(
           "handleTournamentIngest",
-          () => handleTournamentIngest(env, tournament),
+          () => handleTournamentIngest(env, ingestTournamentMessage),
           {
             queue: Queues.IngestTournament,
             tournament_title: tournament.title,
@@ -132,12 +139,12 @@ export async function processQueueBatch(
 
 export async function publishAllTournamentIngest(
   env: Env,
-  trigger: "api" | "cron",
+  trigger: TriggerType,
 ) {
   const data = { publish: "tournament", trigger: trigger };
   for (const type of SUPPORTED_TOURNAMENT_TYPES) {
     try {
-      await publishIngestTournament(env, null, type);
+      await publishIngestTournament(env, trigger, null, type);
       console.log(
         JSON.stringify({
           tournament_type: type,
@@ -225,11 +232,12 @@ async function handleResultIngest(
   tournament: Tournament,
   abrEntry: ABREntryType,
 ) {
-  // Being explicit, even though defaults are supplied
-  const { points } = calculateTournamentPointDistribution(
+  const { points } = calculatePointDistribution(
     tournament.players_count,
     tournament.type,
+    tournament.cutTo,
   );
+
   const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
   const loggedData = {
@@ -246,7 +254,7 @@ async function handleResultIngest(
       env,
       abrEntry,
       tournament.id,
-      points[placement - 1],
+      points[placement],
     );
 
     if (!result) {
@@ -281,8 +289,10 @@ async function handleResultIngest(
 
 async function handleTournamentIngest(
   env: Env,
-  abrTournament: ABRTournamentType,
+  message: IngestTournamentQueueMessage,
 ) {
+  const { tournament: abrTournament, trigger } = message;
+
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
   const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
@@ -294,16 +304,27 @@ async function handleTournamentIngest(
     entries: entries,
   });
 
-  const existingTournament = await Tournaments.get(tournamentBlob.id);
-  if (existingTournament && existingTournament.fingerprint === fingerprint) {
-    console.log(`skipping ${existingTournament.name} due to fingerprint match`);
-    return;
-  }
+  let tournament = await Tournaments.get(tournamentBlob.id);
+  const cutTo = entries.filter((e) => e.rank_top !== null).length;
 
-  const tournament = await Tournaments.insert(
-    { ...tournamentBlob, fingerprint: fingerprint },
-    true,
-  );
+  // Is this a new tournament we've never seen?
+  if (tournament === null) {
+    tournament = await Tournaments.insert(
+      { ...tournamentBlob, fingerprint: fingerprint, cutTo: cutTo },
+      true,
+    );
+  } else {
+    // added cutTo later, need to handle a smooth migration
+    if (tournament.cutTo !== cutTo) {
+      tournament.cutTo = cutTo;
+      tournament = await Tournaments.update(tournament);
+    }
+
+    if (trigger !== "api" && tournament.fingerprint === fingerprint) {
+      console.log(`skipping ${tournament.name} due to fingerprint match`);
+      return;
+    }
+  }
 
   for (const entry of entries) {
     await env.INGEST_RESULT_Q.send({ tournament: tournament, entry: entry });
@@ -330,6 +351,7 @@ async function handleResultIngestDLQ(
 
 export async function publishIngestTournament(
   env: Env,
+  trigger: TriggerType,
   userId?: number,
   tournamentTypeFilter?: ABRTournamentTypeFilter,
 ) {
@@ -346,7 +368,10 @@ export async function publishIngestTournament(
   for (let i = 0; i < abrTournaments.length; i += chunkSize) {
     const chunkedTournaments = abrTournaments.slice(i, i + chunkSize);
     await env.INGEST_TOURNAMENT_Q.sendBatch(
-      chunkedTournaments.map((t) => ({ body: t, contentType: "json" })),
+      chunkedTournaments.map((t) => ({
+        body: { tournament: t, trigger: trigger },
+        contentType: "json",
+      })),
     );
   }
 }

@@ -11,6 +11,13 @@ export type IngestResultQueueMessage = {
   entry: ABREntryType;
 };
 
+type TriggerType = "api" | "cron";
+
+export type IngestTournamentQueueMessage = {
+  tournament: ABRTournamentType;
+  trigger: TriggerType;
+};
+
 // declare what's available in our env
 export type Env = {
   ENVIRONMENT: string;
@@ -18,7 +25,7 @@ export type Env = {
   LOGGED_IN_USER_ID: number | null;
   DB: D1Database;
   BACKUP_BUCKET: R2Bucket;
-  INGEST_TOURNAMENT_Q: Queue<ABRTournamentType>;
+  INGEST_TOURNAMENT_Q: Queue<IngestTournamentQueueMessage>;
   INGEST_RESULT_Q: Queue<IngestResultQueueMessage>;
   // TODO: types for cards
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>

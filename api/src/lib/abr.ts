@@ -73,6 +73,7 @@ export function abrToTournament(
     season_id: seasonId,
     date: abr.date.toString(),
     fingerprint: "",
+    cutTo: 0,
   };
 }
 

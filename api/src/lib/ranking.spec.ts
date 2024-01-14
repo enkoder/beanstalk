@@ -1,11 +1,12 @@
 import { TournamentType } from "../schema";
 import {
+  ADDITIONAL_TOP_CUT_PERCENTAGE,
   BASELINE_POINTS,
-  BOTTOM_THRESHOLD,
   MIN_PLAYERS_TO_BE_LEGAL,
   PERCENT_RECEIVING_POINTS,
   POINTS_PER_PLAYER,
-  calculateTournamentPointDistribution,
+  SWISS_BOTTOM_THRESHOLD,
+  calculatePointDistribution,
 } from "./ranking.js";
 
 test.each([
@@ -14,17 +15,18 @@ test.each([
   ["national championship" as TournamentType],
   ["worlds championship" as TournamentType],
 ])("calculate points", (type: TournamentType) => {
+  const cutTo = 4;
   const num = MIN_PLAYERS_TO_BE_LEGAL[type];
-  const pointsForFirst = num * POINTS_PER_PLAYER[type] + BASELINE_POINTS[type];
+  const swissPointsForFirst =
+    num * POINTS_PER_PLAYER[type] + BASELINE_POINTS[type];
+  const cutPointsForFirst =
+    (swissPointsForFirst * ADDITIONAL_TOP_CUT_PERCENTAGE[type]) / 100;
 
-  const { points, totalPoints } = calculateTournamentPointDistribution(
-    num,
-    type,
-  );
+  const { points, totalPoints } = calculatePointDistribution(num, type, cutTo);
 
   expect(points.length).toBe(num);
-  expect(points[0]).toBe(pointsForFirst);
-  expect(points[points.length - 1]).toBeLessThan(BOTTOM_THRESHOLD);
+  expect(points[0]).toBe(swissPointsForFirst + cutPointsForFirst);
+  expect(points[points.length - 1]).toBeLessThan(SWISS_BOTTOM_THRESHOLD);
 
   let sum = 0;
   for (
@@ -46,16 +48,14 @@ test.each([
   }
 
   // Check to make sure the selected alpha hits ~100% of the intended total points
-  expect(sum).toBe(totalPoints);
+  expect(sum.toFixed(4)).toBe(totalPoints.toFixed(4));
 });
 
 test("not enough players", () => {
+  const cutTo = 8;
   const type = "national championship";
   const num = MIN_PLAYERS_TO_BE_LEGAL[type] - 1;
-  const { points, totalPoints } = calculateTournamentPointDistribution(
-    num,
-    type,
-  );
+  const { points, totalPoints } = calculatePointDistribution(num, type, cutTo);
 
   expect(points.length).toBe(num);
   let sum = 0;
@@ -72,13 +72,15 @@ test.each([
   ["national championship" as TournamentType],
   ["worlds championship" as TournamentType],
 ])("Monotonically increasing point", (type: TournamentType) => {
+  const cutTo = 8;
   const numPlayers: number[] = Array.from(Array(100).keys()).slice(16);
 
   let lastValue = 0;
   for (let i = 0; i < numPlayers.length; i++) {
-    const { points, totalPoints } = calculateTournamentPointDistribution(
+    const { points, totalPoints } = calculatePointDistribution(
       numPlayers[i],
       type,
+      cutTo,
     );
 
     if (lastValue) {

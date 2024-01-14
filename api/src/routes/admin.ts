@@ -11,7 +11,7 @@ import {
   publishIngestTournament,
 } from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
-import { calculateTournamentPointDistribution } from "../lib/ranking.js";
+import { calculatePointDistribution } from "../lib/ranking.js";
 import { trace, traceDeco } from "../lib/tracer.js";
 import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
@@ -47,7 +47,7 @@ export class Rerank extends OpenAPIRoute {
           continue;
         }
 
-        const { points } = calculateTournamentPointDistribution(
+        const { points } = calculatePointDistribution(
           results.length,
           tournament.type,
         );
@@ -90,7 +90,8 @@ export class IngestTournament extends OpenAPIRoute {
     const body = IngestTournamentBody.parse(data.body);
     await trace(
       "publishIngestTournament",
-      () => publishIngestTournament(env, body.userId, body.tournamentType),
+      () =>
+        publishIngestTournament(env, "api", body.userId, body.tournamentType),
       {
         trigger: "api",
         tournament_type: body.tournamentType,

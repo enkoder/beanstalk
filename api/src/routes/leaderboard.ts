@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
-import { calculateTournamentPointDistribution } from "../lib/ranking.js";
+import { calculatePointDistribution } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import { Factions, getFactionFromCode } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard.js";
@@ -69,10 +69,12 @@ export class GetPointDistribution extends OpenAPIRoute {
   @traceDeco("GetPointsDistribution") async handle(req: RequestWithDB) {
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
+    const cutTo = Number(req.query.cutTo);
 
-    const { points, totalPoints } = calculateTournamentPointDistribution(
+    const { points, cutPoints, totalPoints } = calculatePointDistribution(
       numPlayers,
       type,
+      cutTo,
     );
 
     const cumulative: number[] = [];
@@ -86,6 +88,7 @@ export class GetPointDistribution extends OpenAPIRoute {
     return json(
       GetPointDistributionResponseComponent.parse({
         totalPoints: totalPoints,
+        cutPoints: cutPoints,
         pointDistribution: points.map((value, index) => {
           return {
             placement: index + 1,

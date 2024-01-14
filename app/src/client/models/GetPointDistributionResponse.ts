@@ -5,6 +5,7 @@
 
 export type GetPointDistributionResponse = {
     totalPoints: number;
+    cutPoints: Array<number>;
     pointDistribution: Array<{
         placement: number;
         points: number;

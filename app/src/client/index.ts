@@ -26,6 +26,7 @@ export type { User } from './models/User';
 export type { UserResultsResponse } from './models/UserResultsResponse';
 
 export { AdminService } from './services/AdminService';
+export { AssetsService } from './services/AssetsService';
 export { AuthService } from './services/AuthService';
 export { LeaderboardService } from './services/LeaderboardService';
 export { ResultsService } from './services/ResultsService';

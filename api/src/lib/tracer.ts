@@ -22,6 +22,7 @@ export async function trace<T>(
 
       return retVal;
     } catch (e) {
+      console.log(e);
       span.setStatus({
         code: SpanStatusCode.ERROR,
         message: e?.message,
