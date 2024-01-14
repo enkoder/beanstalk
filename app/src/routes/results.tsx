@@ -36,9 +36,9 @@ function Decks(result: Result) {
             {/* TODO: replace the corp ID with the picture of the faction and the name of the ID */}
             <img
               className={clsx(imageSizes, "rounded")}
-              src={`https://alwaysberunning.net/img/ids/${result.corp_deck_identity_id
+              src={`https://netrunner-beanstalk.net/api/assets/ids/${result.corp_deck_identity_id
                 .toString()
-                .padStart(5, "0")}.png`}
+                .padStart(5, "0")}`}
               alt={result.corp_deck_identity_name || ""}
             />
           </Link>
@@ -54,9 +54,9 @@ function Decks(result: Result) {
           <Link to={result.runner_deck_url || ""}>
             <img
               className={clsx(imageSizes, "rounded")}
-              src={`https://alwaysberunning.net/img/ids/${result.runner_deck_identity_id
+              src={`https://netrunner-beanstalk.net/api/assets/ids/${result.runner_deck_identity_id
                 .toString()
-                .padStart(5, "0")}.png`}
+                .padStart(5, "0")}`}
               alt={result.runner_deck_identity_name || ""}
             />
           </Link>

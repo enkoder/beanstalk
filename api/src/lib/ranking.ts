@@ -31,7 +31,7 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
   "national championship": 100,
   "intercontinental championship": 200,
   "circuit opener": 15,
-  "circuit breaker": 100,
+  "circuit breaker": 200,
 };
 
 // Sets a baseline number of players a tournament must have in order to distribute any points at all

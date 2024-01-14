@@ -26,6 +26,7 @@ import {
   UpdateTournamentSeasons,
   UpdateUsers,
 } from "./routes/admin.js";
+import { GetIdImg } from "./routes/assets.js";
 import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth.js";
 import {
   GetFactions,
@@ -115,6 +116,9 @@ router
     authenticatedUser,
     DeleteTagTournament,
   )
+
+  // Assets
+  .get("/assets/ids/:id", GetIdImg)
 
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)

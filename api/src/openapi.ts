@@ -719,3 +719,14 @@ export const GetTournamentResultsSchema = {
     },
   },
 };
+
+export const GetIdImgSchema = {
+  tags: ["Assets"],
+  summary: "Gets a cached ID image",
+  parameters: { id: Path(Number, { description: "Identity card ID" }) },
+  responses: {
+    "200": {
+      description: "Identity image PNG",
+    },
+  },
+};

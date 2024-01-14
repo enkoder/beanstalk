@@ -1,4 +1,4 @@
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
@@ -342,7 +342,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     <>
       <Disclosure
         as={"div"}
-        className={"block sm:hidden mt-4 border border-gray-700 rounded-lg"}
+        className={"block sm:hidden my-4 border border-gray-700 rounded-lg"}
       >
         {({ open }) => (
           <>
@@ -357,10 +357,18 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
                 className={clsx(open && "rotate-180 transform", "h-5 w-5")}
               />
             </Disclosure.Button>
-
-            <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
-              {filters}
-            </Disclosure.Panel>
+            <Transition
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-75 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
+            >
+              <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
+                {filters}
+              </Disclosure.Panel>
+            </Transition>
           </>
         )}
       </Disclosure>
