@@ -132,7 +132,7 @@ export function Results() {
           "mt-4 w-full table-fixed border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
         }
       >
-        <thead className={"sticky top-0 bg-slate-950 text-left"}>
+        <thead className={"bg-slate-950 text-left"}>
           <tr>
             <th scope="col" className={"w-3/6 text-left"}>
               Tournament
