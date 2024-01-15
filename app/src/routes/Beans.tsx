@@ -168,6 +168,47 @@ export function Beans() {
         ),
       },
       {
+        title: "Beans for top cut",
+        id: "cut",
+        content: (
+          <p className={"pl-2"}>
+            Top cut winners will receive and additional chunk of beans using the
+            same decaying algorithm used to determine swiss payouts. We set the
+            initial value by taking a flat percentage from the first place bean
+            total and finding an acceptable rate of decay where the last person
+            in the cut makes 10% of what the first place receives. You can see
+            the additional beans awarded due to cut placement on the{" "}
+            <Link to={"/sim"}>Sim</Link> page. It's the number in parenthesis in
+            the beans column.
+            <Sep className={"mt-4"} />
+            First Place Cut Points = First place swiss points * configured
+            percentage / 100
+            <Sep className={"mt-4"} />
+            The following bean values are for 50 person tournaments of each
+            type.
+            <ul className={"list-disc px-8"}>
+              {tournamentConfigs.map((tc) => (
+                <>
+                  {tc.code !== "intercontinental championship" && (
+                    <li>
+                      <div className={"flex w-full flex-row"}>
+                        <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                          {capStr(tc.code)}
+                        </span>
+                        <span className={"w-1/6"}>
+                          {" "}
+                          {tc.additional_top_cut_percentage}{" "}
+                        </span>
+                      </div>
+                    </li>
+                  )}
+                </>
+              ))}
+            </ul>
+          </p>
+        ),
+      },
+      {
         title: "Top % Winners",
         id: "top-half-winners",
         content: (

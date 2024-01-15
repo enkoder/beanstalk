@@ -98,6 +98,7 @@ export const TournamentConfigComponent = z
     baseline_points: z.number(),
     points_per_player: z.number(),
     percent_receiving_points: z.number(),
+    additional_top_cut_percentage: z.number(),
   })
   .openapi("TournamentConfig");
 export type TournamentConfigType = z.infer<typeof TournamentConfigComponent>;

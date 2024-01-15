@@ -13,5 +13,6 @@ export type TournamentConfig = {
     baseline_points: number;
     points_per_player: number;
     percent_receiving_points: number;
+    additional_top_cut_percentage: number;
 };
 
