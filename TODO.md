@@ -11,7 +11,6 @@
 ## Data Ingestion
 
 - Actually do something with the DLQ
-- Add bypass fingerprint skipping when triggered by api
 
 ## Misc
 
