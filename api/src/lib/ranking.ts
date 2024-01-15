@@ -78,7 +78,7 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
 export const SWISS_BOTTOM_THRESHOLD = 1;
 
 // Means the last person in the cut will receive 10% of the additional points that top of swiss is receiving
-// i.e. first place receives 100 points for taking down the tournament, 8th place will receive an extra 10 points,
+// i.e. first place receives 100 points for taking down the tournament, 8th place will receive an extra 20 points,
 // assuming it's a cut to top 8
 export const CUT_BOTTOM_THRESHOLD_PERCENT_OF_FIRST = 20;
 
