@@ -71,7 +71,31 @@ test.each([
   ["continental championship" as TournamentType],
   ["national championship" as TournamentType],
   ["worlds championship" as TournamentType],
-])("Monotonically increasing point", (type: TournamentType) => {
+])("Monotonically decreasing", (type: TournamentType) => {
+  const cutTo = 16;
+  const numPlayers = 100;
+
+  const { points, totalPoints } = calculatePointDistribution(
+    numPlayers,
+    type,
+    cutTo,
+  );
+
+  let lastValue = points[0];
+  for (let i = 1; i < numPlayers; i++) {
+    if (points[i] !== 0) {
+      expect(points[i]).toBeLessThan(lastValue);
+    }
+    lastValue = points[i];
+  }
+});
+
+test.each([
+  ["circuit opener" as TournamentType],
+  ["continental championship" as TournamentType],
+  ["national championship" as TournamentType],
+  ["worlds championship" as TournamentType],
+])("Monotonically increasing when adding players", (type: TournamentType) => {
   const cutTo = 8;
   const numPlayers: number[] = Array.from(Array(100).keys()).slice(16);
 
