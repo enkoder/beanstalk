@@ -26,7 +26,6 @@
 
 - Figure out why biome doesn't always autoformat from webstorm
 - Move to an npm based precommit so you dont need a python dependency
-- Do I actually like PM2?
 
 ## Infrastructure
 

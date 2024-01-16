@@ -71,11 +71,16 @@ export class GetPointDistribution extends OpenAPIRoute {
     const type = req.query.type as TournamentType;
     const cutTo = Number(req.query.cutTo);
 
-    const { points, cutPoints, totalPoints } = calculatePointDistribution(
+    const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
       numPlayers,
       type,
       cutTo,
     );
+
+    const points: number[] = [];
+    for (let i = 0; i < swissPoints.length; i++) {
+      points.push(swissPoints[i] + (i < cutPoints.length ? cutPoints[i] : 0));
+    }
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {

@@ -184,4 +184,19 @@ export class Results {
       .where("tournaments.season_id", "=", season_id)
       .execute();
   }
+
+  @traceDeco("Results")
+  public static async countUniqueAttendeesByType(
+    type: TournamentType,
+    season_id: number,
+  ): Promise<number> {
+    const { count } = await g()
+      .db.selectFrom("tournaments")
+      .select((eb) => eb.fn.sum<number>("players_count").as("count"))
+      .where("season_id", "=", season_id)
+      .where("type", "=", type)
+      .executeTakeFirst();
+
+    return count;
+  }
 }

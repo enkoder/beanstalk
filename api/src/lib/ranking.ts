@@ -42,7 +42,7 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
 export const ADDITIONAL_TOP_CUT_PERCENTAGE: Partial<
   Record<TournamentType, number>
 > = {
-  "worlds championship": 35,
+  "worlds championship": 30,
   "continental championship": 25,
   "national championship": 20,
   "intercontinental championship": 0,
@@ -78,28 +78,32 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
 export const SWISS_BOTTOM_THRESHOLD = 1;
 
 // Means the last person in the cut will receive 10% of the additional points that top of swiss is receiving
-// i.e. first place receives 100 points for taking down the tournament, 8th place will receive an extra 20 points,
+// i.e. first place receives 100 points for taking down the tournament, 8th place will receive an extra 10 points,
 // assuming it's a cut to top 8
-export const CUT_BOTTOM_THRESHOLD_PERCENT_OF_FIRST = 20;
+export const CUT_BOTTOM_THRESHOLD_PERCENT_OF_FIRST = 10;
 
 export function calculatePointDistribution(
   numPlayers: number,
   tournamentType: TournamentType,
   cutTo?: number,
+  customPointsForFirst?: number,
 ): {
-  points: number[];
   totalPoints: number;
   cutPoints: number[];
   swissPoints: number[];
 } {
-  const pointsForFirst =
-    numPlayers * POINTS_PER_PLAYER[tournamentType] +
-    BASELINE_POINTS[tournamentType];
+  let pointsForFirst: number;
+  if (customPointsForFirst) {
+    pointsForFirst = customPointsForFirst;
+  } else {
+    pointsForFirst =
+      numPlayers * POINTS_PER_PLAYER[tournamentType] +
+      BASELINE_POINTS[tournamentType];
+  }
 
   // Must have enough players to earn any points
   if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL[tournamentType]) {
     return {
-      points: Array(numPlayers).fill(0),
       cutPoints: Array(numPlayers).fill(0),
       swissPoints: Array(numPlayers).fill(0),
       totalPoints: 0,
@@ -163,13 +167,7 @@ export function calculatePointDistribution(
     }
   }
 
-  const points: number[] = [];
-  for (let i = 0; i < swissPoints.length; i++) {
-    points.push(swissPoints[i] + (i < cutPoints.length ? cutPoints[i] : 0));
-  }
-
   return {
-    points: points,
     swissPoints: swissPoints,
     cutPoints: cutPoints,
     totalPoints: swissTotalPoints + cutTotalPoints,

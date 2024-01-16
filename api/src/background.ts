@@ -232,13 +232,23 @@ async function handleResultIngest(
   tournament: Tournament,
   abrEntry: ABREntryType,
 ) {
-  const { points } = calculatePointDistribution(
+  let count = 0;
+  if (
+    tournament.type === "intercontinental championship" &&
+    tournament.season_id !== null
+  ) {
+    count = await Results.countUniqueAttendeesByType(
+      "continental championship",
+      tournament.season_id,
+    );
+  }
+
+  const { cutPoints, swissPoints } = calculatePointDistribution(
     tournament.players_count,
     tournament.type,
     tournament.cutTo,
+    count,
   );
-
-  const placement = abrEntry.rank_top || abrEntry.rank_swiss;
 
   const loggedData = {
     tournament_id: tournament.id,
@@ -248,14 +258,18 @@ async function handleResultIngest(
     user_name_import: abrEntry.user_import_name,
   };
 
+  let points = swissPoints[abrEntry.rank_swiss - 1];
+  if (
+    abrEntry.rank_top !== null &&
+    tournament.cutTo !== null &&
+    tournament.cutTo > 0
+  ) {
+    points += cutPoints[abrEntry.rank_top - 1];
+  }
+
   const span = otel.getActiveSpan();
   try {
-    const result = await ingestEntry(
-      env,
-      abrEntry,
-      tournament.id,
-      points[placement],
-    );
+    const result = await ingestEntry(env, abrEntry, tournament.id, points);
 
     if (!result) {
       span.setAttribute("ingest_status", "skip");

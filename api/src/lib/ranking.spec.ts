@@ -22,29 +22,42 @@ test.each([
   const cutPointsForFirst =
     (swissPointsForFirst * ADDITIONAL_TOP_CUT_PERCENTAGE[type]) / 100;
 
-  const { points, totalPoints } = calculatePointDistribution(num, type, cutTo);
+  const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
+    num,
+    type,
+    cutTo,
+  );
 
-  expect(points.length).toBe(num);
-  expect(points[0]).toBe(swissPointsForFirst + cutPointsForFirst);
-  expect(points[points.length - 1]).toBeLessThan(SWISS_BOTTOM_THRESHOLD);
+  // Check first placement
+  expect(swissPoints.length).toBe(num);
+  expect(cutPoints[0]).toBe(cutPointsForFirst);
+  expect(swissPoints[0]).toBe(swissPointsForFirst);
+  expect(swissPoints[swissPoints.length - 1]).toBeLessThan(
+    SWISS_BOTTOM_THRESHOLD,
+  );
 
+  // Check bottom half
   let sum = 0;
   for (
     let i = Math.ceil((num * PERCENT_RECEIVING_POINTS[type]) / 100);
-    i < points.length;
+    i < swissPoints.length;
     i++
   ) {
-    sum += points[i];
+    sum += swissPoints[i];
   }
   expect(sum).toBe(0);
 
+  // Check top half
   sum = 0;
   for (
     let i = 0;
     i < Math.ceil((num * PERCENT_RECEIVING_POINTS[type]) / 100);
     i++
   ) {
-    sum += points[i];
+    sum += swissPoints[i];
+    if (i < cutTo) {
+      sum += cutPoints[i];
+    }
   }
 
   // Check to make sure the selected alpha hits ~100% of the intended total points
@@ -55,12 +68,16 @@ test("not enough players", () => {
   const cutTo = 8;
   const type = "national championship";
   const num = MIN_PLAYERS_TO_BE_LEGAL[type] - 1;
-  const { points, totalPoints } = calculatePointDistribution(num, type, cutTo);
+  const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
+    num,
+    type,
+    cutTo,
+  );
 
-  expect(points.length).toBe(num);
+  expect(swissPoints.length).toBe(num);
   let sum = 0;
-  for (let i = 0; i < points.length; i++) {
-    sum += points[i];
+  for (let i = 0; i < swissPoints.length; i++) {
+    sum += swissPoints[i];
   }
   expect(sum).toBe(0);
   expect(totalPoints).toBe(0);
@@ -75,18 +92,19 @@ test.each([
   const cutTo = 16;
   const numPlayers = 100;
 
-  const { points, totalPoints } = calculatePointDistribution(
+  const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
     numPlayers,
     type,
     cutTo,
   );
 
-  let lastValue = points[0];
+  let lastValue = swissPoints[0];
   for (let i = 1; i < numPlayers; i++) {
-    if (points[i] !== 0) {
-      expect(points[i]).toBeLessThan(lastValue);
+    if (swissPoints[i] !== 0) {
+      const pointsAtPlacement = swissPoints[i] + i < cutTo ? cutPoints[i] : 0;
+      expect(pointsAtPlacement).toBeLessThan(lastValue);
     }
-    lastValue = points[i];
+    lastValue = swissPoints[i];
   }
 });
 
@@ -101,15 +119,30 @@ test.each([
 
   let lastValue = 0;
   for (let i = 0; i < numPlayers.length; i++) {
-    const { points, totalPoints } = calculatePointDistribution(
+    const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
       numPlayers[i],
       type,
       cutTo,
     );
 
     if (lastValue) {
-      expect(points[5]).toBeGreaterThan(lastValue);
+      expect(swissPoints[5]).toBeGreaterThan(lastValue);
     }
-    lastValue = points[5];
+    lastValue = swissPoints[5];
   }
+});
+
+test("Interconts", () => {
+  const overridePoints = 1000;
+  const cutTo = 0;
+  const numPlayers = 12;
+
+  const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
+    numPlayers,
+    "intercontinental championship",
+    cutTo,
+    overridePoints,
+  );
+
+  expect(swissPoints[0]).toBe(overridePoints);
 });
