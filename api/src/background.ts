@@ -322,11 +322,12 @@ async function handleTournamentIngest(
   const cutTo = entries.filter((e) => e.rank_top !== null).length;
 
   // Is this a new tournament we've never seen?
-  if (tournament === null) {
-    tournament = await Tournaments.insert(
-      { ...tournamentBlob, fingerprint: fingerprint, cutTo: cutTo },
-      true,
-    );
+  if (!tournament) {
+    tournament = await Tournaments.insert({
+      ...tournamentBlob,
+      fingerprint: fingerprint,
+      cutTo: cutTo,
+    });
   } else {
     // added cutTo later, need to handle a smooth migration
     if (tournament.cutTo !== cutTo) {
