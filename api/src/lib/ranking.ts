@@ -56,7 +56,7 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
   {
     "worlds championship": 8,
     "continental championship": 8,
-    "national championship": 16,
+    "national championship": 12,
     "intercontinental championship": 8,
     "circuit opener": 8,
     "circuit breaker": 8,
