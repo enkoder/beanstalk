@@ -157,7 +157,7 @@ export function Faq() {
                 <Link to={`/?season=${s.id}`}>{s.name}</Link> - Started{" "}
                 {moment(s.started_at).format(DT_FORMAT)}{" "}
                 {s.ended_at
-                  ? `and ended at ${s.ended_at}`
+                  ? `and ended at ${moment(s.ended_at).format(DT_FORMAT)}`
                   : "and is the current season."}
               </li>
             ))}
