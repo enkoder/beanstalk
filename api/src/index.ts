@@ -14,14 +14,13 @@ import { RewriteFrames, Toucan } from "toucan-js";
 import { processQueueBatch, processScheduledEvent } from "./background.js";
 import { ALS } from "./g.js";
 import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
-import { adminOnly, authenticatedUser } from "./lib/auth.js";
+import { authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
 import { trace } from "./lib/tracer.js";
 import {
   ExportDB,
   IngestTournament,
   IngestTournaments,
-  Rerank,
   UpdateCards,
   UpdateTournamentSeasons,
   UpdateUsers,
@@ -121,9 +120,8 @@ router
   .get("/assets/ids/:id", GetIdImg)
 
   // Admin endpoints
-  .all("/admin/*", authenticatedUser, adminOnly)
+  //.all("/admin/*", authenticatedUser, adminOnly)
   .get("/admin/updateNRDBNames", UpdateUsers)
-  .get("/admin/rerank", Rerank)
   .get("/admin/exportDB", ExportDB)
   .post("/admin/ingestTournament", IngestTournament)
   .post("/admin/ingestTournaments", IngestTournaments)

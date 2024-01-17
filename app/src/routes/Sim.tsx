@@ -17,7 +17,6 @@ export function Sim() {
   const [selectedTournamentConfig, setSelectedTournamentConfig] =
     useState<TournamentConfig | null>(null);
   const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
-  const [cutTo, setCutTo] = useState<number | undefined>(8);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();
 
@@ -39,7 +38,6 @@ export function Sim() {
       LeaderboardService.getGetPointDistribution(
         numPlayers,
         selectedTournamentConfig.code,
-        cutTo,
       ).then((response) => {
         setPointsDistributionResponse(response);
       });
@@ -142,17 +140,6 @@ export function Sim() {
           )}
         </Tooltip>
 
-        <Input
-          width={"w-full"}
-          className={"h-12 rounded-lg"}
-          label={"Cut To"}
-          value={cutTo}
-          type="number"
-          id={"cut-to"}
-          onChange={(e) =>
-            setCutTo(e.target.value !== "" ? Number(e.target.value) : undefined)
-          }
-        />
         <button
           className={clsx(
             numPlayers === undefined && "cursor-not-allowed bg-gray-500",
@@ -197,7 +184,7 @@ export function Sim() {
             </tr>
           </thead>
           <tbody>
-            {pointsDistributionResponse?.pointDistribution.map((row, i) => (
+            {pointsDistributionResponse?.pointDistribution.map((row) => (
               <tr
                 key={row.placement}
                 className={
@@ -205,11 +192,7 @@ export function Sim() {
                 }
               >
                 <td>{row.placement}</td>
-                <td>
-                  {row.points}{" "}
-                  {i < pointsDistributionResponse.cutPoints.length &&
-                    `(${pointsDistributionResponse.cutPoints[i].toFixed(2)})`}
-                </td>
+                <td>{row.points}</td>
                 <td>{row.cumulative}</td>
               </tr>
             ))}

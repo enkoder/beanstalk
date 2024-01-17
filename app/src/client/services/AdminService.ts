@@ -21,20 +21,6 @@ export class AdminService {
     }
 
     /**
-     * Triggers a re-rank on all User rows. Limited to admin users
-     * @returns any Summary of what was changed during the re-ranking
-     * @throws ApiError
-     */
-    public static getRerank(): CancelablePromise<{
-        numberUsersUpdate: number;
-    }> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/admin/rerank',
-        });
-    }
-
-    /**
      * Exports the production DB
      * @returns any How many tournaments were updated
      * @throws ApiError

@@ -243,12 +243,20 @@ async function handleResultIngest(
     );
   }
 
-  const { cutPoints, swissPoints } = calculatePointDistribution(
+  const { points } = calculatePointDistribution(
     tournament.players_count,
     tournament.type,
-    tournament.cutTo,
     count,
   );
+
+  const placementIndex = (abrEntry.rank_top || abrEntry.rank_swiss) - 1;
+  if (placementIndex < 0 || placementIndex >= points.length) {
+    g().sentry.captureException(
+      new Error(
+        `Somehow the placement (${placementIndex}) is out of rang of points (${points})`,
+      ),
+    );
+  }
 
   const loggedData = {
     tournament_id: tournament.id,
@@ -258,18 +266,14 @@ async function handleResultIngest(
     user_name_import: abrEntry.user_import_name,
   };
 
-  let points = swissPoints[abrEntry.rank_swiss - 1];
-  if (
-    abrEntry.rank_top !== null &&
-    tournament.cutTo !== null &&
-    tournament.cutTo > 0
-  ) {
-    points += cutPoints[abrEntry.rank_top - 1];
-  }
-
   const span = otel.getActiveSpan();
   try {
-    const result = await ingestEntry(env, abrEntry, tournament.id, points);
+    const result = await ingestEntry(
+      env,
+      abrEntry,
+      tournament.id,
+      points[placementIndex],
+    );
 
     if (!result) {
       span.setAttribute("ingest_status", "skip");
@@ -310,8 +314,10 @@ async function handleTournamentIngest(
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
   const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
-  const tournamentBlob = abrToTournament(abrTournament, seasonId);
-  const entries = await getEntries(tournamentBlob.id);
+  const entries = await getEntries(abrTournament.id);
+  const cutTo = entries.filter((e) => e.rank_top !== null).length;
+  const tournamentBlob = abrToTournament(abrTournament, seasonId, cutTo);
+
   const fingerprint = objectHash({
     tournament: tournamentBlob,
     season_id: seasonId,
@@ -319,26 +325,23 @@ async function handleTournamentIngest(
   });
 
   let tournament = await Tournaments.get(tournamentBlob.id);
-  const cutTo = entries.filter((e) => e.rank_top !== null).length;
 
   // Is this a new tournament we've never seen?
   if (!tournament) {
     tournament = await Tournaments.insert({
       ...tournamentBlob,
       fingerprint: fingerprint,
-      cutTo: cutTo,
     });
   } else {
-    // added cutTo later, need to handle a smooth migration
-    if (tournament.cutTo !== cutTo) {
-      tournament.cutTo = cutTo;
-      tournament = await Tournaments.update(tournament);
-    }
-
     if (trigger !== "api" && tournament.fingerprint === fingerprint) {
       console.log(`skipping ${tournament.name} due to fingerprint match`);
       return;
     }
+
+    tournament = await Tournaments.update({
+      ...tournamentBlob,
+      fingerprint: fingerprint,
+    });
   }
 
   for (const entry of entries) {

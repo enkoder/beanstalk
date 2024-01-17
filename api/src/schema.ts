@@ -1,12 +1,11 @@
 import { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
-  ADDITIONAL_TOP_CUT_PERCENTAGE,
   BASELINE_POINTS,
+  BOTTOM_THRESHOLD,
   MAX_TOURNAMENTS_PER_TYPE,
   MIN_PLAYERS_TO_BE_LEGAL,
   PERCENT_RECEIVING_POINTS,
   POINTS_PER_PLAYER,
-  SWISS_BOTTOM_THRESHOLD,
 } from "./lib/ranking.js";
 import { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
@@ -27,7 +26,6 @@ export type TournamentType =
   | "regional championship";
 
 export const RankingConfig = {
-  bottom_threshold: SWISS_BOTTOM_THRESHOLD,
   tournament_configs: {
     "worlds championship": {
       code: "worlds championship",
@@ -37,8 +35,7 @@ export const RankingConfig = {
       points_per_player: POINTS_PER_PLAYER["worlds championship"],
       baseline_points: BASELINE_POINTS["worlds championship"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["worlds championship"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["worlds championship"],
+      bottom_threshold: BOTTOM_THRESHOLD["worlds championship"],
     } as TournamentConfigType,
     "continental championship": {
       code: "continental championship",
@@ -50,8 +47,7 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["continental championship"],
       percent_receiving_points:
         PERCENT_RECEIVING_POINTS["continental championship"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["continental championship"],
+      bottom_threshold: BOTTOM_THRESHOLD["continental championship"],
     } as TournamentConfigType,
     "national championship": {
       code: "national championship",
@@ -62,8 +58,7 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["national championship"],
       percent_receiving_points:
         PERCENT_RECEIVING_POINTS["national championship"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["national championship"],
+      bottom_threshold: BOTTOM_THRESHOLD["national championship"],
     } as TournamentConfigType,
     "intercontinental championship": {
       code: "intercontinental championship",
@@ -76,8 +71,7 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["intercontinental championship"],
       percent_receiving_points:
         PERCENT_RECEIVING_POINTS["intercontinental championship"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["intercontinental championship"],
+      bottom_threshold: BOTTOM_THRESHOLD["intercontinental championship"],
     } as TournamentConfigType,
     "circuit opener": {
       code: "circuit opener",
@@ -87,8 +81,7 @@ export const RankingConfig = {
       points_per_player: POINTS_PER_PLAYER["circuit opener"],
       baseline_points: BASELINE_POINTS["circuit opener"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit opener"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["circuit opener"],
+      bottom_threshold: BOTTOM_THRESHOLD["circuit opener"],
     } as TournamentConfigType,
     "circuit breaker": {
       code: "circuit breaker",
@@ -98,8 +91,7 @@ export const RankingConfig = {
       points_per_player: POINTS_PER_PLAYER["circuit breaker"],
       baseline_points: BASELINE_POINTS["circuit breaker"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
-      additional_top_cut_percentage:
-        ADDITIONAL_TOP_CUT_PERCENTAGE["circuit breaker"],
+      bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;

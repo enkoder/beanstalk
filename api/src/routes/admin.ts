@@ -11,9 +11,7 @@ import {
   publishIngestTournament,
 } from "../background.js";
 import { getCards, getNameFromId } from "../lib/nrdb.js";
-import { calculatePointDistribution } from "../lib/ranking.js";
 import { trace, traceDeco } from "../lib/tracer.js";
-import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
 import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
@@ -22,52 +20,11 @@ import {
   IngestTournamentBody,
   IngestTournamentSchema,
   IngestTournamentsSchema,
-  RerankSchema,
   UpdateCardsSchema,
   UpdateTournamentSeasonSchema,
   UpdateUsersSchema,
 } from "../openapi.js";
 import { Env, RequestWithDB } from "../types.d.js";
-
-export class Rerank extends OpenAPIRoute {
-  static schema = RerankSchema;
-
-  async handle(_: RequestWithDB) {
-    let count = 0;
-
-    for (const season of await Seasons.getAll()) {
-      const tournaments = await Tournaments.getBySeasonId(season.id);
-      for (const tournament of tournaments) {
-        const results = await Results.getExpanded({
-          tournamentId: tournament.id,
-        });
-
-        // Totally arbitrary
-        if (results.length <= 6) {
-          continue;
-        }
-
-        const { points } = calculatePointDistribution(
-          results.length,
-          tournament.type,
-        );
-
-        for (let i = 0; i < results.length; i++) {
-          const result = results[i];
-
-          if (result.points_earned !== points[i]) {
-            await Results.update(result.tournament_id, result.user_id, {
-              points_earned: points[i],
-            });
-            count += 1;
-          }
-        }
-      }
-    }
-
-    return json({ numberUsersUpdate: count });
-  }
-}
 
 export class UpdateUsers extends OpenAPIRoute {
   static schema = UpdateUsersSchema;

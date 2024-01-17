@@ -36,20 +36,6 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
   "circuit breaker": 200,
 };
 
-// Award all players who make the cut with an additional chunk of points.
-// Values in this map indicate an additional percentage that goes to first place and follows the same decaying
-// distribution as the swiss ranking point system.
-export const ADDITIONAL_TOP_CUT_PERCENTAGE: Partial<
-  Record<TournamentType, number>
-> = {
-  "worlds championship": 30,
-  "continental championship": 25,
-  "national championship": 20,
-  "intercontinental championship": 0,
-  "circuit opener": 20,
-  "circuit breaker": 25,
-};
-
 // Sets a baseline number of players a tournament must have in order to distribute any points at all
 // This means that small tournaments are not eligible for payouts
 export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
@@ -74,23 +60,24 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "circuit breaker": 1,
   };
 
-// Means the last person in swiss to receive less than 1 point
-export const SWISS_BOTTOM_THRESHOLD = 1;
-
-// Means the last person in the cut will receive 10% of the additional points that top of swiss is receiving
-// i.e. first place receives 100 points for taking down the tournament, 8th place will receive an extra 10 points,
-// assuming it's a cut to top 8
-export const CUT_BOTTOM_THRESHOLD_PERCENT_OF_FIRST = 10;
+// Defines the bottom anchor point which means the last place player will receive less than the value provided
+// This is used to help set the rate of decay and the payout slope. A higher number indicates a more gradual slope
+export const BOTTOM_THRESHOLD: Partial<Record<TournamentType, number>> = {
+  "worlds championship": 1,
+  "continental championship": 1,
+  "national championship": 1,
+  "intercontinental championship": 20,
+  "circuit opener": 2,
+  "circuit breaker": 1,
+};
 
 export function calculatePointDistribution(
   numPlayers: number,
   tournamentType: TournamentType,
-  cutTo?: number,
   customPointsForFirst?: number,
 ): {
   totalPoints: number;
-  cutPoints: number[];
-  swissPoints: number[];
+  points: number[];
 } {
   let pointsForFirst: number;
   if (customPointsForFirst) {
@@ -104,14 +91,13 @@ export function calculatePointDistribution(
   // Must have enough players to earn any points
   if (numPlayers < MIN_PLAYERS_TO_BE_LEGAL[tournamentType]) {
     return {
-      cutPoints: Array(numPlayers).fill(0),
-      swissPoints: Array(numPlayers).fill(0),
+      points: Array(numPlayers).fill(0),
       totalPoints: 0,
     };
   }
 
-  let swissPoints: number[] = [];
-  let swissTotalPoints = 0;
+  let points: number[] = [];
+  let totalPoints = 0;
 
   // Limit the number of point winners to be based upon the given arg
   const totalWinners = Math.ceil(
@@ -123,53 +109,23 @@ export function calculatePointDistribution(
 
   // Outer loop conditions that iterates over the first place percentage until we find a smooth fit
   while (
-    swissPoints.length === 0 ||
-    swissPoints[totalWinners - 1] > SWISS_BOTTOM_THRESHOLD
+    points.length === 0 ||
+    points[totalWinners - 1] > BOTTOM_THRESHOLD[tournamentType]
   ) {
-    swissPoints = [pointsForFirst];
-    swissTotalPoints = pointsForFirst;
+    points = [pointsForFirst];
+    totalPoints = pointsForFirst;
 
     for (let i = 1; i < numPlayers; i++) {
-      const pointsAtIndex = i < totalWinners ? swissPoints[i - 1] * ratio : 0;
-      swissPoints.push(pointsAtIndex);
-      swissTotalPoints += pointsAtIndex;
+      const pointsAtIndex = i < totalWinners ? points[i - 1] * ratio : 0;
+      points.push(pointsAtIndex);
+      totalPoints += pointsAtIndex;
     }
 
     ratio -= 0.0001;
   }
 
-  const extraPointsFirstPlaceCut =
-    (swissPoints[0] * ADDITIONAL_TOP_CUT_PERCENTAGE[tournamentType]) / 100.0;
-  let cutPoints: number[] = [];
-  let cutTotalPoints = 0;
-
-  // Start low and ramp up the percentage for first place until we hit the sweet spot
-  ratio = 0.99;
-
-  // Outer loop conditions that iterates over the first place percentage until we find a smooth fit
-  if (cutTo !== undefined && cutTo > 1) {
-    while (
-      cutPoints.length === 0 ||
-      cutPoints[cutTo - 1] >
-        (extraPointsFirstPlaceCut * CUT_BOTTOM_THRESHOLD_PERCENT_OF_FIRST) / 100
-    ) {
-      cutPoints = [extraPointsFirstPlaceCut];
-      cutTotalPoints = cutPoints[0];
-
-      for (let i = 1; i < cutTo; i++) {
-        // using previous value, decrease the number of points by the current ratio
-        const pointsAtIndex = cutPoints[i - 1] * ratio;
-        cutPoints.push(pointsAtIndex);
-        cutTotalPoints += pointsAtIndex;
-      }
-
-      ratio -= 0.0001;
-    }
-  }
-
   return {
-    swissPoints: swissPoints,
-    cutPoints: cutPoints,
-    totalPoints: swissTotalPoints + cutTotalPoints,
+    points: points,
+    totalPoints: totalPoints,
   };
 }

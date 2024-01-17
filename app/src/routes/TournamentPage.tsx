@@ -26,7 +26,7 @@ export function TournamentPage() {
     <>
       <PageHeading text={"Tournament"} includeUnderline={true} />
       {tournament && (
-        <div className={"flex flex-row mt-2 text-lg items-center"}>
+        <div className={"mt-2 flex flex-row items-center text-lg"}>
           <Link to={`https://alwaysberunning.net/tournaments/${tournament.id}`}>
             {tournament.name}
           </Link>
@@ -36,24 +36,34 @@ export function TournamentPage() {
         </div>
       )}
 
-      <div className={"overflow-auto whitespace-nowrap text-lg"}>
+      <div className={"mx-auto mt-4 max-w-7xl"}>
         <table
           className={
             "mt-4 w-full table-fixed border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
           }
         >
-          <thead className={"sticky top-0 h-10 bg-slate-950 text-left text-lg"}>
+          <thead className={"sticky top-0 h-10 bg-slate-950 text-lg"}>
             <tr className={"border-b"}>
               <th
                 scope="col"
-                className={"w-1/3 border-b-2 border-solid border-gray-300 pl-4"}
+                className={
+                  "w-1/12 border-b-2 border-solid border-gray-300 pl-4 text-left"
+                }
               >
-                Placement
+                Place
               </th>
               <th
                 scope="col"
                 className={
-                  "w-1/3 border-b-2 border-solid border-gray-300 text-center"
+                  "w-1/12 border-b-2 border-solid border-gray-300 pl-4 text-left"
+                }
+              >
+                Seed
+              </th>
+              <th
+                scope="col"
+                className={
+                  "w-2/3 border-b-2 border-solid border-gray-300 text-center"
                 }
               >
                 Player
@@ -64,7 +74,7 @@ export function TournamentPage() {
                   "w-1/3 border-b-2 border-solid border-gray-300 pr-4 text-right"
                 }
               >
-                Points
+                Total Beans
               </th>
             </tr>
           </thead>
@@ -72,15 +82,18 @@ export function TournamentPage() {
             <tbody>
               {results.map((result) => (
                 <tr className={"text-left odd:bg-slate-900 even:bg-slate-950"}>
-                  <td className={"w-1/3 pl-4 pr-4"}>
-                    {result.rank_cut ? result.rank_cut : result.rank_swiss}
+                  <td className={"w-1/12 pl-4 pr-4 text-left"}>
+                    {result.rank_cut || result.rank_swiss}
                   </td>
-                  <td className={"w-1/3 pr-4 text-center"}>
+                  <td className={"w-1/12 pl-4 pr-4 text-left"}>
+                    {result.rank_cut ? result.rank_swiss : ""}
+                  </td>
+                  <td className={"w-2/3 pr-4 text-center"}>
                     <Link to={`/results/${result.user_name}`}>
                       {result.user_name}
                     </Link>
                   </td>
-                  <td className={"w-1/3 pr-4 text-right"}>
+                  <td className={"w-1/6 pr-4 text-right"}>
                     {result.points_earned.toFixed(2)}
                   </td>
                 </tr>

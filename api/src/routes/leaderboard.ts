@@ -69,18 +69,11 @@ export class GetPointDistribution extends OpenAPIRoute {
   @traceDeco("GetPointsDistribution") async handle(req: RequestWithDB) {
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
-    const cutTo = Number(req.query.cutTo);
 
-    const { swissPoints, cutPoints, totalPoints } = calculatePointDistribution(
+    const { points, totalPoints } = calculatePointDistribution(
       numPlayers,
       type,
-      cutTo,
     );
-
-    const points: number[] = [];
-    for (let i = 0; i < swissPoints.length; i++) {
-      points.push(swissPoints[i] + (i < cutPoints.length ? cutPoints[i] : 0));
-    }
 
     const cumulative: number[] = [];
     points.reduce((accum, value) => {
@@ -93,7 +86,6 @@ export class GetPointDistribution extends OpenAPIRoute {
     return json(
       GetPointDistributionResponseComponent.parse({
         totalPoints: totalPoints,
-        cutPoints: cutPoints,
         pointDistribution: points.map((value, index) => {
           return {
             placement: index + 1,

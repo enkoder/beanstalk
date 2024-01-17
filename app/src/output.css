@@ -638,6 +638,10 @@ html {
   margin: 1rem;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mx-2 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -717,6 +721,10 @@ html {
 
 .mt-auto {
   margin-top: auto;
+}
+
+.mr-auto {
+  margin-right: auto;
 }
 
 .block {
@@ -891,6 +899,26 @@ html {
   width: 100vw;
 }
 
+.w-auto {
+  width: auto;
+}
+
+.w-1\/4 {
+  width: 25%;
+}
+
+.w-1\/5 {
+  width: 20%;
+}
+
+.w-2\/6 {
+  width: 33.333333%;
+}
+
+.w-2\/3 {
+  width: 66.666667%;
+}
+
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -901,6 +929,14 @@ html {
 
 .max-w-xl {
   max-width: 36rem;
+}
+
+.max-w-3xl {
+  max-width: 48rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
 }
 
 .flex-1 {

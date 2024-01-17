@@ -61,6 +61,7 @@ export const ABRTournament = z.object({
 export function abrToTournament(
   abr: ABRTournamentType,
   seasonId: number | null,
+  cutTo: number,
 ): Tournament {
   return {
     id: abr.id,
@@ -73,7 +74,7 @@ export function abrToTournament(
     season_id: seasonId,
     date: abr.date.toString(),
     fingerprint: "",
-    cutTo: 0,
+    cutTo: cutTo,
   };
 }
 

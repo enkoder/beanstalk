@@ -160,7 +160,6 @@ export type PrivateAccountInfoType = z.infer<typeof PrivateAccountInfo>;
 export const GetPointDistributionResponseComponent = z
   .object({
     totalPoints: z.number(),
-    cutPoints: z.array(z.number()),
     pointDistribution: z.array(
       z.object({
         placement: z.number(),
@@ -532,27 +531,12 @@ export const GetPointDistributionSchema = {
   parameters: {
     numPlayers: Query(z.coerce.number()),
     type: Query(TournamentTypeComponent.optional()),
-    cutTo: Query(z.coerce.number().optional()),
   },
   responses: {
     "200": {
       schema: GetPointDistributionResponseComponent,
       description:
         "Returns a array of numbers representing the point distribution of the simulated tournament",
-    },
-  },
-};
-
-export const RerankSchema = {
-  tags: ["Admin"],
-  summary: "Triggers a re-rank on all User rows. Limited to admin users",
-  security: [{ bearerAuth: [] }],
-  responses: {
-    "200": {
-      schema: z.object({
-        numberUsersUpdate: z.number(),
-      }),
-      description: "Summary of what was changed during the re-ranking",
     },
   },
 };

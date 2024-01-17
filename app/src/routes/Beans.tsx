@@ -168,57 +168,27 @@ export function Beans() {
         ),
       },
       {
-        title: "Beans for top cut",
-        id: "cut",
+        title: "Beans for top cut vs swiss",
+        id: "cut-vs-swiss",
         content: (
           <p className={"pl-2"}>
             In Netrunner tournaments, theres a swiss placement and a cut
-            placement. We need to give beans in ways that maps to these
-            achievements. For example if the player who gets top of swiss and
-            then goes 0-2 and gets bottom in the cut, they should still be
-            awarded for their top-of-swiss placement. We need to calculate a
-            bean value for swiss as well as a cut value.
+            placement. We experimented with separate beans for cut and swiss
+            placement to account for the situation where a player got top of
+            swiss, but then got out quick in the cut. Having a way to award
+            swiss placement intuitively felt right, but in practice it created a
+            complicated system where beans were not monotonically decreasing
+            from 1st down to last. Simplicity of the ranking system is an
+            important feature and seeing top cut bean payouts jump all over the
+            place, didn't feel right. So we rolled it back kept it simple and
+            easy to reason about.
             <Sep className={"mt-4"} />
-            Top cut winners receive and additional chunk of beans calculated
-            using the same decaying algorithm used to determine swiss payouts.
-            We set the amount of beans going to first place in the cut by taking
-            a flat percentage from top-of-swiss finding an acceptable rate of
-            decay where the last person in the cut makes 10% of what the first
-            place receives.
-            <Sep className={"mt-4"} />
-            We use this method because the cut payout should be relative to the
-            total amount of beans being distributed in swiss. Bigger tournament,
-            bigger bean payout. We anchor the last place in swiss at 10% because
-            we feel every player should be awarded for making the cut, but I
-            didn't want to create a large jump from 9th to 8th place (given an 8
-            person cut). You can get a feel for the additional beans awarded due
-            to cut placement on the <Link to={"/sim"}>Sim</Link> page. It's the
-            number in parenthesis in the beans column.
-            <Sep className={"mt-4"} />
-            First Place Cut Points = First place swiss points * configured
-            percentage / 100
-            <Sep className={"mt-4"} />
-            The following values are configured percentage for each tournament
-            type
-            <ul className={"list-disc px-8"}>
-              {tournamentConfigs.map((tc) => (
-                <>
-                  {tc.code !== "intercontinental championship" && (
-                    <li>
-                      <div className={"flex w-full flex-row"}>
-                        <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
-                          {capStr(tc.code)}
-                        </span>
-                        <span className={"w-1/6"}>
-                          {" "}
-                          {tc.additional_top_cut_percentage}%
-                        </span>
-                      </div>
-                    </li>
-                  )}
-                </>
-              ))}
-            </ul>
+            Additionally, after thinking about it more, your award for placing
+            high in swiss means you get a better chance at making a higher
+            placement in the cut. You get to pick your first matchup and have
+            advantage for higher seed. This give you a higher chance to win more
+            beans in the cut, so we feel this is award enough for making top of
+            swiss.
           </p>
         ),
       },
@@ -300,18 +270,23 @@ export function Beans() {
             beans Interconts awards because if it's too much then getting top 4
             at a continental could not be balanced, but at the same time, this
             is taking the top 4 from all continentals and letting them duke it
-            out.
+            out. How we approach this is highly subjective. Some believe it
+            should be weighted heavy and others, not as much.
             <Sep className={"mt-4"} />
-            For now, we've decided to scale intercontinental tournaments based
-            upon the total number of players who played in each continental. You
-            receive 1 point per player who entered a tournament. We need to
-            filter and group by season so for older intercontinentals, first
-            place receives a flat{" "}
+            We've landed on a pretty interesting balancing mechanic. Since
+            Intercontinentals is a culmination of three continental tournaments
+            with hundreds of players, we thought it could be interesting to
+            scale the beans based upon the total number of contestants who
+            registered across all continentals. During Season 0 we saw 305
+            players, which seemed to fit well with the overall balancing of
+            beans. For every player registered, this adds 1 bean to the
+            potential pool for first place. For intercontinentals that don't
+            have a season associated with it, they receive a flat{" "}
             {
               rankingConfig?.tournament_configs["intercontinental championship"]
                 .baseline_points
             }{" "}
-            points.
+            beans.
           </p>
         ),
       },
