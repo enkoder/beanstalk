@@ -30,7 +30,6 @@
 ## Infrastructure
 
 - Visualize tournament ingestion %
-- Get rid of logpush and grafana
 
 ## Database
 

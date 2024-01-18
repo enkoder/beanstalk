@@ -1,4 +1,0 @@
-LOKI_URL='i.e. https://logs-prod-XXX.grafana.net'
-LOKI_CREDENTIALS='echo "username:password" | base64'
-SHARED_TOKEN='Shared token - set during Lougpush create'
-SENTRY_DSN='beanstalk-logpush project DSN'
