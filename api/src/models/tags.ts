@@ -5,6 +5,7 @@ import {
   InsertTournamentTag,
   Tag,
   TournamentTag,
+  UpdateTag,
 } from "../schema.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
@@ -40,6 +41,17 @@ export class Tags {
   }
 
   @traceDeco("Tags")
+  public static async getAllByNormalizedNames(
+    tagStrings: string[],
+  ): Promise<Tag[]> {
+    return await g()
+      .db.selectFrom("tags")
+      .selectAll("tags")
+      .where("tags.normalized", "in", tagStrings)
+      .execute();
+  }
+
+  @traceDeco("Tags")
   public static async getTagTournaments(
     tag_id: number,
   ): Promise<TournamentTag[]> {
@@ -48,6 +60,15 @@ export class Tags {
       .selectAll("tournament_tags")
       .where("tournament_tags.tag_id", "=", tag_id)
       .execute();
+  }
+
+  @traceDeco("Tags")
+  public static async get(tag_id: number): Promise<Tag> {
+    return await g()
+      .db.selectFrom("tags")
+      .selectAll()
+      .where("tags.id", "=", tag_id)
+      .executeTakeFirst();
   }
 
   @traceDeco("Tags")
@@ -61,6 +82,15 @@ export class Tags {
       .executeTakeFirst();
   }
 
+  @traceDeco("Tags")
+  public static async update(tag: UpdateTag): Promise<Tag> {
+    return await g()
+      .db.updateTable("tags")
+      .set(tag)
+      .where("id", "=", tag.id)
+      .returningAll()
+      .executeTakeFirst();
+  }
   @traceDeco("Tags")
   public static async insertTagTournament(tournament_tag: InsertTournamentTag) {
     return await g()

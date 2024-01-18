@@ -50,10 +50,12 @@ export function urlLeaderboard({
   season,
   faction,
   format,
+  tags = [],
 }: {
   season?: Season;
   faction?: Faction;
   format?: Format;
+  tags?: string[];
 }) {
   const url = new URL("http://localhost:8787/api/leaderboard");
   if (season) {
@@ -64,6 +66,9 @@ export function urlLeaderboard({
   }
   if (format) {
     url.searchParams.append("format", format);
+  }
+  for (const tag of tags) {
+    url.searchParams.append("tags", tag);
   }
   return url;
 }
@@ -175,13 +180,21 @@ type TagArgs = {
   name: string;
   normalized?: string;
   user: User;
+  use_tournament_limits?: boolean;
 };
 
-export function tag({ name, normalized, user }: TagArgs) {
+export function tag({
+  name,
+  normalized,
+  user,
+  use_tournament_limits,
+}: TagArgs) {
   return {
     name: name,
     normalized: normalized || Tags.normalizeName(name),
     owner_id: user.id,
+    use_tournament_limits:
+      use_tournament_limits !== undefined && use_tournament_limits ? 1 : 0,
   } as Tag;
 }
 

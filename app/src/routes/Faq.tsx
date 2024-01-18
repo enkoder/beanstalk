@@ -194,6 +194,16 @@ export function Faq() {
               creating unique leaderboard rankings.
             </li>
             <li>
+              For each tag you can select if you'd like to use or bypass the
+              configured tournament limits. This allows users to create a
+              leaderboard with more than 5 Circuit Openers as an example.
+            </li>
+            <li>
+              When selecting multiple tags on the leaderboard, the logic is OR.
+              Meaning, the leaderboard will find all results from tournaments
+              that have any of the tags, not all of the tags.
+            </li>
+            <li>
               In order to delete a tag, you must remove every tournament with
               that tag.
             </li>

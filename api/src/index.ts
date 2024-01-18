@@ -42,6 +42,7 @@ import {
   GetTags,
   InsertTagTournament,
   InsertTags,
+  UpdateTag,
 } from "./routes/tags.js";
 import {
   GetTournament,
@@ -108,6 +109,7 @@ router
   .get("/tags", GetTags)
   .put("/tags", authenticatedUser, InsertTags)
   .delete("/tags/:tag_id", authenticatedUser, DeleteTag)
+  .post("/tags/:tag_id", authenticatedUser, UpdateTag)
   .put("/tags/:tag_id/tournament", authenticatedUser, InsertTagTournament)
   .get("/tags/:tag_id/tournament", GetTagTournaments)
   .delete(

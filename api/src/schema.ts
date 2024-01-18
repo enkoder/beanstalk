@@ -189,9 +189,12 @@ export interface TagsTable {
   name: string;
   normalized: string;
   owner_id: number;
+  use_tournament_limits: number;
 }
+
 export type Tag = Selectable<TagsTable>;
 export type InsertTag = Insertable<TagsTable>;
+export type UpdateTag = Updateable<TagsTable>;
 
 export interface TournamentTagsTable {
   id: Generated<number>;

@@ -16,6 +16,8 @@ import {
   InsertTagTournamentSchema,
   TagComponent,
   TagTournamentComponent,
+  UpdateTagBodyType,
+  UpdateTagsSchema,
 } from "../openapi.js";
 import { InsertTag, TournamentTag } from "../schema.js";
 import { RequestWithDB } from "../types.js";
@@ -100,6 +102,29 @@ export class DeleteTag extends OpenAPIRoute {
     }
 
     return json({});
+  }
+}
+
+export class UpdateTag extends OpenAPIRoute {
+  static schema = UpdateTagsSchema;
+
+  @traceDeco("UpdateTag")
+  async handle(req: RequestWithDB, env: Env, _: ExecutionContext, data) {
+    const tag_id = Number(req.params?.tag_id);
+    const body = data.body as UpdateTagBodyType;
+
+    const tag = await Tags.get(tag_id);
+    if (!tag) {
+      return error(400, `Tag ID ${tag_id} does not exist`);
+    }
+    tag.use_tournament_limits = body.use_tournament_limits ? 1 : 0;
+
+    try {
+      const updatedTag = await Tags.update(tag);
+      return json(TagComponent.parse(updatedTag));
+    } catch (e) {
+      error(400, `Could not update tag ${tag_id}`);
+    }
   }
 }
 

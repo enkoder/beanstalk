@@ -6,9 +6,11 @@ import {
   Format,
   RankingConfig,
   ResultsTable,
+  Tag,
   TournamentType,
   UpdateResult,
 } from "../schema.js";
+import { Tags } from "./tags.js";
 
 export type ResultExpanded = ResultsTable & {
   players_count: number;
@@ -53,6 +55,11 @@ export class Results {
     format = null,
     tags = null,
   }: GetExpandedOptions): Promise<ResultExpanded[]> {
+    let tagModels: Tag[] = [];
+    if (tags) {
+      tagModels = await Tags.getAllByNormalizedNames(tags);
+    }
+
     let q = g()
       .db.with("filteredResults", (db) => {
         let results = db.selectFrom("results").selectAll("results");
@@ -118,6 +125,16 @@ export class Results {
       q = q.where("tournaments.format", "=", format);
     }
 
+    let includeLimits: null | boolean = null;
+    if (tagModels.length > 0) {
+      // If ANY one tag has disabled tournament limits, we will disable them for the full query
+      includeLimits = tagModels.every((tag) => tag.use_tournament_limits);
+    }
+    // default to keeping on limits for a season
+    if (includeLimits === null && seasonId != null) {
+      includeLimits = true;
+    }
+
     // TODO: yes we could do this in sql, but this is so much easier
     const results: ResultExpanded[] = [];
     const initialResults = await q.execute();
@@ -125,9 +142,9 @@ export class Results {
       const max = MAX_TOURNAMENTS_PER_TYPE[initialResults[i].tournament_type];
       results.push({
         ...initialResults[i],
-        is_valid:
-          seasonId == null ||
-          initialResults[i].count_for_tournament_type <= max,
+        is_valid: includeLimits
+          ? initialResults[i].count_for_tournament_type <= max
+          : true,
       });
     }
 

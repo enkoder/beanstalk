@@ -189,6 +189,7 @@ export const GetTagsResponseComponent = z
     owner_id: z.number(),
     owner_name: z.string(),
     count: z.number(),
+    use_tournament_limits: z.coerce.boolean(),
   })
   .openapi("GetTagsResponse");
 export type GetTagsResponseComponentType = z.infer<
@@ -201,6 +202,7 @@ export const TagComponent = z
     name: z.string(),
     normalized: z.string(),
     owner_id: z.number(),
+    use_tournament_limits: z.coerce.boolean(),
   })
   .openapi("Tag");
 export type TagComponentType = z.infer<typeof TagComponent>;
@@ -436,6 +438,28 @@ export const InsertTagSchema = {
     "201": {
       schema: TagComponent,
       description: "Returns the inserted tag",
+    },
+  },
+};
+
+export const UpdateTagBody = z.object({
+  use_tournament_limits: z.boolean(),
+});
+
+export type UpdateTagBodyType = z.infer<typeof UpdateTagBody>;
+export const UpdateTagsSchema = {
+  tags: ["Tags"],
+  summary: "Updates a tag",
+  parameters: {
+    tag_id: Path(Number, {
+      description: "Tag ID",
+    }),
+  },
+  requestBody: UpdateTagBody,
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates deleted tag",
     },
   },
 };

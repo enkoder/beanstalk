@@ -68,6 +68,30 @@ export class TagsService {
     }
 
     /**
+     * Updates a tag
+     * @param tagId
+     * @param requestBody
+     * @returns any Empty object indicates deleted tag
+     * @throws ApiError
+     */
+    public static postUpdateTag(
+        tagId: number,
+        requestBody?: {
+            use_tournament_limits: boolean;
+        },
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/tags/{tag_id}',
+            path: {
+                'tag_id': tagId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+
+    /**
      * Inserts a tournament tag
      * @param tagId
      * @param requestBody

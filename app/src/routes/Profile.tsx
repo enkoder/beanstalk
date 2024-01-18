@@ -242,8 +242,15 @@ export function Profile() {
     await refetch();
   };
 
+  const handleTagSwitchChange = async (tag: GetTagsResponse) => {
+    await TagsService.postUpdateTag(tag.id, {
+      use_tournament_limits: !tag.use_tournament_limits,
+    });
+    await refetch();
+  };
+
   return (
-    <div className="mx-auto flex flex-col text-gray-400 max-w-xl">
+    <div className="mx-auto flex max-w-xl flex-col text-gray-400">
       <PageHeading includeUnderline={true} text={"Profile"} />
 
       {!user && !loading ? (
@@ -315,7 +322,7 @@ export function Profile() {
         className={"my-4"}
       />
 
-      <div className={"flex flex-row gap-4"}>
+      <div className={"mt-4 flex flex-row gap-4"}>
         <Input
           width={"w-full"}
           className={"h-12 rounded-lg"}
@@ -355,6 +362,12 @@ export function Profile() {
               scope="col"
               className={"border-b-2 border-solid border-gray-300"}
             >
+              Use Tournament Limits
+            </th>
+            <th
+              scope="col"
+              className={"border-b-2 border-solid border-gray-300"}
+            >
               Tournament Count
             </th>
             <th
@@ -379,6 +392,32 @@ export function Profile() {
                 >
                   {tag.name}
                 </button>
+              </td>
+              <td>
+                <div className={"text-xg mb-4 ml-auto flex flex-row pt-4 pl-4"}>
+                  {tag.use_tournament_limits ? (
+                    <span className={"pr-4"}>Use Limits</span>
+                  ) : (
+                    <span className={"pr-4"}>No Limits</span>
+                  )}
+                  <Switch
+                    checked={tag.use_tournament_limits || false}
+                    onChange={() => handleTagSwitchChange(tag)}
+                    className={
+                      "relative mr-4 inline-flex h-6 w-12 items-center rounded-full border-2 border-gray-600 bg-gray-900"
+                    }
+                    disabled={user === null}
+                  >
+                    <span
+                      className={clsx(
+                        tag.use_tournament_limits
+                          ? "translate-x-6 bg-cyan-500"
+                          : "translate-x-1 bg-gray-400",
+                        "inline-block h-4 w-4 transform rounded-full transition",
+                      )}
+                    />
+                  </Switch>
+                </div>
               </td>
               <td className={"px-4 py-2"}>{tag.count}</td>
               <td className={"w-6"}>
