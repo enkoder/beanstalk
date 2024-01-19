@@ -228,7 +228,7 @@ export function Profile() {
   }
 
   const handleCreateTag = async () => {
-    await TagsService.putInsertTags({ tag_name: tagInputString });
+    await TagsService.putInsertTags({ name: tagInputString });
     await refetch();
   };
 

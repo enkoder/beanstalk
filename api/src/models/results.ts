@@ -61,41 +61,35 @@ export class Results {
     }
 
     let q = g()
-      .db.with("filteredResults", (db) => {
-        let results = db.selectFrom("results").selectAll("results");
-        if (tags) {
-          results = results
-            .innerJoin(
-              "tournament_tags",
-              "results.tournament_id",
-              "tournament_tags.tournament_id",
-            )
-            .innerJoin("tags", "tags.id", "tournament_tags.tag_id")
-            .distinct()
-            .where("tags.normalized", "in", tags);
-        }
-        return results;
-      })
-      .selectFrom("filteredResults")
-      .selectAll()
-      .innerJoin("users", "users.id", "filteredResults.user_id")
-      .innerJoin(
-        "tournaments",
-        "tournaments.id",
-        "filteredResults.tournament_id",
+      .db.selectFrom("results")
+      .selectAll("results")
+      .distinct()
+      .$if(tags && tags.length > 0, (qb) =>
+        qb
+          .innerJoin(
+            "tournament_tags",
+            "results.tournament_id",
+            "tournament_tags.tournament_id",
+          )
+          .innerJoin("tags", "tags.id", "tournament_tags.tag_id")
+          .where("tags.normalized", "in", tags),
       )
-      .select((eb) => [
+      .innerJoin("users", "users.id", "results.user_id")
+      .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
+      .select([
         "users.name as user_name",
         "tournaments.type as tournament_type",
         "tournaments.name as tournament_name",
         "tournaments.players_count as players_count",
         "tournaments.format as format",
+      ])
+      .select((eb) => [
         eb.fn
           .agg<number>("rank")
           .over((ob) =>
             ob
-              .partitionBy(["filteredResults.user_id", "tournaments.type"])
-              .orderBy("filteredResults.points_earned", "desc")
+              .partitionBy(["results.user_id", "tournaments.type"])
+              .orderBy("results.points_earned", "desc")
               .orderBy("tournaments.id", "asc"),
           )
           .as("count_for_tournament_type"),
@@ -104,7 +98,7 @@ export class Results {
       .where("users.disabled", "=", 0);
 
     if (userId) {
-      q = q.where("filteredResults.user_id", "=", userId);
+      q = q.where("results.user_id", "=", userId);
     }
 
     if (tournamentId) {
@@ -116,10 +110,10 @@ export class Results {
       q = q.where("tournaments.season_id", "=", seasonId);
     }
     if (faction && faction.side_code === "runner") {
-      q = q.where("filteredResults.runner_deck_faction", "=", faction.code);
+      q = q.where("results.runner_deck_faction", "=", faction.code);
     }
     if (faction && faction.side_code === "corp") {
-      q = q.where("filteredResults.corp_deck_faction", "=", faction.code);
+      q = q.where("results.corp_deck_faction", "=", faction.code);
     }
     if (format) {
       q = q.where("tournaments.format", "=", format);

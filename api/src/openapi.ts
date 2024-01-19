@@ -39,7 +39,7 @@ export const ResultComponent = z
   .object({
     rank_swiss: z.number(),
     rank_cut: z.number().nullable().optional(),
-    season_id: z.number().nullable(),
+    season_id: z.number().nullable().optional(),
     points_earned: z.number(),
     tournament_id: z.number(),
     tournament_name: z.string(),
@@ -426,7 +426,7 @@ export const GetTagsSchema = {
 };
 
 export const InsertTagBody = z.object({
-  tag_name: z.string(),
+  name: z.string(),
 });
 export type InsertTagBodyType = z.infer<typeof InsertTagBody>;
 

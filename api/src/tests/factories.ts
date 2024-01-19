@@ -1,6 +1,8 @@
+import { IncomingRequestCfProperties } from "@cloudflare/workers-types/experimental/index";
+import { RequestInit } from "miniflare";
 import { Factions } from "../models/factions.js";
 import { Tags } from "../models/tags";
-import { PrivateAccountInfo } from "../openapi";
+import { PrivateAccountInfo, TagComponentType } from "../openapi";
 import {
   Faction,
   Format,
@@ -23,7 +25,7 @@ export function urlTags({
   tag,
   owner,
   tournamentsUrl = false,
-}: { tag?: Tag; owner?: User; tournamentsUrl?: boolean }) {
+}: { tag?: Tag | TagComponentType; owner?: User; tournamentsUrl?: boolean }) {
   const base = "http://localhost:8787/api/tags";
   let url: URL;
   if (tag && tournamentsUrl) {
@@ -41,7 +43,10 @@ export function urlTags({
   return url;
 }
 
-export function authedOptions(method: string, body?: string) {
+export function authedOptions({
+  method,
+  body,
+}: RequestInit): RequestInit<Partial<IncomingRequestCfProperties>> {
   const headers = { Authorization: `Bearer ${TEST_TOKEN}` };
   return { method: method, headers: headers, body: body };
 }

@@ -9,7 +9,7 @@ import type { TournamentType } from './TournamentType';
 export type Result = {
     rank_swiss: number;
     rank_cut?: number | null;
-    season_id: number | null;
+    season_id?: number | null;
     points_earned: number;
     tournament_id: number;
     tournament_name: string;

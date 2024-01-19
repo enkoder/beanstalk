@@ -147,8 +147,7 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
     dialect: new D1Dialect({ database: env.DB }),
     //log(event) {
     //  if (event.level === "query") {
-    //    console.log(event.query.sql);
-    //    console.log(event.query.parameters);
+    //    console.log(event.query.sql, event.query.parameters);
     //  }
     //},
   });

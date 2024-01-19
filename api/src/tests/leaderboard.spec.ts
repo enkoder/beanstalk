@@ -256,25 +256,28 @@ describe("leaderboard", () => {
     const t1 = await Tournaments.insert(Factories.tournament({ id: 1 }));
     const t2 = await Tournaments.insert(Factories.tournament({ id: 2 }));
 
-    const tag = await Tags.insert(Factories.tag({ name: "tag", user: u0 }));
+    const tag0 = await Tags.insert(Factories.tag({ name: "tag0", user: u0 }));
+    const tag1 = await Tags.insert(Factories.tag({ name: "tag1", user: u0 }));
 
-    const tt0 = await Tags.insertTagTournament(
-      Factories.tournament_tag({ tournament: t0, tag: tag }),
+    // Tag two tournaments with different tags
+    await Tags.insertTagTournament(
+      Factories.tournament_tag({ tournament: t0, tag: tag0 }),
     );
-    const tt2 = await Tags.insertTagTournament(
-      Factories.tournament_tag({ tournament: t2, tag: tag }),
+    await Tags.insertTagTournament(
+      Factories.tournament_tag({ tournament: t1, tag: tag1 }),
     );
 
+    // Add results for all tournaments to prove multi-tag filtering
     await Results.insert(
       Factories.result({
-        tournament: t0,
+        tournament: t1,
         user: u0,
         points: 100,
       }),
     );
     await Results.insert(
       Factories.result({
-        tournament: t1,
+        tournament: t0,
         user: u0,
         points: 100,
       }),
@@ -288,13 +291,14 @@ describe("leaderboard", () => {
     );
 
     const rows = await Leaderboard.getExpanded({
-      tags: ["tag"],
+      tags: ["tag0", "tag1"],
     });
 
-    expect(rows.length).toEqual(2);
+    // Only returns one result since only one user's results are added to the two tagged tournaments
+    expect(rows.length).toEqual(1);
     expect(rows[0].user_id).toEqual(u0.id);
-    // User0 attended two tournaments, but only two of the three tourneys are returned
-    expect(rows[0].points).toEqual(100);
+    // includes the results from both tags
+    expect(rows[0].points).toEqual(200);
   });
 
   test.each([[true], [false]])(

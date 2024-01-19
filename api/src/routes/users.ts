@@ -103,10 +103,10 @@ export class GetUserResults extends OpenAPIRoute {
         ? [req.query.tags]
         : null;
 
-    let seasonName: string = undefined;
-    let seasonId: number = undefined;
+    let seasonName: string | undefined = undefined;
+    let seasonId: number | undefined = undefined;
 
-    if (req.query.season !== undefined) {
+    if (req.query.season != null) {
       const season = await Seasons.getFromId(Number(req.query.season));
       seasonName = season.name;
       seasonId = season.id;
@@ -134,10 +134,10 @@ export class GetUserResults extends OpenAPIRoute {
     return json({
       user_id: user.id,
       user_name: user.name,
-      seasonId: seasonId,
+      season_id: seasonId || null,
       seasonName: seasonName,
       format: format,
-      factionCode: faction?.code,
+      factionCode: faction?.code || null,
       rank: currentRank,
       results: results.map((result) => ResultComponent.parse(result)),
     });

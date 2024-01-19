@@ -26,7 +26,7 @@ describe("users", () => {
     const u = await Users.insert({ id: 0 });
     const response = await g().mf.dispatchFetch(
       Factories.urlMe(),
-      Factories.authedOptions("GET"),
+      Factories.authedOptions({ method: "GET" }),
     );
 
     expect(response.status).toBe(200);
@@ -38,10 +38,10 @@ describe("users", () => {
     const u = await Users.insert({ id: 0, email: "", disabled: 0 });
     const response = await g().mf.dispatchFetch(
       Factories.urlMe(),
-      Factories.authedOptions(
-        "PATCH",
-        JSON.stringify({ email: "changed", disabled: 1 }),
-      ),
+      Factories.authedOptions({
+        method: "PATCH",
+        body: JSON.stringify({ email: "changed", disabled: 1 }),
+      }),
     );
 
     expect(response.status).toBe(200);

@@ -38,7 +38,7 @@ export class TagsService {
      */
     public static putInsertTags(
         requestBody?: {
-            tag_name: string;
+            name: string;
         },
     ): CancelablePromise<Tag> {
         return __request(OpenAPI, {

@@ -35,7 +35,10 @@ describe("tags", () => {
     // insert initial tag
     const insertTagResponse = await g().mf.dispatchFetch(
       Factories.urlTags({}),
-      Factories.authedOptions("PUT", JSON.stringify({ tag_name: name })),
+      Factories.authedOptions({
+        method: "PUT",
+        body: JSON.stringify({ name: name }),
+      }),
     );
     expect(insertTagResponse.status).toBe(201);
     const tagComponent = (await insertTagResponse.json()) as TagComponentType;
@@ -65,7 +68,10 @@ describe("tags", () => {
     // insert tournament tag
     const insertTTResponse = await g().mf.dispatchFetch(
       Factories.urlTags({ tag: tag, tournamentsUrl: true }),
-      Factories.authedOptions("PUT", JSON.stringify({ tournament_id: t.id })),
+      Factories.authedOptions({
+        method: "PUT",
+        body: JSON.stringify({ tournament_id: t.id }),
+      }),
     );
 
     expect(insertTTResponse.status).toBe(200);
@@ -120,5 +126,43 @@ describe("tags", () => {
     expect(tags[0].count).toBe(1);
     expect(tags[0].owner_id).toBe(u0.id);
     expect(tags[0].id).toBe(tag0.id);
+  });
+
+  test("Insert & Update Tag", async () => {
+    // adds two users
+    const u0 = await Users.insert(Factories.user({ id: 0 }));
+
+    const tagToBeInserted = Factories.tag({
+      name: "name0",
+      user: u0,
+      use_tournament_limits: true,
+    });
+    let getTagsResponse = await g().mf.dispatchFetch(
+      Factories.urlTags({}),
+      Factories.authedOptions({
+        method: "PUT",
+        body: JSON.stringify(tagToBeInserted),
+      }),
+    );
+    expect(getTagsResponse.status).toBe(201);
+    const tag = (await getTagsResponse.json()) as TagComponentType;
+
+    expect(tag.normalized).toBe(tagToBeInserted.normalized);
+    expect(tag.name).toBe(tagToBeInserted.name);
+    expect(tag.owner_id).toBe(tagToBeInserted.owner_id);
+    expect(tag.use_tournament_limits).toBe(true);
+
+    getTagsResponse = await g().mf.dispatchFetch(
+      Factories.urlTags({ tag: tag }),
+      Factories.authedOptions({
+        method: "POST",
+        body: JSON.stringify({ use_tournament_limits: false }),
+      }),
+    );
+    expect(getTagsResponse.status).toBe(200);
+    const updatedTag = (await getTagsResponse.json()) as TagComponentType;
+
+    expect(updatedTag.id).toBe(tag.id);
+    expect(updatedTag.use_tournament_limits).toBe(false);
   });
 });

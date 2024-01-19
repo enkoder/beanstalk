@@ -74,8 +74,8 @@ export class InsertTags extends OpenAPIRoute {
     }
 
     const tournament_tag = {
-      name: body.tag_name,
-      normalized: Tags.normalizeName(body.tag_name),
+      name: body.name,
+      normalized: Tags.normalizeName(body.name),
       owner_id: user.id,
     } as InsertTag;
 
