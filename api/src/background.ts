@@ -235,6 +235,7 @@ async function handleResultIngest(
   let count = 0;
   if (
     tournament.type === "intercontinental championship" &&
+    tournament.season_id !== 0 &&
     tournament.season_id !== null
   ) {
     count = await Results.countUniqueAttendeesByType(

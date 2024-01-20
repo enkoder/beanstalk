@@ -145,10 +145,18 @@ export function Faq() {
         <p>
           Beanstalk has a seasonal leaderboard mechanic. Each full competitive
           tournament cycle will have a season associated with it. At the start
-          of the season, everyone's beans "resets" keeping the leaderboard fresh
+          of the season, everyone's beans resets keeping the leaderboard fresh
           and giving people an equal opportunity to rise to the top of the
-          Beanstalk. Each season typically starts after the last major
-          tournament, which is typically the Circuit Breaker Invitational.
+          Beanstalk. Each season starts after the last major tournament, which
+          is typically the Circuit Breaker Invitational.
+          <Sep className={"mt-4"} />
+          <Link to={"/?season=0"}>Season 0</Link> is unique because it starts in
+          2020 and ends at the beginning of 2024. These dates are important
+          because 2020 marks the start of NSGs competitive tournament cycle. By
+          setting these dates, Beanstalk is effectively ignoring all tournaments
+          prior to NSG taking over. At some point down the road, we may ingest
+          old tournaments and balance past tournaments like regionals and store
+          champs, but for now, we're just focusing on NSG tournaments.
           <Sep className={"mt-4"} />
           Seasons
           <ul className={"my-2 ml-4 list-inside list-disc"}>
