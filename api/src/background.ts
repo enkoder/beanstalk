@@ -314,6 +314,10 @@ async function handleTournamentIngest(
   const seasons = await Seasons.getFromTimestamp(abrTournament.date.toString());
   const seasonId = seasons.length !== 0 ? seasons[0].id : null;
 
+  if (seasonId === null) {
+    return;
+  }
+
   const entries = await getEntries(abrTournament.id);
   const cutTo = entries.filter((e) => e.rank_top !== null).length;
   const tournamentBlob = abrToTournament(abrTournament, seasonId, cutTo);
