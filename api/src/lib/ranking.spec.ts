@@ -22,7 +22,7 @@ test.each([
   // Check first placement
   expect(points.length).toBe(num);
   expect(points[0]).toBe(pointsForFirst);
-  expect(points[points.length - 1]).toBeLessThan(BOTTOM_THRESHOLD[type]);
+  expect(points[points.length - 1]).toBeLessThanOrEqual(BOTTOM_THRESHOLD[type]);
 
   // Check bottom half
   let sum = 0;

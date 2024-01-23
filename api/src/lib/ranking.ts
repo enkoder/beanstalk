@@ -110,7 +110,9 @@ export function calculatePointDistribution(
   equation (pointsForFirst)*ratio**(totalWinners-1) = BOTTOM_THRESHOLD[tournamentType]
   for ratio to find the correct rate.
   */
-  let ratio = (BOTTOM_THRESHOLD[tournamentType]/pointsForFirst) ** (1/(totalWinners-1));
+  const ratio =
+    (BOTTOM_THRESHOLD[tournamentType] / pointsForFirst) **
+    (1 / (totalWinners - 1));
 
   // Create array of points for each player
   points = [pointsForFirst];
@@ -122,10 +124,8 @@ export function calculatePointDistribution(
     totalPoints += pointsAtIndex;
   }
 
-
   return {
     points: points,
     totalPoints: totalPoints,
   };
 }
-
