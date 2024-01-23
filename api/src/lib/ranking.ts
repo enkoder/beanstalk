@@ -104,28 +104,28 @@ export function calculatePointDistribution(
     (numPlayers * PERCENT_RECEIVING_POINTS[tournamentType]) / 100,
   );
 
-  // Start low and ramp up the percentage for first place until we hit the sweet spot
-  let ratio = 0.99;
+  /* Calculate the correct rate of decay. The formula for the number of points
+  that player i receives is (pointsForFirst)*ratio**(i-1). We want player with index
+  totalWinners to receive BOTTOM_THRESHOLD[tournamentType] points. Thus, we solve the
+  equation (pointsForFirst)*ratio**(totalWinners-1) = BOTTOM_THRESHOLD[tournamentType]
+  for ratio to find the correct rate.
+  */
+  let ratio = (BOTTOM_THRESHOLD[tournamentType]/pointsForFirst) ** (1/(totalWinners-1));
 
-  // Outer loop conditions that iterates over the first place percentage until we find a smooth fit
-  while (
-    points.length === 0 ||
-    points[totalWinners - 1] > BOTTOM_THRESHOLD[tournamentType]
-  ) {
-    points = [pointsForFirst];
-    totalPoints = pointsForFirst;
+  // Create array of points for each player
+  points = [pointsForFirst];
+  totalPoints = pointsForFirst;
 
-    for (let i = 1; i < numPlayers; i++) {
-      const pointsAtIndex = i < totalWinners ? points[i - 1] * ratio : 0;
-      points.push(pointsAtIndex);
-      totalPoints += pointsAtIndex;
-    }
-
-    ratio -= 0.0001;
+  for (let i = 1; i < numPlayers; i++) {
+    const pointsAtIndex = i < totalWinners ? points[i - 1] * ratio : 0;
+    points.push(pointsAtIndex);
+    totalPoints += pointsAtIndex;
   }
+
 
   return {
     points: points,
     totalPoints: totalPoints,
   };
 }
+
