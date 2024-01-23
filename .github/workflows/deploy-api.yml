@@ -34,10 +34,9 @@ jobs:
       - name: Deploy Source Maps
         run: |
           VERSION=`pnpm --filter api exec sentry-cli releases propose-version`
-          pnpm --filter api exec sentry-cli releases set-commits "$VERSION" --auto
-          pnpm --filter api exec sentry-cli releases new "$VERSION"
-          pnpm --filter api exec sentry-cli sourcemaps inject dist -r "$VERSION"
-          pnpm --filter api exec sentry-cli sourcemaps upload dist -r "$VERSION"
+          pnpm --filter api exec sentry-cli releases new "$VERSION" --finalize
+          pnpm --filter api exec sentry-cli releases files $VERSION upload-sourcemaps dist
+
         env:
           SENTRY_ORG: "netrunner-beanstalk"
           SENTRY_PROJECT: "beanstalk-api"
