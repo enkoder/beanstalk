@@ -28,7 +28,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
 // Flat points added to the total point pool that gets awarded to 1st place
 // Each tournament gets a different point total to reflect the tournament prestige
 export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
-  "worlds championship": 500,
+  "worlds championship": 250,
   "continental championship": 250,
   "national championship": 100,
   "intercontinental championship": 200,
