@@ -127,16 +127,11 @@ mv api/.dev.vars.example api/.dev.vars
 
 ### Linting, Formatting, and Import Order
 
-This repo has some pre-commits installed to help ensure the repo stays looking fresh. To install and setup pre-commit,
-run the following. If you are on Linux, you can install pre-commit w/ pip
+This repo has some pre-commits installed to help ensure the repo stays looking fresh. These should come pre-installed
+and ready to go out of the box after a `pnpm install`.
 
-```shell
-brew install pre-commit
-pre-commit isntall
-```
-
-We use [Biomejs](https://biomejs.dev/) as our linter & formatter. Install the BiomeJS plugin into your editor and you
-will get autoformatting out of the box. To run biome in your editor run
+We use [Biomejs](https://biomejs.dev/) as our linter & formatter. Install the BiomeJS plugin into your editor, and you
+will get autoformatting out of the box. To run all lints run
 
 ```shell
 pnpm lint

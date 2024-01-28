@@ -4,7 +4,7 @@
   "description": "",
   "exports": "./src/index.ts",
   "scripts": {
-    "lint": "pnpm --filter api tsc && pnpm --filter api biome check .",
+    "lint": "pnpm --filter api exec tsc --noEmit",
     "test": "pnpm --filter api build && jest",
     "start": "wrangler dev --test-scheduled -e dev",
     "build": "wrangler build"

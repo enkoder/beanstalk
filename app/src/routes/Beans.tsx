@@ -42,18 +42,18 @@ export function Beans() {
             something linear or bucketed. Initially, my goal was to set a
             configurable % of total beans that the top % of players should
             receive. For example, I wanted to set a target of the top 20% of
-            players receiving 80% of the total beans. I would then
-            calculate the appropriate rate of decay based upon those
-            constraints. This was mostly working, but I wanted to find a simpler
-            solution that players could reason about.
+            players receiving 80% of the total beans. I would then calculate the
+            appropriate rate of decay based upon those constraints. This was
+            mostly working, but I wanted to find a simpler solution that players
+            could reason about.
             <Sep className={"mb-4"} />
             The current algorithm is much simpler, but still follows a
             non-linear decaying distribution. We set a bean value for first
-            place and then look for a rate of decay so that a certain percentage 
+            place and then look for a rate of decay so that a certain percentage
             of players receive points.
             <Sep className={"mb-4"} />
-            You can find more details and a well documented and tested algorithm over at the{" "}
-            <Link to={"/code"}>Code</Link> page.
+            You can find more details and a well documented and tested algorithm
+            over at the <Link to={"/code"}>Code</Link> page.
           </p>
         ),
       },
@@ -105,8 +105,8 @@ export function Beans() {
             more beans than a 16-person Nationals. The difference in bean totals
             should be grounded in the difficulty required to win that
             tournament. Additionally, instead of scaling beans by a flat value,
-            we use different values for different tournament types. This is incredibly
-            helpful to balance COs and other tournament types.
+            we use different values for different tournament types. This is
+            incredibly helpful to balance COs and other tournament types.
             <Sep className={"my-2"} />
             The current beans added per player is as follows follows:
             <ul className={"list-disc px-8"}>
@@ -155,7 +155,7 @@ export function Beans() {
                           {capStr(tc.code)}
                         </span>
                         <span className={"w-1/6"}>
-                          {tc.baseline_points + (50 * tc.points_per_player)}
+                          {tc.baseline_points + 50 * tc.points_per_player}
                         </span>
                       </div>
                     </li>
@@ -197,15 +197,16 @@ export function Beans() {
         content: (
           <p className={"pl-2"}>
             Making the cut is such a rewarding experience. Of course, everyone
-            wants to get 1st, but making the cut feels great and gives you another
-            goal to shoot for. To recreate this feeling, we have implemented a
-            configurable top-% cutoff where you need to hit a threshold in order
-            to receive any beans. For major tournaments, this value is set to
-            50%. This should create exciting experiences for people who don't
-            make the cut but perform well enough to make the top half. For large
-            tournaments, the beans acquired by making top half is still
-            significant! This mechanic also creates a better concentration of
-            beans for the top winners rewarding consistently solid play.
+            wants to get 1st, but making the cut feels great and gives you
+            another goal to shoot for. To recreate this feeling, we have
+            implemented a configurable top-% cutoff where you need to hit a
+            threshold in order to receive any beans. For major tournaments, this
+            value is set to 50%. This should create exciting experiences for
+            people who don't make the cut but perform well enough to make the
+            top half. For large tournaments, the beans acquired by making top
+            half is still significant! This mechanic also creates a better
+            concentration of beans for the top winners rewarding consistently
+            solid play.
             <Sep className={"mt-4"} />
             <ul className={"list-disc px-8"}>
               {tournamentConfigs.map((tc) => (
@@ -229,9 +230,9 @@ export function Beans() {
         id: "minimum-players",
         content: (
           <p className={"pl-2"}>
-            Circuit Openers and Nationals can be as small as 8 players and
-            get up to 100. In order to keep things balanced we've set minimum
-            player limits.
+            Circuit Openers and Nationals can be as small as 8 players and get
+            up to 100. In order to keep things balanced we've set minimum player
+            limits.
             <Sep className={"mt-4"} />
             <ul className={"list-disc px-8"}>
               {tournamentConfigs.map((tc) => (

@@ -5,7 +5,9 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "pnpm --stream -r lint",
+    "lint": "pnpm --stream -r lint && pnpm biome",
+    "test": "pnpm -r build && pnpm -r test && pnpm lint",
+    "biome": "pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true .",
     "build": "pnpm --stream -r run build",
     "start": "pnpm exec pm2 start && pnpm exec pm2 logs",
     "stop": "pnpm exec pm2 stop all",
@@ -14,19 +16,32 @@
     "start-api": "pnpm exec pm2 start api",
     "start-app": "pnpm exec pm2 start app",
     "start-tailwind": "pnpm exec pm2 start tailwind",
-    "spec": "curl http://0.0.0.0:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios"
+    "spec": "curl http://0.0.0.0:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios",
+    "prepare": "pnpm exec husky"
   },
-  "keywords": [],
+  "keywords": [
+    "cloudflare",
+    "netrunner",
+    "typescript"
+  ],
   "author": "",
+  "lint-staged": {
+    "*": [
+      "pnpm biome"
+    ]
+  },
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "^1.5.2",
     "@rspack/cli": "0.3.10",
     "@rspack/core": "0.3.10",
     "@types/jest": "^29.5.11",
+    "husky": "^9.0.6",
+    "lint-staged": "^15.2.0",
     "nodemon": "^3.0.3",
     "openapi-typescript-codegen": "^0.25.0",
     "pm2": "^5.3.0",
+    "pre-commit": "^1.2.2",
     "prettier": "^3.2.4",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "ts-node": "^10.9.2",

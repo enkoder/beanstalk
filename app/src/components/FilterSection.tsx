@@ -2,9 +2,14 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { ChangeEvent, HTMLAttributes, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  HTMLAttributes,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import { useSearchParams } from "react-router-dom";
-import { Factions } from "../../../api/src/models/factions";
 import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
 import NeutralCorpIcon from "../../assets/factions/NSG_AGENDA.svg";
 import AnarchIcon from "../../assets/factions/NSG_ANARCH.svg";
@@ -26,6 +31,7 @@ import {
   SeasonsService,
   TagsService,
 } from "../client";
+import { Factions } from "../types";
 import ComboBox from "./ComboBox";
 import { Input } from "./Input";
 import { Select } from "./Select";
@@ -51,8 +57,7 @@ const EMPTY_FACTION = {
 } as Faction;
 
 const ICON_SIZE = "h-6 w-6";
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const FACTION_ICONS: Record<string, any> = {
+const FACTION_ICONS: Record<string, ReactNode> = {
   [Factions.Adam.code]: (
     <AdamIcon className={ICON_SIZE} width={16} height={16} />
   ),
