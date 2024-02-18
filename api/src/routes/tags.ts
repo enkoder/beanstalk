@@ -20,7 +20,7 @@ import {
   UpdateTagsSchema,
 } from "../openapi.js";
 import { InsertTag, TournamentTag } from "../schema.js";
-import { RequestWithDB } from "../types.js";
+import { Env, RequestWithDB } from "../types.js";
 
 export class InsertTagTournament extends OpenAPIRoute {
   static schema = InsertTagTournamentSchema;
