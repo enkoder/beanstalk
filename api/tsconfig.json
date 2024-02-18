@@ -1,20 +1,19 @@
 {
+  "extends": "../tsconfig.json",
   "include": [
     "src/*",
     "../node_modules/.pnpm/@nora-soderlund+cloudflare-d1-backups@1.2.0/node_modules/@nora-soderlund/cloudflare-d1-backups/example/global.d.ts"
   ],
-  "exclude": ["**/node_modules/*"],
   "compilerOptions": {
+    "target": "ES6",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ES5",
     "esModuleInterop": true,
     "removeComments": true,
     "inlineSourceMap": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "outDir": "../dist",
-    "skipLibCheck": true,
     "lib": ["ES5"],
     "strict": false,
     "types": ["@cloudflare/workers-types", "jest", "@types/node"]

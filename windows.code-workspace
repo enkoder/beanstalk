@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "app"
+    },
+    {
+      "path": "api"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "biomejs.biome",
+    "tailwindCSS.includeLanguages": {
+      "html": "html",
+      "javascript": "javascript",
+      "css": "css"
+    },
+    "files.associations": {
+      "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+      "strings": "on"
+    },
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    // 7 years, this issue has been open... https://github.com/microsoft/vscode/issues/5595
+    "typescript.tsdk": "api\\node_modules\\typescript\\lib",
+    "files.eol": "\n",
+    "eslint.enable": false
+  }
+}
