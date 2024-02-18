@@ -84,10 +84,10 @@ export function Navbar() {
   }, [location]);
 
   return (
-    <Disclosure as="nav" className="fixed z-[9999] w-full bg-gray-900">
+    <Disclosure as="nav" className="mx-auto max-w-7xl z-[9999] bg-gray-900">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 md:px-8">
+          <div className="px-2 md:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
                 {/* Mobile menu button*/}

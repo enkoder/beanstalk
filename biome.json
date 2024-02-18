@@ -20,7 +20,11 @@
     "useIgnoreFile": true,
     "defaultBranch": "main"
   },
-  "formatter": { "indentStyle": "space", "formatWithErrors": true },
+  "formatter": {
+    "indentStyle": "space",
+    "formatWithErrors": true,
+    "lineEnding": "lf"
+  },
   "linter": {
     "enabled": true,
     "rules": {

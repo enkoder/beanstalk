@@ -26,7 +26,7 @@
     },
     "typescript.enablePromptUseWorkspaceTsdk": true,
     // 7 years, this issue has been open... https://github.com/microsoft/vscode/issues/5595
-    "typescript.tsdk": "${workspaceFolder}/node_modules/typescript/lib",
+    "typescript.tsdk": "${workspaceRoot}/node_modules/typescript/lib",
     "files.eol": "\n"
   }
 }

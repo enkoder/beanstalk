@@ -182,7 +182,11 @@ export function Leaderboard() {
   };
 
   return (
-    <>
+    <div
+      className={
+        "scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 overflow-y-auto"
+      }
+    >
       <PageHeading includeUnderline={true} text={"Leaderboard"}>
         {leaderboardRows && (
           <h1 className={"text-gray-500 text-xl"}>
@@ -290,6 +294,6 @@ export function Leaderboard() {
             ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }

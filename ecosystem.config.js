@@ -2,11 +2,11 @@ module.exports = {
   apps: [
     {
       name: "app",
-      script: "pnpm --filter app exec rspack serve",
+      script: "pnpm --filter app start",
     },
     {
       name: "api",
-      script: "pnpm --filter api exec wrangler dev",
+      script: "pnpm --filter api start",
     },
     {
       name: "tailwind",

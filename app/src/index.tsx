@@ -39,7 +39,7 @@ OpenAPI.WITH_CREDENTIALS = true;
 OpenAPI.BASE =
   process.env.NODE_ENV !== "development"
     ? "https://netrunner-beanstalk.net"
-    : "http://0.0.0.0:8787";
+    : "http://localhost:8787";
 
 export function OAuth2Callback() {
   const { login } = useAuth();
@@ -99,9 +99,13 @@ function Layout() {
 
   return (
     <AuthProvider>
-      <div className={"h-screen w-screen bg-gray-950 opacity-95"}>
+      <div
+        className={
+          "h-screen w-screen bg-gray-950 opacity-95 overflow-y-auto scrollbar scrollbar-thumb-cyan-600 scrollbar-track-gray-900"
+        }
+      >
         <Navbar />
-        <div className={"mx-auto max-w-7xl px-4 pt-20 duration-500"}>
+        <div className={"mx-auto max-w-7xl pt-4 px-2 md:px-4 duration-500"}>
           <Outlet />
         </div>
       </div>
