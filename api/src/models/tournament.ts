@@ -1,6 +1,6 @@
 import { g } from "../g.js";
 import { traceDeco } from "../lib/tracer.js";
-import { Tournament, UpdateTournament } from "../schema.js";
+import type { Tournament, UpdateTournament } from "../schema.js";
 
 export const Formats = ["standard", "startup", "eternal", "other"] as const;
 
@@ -39,7 +39,7 @@ export class Tournaments {
 
   @traceDeco("Tournaments")
   public static async getBySeasonId(season_id: number): Promise<Tournament[]> {
-    return g()
+    return await g()
       .db.selectFrom("tournaments")
       .selectAll()
       .where("tournaments.season_id", "=", season_id)

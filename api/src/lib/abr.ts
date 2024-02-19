@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { g } from "../g.js";
 import { TournamentTypes } from "../models/tournament.js";
-import { Format, Result, Tournament } from "../schema.js";
+import type { Format, Result, Tournament } from "../schema.js";
 
 async function gatherResponse(response) {
   const { headers } = response;
@@ -137,7 +137,7 @@ export async function getTournamentsByType(type: ABRTournamentTypeFilter) {
   const url = new URL(`${ABR_BASE_URL}/tournaments`);
   url.searchParams.append("type", String(type));
   url.searchParams.append("concluded", "1");
-  return _getTournaments(url);
+  return await _getTournaments(url);
 }
 
 export async function getTournamentsByUserId(id: number) {
@@ -158,7 +158,7 @@ export async function getTournaments(
   if (limit) {
     url.searchParams.append("limit", String(limit));
   }
-  return _getTournaments(url);
+  return await _getTournaments(url);
 }
 
 export async function getEntries(

@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import {
-  GetPointDistributionResponse,
+  type GetPointDistributionResponse,
   LeaderboardService,
-  RankingConfig,
-  TournamentConfig,
+  type RankingConfig,
+  type TournamentConfig,
 } from "../client";
 import { Input } from "../components/Input";
 import { PageHeading } from "../components/PageHeader";
@@ -87,7 +87,7 @@ export function Sim() {
           </TooltipTrigger>
           <TooltipContent
             className={
-              "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+              "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
             }
             arrowClassName={
               "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
@@ -129,7 +129,7 @@ export function Sim() {
             "intercontinental championship" && (
             <TooltipContent
               className={
-                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
               }
               arrowClassName={
                 "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
@@ -154,7 +154,7 @@ export function Sim() {
       <div className={"flex-1 overflow-y-auto whitespace-nowrap"}>
         <table
           className={
-            "h-full w-full table-fixed border-separate border-spacing-0 break-all text-lg text-gray-300"
+            "h-full w-full table-fixed border-separate border-spacing-0 break-all text-gray-300 text-lg"
           }
         >
           <thead
@@ -163,20 +163,20 @@ export function Sim() {
             <tr className={"border-b"}>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300 px-4"}
+                className={"border-gray-300 border-b-2 border-solid px-4"}
               >
                 Placement
               </th>
               <th
                 scope="col"
-                className={"border-b-2 border-solid border-gray-300 px-4"}
+                className={"border-gray-300 border-b-2 border-solid px-4"}
               >
                 Beans
               </th>
               <th
                 scope="col"
                 className={
-                  "break-words border-b-2 border-solid border-gray-300 px-4"
+                  "break-words border-gray-300 border-b-2 border-solid px-4"
                 }
               >
                 Cumulative %
@@ -188,7 +188,7 @@ export function Sim() {
               <tr
                 key={row.placement}
                 className={
-                  "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+                  "text-center align-middle even:bg-slate-950 odd:bg-slate-900"
                 }
               >
                 <td>{row.placement}</td>

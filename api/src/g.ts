@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import { G } from "./types.js";
+import type { G } from "./types.js";
 
 export const ALS = new AsyncLocalStorage<G>();
 export let _testG: G;

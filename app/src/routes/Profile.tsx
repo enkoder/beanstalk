@@ -2,15 +2,15 @@ import { Switch } from "@headlessui/react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import {
   AuthService,
-  GetTagsResponse,
-  TagTournament,
+  type GetTagsResponse,
+  type TagTournament,
   TagsService,
-  Tournament,
+  type Tournament,
   TournamentService,
-  User,
+  type User,
   UserService,
 } from "../client";
 import ComboBox from "../components/ComboBox";
@@ -141,7 +141,7 @@ export function TagTournamentsModal({
                   <Link to={`/tournament/${t.id}`}>{t.name}</Link>
                 </span>
                 <TrashIcon
-                  className={"h-6 w-6 cursor-pointer text-red-800 ml-auto"}
+                  className={"ml-auto h-6 w-6 cursor-pointer text-red-800"}
                   onClick={async () => await handleDeleteTagTournament(t)}
                 />
               </div>
@@ -335,7 +335,7 @@ export function Profile() {
           className={clsx(
             (tagInputString === "" || tagAlreadyExists) &&
               "cursor-not-allowed bg-gray-500",
-            "h-12 w-full rounded-lg border border-gray-600 bg-cyan-500 px-2 py-2 text-sm text-gray-950 sm:w-36",
+            "h-12 w-full rounded-lg border border-gray-600 bg-cyan-500 px-2 py-2 text-gray-950 text-sm sm:w-36",
           )}
           type="button"
           onClick={() => handleCreateTag()}
@@ -354,25 +354,25 @@ export function Profile() {
           <tr className={"border-b"}>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300 px-4"}
+              className={"border-gray-300 border-b-2 border-solid px-4"}
             >
               Tag Name
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Use Tournament Limits
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Tournament Count
             </th>
             <th
               scope="col"
-              className={"w-6 border-b-2 border-solid border-gray-300 px-4"}
+              className={"w-6 border-gray-300 border-b-2 border-solid px-4"}
             />
           </tr>
         </thead>
@@ -381,7 +381,7 @@ export function Profile() {
           {tags?.map((tag) => (
             <tr
               className={
-                "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+                "text-center align-middle even:bg-slate-950 odd:bg-slate-900"
               }
             >
               <td>
@@ -394,7 +394,7 @@ export function Profile() {
                 </button>
               </td>
               <td>
-                <div className={"text-xg mb-4 ml-auto flex flex-row pt-4 pl-4"}>
+                <div className={"mb-4 ml-auto flex flex-row pt-4 pl-4 text-xg"}>
                   {tag.use_tournament_limits ? (
                     <span className={"pr-4"}>Use Limits</span>
                   ) : (
@@ -440,7 +440,7 @@ export function Profile() {
                   {tag.count !== 0 && (
                     <TooltipContent
                       className={
-                        "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                        "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
                       }
                       arrowClassName={
                         "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"

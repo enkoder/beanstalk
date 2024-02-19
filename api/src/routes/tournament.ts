@@ -10,7 +10,7 @@ import {
   ResultComponent,
   TournamentComponent,
 } from "../openapi.js";
-import { RequestWithDB } from "../types.d.js";
+import type { RequestWithDB } from "../types.d.js";
 
 export class GetTournament extends OpenAPIRoute {
   static schema = GetTournamentSchema;

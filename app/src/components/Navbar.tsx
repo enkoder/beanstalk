@@ -84,15 +84,15 @@ export function Navbar() {
   }, [location]);
 
   return (
-    <Disclosure as="nav" className="mx-auto max-w-7xl z-[9999] bg-gray-900">
+    <Disclosure as="nav" className="z-[9999] mx-auto max-w-7xl bg-gray-900">
       {({ open }) => (
         <>
           <div className="px-2 md:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-cyan-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-600">
-                  <span className="absolute -inset-0.5" />
+                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-inset">
+                  <span className="-inset-0.5 absolute" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -101,12 +101,12 @@ export function Navbar() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
+              <div className="flex-1 flex items-center justify-center md:items-stretch md:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <Link
                     to={"/"}
                     className={clsx(
-                      "flex flex-row items-center text-lg text-cyan-500",
+                      "flex flex-row items-center text-cyan-500 text-lg",
                     )}
                   >
                     <img
@@ -136,7 +136,7 @@ export function Navbar() {
                   </div>
                 </div>
               </div>
-              <div className="absolute  inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
                 {/* Bell icon, use this later once there is a blog
                 <button
                   type="button"
@@ -152,12 +152,12 @@ export function Navbar() {
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
+                      <span className="-inset-1.5 absolute" />
                       <span className="sr-only">Open user menu</span>
                       <UserCircleIcon
                         className={clsx(
                           user != null ? "text-cyan-400" : "text-gray-400",
-                          "h-8 w-8 ",
+                          "h-8 w-8",
                         )}
                         aria-hidden={true}
                       />
@@ -204,7 +204,7 @@ export function Navbar() {
           </div>
 
           <Disclosure.Panel className="md:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
+            <div className="space-y-1 px-2 pt-2 pb-3">
               {navigation.map((item) => (
                 <Disclosure.Button
                   as="a"
@@ -213,7 +213,7 @@ export function Navbar() {
                     item.to === current
                       ? "bg-gray-950 text-cyan-400"
                       : "text-cyan-400 hover:bg-cyan-600 hover:text-gray-950",
-                    "block rounded-md px-3 py-2 text-base font-medium",
+                    "block rounded-md px-3 py-2 font-medium text-base",
                   )}
                   aria-current={item.to === current ? "page" : undefined}
                 >

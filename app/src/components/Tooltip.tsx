@@ -1,7 +1,7 @@
 import {
   FloatingArrow,
   FloatingPortal,
-  Placement,
+  type Placement,
   arrow,
   autoUpdate,
   flip,
@@ -16,7 +16,7 @@ import {
   useRole,
 } from "@floating-ui/react";
 import * as React from "react";
-import { HTMLProps, useRef } from "react";
+import { type HTMLProps, useRef } from "react";
 
 interface TooltipOptions {
   initialOpen?: boolean;

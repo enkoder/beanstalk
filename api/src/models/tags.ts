@@ -1,6 +1,6 @@
 import { g } from "../g.js";
 import { traceDeco } from "../lib/tracer.js";
-import {
+import type {
   InsertTag,
   InsertTournamentTag,
   Tag,

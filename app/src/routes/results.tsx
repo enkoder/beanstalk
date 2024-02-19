@@ -3,8 +3,8 @@ import { clsx } from "clsx";
 import { useParams, useSearchParams } from "react-router-dom";
 import {
   LeaderboardService,
-  RankingConfig,
-  Result,
+  type RankingConfig,
+  type Result,
   ResultsService,
   type UserResultsResponse,
 } from "../client";
@@ -24,12 +24,12 @@ function Decks(result: Result) {
   return (
     <div className={"flex flex-row justify-center text-gray-400"}>
       {/*grey separator between deck images*/}
-      <div className={"b-2 border-r border-gray-700 pr-2"}>
+      <div className={"b-2 border-gray-700 border-r pr-2"}>
         {/* cyan underline showing its clickable */}
         <div
           className={clsx(
             result.corp_deck_url &&
-              "border-b-2 border-cyan-600 pb-1 hover:border-cyan-400",
+              "border-cyan-600 border-b-2 pb-1 hover:border-cyan-400",
           )}
         >
           <Link to={result.corp_deck_url || ""}>
@@ -48,7 +48,7 @@ function Decks(result: Result) {
         <div
           className={clsx(
             result.corp_deck_url &&
-              "border-b-2 border-cyan-600 pb-1 hover:border-cyan-400",
+              "border-cyan-600 border-b-2 pb-1 hover:border-cyan-400",
           )}
         >
           <Link to={result.runner_deck_url || ""}>
@@ -111,11 +111,11 @@ export function Results() {
           <>
             <PageHeading text={results.user_name} includeUnderline={true} />
             {results.results.length === 0 ? (
-              <text className={"text-lg text-gray-400"}>
+              <text className={"text-gray-400 text-lg"}>
                 No results found for search filters
               </text>
             ) : (
-              <text className={"text-lg text-gray-400"}>
+              <text className={"text-gray-400 text-lg"}>
                 Ranked #{results.rank}
                 {results.seasonName &&
                   ` for Season ${results.seasonId} - ${results.seasonName}`}
@@ -129,7 +129,7 @@ export function Results() {
 
       <table
         className={
-          "mt-4 w-full table-fixed border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
+          "mt-4 w-full table-fixed border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"
         }
       >
         <thead className={"bg-slate-950 text-left"}>
@@ -157,7 +157,7 @@ export function Results() {
               <Tooltip placement={"right-end"}>
                 <TooltipTrigger asChild={true}>
                   <tr
-                    className={"text-left odd:bg-slate-900 even:bg-slate-950"}
+                    className={"text-left even:bg-slate-950 odd:bg-slate-900"}
                     key={`${results.user_id}/${result.tournament_id}`}
                   >
                     <td className={"whitespace-pre-wrap py-2"}>
@@ -204,7 +204,7 @@ export function Results() {
                 </TooltipTrigger>
                 <TooltipContent
                   className={
-                    "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                    "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
                   }
                   arrowClassName={
                     "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"

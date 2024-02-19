@@ -1,11 +1,11 @@
 import {
-  Attributes,
+  type Attributes,
   SpanStatusCode,
   trace as _trace,
 } from "@opentelemetry/api";
 import { g } from "../g.js";
 
-export async function trace<T>(
+export function trace<T>(
   name: string,
   fn: () => T | Promise<T>,
   attributes?: Attributes,
@@ -46,7 +46,7 @@ export function traceDeco(prefix: string) {
     const originalMethod = descriptor.value;
 
     // biome-ignore lint/suspicious/noExplicitAny: can be anything
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = function (...args: any[]) {
       const t = g()?.tracer ? g().tracer : _trace.getTracer("beanstalk");
       return t.startActiveSpan(name, async (span) => {
         try {

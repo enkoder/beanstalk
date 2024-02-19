@@ -1,5 +1,5 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { ExecutionContext } from "@cloudflare/workers-types/experimental";
+import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
 import { traceDeco } from "../lib/tracer.js";
@@ -15,11 +15,11 @@ import {
   MeSchema,
   PatchMeSchema,
   ResultComponent,
-  UpdateUserComponentType,
+  type UpdateUserComponentType,
   UserComponent,
 } from "../openapi.js";
-import { FactionCode, Format } from "../schema.js";
-import { Env, RequestWithDB } from "../types.d.js";
+import type { FactionCode, Format } from "../schema.js";
+import type { Env, RequestWithDB } from "../types.d.js";
 
 export class GetUser extends OpenAPIRoute {
   static schema = GetUserSchema;

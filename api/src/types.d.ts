@@ -1,10 +1,10 @@
-import { Tracer } from "@opentelemetry/api";
-import { IRequest } from "itty-router";
-import { Kysely } from "kysely";
-import { Miniflare } from "miniflare";
-import { Toucan } from "toucan-js";
-import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
-import { Database, Tournament } from "./schema.js";
+import type { Tracer } from "@opentelemetry/api";
+import type { IRequest } from "itty-router";
+import type { Kysely } from "kysely";
+import type { Miniflare } from "miniflare";
+import type { Toucan } from "toucan-js";
+import type { ABREntryType, ABRTournamentType } from "./lib/abr.js";
+import type { Database, Tournament } from "./schema.js";
 
 export type IngestResultQueueMessage = {
   tournament: Tournament;

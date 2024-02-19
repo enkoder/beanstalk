@@ -1,5 +1,5 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { ExecutionContext } from "@cloudflare/workers-types/experimental";
+import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { error, json } from "itty-router";
 import { traceDeco } from "../lib/tracer.js";
 import { Tags } from "../models/tags.js";
@@ -10,17 +10,17 @@ import {
   GetTagTournamentsSchema,
   GetTagsResponseComponent,
   GetTagsSchema,
-  InsertTagBodyType,
+  type InsertTagBodyType,
   InsertTagSchema,
-  InsertTagTournamentBodyType,
+  type InsertTagTournamentBodyType,
   InsertTagTournamentSchema,
   TagComponent,
   TagTournamentComponent,
-  UpdateTagBodyType,
+  type UpdateTagBodyType,
   UpdateTagsSchema,
 } from "../openapi.js";
-import { InsertTag, TournamentTag } from "../schema.js";
-import { Env, RequestWithDB } from "../types.js";
+import type { InsertTag, TournamentTag } from "../schema.js";
+import type { Env, RequestWithDB } from "../types.js";
 
 export class InsertTagTournament extends OpenAPIRoute {
   static schema = InsertTagTournamentSchema;

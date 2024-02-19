@@ -1,6 +1,6 @@
 import { g } from "../g.js";
 import { traceDeco } from "../lib/tracer.js";
-import { InsertSeason, Season } from "../schema.js";
+import type { InsertSeason, Season } from "../schema.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Seasons {

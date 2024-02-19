@@ -1,6 +1,6 @@
 import { Users } from "../models/user.js";
-import { PrivateAccountInfoType } from "../openapi.js";
-import { Env, RequestWithDB } from "../types.d.js";
+import type { PrivateAccountInfoType } from "../openapi.js";
+import type { Env, RequestWithDB } from "../types.d.js";
 import { errorResponse } from "./errors.js";
 import { getPrivateAccountInfo } from "./nrdb.js";
 
@@ -121,7 +121,7 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
   request.is_admin = user.is_admin !== 0;
 }
 
-export async function adminOnly(request: RequestWithDB, _: Env) {
+export function adminOnly(request: RequestWithDB, _: Env) {
   if (!request.is_admin) {
     return errorResponse(401, "Authentication error");
   }

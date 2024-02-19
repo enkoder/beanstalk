@@ -3,9 +3,9 @@ import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import {
-  ChangeEvent,
-  HTMLAttributes,
-  ReactNode,
+  type ChangeEvent,
+  type HTMLAttributes,
+  type ReactNode,
   useEffect,
   useState,
 } from "react";
@@ -23,11 +23,11 @@ import ShaperIcon from "../../assets/factions/NSG_SHAPER.svg";
 import SunnyIcon from "../../assets/factions/NSG_SUNNY.svg";
 import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
 import {
-  Faction,
-  Format,
-  GetTagsResponse,
+  type Faction,
+  type Format,
+  type GetTagsResponse,
   LeaderboardService,
-  Season,
+  type Season,
   SeasonsService,
   TagsService,
 } from "../client";
@@ -280,7 +280,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
   const filters = (
     <div
       className={
-        "z-1 grid grid-cols-1 gap-x-4 sm:grid-cols-2 xl:flex xl:grid-cols-none xl:flex-row"
+        "z-1 grid grid-cols-1 gap-x-4 xl:flex sm:grid-cols-2 xl:grid-cols-none xl:flex-row"
       }
     >
       {hasSearchBar && (
@@ -347,14 +347,14 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
     <>
       <Disclosure
         as={"div"}
-        className={"block sm:hidden my-4 border border-gray-700 rounded-lg"}
+        className={"my-4 block rounded-lg border border-gray-700 sm:hidden"}
       >
         {({ open }) => (
           <>
             <Disclosure.Button
               className={clsx(
                 open ? "rounded-t-lg" : "rounded-lg",
-                "flex w-full justify-between bg-gray-900 px-4 py-2 text-left text-md font-medium text-cyan-400 hover:bg-cyan-600 hover:text-gray-950 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500",
+                "flex w-full justify-between bg-gray-900 px-4 py-2 text-left font-medium text-cyan-400 text-md hover:bg-cyan-600 hover:text-gray-950 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500",
               )}
             >
               <span>Filters</span>
@@ -370,7 +370,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0"
             >
-              <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
+              <Disclosure.Panel className="px-4 pt-4 pb-2 text-gray-500 text-sm">
                 {filters}
               </Disclosure.Panel>
             </Transition>

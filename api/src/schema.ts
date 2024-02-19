@@ -1,4 +1,4 @@
-import { Generated, Insertable, Selectable, Updateable } from "kysely";
+import type { Generated, Insertable, Selectable, Updateable } from "kysely";
 import {
   BASELINE_POINTS,
   BOTTOM_THRESHOLD,
@@ -7,7 +7,7 @@ import {
   PERCENT_RECEIVING_POINTS,
   POINTS_PER_PLAYER,
 } from "./lib/ranking.js";
-import { RankingConfigType, TournamentConfigType } from "./openapi.js";
+import type { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
 export type TournamentType =
   | "GNK / seasonal"

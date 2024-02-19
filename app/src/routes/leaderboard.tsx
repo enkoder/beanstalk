@@ -5,13 +5,13 @@ import { clsx } from "clsx";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  LeaderboardRow,
+  type LeaderboardRow,
   LeaderboardService,
-  RankingConfig,
-  Result,
+  type RankingConfig,
+  type Result,
   ResultsService,
-  User,
-  UserResultsResponse,
+  type User,
+  type UserResultsResponse,
 } from "../client";
 import {
   FilterSection,
@@ -43,7 +43,7 @@ export function ExpandedSection({
     <div className={"flex flex-col"}>
       <table
         className={
-          "lx:text-lg w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 md:text-base"
+          "w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs lx:text-lg md:text-base"
         }
       >
         <tbody>
@@ -93,7 +93,7 @@ export function ExpandedSection({
               </TooltipTrigger>
               <TooltipContent
                 className={
-                  "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                  "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
                 }
                 arrowClassName={
                   "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
@@ -197,25 +197,25 @@ export function Leaderboard() {
       <FilterSection hasSearchBar={true} />
       <table
         className={
-          "w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
+          "w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"
         }
       >
         <thead className={"h-10 bg-slate-950 text-lg"}>
           <tr className={"w-full border-b text-left"}>
             <th
               scope="col"
-              className={"w-1/12 border-b-2 border-solid border-gray-300 px-4"}
+              className={"w-1/12 border-gray-300 border-b-2 border-solid px-4"}
             />
             <th
               scope="col"
-              className={"w-2/12 border-b-2 border-solid border-gray-300 px-4"}
+              className={"w-2/12 border-gray-300 border-b-2 border-solid px-4"}
             >
               Rank
             </th>
             <th
               scope="col"
               className={
-                "w-7/12 border-b-2 border-solid border-gray-300 text-center"
+                "w-7/12 border-gray-300 border-b-2 border-solid text-center"
               }
             >
               Name
@@ -223,7 +223,7 @@ export function Leaderboard() {
             <th
               scope="col"
               className={
-                "w-3/12 border-b-2 border-solid border-gray-300 pr-4 text-right"
+                "w-3/12 border-gray-300 border-b-2 border-solid pr-4 text-right"
               }
             >
               Beans
@@ -243,7 +243,7 @@ export function Leaderboard() {
               <>
                 <tr
                   className={
-                    "w-full odd:bg-slate-900 even:bg-slate-950 hover:text-cyan-500"
+                    "w-full even:bg-slate-950 odd:bg-slate-900 hover:text-cyan-500"
                   }
                   onKeyDown={() => onRowClick(row)}
                   onClick={() => onRowClick(row)}
@@ -272,7 +272,7 @@ export function Leaderboard() {
                   as={"tr"}
                   show={selectedUser?.name === row.user_name && results != null}
                   className={
-                    "w-full border border-cyan-400 odd:bg-slate-900 even:bg-slate-950"
+                    "w-full border border-cyan-400 even:bg-slate-950 odd:bg-slate-900"
                   }
                   enter="transition-opacity duration-100"
                   enterFrom="opacity-0"

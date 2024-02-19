@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
-import { Season, SeasonsService } from "../client";
+import { type Season, SeasonsService } from "../client";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 
@@ -16,7 +16,7 @@ export function Seasons() {
   return (
     <>
       <PageHeading includeUnderline={true} text={"Seasons"} />
-      <small className={"text-lg text-gray-400"}>
+      <small className={"text-gray-400 text-lg"}>
         Seasons are a mechanic that keeps the leaderboard fresh. Seasons are
         typically tied to NSG content releases and the yearly tournament season
         cadence.
@@ -30,25 +30,25 @@ export function Seasons() {
           <tr className={"border-b"}>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300 px-4"}
+              className={"border-gray-300 border-b-2 border-solid px-4"}
             >
               ID
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Name
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Start Date
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               End Date
             </th>
@@ -59,7 +59,7 @@ export function Seasons() {
           {seasons?.map((season) => (
             <tr
               className={
-                "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+                "text-center align-middle even:bg-slate-950 odd:bg-slate-900"
               }
             >
               <td>{season.id}</td>

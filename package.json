@@ -1,9 +1,7 @@
 {
   "name": "beanstalk",
   "description": "https://netrunner-beanstalk.net",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "lint": "pnpm --stream -r lint && pnpm biome",
     "test": "pnpm -r build && pnpm -r test && pnpm lint",
@@ -19,20 +17,14 @@
     "spec": "curl http://0.0.0.0:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios",
     "prepare": "pnpm exec husky"
   },
-  "keywords": [
-    "cloudflare",
-    "netrunner",
-    "typescript"
-  ],
+  "keywords": ["cloudflare", "netrunner", "typescript"],
   "author": "",
   "lint-staged": {
-    "*": [
-      "pnpm biome"
-    ]
+    "*": ["pnpm biome"]
   },
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "^1.5.3",
+    "@biomejs/biome": "1.5.3-nightly.dca6a7a",
     "@rspack/cli": "0.3.10",
     "@rspack/core": "0.3.10",
     "@types/jest": "^29.5.12",

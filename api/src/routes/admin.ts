@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import {
-  CreateBackupOptions,
+  type CreateBackupOptions,
   createBackup,
 } from "@nora-soderlund/cloudflare-d1-backups";
 import { parseISO } from "date-fns";
@@ -24,7 +24,7 @@ import {
   UpdateTournamentSeasonSchema,
   UpdateUsersSchema,
 } from "../openapi.js";
-import { Env, RequestWithDB } from "../types.d.js";
+import type { Env, RequestWithDB } from "../types.d.js";
 
 export class UpdateUsers extends OpenAPIRoute {
   static schema = UpdateUsersSchema;

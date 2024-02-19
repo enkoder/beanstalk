@@ -2,8 +2,8 @@ import { trace as otel } from "@opentelemetry/api";
 import objectHash from "object-hash";
 import { g } from "./g.js";
 import {
-  ABREntryType,
-  ABRTournamentType,
+  type ABREntryType,
+  type ABRTournamentType,
   ABRTournamentTypeFilter,
   abrToResult,
   abrToTournament,
@@ -18,8 +18,8 @@ import { Results } from "./models/results.js";
 import { Seasons } from "./models/season.js";
 import { Tournaments } from "./models/tournament.js";
 import { Users } from "./models/user.js";
-import { Result, Tournament, User } from "./schema.js";
-import {
+import type { Result, Tournament, User } from "./schema.js";
+import type {
   Env,
   IngestResultQueueMessage,
   IngestTournamentQueueMessage,
@@ -354,16 +354,13 @@ async function handleTournamentIngest(
   }
 }
 
-async function handleTournamentIngestDLQ(tournament: ABRTournamentType) {
+function handleTournamentIngestDLQ(tournament: ABRTournamentType) {
   // TODO: actually do something here on ingest fail
   const str = JSON.stringify(tournament, null, 4);
   console.log(`handleTournamentIngestDLQ | ${str}`);
 }
 
-async function handleResultIngestDLQ(
-  tournament: Tournament,
-  entry: ABREntryType,
-) {
+function handleResultIngestDLQ(tournament: Tournament, entry: ABREntryType) {
   // TODO: actually do something here on ingest fail
   const tournamentStr = JSON.stringify(tournament, null, 4);
   const entryStr = JSON.stringify(entry, null, 4);

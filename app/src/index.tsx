@@ -29,6 +29,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./output.css";
 import { Profile } from "./routes/Profile";
 
+// biome-ignore lint/nursery/useAwait: needs to be async
 const getToken = async (): Promise<string> => {
   const access_token = localStorage.getItem("access_token");
   return access_token ? access_token : "";
@@ -101,11 +102,11 @@ function Layout() {
     <AuthProvider>
       <div
         className={
-          "h-screen w-screen bg-gray-950 opacity-95 overflow-y-auto scrollbar scrollbar-thumb-cyan-600 scrollbar-track-gray-900"
+          "scrollbar scrollbar-thumb-cyan-600 scrollbar-track-gray-900 h-screen w-screen overflow-y-auto bg-gray-950 opacity-95"
         }
       >
         <Navbar />
-        <div className={"mx-auto max-w-7xl pt-4 px-2 md:px-4 duration-500"}>
+        <div className={"mx-auto max-w-7xl px-2 pt-4 duration-500 md:px-4"}>
           <Outlet />
         </div>
       </div>

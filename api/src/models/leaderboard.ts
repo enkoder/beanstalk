@@ -1,5 +1,5 @@
 import { traceDeco } from "../lib/tracer.js";
-import { Faction, Format } from "../schema.js";
+import type { Faction, Format } from "../schema.js";
 import { Results } from "./results.js";
 
 type LeaderboardRow = {

@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
 type PageHeaderProps = HTMLAttributes<HTMLElement> & {
@@ -18,13 +18,13 @@ export function PageHeading({
     <div
       className={clsx(
         "flex flex-row",
-        includeUnderline && "border-b border-gray-700 pb-2",
+        includeUnderline && "border-gray-700 border-b pb-2",
       )}
     >
       <h1 className={twMerge(className, "text-3xl text-gray-300")} {...props}>
         {text}
       </h1>
-      {children && <div className={"ml-auto mt-auto"}>{children}</div>}
+      {children && <div className={"mt-auto ml-auto"}>{children}</div>}
     </div>
   );
 }

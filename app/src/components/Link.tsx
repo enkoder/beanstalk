@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import {
   Link as ReactRouterLink,
-  LinkProps as ReactRouterLinkProps,
+  type LinkProps as ReactRouterLinkProps,
 } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 

@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { GetIdImgSchema } from "../openapi.js";
-import { Env, RequestWithDB } from "../types.js";
+import type { Env, RequestWithDB } from "../types.js";
 
 export class GetIdImg extends OpenAPIRoute {
   static schema = GetIdImgSchema;

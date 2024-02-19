@@ -1,4 +1,4 @@
-import { Faction, FactionCode } from "../schema.js";
+import type { Faction, FactionCode } from "../schema.js";
 
 export const Factions = {
   Anarch: {

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 // @ts-ignore
 import whitepaper from "../../assets/whitepaper.pdf";
-import { LeaderboardService, RankingConfig } from "../client";
+import { LeaderboardService, type RankingConfig } from "../client";
 import { Anchor } from "../components/Anchor";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
@@ -75,7 +75,7 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                    <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                       {capStr(tc.code)}
                     </span>
                     <span className={"w-1/6"}>{tc.baseline_points}</span>
@@ -85,11 +85,11 @@ export function Beans() {
             </ul>
             <Sep className={"my-2"} />
             You can find this configured in{" "}
-            <Link className={"text-lg text-cyan-600"} to={"/code"}>
+            <Link className={"text-cyan-600 text-lg"} to={"/code"}>
               Code
             </Link>
             , or you can view them in the{" "}
-            <Link className={"text-lg text-cyan-600"} to={"/sim"}>
+            <Link className={"text-cyan-600 text-lg"} to={"/sim"}>
               Sim
             </Link>
             .
@@ -113,7 +113,7 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                    <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                       {capStr(tc.code)}
                     </span>
                     <span className={"w-1/6"}>{tc.points_per_player}</span>
@@ -123,7 +123,7 @@ export function Beans() {
             </ul>
             <Sep className={"my-2"} />
             Again, head over to the{" "}
-            <Link className={"text-lg text-cyan-600"} to={"/sim"}>
+            <Link className={"text-cyan-600 text-lg"} to={"/sim"}>
               Sim
             </Link>{" "}
             to take a look at how the bean values change as you add more
@@ -151,7 +151,7 @@ export function Beans() {
                   {tc.code !== "intercontinental championship" && (
                     <li>
                       <div className={"flex w-full flex-row"}>
-                        <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                        <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                           {capStr(tc.code)}
                         </span>
                         <span className={"w-1/6"}>
@@ -212,7 +212,7 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                    <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                       {capStr(tc.code)}
                     </span>
                     <span className={"w-1/6"}>
@@ -241,7 +241,7 @@ export function Beans() {
                     tc.code === "circuit opener") && (
                     <li>
                       <div className={"flex w-full flex-row"}>
-                        <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                        <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                           {capStr(tc.code)}
                         </span>
                         <span className={"w-1/6"}>
@@ -308,7 +308,7 @@ export function Beans() {
               {tournamentConfigs.map((tc) => (
                 <li>
                   <div className={"flex w-full flex-row"}>
-                    <span className={"w-5/6 sm:w-4/6 lg:w-2/6"}>
+                    <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
                       {capStr(tc.code)}
                     </span>
                     <span className={"w-1/6"}>Limit {tc.tournament_limit}</span>
@@ -340,7 +340,7 @@ export function Beans() {
 
         {sections.map((s) => (
           <>
-            <Anchor id={s.id} className={"mb-2 mt-4"}>
+            <Anchor id={s.id} className={"mt-4 mb-2"}>
               {" "}
               {s.title}
             </Anchor>
@@ -352,7 +352,7 @@ export function Beans() {
           <span className={"text-lg"}>
             Made with{" "}
             <FontAwesomeIcon
-              className={"text-xl text-red-700"}
+              className={"text-red-700 text-xl"}
               icon={faHeart}
             />{" "}
             by <Link to={"https://github.com/enkoder/beanstalk"}>enkoder</Link>

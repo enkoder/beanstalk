@@ -2,13 +2,13 @@ import { g } from "../g.js";
 import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import {
-  Faction,
-  Format,
+  type Faction,
+  type Format,
   RankingConfig,
-  ResultsTable,
-  Tag,
-  TournamentType,
-  UpdateResult,
+  type ResultsTable,
+  type Tag,
+  type TournamentType,
+  type UpdateResult,
 } from "../schema.js";
 import { Tags } from "./tags.js";
 
@@ -188,7 +188,7 @@ export class Results {
 
   @traceDeco("Results")
   public static async getBySeasonId(season_id: number) {
-    return g()
+    return await g()
       .db.selectFrom("results")
       .innerJoin("tournaments", "results.tournament_id", "tournaments.id")
       .selectAll("results")

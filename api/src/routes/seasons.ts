@@ -9,7 +9,7 @@ import {
   SeasonComponent,
   TournamentComponent,
 } from "../openapi.js";
-import { RequestWithDB } from "../types.d.js";
+import type { RequestWithDB } from "../types.d.js";
 
 export class GetSeasons extends OpenAPIRoute {
   static schema = GetSeasonsSchema;

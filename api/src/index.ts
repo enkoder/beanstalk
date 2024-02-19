@@ -2,8 +2,8 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
 import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import {
-  ResolveConfigFn,
-  Trigger,
+  type ResolveConfigFn,
+  type Trigger,
   instrument,
 } from "@microlabs/otel-cf-workers";
 import { trace as _trace } from "@opentelemetry/api";
@@ -13,7 +13,7 @@ import { D1Dialect } from "kysely-d1";
 import { RewriteFrames, Toucan } from "toucan-js";
 import { processQueueBatch, processScheduledEvent } from "./background.js";
 import { ALS } from "./g.js";
-import { ABREntryType, ABRTournamentType } from "./lib/abr.js";
+import type { ABREntryType, ABRTournamentType } from "./lib/abr.js";
 import { adminOnly, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
 import { trace } from "./lib/tracer.js";
@@ -56,8 +56,8 @@ import {
   Me,
   PatchMe,
 } from "./routes/users.js";
-import { Database } from "./schema.js";
-import { Env } from "./types.js";
+import type { Database } from "./schema.js";
+import type { Env } from "./types.js";
 
 const router = OpenAPIRouter({
   base: "/api",
@@ -172,7 +172,7 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext) {
   }
 }
 
-async function handleScheduled(
+function handleScheduled(
   event: ScheduledEvent,
   env: Env,
   ctx: ExecutionContext,
@@ -203,7 +203,7 @@ async function handleScheduled(
   });
 }
 
-async function handleQueue(
+function handleQueue(
   batch: MessageBatch<ABRTournamentType | ABREntryType>,
   env: Env,
   ctx: ExecutionContext,

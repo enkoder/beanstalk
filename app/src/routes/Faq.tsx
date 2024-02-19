@@ -6,7 +6,7 @@ import moment from "moment";
 import aiBeanstalk from "../../assets/ai_beanstalk_royalties.jpeg";
 // @ts-ignore
 import doggo from "../../assets/doggo.png";
-import { Season, SeasonsService } from "../client";
+import { type Season, SeasonsService } from "../client";
 import { Anchor } from "../components/Anchor";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
@@ -45,7 +45,7 @@ export function Faq() {
           rankings to reach the top... of the Beanstalk.
           <div className={"flex flex-row justify-center"}>
             <img
-              className={"mb-8 mt-4 h-48 lg:h-96"}
+              className={"mt-4 mb-8 h-48 lg:h-96"}
               src={aiBeanstalk}
               alt={"Beanstalk"}
             />
@@ -303,7 +303,7 @@ export function Faq() {
             PLEASE DO! This is an actual picture taken of me during active
             development lol
             <img
-              className={"mb-8 mt-4"}
+              className={"mt-4 mb-8"}
               src={doggo}
               alt={"I have no idea what I'm doing"}
             />
@@ -313,7 +313,7 @@ export function Faq() {
             you!!
             <br />
           </p>
-          <div className={"mb-8 mt-4"}>
+          <div className={"mt-4 mb-8"}>
             <text>Here are some ways you can help</text>
             <ul className={"my-2 ml-4 list-inside list-disc"}>
               <li>
@@ -357,7 +357,7 @@ export function Faq() {
       <div className={"overflow-auto pt-4 text-gray-400"}>
         {QUESTIONS.map((question) => (
           <>
-            <Anchor id={question.id} className={"mb-2 mt-4"}>
+            <Anchor id={question.id} className={"mt-4 mb-2"}>
               {question.title}
             </Anchor>
             <p className={"pl-2 text-gray-400"}> {question.content}</p>
@@ -368,7 +368,7 @@ export function Faq() {
           <span className={"text-lg"}>
             Made with{" "}
             <FontAwesomeIcon
-              className={"text-xl text-red-700"}
+              className={"text-red-700 text-xl"}
               icon={faHeart}
             />{" "}
             by <Link to={"https://github.com/enkoder/beanstalk"}>enkoder</Link>

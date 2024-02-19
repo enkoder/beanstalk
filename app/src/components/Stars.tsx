@@ -25,7 +25,7 @@ export function Stars({ count }: StarProps) {
   return (
     <div
       className={
-        "-z-1 duration-5 fixed left-1/2 top-1/2 h-[1px] w-[1px] animate-zoom rounded-full bg-gray-300 transition-zoom"
+        "-z-1 fixed top-1/2 left-1/2 h-[1px] w-[1px] animate-zoom rounded-full bg-gray-300 transition-zoom duration-5"
       }
       style={{ boxShadow: getBoxShadow() }}
     />

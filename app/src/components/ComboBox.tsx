@@ -1,7 +1,7 @@
-import { Combobox, ComboboxProps, Transition } from "@headlessui/react";
+import { Combobox, type ComboboxProps, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState } from "react";
 
 type Nullable = true;
 type Tag = "div";
@@ -59,7 +59,7 @@ export default function ComboBox<T>({
       {({ open }) => (
         <>
           {label && (
-            <Combobox.Label className="block pl-4 text-sm font-medium leading-6 text-gray-400">
+            <Combobox.Label className="block pl-4 font-medium text-gray-400 text-sm leading-6">
               {label}
             </Combobox.Label>
           )}
@@ -68,7 +68,7 @@ export default function ComboBox<T>({
             <Combobox.Input
               className={clsx(
                 width,
-                "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pl-3 pr-10 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
+                "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pr-10 pl-3 text-left text-gray-400 shadow-sm ring-1 ring-gray-600 ring-inset sm:text-sm sm:leading-6 focus:outline-none focus:ring-2 focus:ring-cyan-600",
               )}
               displayValue={
                 itemToString
@@ -85,7 +85,7 @@ export default function ComboBox<T>({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-cyan-500 bg-gray-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-cyan-500 bg-gray-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm focus:outline-none">
                 {filteredItems.length === 0 && query !== "" ? (
                   <div className="relative cursor-default select-none px-4 py-2 text-gray-400">
                     Nothing found.
@@ -99,7 +99,7 @@ export default function ComboBox<T>({
                           active
                             ? "bg-gray-950 text-cyan-400"
                             : "text-gray-400",
-                          "relative cursor-default select-none py-2 pl-3 pr-9",
+                          "relative cursor-default select-none py-2 pr-9 pl-3",
                         )
                       }
                       value={item}

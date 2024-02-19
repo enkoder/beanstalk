@@ -1,8 +1,9 @@
 import { Listbox, Transition } from "@headlessui/react";
-import { Fragment, ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export interface SelectProps<T> {
   width: string;
@@ -22,11 +23,16 @@ export function Select<T>({
   onChange,
 }: SelectProps<T>) {
   return (
-    <Listbox as={"div"} className={width} value={selected} onChange={onChange}>
+    <Listbox
+      as={"div"}
+      className={twMerge(width)}
+      value={selected}
+      onChange={onChange}
+    >
       {({ open }) => (
         <>
           {label && (
-            <Listbox.Label className="block pl-4 text-sm font-medium leading-6 text-gray-400">
+            <Listbox.Label className="block pl-4 font-medium text-gray-400 text-sm leading-6">
               {label}
             </Listbox.Label>
           )}
@@ -34,7 +40,7 @@ export function Select<T>({
             <Listbox.Button
               className={clsx(
                 width,
-                "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pl-3 pr-10 text-left text-gray-400 shadow-sm ring-1 ring-inset ring-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-600 sm:text-sm sm:leading-6",
+                "relative h-12 cursor-default rounded-lg bg-gray-900 py-1.5 pr-10 pl-3 text-left text-gray-400 shadow-sm ring-1 ring-gray-600 ring-inset sm:text-sm sm:leading-6 focus:outline-none focus:ring-2 focus:ring-cyan-600",
               )}
             >
               <span className="flex items-center">
@@ -54,14 +60,14 @@ export function Select<T>({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-cyan-500 bg-gray-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="scrollbar scrollbar-track-gray-900 scrollbar-thumb-cyan-600 absolute z-10 mt-1 max-h-56 w-full overflow-auto overflow-y-auto rounded-md border border-cyan-500 bg-gray-900 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm focus:outline-none">
                 {items.map((item, i) => (
                   <Listbox.Option
                     key={String(i)}
                     className={({ active }) =>
                       clsx(
                         active ? "bg-gray-950 text-cyan-400" : "text-gray-400",
-                        "relative cursor-default select-none py-2 pl-3 pr-9",
+                        "relative cursor-default select-none py-2 pr-9 pl-3",
                       )
                     }
                     value={item}

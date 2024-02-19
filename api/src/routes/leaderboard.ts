@@ -7,7 +7,7 @@ import { Leaderboard } from "../models/leaderboard.js";
 import { Formats } from "../models/tournament.js";
 import {
   FactionComponent,
-  FactionComponentType,
+  type FactionComponentType,
   FormatComponent,
   GetFactionsSchema,
   GetFormatSchema,
@@ -16,15 +16,15 @@ import {
   GetPointDistributionSchema,
   GetRankingConfigSchema,
   LeaderboardRowComponent,
-  LeaderboardRowComponentType,
+  type LeaderboardRowComponentType,
 } from "../openapi.js";
 import {
-  FactionCode,
-  Format,
+  type FactionCode,
+  type Format,
   RankingConfig,
-  TournamentType,
+  type TournamentType,
 } from "../schema.js";
-import { RequestWithDB } from "../types.d.js";
+import type { RequestWithDB } from "../types.d.js";
 
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
@@ -102,7 +102,7 @@ export class GetRankingConfig extends OpenAPIRoute {
   static schema = GetRankingConfigSchema;
 
   @traceDeco("GetRankingConfig")
-  async handle() {
+  handle() {
     return json(RankingConfig);
   }
 }
@@ -111,7 +111,7 @@ export class GetFactions extends OpenAPIRoute {
   static schema = GetFactionsSchema;
 
   @traceDeco("GetFactions")
-  async handle() {
+  handle() {
     const factions: FactionComponentType[] = [];
     for (const faction in Factions) {
       factions.push(FactionComponent.parse(Factions[faction]));
@@ -124,7 +124,7 @@ export class GetFormats extends OpenAPIRoute {
   static schema = GetFormatSchema;
 
   @traceDeco("GetFormats")
-  async handle() {
+  handle() {
     const formats: Format[] = [];
     for (const format of Formats) {
       formats.push(FormatComponent.parse(format));

@@ -8,7 +8,7 @@ import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
 import {
   LeaderboardRowComponent,
-  LeaderboardRowComponentType,
+  type LeaderboardRowComponentType,
 } from "../openapi.js";
 import * as Factories from "./factories.js";
 import { applyMigrations, initG, wipeDB } from "./setup";

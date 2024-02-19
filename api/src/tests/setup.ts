@@ -3,7 +3,7 @@ import { CompiledQuery, Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
 import { Miniflare } from "miniflare";
 import { g, initTestG } from "../g";
-import { Database } from "../schema";
+import type { Database } from "../schema";
 
 export async function initG(loggedInUser = 0) {
   console.log("Initializing Global State");

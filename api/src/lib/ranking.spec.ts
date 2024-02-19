@@ -1,4 +1,4 @@
-import { TournamentType } from "../schema";
+import type { TournamentType } from "../schema";
 import {
   BASELINE_POINTS,
   BOTTOM_THRESHOLD,

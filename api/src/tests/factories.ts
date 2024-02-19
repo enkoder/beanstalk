@@ -1,9 +1,9 @@
-import { IncomingRequestCfProperties } from "@cloudflare/workers-types/experimental/index";
-import { RequestInit } from "miniflare";
+import type { IncomingRequestCfProperties } from "@cloudflare/workers-types/experimental/index";
+import type { RequestInit } from "miniflare";
 import { Factions } from "../models/factions.js";
 import { Tags } from "../models/tags";
-import { PrivateAccountInfo, TagComponentType } from "../openapi";
-import {
+import { PrivateAccountInfo, type TagComponentType } from "../openapi";
+import type {
   Faction,
   Format,
   Result,

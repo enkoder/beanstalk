@@ -1,6 +1,6 @@
-import { LeaderboardRow } from "../client";
+import type { LeaderboardRow } from "../client";
 import {
-  FilterSectionValues,
+  type FilterSectionValues,
   getSearchParamsFromValues,
 } from "./FilterSection";
 import { Link } from "./Link";
@@ -27,14 +27,14 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
         <tr className={"border-b"}>
           <th
             scope="col"
-            className={"border-b-2 border-solid border-gray-300 px-4"}
+            className={"border-gray-300 border-b-2 border-solid px-4"}
           >
             #
           </th>
-          <th scope="col" className={"border-b-2 border-solid border-gray-300"}>
+          <th scope="col" className={"border-gray-300 border-b-2 border-solid"}>
             Name
           </th>
-          <th scope="col" className={"border-b-2 border-solid border-gray-300"}>
+          <th scope="col" className={"border-gray-300 border-b-2 border-solid"}>
             Beans
           </th>
         </tr>
@@ -49,7 +49,7 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
               : false,
           )
           .map((row) => (
-            <tr className={"text-center odd:bg-slate-900 even:bg-slate-950"}>
+            <tr className={"text-center even:bg-slate-950 odd:bg-slate-900"}>
               <td className={"px-4 py-2"}>{row.rank}</td>
               <th
                 scope="row"

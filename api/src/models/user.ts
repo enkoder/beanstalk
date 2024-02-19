@@ -1,6 +1,6 @@
 import { g } from "../g.js";
 import { traceDeco } from "../lib/tracer.js";
-import { InsertUser, UpdateUser, User } from "../schema.js";
+import type { InsertUser, UpdateUser, User } from "../schema.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Users {

@@ -2,12 +2,12 @@ import { g } from "../g";
 import { Tags } from "../models/tags";
 import { Tournaments } from "../models/tournament";
 import { Users } from "../models/user";
-import {
+import type {
   GetTagsResponseComponentType,
   TagComponentType,
   TournamentTagComponentType,
 } from "../openapi";
-import { Tag } from "../schema";
+import type { Tag } from "../schema";
 import * as Factories from "./factories";
 import { applyMigrations, initG, wipeDB } from "./setup";
 

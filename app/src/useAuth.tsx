@@ -1,6 +1,6 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import {
-  ReactNode,
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -9,7 +9,12 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthService, TokenResponse, User, UserService } from "./client";
+import {
+  AuthService,
+  type TokenResponse,
+  type User,
+  UserService,
+} from "./client";
 
 interface AuthContextType {
   user?: User | null;

@@ -2,7 +2,7 @@ import { Switch } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { GetTagsResponse, TagsService } from "../client";
+import { type GetTagsResponse, TagsService } from "../client";
 import { Input } from "../components/Input";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
@@ -58,7 +58,7 @@ export function TagsPage() {
           {user === null && (
             <TooltipContent
               className={
-                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
               }
               arrowClassName={
                 "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
@@ -70,7 +70,7 @@ export function TagsPage() {
         </Tooltip>
         <Tooltip placement={"top"}>
           <TooltipTrigger asChild={true}>
-            <div className={"text-xg mb-4 ml-auto flex flex-row"}>
+            <div className={"mb-4 ml-auto flex flex-row text-xg"}>
               {switchEnabled ? (
                 <span className={"pr-4"}>Your Tags</span>
               ) : (
@@ -98,7 +98,7 @@ export function TagsPage() {
           {user === null && (
             <TooltipContent
               className={
-                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-sm text-cyan-500 shadow-lg"
+                "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
               }
               arrowClassName={
                 "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
@@ -119,19 +119,19 @@ export function TagsPage() {
           <tr className={"border-b"}>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300 px-4"}
+              className={"border-gray-300 border-b-2 border-solid px-4"}
             >
               Tag Name
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Owner
             </th>
             <th
               scope="col"
-              className={"border-b-2 border-solid border-gray-300"}
+              className={"border-gray-300 border-b-2 border-solid"}
             >
               Tournament Count
             </th>
@@ -142,7 +142,7 @@ export function TagsPage() {
           {filteredTags?.map((tag) => (
             <tr
               className={
-                "text-center align-middle odd:bg-slate-900 even:bg-slate-950"
+                "text-center align-middle even:bg-slate-950 odd:bg-slate-900"
               }
             >
               <td>

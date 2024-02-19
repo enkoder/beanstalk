@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
     "ignore": [
       "app/**/*.js",
@@ -31,6 +31,15 @@
       "recommended": true,
       "correctness": {
         "useExhaustiveDependencies": "off"
+      },
+      "nursery": {
+        "recommended": true,
+        "useSortedClasses": {
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "twMerge", "tw"]
+          }
+        }
       }
     }
   }

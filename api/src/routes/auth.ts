@@ -6,7 +6,7 @@ import {
   RefreshTokenSchema,
   TokenResponseComponent,
 } from "../openapi.js";
-import { Env, RequestWithDB } from "../types.d.js";
+import type { Env, RequestWithDB } from "../types.d.js";
 
 const NRDB_BASE_URL = "https://netrunnerdb.com";
 const NRDB_AUTH_URL = `${NRDB_BASE_URL}/oauth/v2/auth`;
@@ -16,7 +16,7 @@ const REDIRECT_URL = "https://netrunner-beanstalk.net/oauth/callback";
 export class GetLoginUrl extends OpenAPIRoute {
   static schema = GetOAuthLoginURLSchema;
 
-  async handle(req: RequestWithDB, env: Env) {
+  handle(req: RequestWithDB, env: Env) {
     const nrdbUrl = new URL(NRDB_AUTH_URL);
     nrdbUrl.searchParams.append("client_id", env.NRDB_OAUTH_CLIENT_ID);
     nrdbUrl.searchParams.append("redirect_uri", REDIRECT_URL);

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { Result, Tournament, TournamentService } from "../client";
+import { type Result, type Tournament, TournamentService } from "../client";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 
@@ -39,7 +39,7 @@ export function TournamentPage() {
       <div className={"mx-auto mt-4 max-w-7xl"}>
         <table
           className={
-            "mt-4 w-full table-auto border-separate border-spacing-0 text-xs text-gray-300 sm:text-base md:text-lg xl:text-xl"
+            "mt-4 w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"
           }
         >
           <thead className={"sticky top-0 h-10 bg-slate-950 text-lg"}>
@@ -47,7 +47,7 @@ export function TournamentPage() {
               <th
                 scope="col"
                 className={
-                  "border-b-2 border-solid border-gray-300 pl-4 text-left"
+                  "border-gray-300 border-b-2 border-solid pl-4 text-left"
                 }
               >
                 Place
@@ -55,7 +55,7 @@ export function TournamentPage() {
               <th
                 scope="col"
                 className={
-                  "border-b-2 border-solid border-gray-300 pl-4 text-left"
+                  "border-gray-300 border-b-2 border-solid pl-4 text-left"
                 }
               >
                 Seed
@@ -63,7 +63,7 @@ export function TournamentPage() {
               <th
                 scope="col"
                 className={
-                  "border-b-2 border-solid border-gray-300 text-center"
+                  "border-gray-300 border-b-2 border-solid text-center"
                 }
               >
                 Player
@@ -71,7 +71,7 @@ export function TournamentPage() {
               <th
                 scope="col"
                 className={
-                  "border-b-2 border-solid border-gray-300 pr-4 text-right"
+                  "border-gray-300 border-b-2 border-solid pr-4 text-right"
                 }
               >
                 Total Beans
@@ -81,11 +81,11 @@ export function TournamentPage() {
           {results && (
             <tbody>
               {results.map((result) => (
-                <tr className={"text-left odd:bg-slate-900 even:bg-slate-950"}>
-                  <td className={"pl-4 pr-4 text-left"}>
+                <tr className={"text-left even:bg-slate-950 odd:bg-slate-900"}>
+                  <td className={"pr-4 pl-4 text-left"}>
                     {result.rank_cut || result.rank_swiss}
                   </td>
-                  <td className={"pl-4 pr-4 text-left"}>
+                  <td className={"pr-4 pl-4 text-left"}>
                     {result.rank_cut ? result.rank_swiss : ""}
                   </td>
                   <td className={"pr-4 text-center"}>
