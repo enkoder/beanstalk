@@ -28,6 +28,22 @@
     // 7 years, this issue has been open... https://github.com/microsoft/vscode/issues/5595
     "typescript.tsdk": "api\\node_modules\\typescript\\lib",
     "files.eol": "\n",
-    "eslint.enable": false
+    "[markdown]": {
+      "editor.defaultFormatter": "mervin.markdown-formatter",
+      "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+      },
+      "editor.snippetSuggestions": "top",
+      "editor.tabCompletion": "on",
+      "editor.acceptSuggestionOnEnter": "on"
+    },
+    "markdownFormatter.formatOpt": {
+      "wrap_line_length": 120,
+      "indent_size": 2
+    },
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 120
   }
 }
