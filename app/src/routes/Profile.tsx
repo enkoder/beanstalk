@@ -110,9 +110,11 @@ export function TagTournamentsModal({
             selected={selectedTournaments}
             preProcess={(items, query) =>
               items
-                .sort((a, b) => (a.name < b.name ? -1 : 1))
+                .sort((a, b) =>
+                  a?.name && b?.name ? (a.name < b.name ? -1 : 1) : 0,
+                )
                 .filter((t) =>
-                  t?.name.toLowerCase().includes(query.toLowerCase()),
+                  t?.name?.toLowerCase().includes(query.toLowerCase()),
                 )
             }
             multiple={true}
