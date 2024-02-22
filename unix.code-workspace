@@ -47,6 +47,9 @@
     "editor.wordWrapColumn": 120,
     "[json]": {
       "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "biomejs.biome"
     }
   }
 }

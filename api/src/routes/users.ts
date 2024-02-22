@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
-import { json } from "itty-router";
+import { error, json } from "itty-router";
 import { errorResponse } from "../lib/errors.js";
 import { traceDeco } from "../lib/tracer.js";
 import { getFactionFromCode } from "../models/factions.js";
@@ -28,7 +28,7 @@ export class GetUser extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const user = await Users.getById(Number(req.params?.userID));
 
-    if (!user) {
+    if (!user || user.disabled) {
       return errorResponse(400, "User does not exist");
     }
     return json(UserComponent.parse(user));
@@ -43,10 +43,12 @@ export class GetUsers extends OpenAPIRoute {
     // TODO: pagination
     const users = await Users.getAll();
     if (!users) {
-      throw new Error("No users in table??");
+      return error(500, "No users in table??");
     }
 
-    return json(users.map((user) => UserComponent.parse(user)));
+    return json(
+      users.filter((u) => !u.disabled).map((user) => UserComponent.parse(user)),
+    );
   }
 }
 
@@ -86,7 +88,7 @@ export class GetUserResults extends OpenAPIRoute {
     const userIdOrName = req.params?.user;
 
     const user = await Users.getByIdOrName(decodeURI(userIdOrName));
-    if (!user) {
+    if (!user || user.disabled) {
       return errorResponse(400, "User does not exist");
     }
 

@@ -21,11 +21,23 @@ export function urlMe() {
   return new URL("http://localhost:8787/api/users/@me");
 }
 
+export function urlUser({ id }: { id: number }) {
+  return new URL(`http://localhost:8787/api/users/${id}`);
+}
+
+export function urlUsers() {
+  return new URL("http://localhost:8787/api/users");
+}
+
 export function urlTags({
   tag,
   owner,
   tournamentsUrl = false,
-}: { tag?: Tag | TagComponentType; owner?: User; tournamentsUrl?: boolean }) {
+}: {
+  tag?: Tag | TagComponentType;
+  owner?: User;
+  tournamentsUrl?: boolean;
+}) {
   const base = "http://localhost:8787/api/tags";
   let url: URL;
   if (tag && tournamentsUrl) {
@@ -49,6 +61,18 @@ export function authedOptions({
 }: RequestInit): RequestInit<Partial<IncomingRequestCfProperties>> {
   const headers = { Authorization: `Bearer ${TEST_TOKEN}` };
   return { method: method, headers: headers, body: body };
+}
+
+export function urlTournament({ id }: { id: number }) {
+  return new URL(`http://localhost:8787/api/tournaments/${id}`);
+}
+
+export function urlTournaments() {
+  return new URL("http://localhost:8787/api/tournaments");
+}
+
+export function urlTournamentResults({ id }: { id: number }) {
+  return new URL(`${urlTournament({ id }).toString()}/results`);
 }
 
 export function urlLeaderboard({
@@ -84,6 +108,8 @@ type ResultArgs = {
   points: number;
   runnerFaction?: Faction;
   corpFaction?: Faction;
+  rank_swiss?: number;
+  rank_cut?: number;
 };
 
 export function result({
@@ -92,6 +118,8 @@ export function result({
   points,
   runnerFaction,
   corpFaction,
+  rank_swiss,
+  rank_cut,
 }: ResultArgs) {
   return {
     tournament_id: tournament.id,
@@ -105,8 +133,8 @@ export function result({
     corp_deck_faction: corpFaction?.code || Factions.HaasBioroid.code,
     corp_deck_url: "",
     corp_deck_identity_name: "",
-    rank_swiss: 1,
-    rank_cut: 1,
+    rank_swiss: rank_swiss || 1,
+    rank_cut: rank_cut || 1,
   } as Result;
 }
 
@@ -136,7 +164,7 @@ export function tournament({
     type: type || "worlds championship",
     players_count: 10,
     season_id: season?.id,
-    date: "",
+    date: "1970-01-10T00:00:00Z",
     fingerprint: "",
     cutTo: cutTo || null,
   } as Tournament;
@@ -145,15 +173,17 @@ export function tournament({
 type UserArgs = {
   id: number;
   isAdmin?: number;
+  disabled?: number;
 };
 
-export function user({ id, isAdmin }: UserArgs) {
+export function user({ id, isAdmin, disabled }: UserArgs) {
   return {
     id: id,
     name: `user${id} name`,
     email: `user${id} email`,
     password: `user${id} password`,
-    is_admin: isAdmin,
+    is_admin: isAdmin || 0,
+    disabled: disabled || 0,
   } as User;
 }
 

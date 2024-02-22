@@ -369,4 +369,28 @@ describe("leaderboard", () => {
       expect(rows[0].points).toEqual(use_tournament_limits ? 100 : 200);
     },
   );
+
+  test("check disabled users", async () => {
+    // Set user id to something large to ensure it's not being used
+    const u0 = await Users.insert(Factories.user({ id: 100, disabled: 1 }));
+    const u1 = await Users.insert(Factories.user({ id: 1, disabled: 0 }));
+    const t = await Tournaments.insert(Factories.tournament({ id: 0 }));
+    await Results.insert(
+      Factories.result({ tournament: t, user: u0, points: 100 }),
+    );
+
+    await Results.insert(
+      Factories.result({ tournament: t, user: u1, points: 50 }),
+    );
+
+    const response = await g().mf.dispatchFetch(Factories.urlLeaderboard({}));
+    const rows = (await response.json()) as LeaderboardRowComponentType[];
+
+    expect(rows[0].rank).toEqual(1);
+    expect(rows[0].user_id).toEqual(0);
+    expect(rows[0].user_name).toEqual(null);
+
+    expect(rows[1].rank).toEqual(2);
+    expect(rows[1].user_id).toEqual(u1.id);
+  });
 });

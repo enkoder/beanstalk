@@ -5,7 +5,7 @@
 
 export type Tournament = {
     id: number;
-    name: string;
+    name: string | null;
     date: string | null;
     players_count: number;
     location: string;

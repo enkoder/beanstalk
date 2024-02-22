@@ -220,19 +220,40 @@ export function Faq() {
       ),
     },
     {
-      title: "How do I opt-out?",
-      id: "opt-out",
+      title: "How do I opt-in?",
+      id: "opt-in",
       content: (
         <p>
-          If you would like to opt-out of Beanstalk and not show up on the
-          leaderboard, you can toggle the setting on your profile page. To
-          opt-out, you need to log-in via our Netrunnerdb OAuth flow (top right)
-          and then update your profile by flipping the enabled toggle and
-          clicking the submit button. Refresh your browser and double check to
-          see that your name is no longer on the leaderboard.
+          By default, every user created and stored in The Beanstalk database
+          will be disabled. Usernames and IDs will not be displayed and set to
+          null and 0. This is to ensure that everyone who shows up on the
+          leaderboard has explicitly opted-in and fully consented to their data
+          being used.
           <Sep className={"mt-4"} />
-          You can opt-in at anytime by flipping the toggle and submitting the
-          changes.
+          If you would like to opt-in, you can toggle the "User Activate"
+          setting on your profile page. First, you will need to log-in via the
+          Netrunnerdb OAuth flow (top right) and then update your profile by
+          flipping the toggle and clicking the submit button. Refresh your
+          browser and double check to see that your name is no longer on the
+          leaderboard. If you change your mind, you can opt-out at anytime by
+          flipping the toggle and submitting the changes again.
+        </p>
+      ),
+    },
+    {
+      title: "Why are NetrunnerDB's OAuth permissions so broad?",
+      id: "oauth-scopes",
+      content: (
+        <p>
+          During the login flow, NetrunnerDB's only OAuth scope grants too much
+          permission. The auth screen will require you to grant The Beanstalk
+          permission to read and modify your decks, but the website will only
+          ever read your username which is used to check claims on
+          AlwaysBeRunning. Until NRDB updates their OAuth scoping, this is the
+          only option available. ABR has this exact same problem. Any concern
+          that comes from this is completely understandable. Once we can just
+          read the minimal data from NRDB, Beanstalk will update the OAuth
+          scopes to only request the necessary permissions.
         </p>
       ),
     },

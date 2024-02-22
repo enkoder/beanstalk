@@ -7,7 +7,8 @@ export type LeaderboardRow = {
     points: number;
     rank: number;
     user_id: number;
-    user_name?: string | null;
+    user_name: string | null;
+    disabled?: boolean | null;
     attended: number;
 };
 

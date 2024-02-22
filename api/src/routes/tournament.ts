@@ -1,5 +1,5 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import { json } from "itty-router";
+import { error, json } from "itty-router";
 import { traceDeco } from "../lib/tracer.js";
 import { Results } from "../models/results.js";
 import { Tournaments } from "../models/tournament.js";
@@ -19,6 +19,9 @@ export class GetTournament extends OpenAPIRoute {
   async handle(req: RequestWithDB) {
     const tournamentId = req.params?.tournamentId;
     const tournament = await Tournaments.get(Number(tournamentId));
+    if (!tournament) {
+      return error(400, "Invalid tournament ID provided.");
+    }
     return json(TournamentComponent.parse(tournament));
   }
 }
@@ -45,6 +48,18 @@ export class GetTournamentResults extends OpenAPIRoute {
     const results = await Results.getExpanded({
       tournamentId: Number(tournamentId),
     });
+
+    if (results.length === 0) {
+      return error(400, "Invalid tournament ID provided.");
+    }
+    // sanitize user data if disabled
+    for (const result of results) {
+      if (result.disabled) {
+        result.user_name = null;
+        result.user_id = 0;
+      }
+    }
+
     return json(
       results
         .sort((a, b) =>

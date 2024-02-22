@@ -8,6 +8,7 @@ type LeaderboardRow = {
   user_id: number;
   user_name: string;
   attended: number;
+  disabled: number;
 };
 
 // biome-ignore lint/complexity/noStaticOnlyClass:
@@ -37,9 +38,10 @@ export class Leaderboard {
         rows[result.user_id] = {
           points: 0,
           rank: 0,
-          user_id: result.user_id,
-          user_name: result.user_name,
+          user_id: result.disabled ? 0 : result.user_id,
+          user_name: result.disabled ? null : result.user_name,
           attended: 0,
+          disabled: result.disabled,
         } as LeaderboardRow;
       }
 

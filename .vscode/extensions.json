@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "biomejs.biome-nightly",
+    "biomejs.biome",
     "bradlc.vscode-tailwindcss",
     "mervin.markdown-formatter"
   ]

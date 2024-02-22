@@ -70,7 +70,7 @@ export class InsertTags extends OpenAPIRoute {
     const user = await Users.getById(req.user_id);
 
     if (!user) {
-      throw new Error("User is invalid in an authed endpoint");
+      return error(500, "User is invalid in an authed endpoint");
     }
 
     const tournament_tag = {

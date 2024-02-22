@@ -191,7 +191,10 @@ async function ingestEntry(
 
   // first time here, let's make a new user for later
   if (!user && entry.user_id) {
-    user = await Users.insert({ id: entry.user_id, name: name });
+    user = await Users.insert({
+      id: entry.user_id,
+      name: name,
+    });
   }
 
   if (!user) {

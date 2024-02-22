@@ -23,7 +23,7 @@ describe("users", () => {
   });
 
   test("Get @me", async () => {
-    const u = await Users.insert({ id: 0 });
+    const u = await Users.insert(Factories.user({ id: 0, disabled: 0 }));
     const response = await g().mf.dispatchFetch(
       Factories.urlMe(),
       Factories.authedOptions({ method: "GET" }),
@@ -35,7 +35,7 @@ describe("users", () => {
   });
 
   test("Patch @me", async () => {
-    const u = await Users.insert({ id: 0, email: "", disabled: 0 });
+    const u = await Users.insert(Factories.user({ id: 0, disabled: 0 }));
     const response = await g().mf.dispatchFetch(
       Factories.urlMe(),
       Factories.authedOptions({
@@ -49,5 +49,21 @@ describe("users", () => {
     expect(data.id).toBe(u.id);
     expect(data.email).toBe("changed");
     expect(data.disabled).toBe(true);
+  });
+
+  test("check disabled user", async () => {
+    const u0 = await Users.insert(Factories.user({ id: 100, disabled: 1 }));
+    const response = await g().mf.dispatchFetch(
+      Factories.urlUser({ id: u0.id }),
+    );
+    expect(response.status).toBe(400);
+  });
+
+  test("check disabled users", async () => {
+    const u0 = await Users.insert(Factories.user({ id: 100, disabled: 1 }));
+    const response = await g().mf.dispatchFetch(Factories.urlUsers());
+    expect(response.status).toBe(200);
+    const rows = (await response.json()) as [UserComponentType];
+    expect(rows.length).toBe(0);
   });
 });

@@ -54,7 +54,7 @@ export const ResultComponent = z
     runner_deck_faction: z.string().optional().nullable(),
     runner_deck_url: z.string().nullable().optional(),
     user_id: z.number(),
-    user_name: z.string(),
+    user_name: z.string().nullable(),
     format: FormatComponent,
     count_for_tournament_type: z.number().default(0),
     is_valid: z.boolean(),
@@ -75,7 +75,7 @@ export type SeasonComponentType = z.infer<typeof SeasonComponent>;
 export const TournamentComponent = z
   .object({
     id: z.number(),
-    name: z.string(),
+    name: z.string().nullable(),
     date: z.string().datetime().nullable(),
     players_count: z.number(),
     location: z.string(),
@@ -130,7 +130,8 @@ export const LeaderboardRowComponent = z
     points: z.number(),
     rank: z.number(),
     user_id: z.number(),
-    user_name: z.coerce.string(),
+    user_name: z.string().nullable(),
+    disabled: z.coerce.boolean(),
     attended: z.number(),
   })
   .openapi("LeaderboardRow");
