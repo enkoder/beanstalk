@@ -15,7 +15,8 @@ import { Tags } from "./tags.js";
 export type ResultExpanded = ResultsTable & {
   players_count: number;
   tournament_name: string;
-  user_name: string;
+  user_name: string | null;
+  disabled: number;
   format: Format;
   tournament_type: TournamentType;
   count_for_tournament_type: number;
@@ -78,6 +79,7 @@ export class Results {
       .innerJoin("tournaments", "tournaments.id", "results.tournament_id")
       .select([
         "users.name as user_name",
+        "users.disabled as disabled",
         "tournaments.type as tournament_type",
         "tournaments.name as tournament_name",
         "tournaments.players_count as players_count",
@@ -93,9 +95,7 @@ export class Results {
               .orderBy("tournaments.id", "asc"),
           )
           .as("count_for_tournament_type"),
-      ])
-      // Only fetch users who have not opted out
-      .where("users.disabled", "=", 0);
+      ]);
 
     if (userId) {
       q = q.where("results.user_id", "=", userId);

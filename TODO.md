@@ -7,6 +7,7 @@
 - Get design help from someone who knows what they are doing
 - Bigger and responsive fonts
 - Style leaderboard table rows // show ID you've played the most
+- /results - Error state when user doesn't exist
 
 ## Data Ingestion
 

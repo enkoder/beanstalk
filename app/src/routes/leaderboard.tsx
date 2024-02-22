@@ -168,6 +168,7 @@ export function Leaderboard() {
   });
 
   const onRowClick = (row: LeaderboardRow) => {
+    if (row.disabled) return;
     if (row.user_name === selectedUser?.name) {
       setSelectedUser(null);
     } else {
@@ -232,19 +233,23 @@ export function Leaderboard() {
         </thead>
         <tbody>
           {leaderboardRows
-            ?.filter((row) =>
-              row.user_name
+            ?.filter((row) => {
+              if (!values.searchString) {
+                return true;
+              }
+              return row.user_name
                 ? row.user_name
                     .toLowerCase()
                     .includes(values.searchString?.toLowerCase() || "")
-                : false,
-            )
+                : false;
+            })
             .map((row) => (
               <>
                 <tr
-                  className={
-                    "w-full even:bg-slate-950 odd:bg-slate-900 hover:text-cyan-500"
-                  }
+                  className={clsx(
+                    !row.disabled && "hover:text-cyan-500",
+                    "w-full even:bg-slate-950 odd:bg-slate-900",
+                  )}
                   onKeyDown={() => onRowClick(row)}
                   onClick={() => onRowClick(row)}
                 >
@@ -260,11 +265,18 @@ export function Leaderboard() {
                   <td className={"px-4 py-2"}>{row.rank}</td>
                   <th
                     scope="row"
-                    className="whitespace-pre-wrap font-medium text-cyan-500"
+                    className={clsx(
+                      !row.disabled && "text-cyan-500",
+                      "whitespace-pre-wrap font-medium",
+                    )}
                   >
-                    <Link to={getLinkToUserSearchParams(row)}>
-                      {row.user_name}
-                    </Link>
+                    {row.disabled ? (
+                      <text>{row.user_name}</text>
+                    ) : (
+                      <Link to={getLinkToUserSearchParams(row)}>
+                        {row.user_name}
+                      </Link>
+                    )}
                   </th>
                   <td className={"pr-4 text-right"}>{row.points.toFixed(2)}</td>
                 </tr>
