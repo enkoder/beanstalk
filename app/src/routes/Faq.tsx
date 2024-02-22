@@ -224,14 +224,14 @@ export function Faq() {
       id: "opt-in",
       content: (
         <p>
-          By default, every user entered into the Beanstalk database will be
-          disabled. The username will be randomized in "adjective-animal" format
-          and their user ID will be set to 0. This is to ensure that everyone
-          who shows up on the leaderboard has explicitly opted-in and fully
-          consented to their data being used.
+          By default, every user created and stored in The Beanstalk database
+          will be disabled. Usernames and IDs will not be displayed and set to
+          null and 0. This is to ensure that everyone who shows up on the
+          leaderboard has explicitly opted-in and fully consented to their data
+          being used.
           <Sep className={"mt-4"} />
           If you would like to opt-in, you can toggle the "User Activate"
-          setting on your profile page. First, you will need to log-in via our
+          setting on your profile page. First, you will need to log-in via the
           Netrunnerdb OAuth flow (top right) and then update your profile by
           flipping the toggle and clicking the submit button. Refresh your
           browser and double check to see that your name is no longer on the
@@ -250,9 +250,10 @@ export function Faq() {
           permission to read and modify your decks, but the website will only
           ever read your username which is used to check claims on
           AlwaysBeRunning. Until NRDB updates their OAuth scoping, this is the
-          only option available. ABR has this exact same problem. The concern is
-          completely understandable and will be updated as soon as NRDB updates
-          their OAuth scopes.
+          only option available. ABR has this exact same problem. Any concern
+          that comes from this is completely understandable. Once we can just
+          read the minimal data from NRDB, Beanstalk will update the OAuth
+          scopes to only request the necessary permissions.
         </p>
       ),
     },
