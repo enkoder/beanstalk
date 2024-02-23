@@ -234,7 +234,7 @@ export function Faq() {
           setting on your profile page. First, you will need to log-in via the
           Netrunnerdb OAuth flow (top right) and then update your profile by
           flipping the toggle and clicking the submit button. Refresh your
-          browser and double check to see that your name is no longer on the
+          browser and double check to see that your name now appears on the
           leaderboard. If you change your mind, you can opt-out at anytime by
           flipping the toggle and submitting the changes again.
         </p>
