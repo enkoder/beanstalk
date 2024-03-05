@@ -2,6 +2,7 @@
   "recommendations": [
     "biomejs.biome",
     "bradlc.vscode-tailwindcss",
-    "mervin.markdown-formatter"
+    "mervin.markdown-formatter",
+    "tamasfe.even-better-toml"
   ]
 }

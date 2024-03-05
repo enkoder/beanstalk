@@ -25,7 +25,7 @@ export class TagsService {
             method: 'GET',
             url: '/api/tags',
             query: {
-                'owner_id': ownerId,
+                owner_id: ownerId,
             },
         });
     }
@@ -62,7 +62,7 @@ export class TagsService {
             method: 'DELETE',
             url: '/api/tags/{tag_id}',
             path: {
-                'tag_id': tagId,
+                tag_id: tagId,
             },
         });
     }
@@ -84,7 +84,7 @@ export class TagsService {
             method: 'POST',
             url: '/api/tags/{tag_id}',
             path: {
-                'tag_id': tagId,
+                tag_id: tagId,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -108,7 +108,7 @@ export class TagsService {
             method: 'PUT',
             url: '/api/tags/{tag_id}/tournament',
             path: {
-                'tag_id': tagId,
+                tag_id: tagId,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -128,7 +128,7 @@ export class TagsService {
             method: 'GET',
             url: '/api/tags/{tag_id}/tournament',
             path: {
-                'tag_id': tagId,
+                tag_id: tagId,
             },
         });
     }
@@ -148,8 +148,8 @@ export class TagsService {
             method: 'DELETE',
             url: '/api/tags/{tag_id}/tournament/{tag_tournament_id}',
             path: {
-                'tag_id': tagId,
-                'tag_tournament_id': tagTournamentId,
+                tag_id: tagId,
+                tag_tournament_id: tagTournamentId,
             },
         });
     }

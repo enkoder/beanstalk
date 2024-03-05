@@ -18,7 +18,7 @@ ENVIRONMENT = "production"
 crons = ["0 0 * * *"]
 
 [[d1_databases]]
-binding = "DB" # i.e. available in your Worker on env.DB
+binding = "DB"                                       # i.e. available in your Worker on env.DB
 database_name = "beanstalk-api"
 database_id = "c2f0d824-a702-42b0-a708-70a50760461c"
 migrations_table = "migrations"

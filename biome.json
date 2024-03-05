@@ -2,8 +2,9 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
     "ignore": [
+      "**/*.json",
       "app/**/*.js",
-      "app/src/client/**",
+      "*/src/client/**",
       "./api/.wrangler",
       "**/output.css",
       "spec.json",

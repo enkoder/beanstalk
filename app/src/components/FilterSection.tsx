@@ -378,7 +378,7 @@ export function FilterSection({ hasSearchBar }: FilterSectionProps) {
         )}
       </Disclosure>
 
-      <div className={"hidden sm:block"}>{filters}</div>
+      <div className={"z-0 hidden sm:block"}>{filters}</div>
     </>
   );
 }

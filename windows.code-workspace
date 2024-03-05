@@ -44,6 +44,15 @@
       "indent_size": 2
     },
     "editor.wordWrap": "on",
-    "editor.wordWrapColumn": 120
+    "editor.wordWrapColumn": 120,
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[toml]": {
+      "editor.defaultFormatter": "tamasfe.even-better-toml"
+    }
   }
 }

@@ -35,7 +35,7 @@ export class AuthService {
             method: 'GET',
             url: '/api/auth/token',
             query: {
-                'code': code,
+                code: code,
             },
         });
     }
@@ -53,7 +53,7 @@ export class AuthService {
             method: 'GET',
             url: '/api/auth/refresh_token',
             query: {
-                'refresh_token': refreshToken,
+                refresh_token: refreshToken,
             },
         });
     }
