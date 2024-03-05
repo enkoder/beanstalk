@@ -6,6 +6,7 @@
     "lint": "pnpm --stream -r lint && pnpm biome",
     "test": "pnpm -r build && pnpm -r test && pnpm lint",
     "biome": "pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true .",
+    "biome-apply": "pnpm exec biome lint . --apply-unsafe",
     "build": "pnpm --stream -r run build",
     "start": "pnpm exec pm2 start && pnpm exec pm2 logs",
     "stop": "pnpm exec pm2 stop all",
