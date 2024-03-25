@@ -1,7 +1,9 @@
 {
   "name": "beanstalk",
   "description": "https://netrunner-beanstalk.net",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "lint": "pnpm --stream -r lint && pnpm biome",
     "test": "pnpm -r build && pnpm -r test && pnpm lint",
@@ -18,10 +20,16 @@
     "spec": "curl http://localhost:8787/api/spec.json > spec.json && pnpm exec openapi --input ./spec.json --output ./app/src/client --client axios",
     "prepare": "pnpm exec husky"
   },
-  "keywords": ["cloudflare", "netrunner", "typescript"],
+  "keywords": [
+    "cloudflare",
+    "netrunner",
+    "typescript"
+  ],
   "author": "",
   "lint-staged": {
-    "*": ["pnpm biome"]
+    "*": [
+      "pnpm biome"
+    ]
   },
   "license": "ISC",
   "devDependencies": {
@@ -31,14 +39,14 @@
     "@types/jest": "^29.5.12",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "nodemon": "^3.0.3",
+    "nodemon": "^3.1.0",
     "openapi-typescript-codegen": "^0.25.0",
     "pm2": "^5.3.1",
     "pre-commit": "^1.2.2",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.11",
+    "prettier-plugin-tailwindcss": "^0.5.12",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "wrangler": "^3.28.3"
+    "typescript": "^5.4.3",
+    "wrangler": "^3.37.0"
   }
 }
