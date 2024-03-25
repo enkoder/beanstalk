@@ -46,6 +46,7 @@ const SUPPORTED_TOURNAMENT_TYPES: ABRTournamentTypeFilter[] = [
   ABRTournamentTypeFilter.NationalChampionship,
   ABRTournamentTypeFilter.IntercontinentalChampionship,
   ABRTournamentTypeFilter.ContinentalChampionship,
+  ABRTournamentTypeFilter.PlayersCircuit,
 ];
 
 export async function processScheduledEvent(event: ScheduledEvent, env: Env) {
