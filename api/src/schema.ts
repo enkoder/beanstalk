@@ -23,7 +23,8 @@ export type TournamentType =
   | "store championship"
   | "team tournament"
   | "worlds championship"
-  | "regional championship";
+  | "regional championship"
+  | "players circuit";
 
 export const RankingConfig = {
   tournament_configs: {
@@ -92,6 +93,16 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["circuit breaker"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
       bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
+    } as TournamentConfigType,
+    "players circuit": {
+      code: "players circuit",
+      name: "Players Circuit",
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["players circuit"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["players circuit"],
+      points_per_player: POINTS_PER_PLAYER["players circuit"],
+      baseline_points: BASELINE_POINTS["players circuit"],
+      percent_receiving_points: PERCENT_RECEIVING_POINTS["players circuit"],
+      bottom_threshold: BOTTOM_THRESHOLD["players circuit"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;
