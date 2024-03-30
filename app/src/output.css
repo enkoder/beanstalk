@@ -804,12 +804,20 @@ html {
   height: 100vh;
 }
 
+.h-auto {
+  height: auto;
+}
+
 .max-h-56 {
   max-height: 14rem;
 }
 
 .min-h-full {
   min-height: 100%;
+}
+
+.min-h-80 {
+  min-height: 20rem;
 }
 
 .w-1\/12 {

@@ -185,7 +185,7 @@ export function Leaderboard() {
   return (
     <div
       className={
-        "scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 overflow-y-auto"
+        "scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 min-h-96 overflow-y-auto"
       }
     >
       <PageHeading includeUnderline={true} text={"Leaderboard"}>
