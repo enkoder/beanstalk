@@ -1488,6 +1488,10 @@ html {
   opacity: 1;
 }
 
+.opacity-30 {
+  opacity: 0.3;
+}
+
 .opacity-95 {
   opacity: 0.95;
 }
