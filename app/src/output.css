@@ -808,6 +808,10 @@ html {
   max-height: 14rem;
 }
 
+.min-h-96 {
+  min-height: 24rem;
+}
+
 .min-h-full {
   min-height: 100%;
 }
