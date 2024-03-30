@@ -83,9 +83,7 @@ export async function authMiddleware(request: RequestWithDB, env: Env) {
       accountInfo = await getPrivateAccountInfo(access_token);
     }
   } catch (e) {
-    if (e.statusCode === 401) {
-      return errorResponse(401, "Authentication error");
-    }
+    return;
   }
 
   let user = await Users.getById(
