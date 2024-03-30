@@ -105,6 +105,7 @@ export function Navbar() {
                 <div className="flex flex-shrink-0 items-center">
                   <Link
                     to={"/"}
+                    reloadDocument
                     className={clsx(
                       "flex flex-row items-center text-cyan-500 text-lg",
                     )}
