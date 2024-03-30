@@ -34,10 +34,10 @@ export class LeaderboardService {
             method: 'GET',
             url: '/api/leaderboard',
             query: {
-                seasonId: seasonId,
-                factionCode: factionCode,
-                format: format,
-                tags: tags,
+                'seasonId': seasonId,
+                'factionCode': factionCode,
+                'format': format,
+                'tags': tags,
             },
         });
     }
@@ -57,8 +57,8 @@ export class LeaderboardService {
             method: 'GET',
             url: '/api/point-distribution',
             query: {
-                numPlayers: numPlayers,
-                type: type,
+                'numPlayers': numPlayers,
+                'type': type,
             },
         });
     }

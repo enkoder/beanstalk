@@ -19,11 +19,13 @@ export class Leaderboard {
     faction,
     format,
     tags,
+    isAdmin,
   }: {
     seasonId?: number;
     faction?: Faction;
     format?: Format;
     tags?: string[];
+    isAdmin?: boolean;
   }): Promise<LeaderboardRow[]> {
     const results = await Results.getExpanded({
       seasonId,
@@ -38,8 +40,8 @@ export class Leaderboard {
         rows[result.user_id] = {
           points: 0,
           rank: 0,
-          user_id: result.disabled ? 0 : result.user_id,
-          user_name: result.disabled ? null : result.user_name,
+          user_id: result.disabled && !isAdmin ? 0 : result.user_id,
+          user_name: result.disabled && !isAdmin ? null : result.user_name,
           attended: 0,
           disabled: result.disabled,
         } as LeaderboardRow;

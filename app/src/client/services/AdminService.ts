@@ -43,7 +43,7 @@ export class AdminService {
     public static postIngestTournament(
         requestBody?: {
             userId?: number;
-            tournamentType?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
+            tournamentType?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {

@@ -36,7 +36,7 @@ export class SeasonsService {
             method: 'GET',
             url: '/api/seasons/{seasonId}/tournaments',
             path: {
-                seasonId: seasonId,
+                'seasonId': seasonId,
             },
         });
     }

@@ -36,7 +36,7 @@ export class TournamentService {
             method: 'GET',
             url: '/api/tournaments/{tournamentId}',
             path: {
-                tournamentId: tournamentId,
+                'tournamentId': tournamentId,
             },
         });
     }
@@ -54,7 +54,7 @@ export class TournamentService {
             method: 'GET',
             url: '/api/tournaments/{tournamentId}/results',
             path: {
-                tournamentId: tournamentId,
+                'tournamentId': tournamentId,
             },
         });
     }

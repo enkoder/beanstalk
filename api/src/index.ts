@@ -14,7 +14,7 @@ import { RewriteFrames, Toucan } from "toucan-js";
 import { processQueueBatch, processScheduledEvent } from "./background.js";
 import { ALS } from "./g.js";
 import type { ABREntryType, ABRTournamentType } from "./lib/abr.js";
-import { adminOnly, authenticatedUser } from "./lib/auth.js";
+import { adminOnly, authMiddleware, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
 import { trace } from "./lib/tracer.js";
 import {
@@ -81,7 +81,7 @@ const { preflight, corsify } = createCors({
 
 router
   // un-authed endpoints
-  .all("*", preflight)
+  .all("*", preflight, authMiddleware)
 
   .get("/auth/login_url", GetLoginUrl)
   .get("/auth/token", GetTokenFromCode)

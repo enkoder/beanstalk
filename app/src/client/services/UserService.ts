@@ -65,7 +65,7 @@ export class UserService {
             method: 'GET',
             url: '/api/users/{userID}',
             path: {
-                userID: userId,
+                'userID': userId,
             },
         });
     }

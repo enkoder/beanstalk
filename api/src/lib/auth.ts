@@ -70,11 +70,9 @@ export async function verifyPassword(
 //  return decode(token);
 //}
 
-export async function authenticatedUser(request: RequestWithDB, env: Env) {
+export async function authMiddleware(request: RequestWithDB, env: Env) {
   const access_token = getBearer(request);
-  if (!access_token) {
-    return errorResponse(401, "No token");
-  }
+  if (!access_token) return;
 
   const isTestMode = env.IS_TEST && env.LOGGED_IN_USER_ID !== null;
 
@@ -100,25 +98,19 @@ export async function authenticatedUser(request: RequestWithDB, env: Env) {
       email: accountInfo.email,
     });
   }
-  //const user = await Users.getById(Number(session.payload.sub));
-  //let session;
 
-  //if (token) {
-  //  // Implement your own token validation here
-  //  session = await validateToken(token, env);
-  //}
-
-  //if (!token || !session) {
-  //  return errorResponse(401, "Authentication error. Invalid token");
-  //}
-  //const user = await Users.getById(Number(session.payload.sub));
-
-  //if (!user) {
-  //  return errorResponse(401, "Authentication error. Invalid user.");
-  //}
-  // user_id not null implies user is logged in
+  // these variables can be used in vies
   request.user_id = user.id;
   request.is_admin = user.is_admin !== 0;
+}
+
+export function authenticatedUser(request: RequestWithDB, env: Env) {
+  const isTestMode = env.IS_TEST && env.LOGGED_IN_USER_ID !== null;
+  if (isTestMode) return;
+
+  if (!request.user_id) {
+    return errorResponse(401, "No token");
+  }
 }
 
 export function adminOnly(request: RequestWithDB, _: Env) {

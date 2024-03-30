@@ -54,6 +54,7 @@ export class GetLeaderboard extends OpenAPIRoute {
       faction,
       format,
       tags,
+      isAdmin: req.is_admin,
     });
     for (const result of results) {
       rows.push(LeaderboardRowComponent.parse(result));

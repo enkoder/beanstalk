@@ -32,13 +32,13 @@ export class ResultsService {
             method: 'GET',
             url: '/api/users/{user}/results',
             path: {
-                user: user,
+                'user': user,
             },
             query: {
-                season: season,
-                factionCode: factionCode,
-                format: format,
-                tags: tags,
+                'season': season,
+                'factionCode': factionCode,
+                'format': format,
+                'tags': tags,
             },
         });
     }

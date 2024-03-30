@@ -271,7 +271,9 @@ export function Leaderboard() {
                     )}
                   >
                     {row.disabled ? (
-                      <text>{row.user_name}</text>
+                      <text className="text-gray-500 opacity-30">
+                        {row.user_name}
+                      </text>
                     ) : (
                       <Link to={getLinkToUserSearchParams(row)}>
                         {row.user_name}

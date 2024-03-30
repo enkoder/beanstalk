@@ -21,7 +21,7 @@ export class AssetsService {
             method: 'GET',
             url: '/api/assets/ids/{id}',
             path: {
-                id: id,
+                'id': id,
             },
         });
     }
