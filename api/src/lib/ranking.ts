@@ -12,7 +12,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "intercontinental championship": 100,
     "circuit opener": 100,
     "circuit breaker": 50,
-    "players circuit": 50,
+    "players circuit": 75,
   };
 
 // Defines how many points are added per player registered to the tournament
