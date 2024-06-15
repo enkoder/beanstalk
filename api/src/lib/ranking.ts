@@ -6,13 +6,13 @@ import type { TournamentType } from "../schema.js";
 // of total players i.e. value of 50 implies half of the field will get points
 export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
   {
-    "worlds championship": 50,
-    "continental championship": 50,
-    "national championship": 66,
+    "worlds championship": 100,
+    "continental championship": 100,
+    "national championship": 100,
     "intercontinental championship": 100,
     "circuit opener": 100,
-    "circuit breaker": 50,
-    "players circuit": 75,
+    "circuit breaker": 100,
+    "players circuit": 100,
   };
 
 // Defines how many points are added per player registered to the tournament
