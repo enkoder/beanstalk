@@ -72,7 +72,7 @@ export const BOTTOM_THRESHOLD: Partial<Record<TournamentType, number>> = {
   "continental championship": 1,
   "national championship": 1,
   "intercontinental championship": 20,
-  "circuit opener": 2,
+  "circuit opener": 1,
   "circuit breaker": 1,
   "players circuit": 1,
 };
