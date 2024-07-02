@@ -13,7 +13,7 @@ export class ResultsService {
 
     /**
      * Gets the results for the given user
-     * @param user
+     * @param user Name or ID of the user
      * @param season
      * @param factionCode
      * @param format

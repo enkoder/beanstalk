@@ -7,6 +7,22 @@ import type { TournamentConfig } from './TournamentConfig';
 
 export type RankingConfig = {
     bottom_threshold: number;
-    tournament_configs: Record<string, TournamentConfig>;
+    tournament_configs: {
+        'GNK / seasonal'?: TournamentConfig;
+        'asynchronous tournament'?: TournamentConfig;
+        'circuit breaker'?: TournamentConfig;
+        'circuit opener'?: TournamentConfig;
+        'community tournament'?: TournamentConfig;
+        'continental championship'?: TournamentConfig;
+        'infinite recursion'?: TournamentConfig;
+        'intercontinental championship'?: TournamentConfig;
+        'national championship'?: TournamentConfig;
+        'online event'?: TournamentConfig;
+        'store championship'?: TournamentConfig;
+        'team tournament'?: TournamentConfig;
+        'worlds championship'?: TournamentConfig;
+        'regional championship'?: TournamentConfig;
+        'players circuit'?: TournamentConfig;
+    };
 };
 

@@ -54,7 +54,7 @@ export class UserService {
 
     /**
      * Gets a single user
-     * @param userId
+     * @param userId User ID (integer)
      * @returns User User Object
      * @throws ApiError
      */

@@ -25,7 +25,7 @@ export class TournamentService {
 
     /**
      * Gets a single tournament
-     * @param tournamentId
+     * @param tournamentId Tournament ID
      * @returns Tournament Full Tournament object
      * @throws ApiError
      */
@@ -43,7 +43,7 @@ export class TournamentService {
 
     /**
      * Gets a list of results from the given tournament
-     * @param tournamentId
+     * @param tournamentId Tournament ID
      * @returns Result List of Results from the supplied tournament
      * @throws ApiError
      */

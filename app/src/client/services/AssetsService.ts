@@ -10,7 +10,7 @@ export class AssetsService {
 
     /**
      * Gets a cached ID image
-     * @param id
+     * @param id Identity card ID
      * @returns any Identity image PNG
      * @throws ApiError
      */
