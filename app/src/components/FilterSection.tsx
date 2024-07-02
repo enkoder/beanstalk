@@ -73,7 +73,11 @@ export function FilterSection({
   });
 
   useEffect(() => {
-    if (values.seasonId === undefined && seasons && startSeason > -1) {
+    if (
+      (values.seasonId === undefined || values.seasonId > -1) &&
+      seasons &&
+      startSeason > -1
+    ) {
       const initialSeason =
         seasons.find((s) => s.id === startSeason) || EMPTY_SEASON;
       handleFilterChange("seasonId", initialSeason.id);
@@ -82,7 +86,19 @@ export function FilterSection({
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleFilterChange = (key: keyof FilterSectionValues, value: any) => {
-    const newValues = { ...values, [key]: value };
+    const newValues = { ...values };
+
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      (key === "seasonId" && value === -1)
+    ) {
+      delete newValues[key];
+    } else {
+      newValues[key] = value;
+    }
+
     setValues(newValues);
     setSearchParams(getSearchParamsFromValues(newValues));
     onFilterChange?.(newValues);
