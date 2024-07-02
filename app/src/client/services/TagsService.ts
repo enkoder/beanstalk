@@ -51,7 +51,7 @@ export class TagsService {
 
     /**
      * Deletes a tag
-     * @param tagId
+     * @param tagId Tag ID
      * @returns any Empty object indicates deleted tag
      * @throws ApiError
      */
@@ -69,7 +69,7 @@ export class TagsService {
 
     /**
      * Updates a tag
-     * @param tagId
+     * @param tagId Tag ID
      * @param requestBody
      * @returns any Empty object indicates deleted tag
      * @throws ApiError
@@ -93,7 +93,7 @@ export class TagsService {
 
     /**
      * Inserts a tournament tag
-     * @param tagId
+     * @param tagId Tag ID you are using to tag the given tournament
      * @param requestBody
      * @returns TagTournament Returns a array of rows showing all tags, the owners, and the count of tournaments associated with each tag
      * @throws ApiError
@@ -117,7 +117,7 @@ export class TagsService {
 
     /**
      * Gets a list of tag tournaments
-     * @param tagId
+     * @param tagId Tag ID
      * @returns TagTournament List of tag tournaments
      * @throws ApiError
      */
@@ -135,8 +135,8 @@ export class TagsService {
 
     /**
      * Deletes the given tag tournament
-     * @param tagId
-     * @param tagTournamentId
+     * @param tagId Tag ID
+     * @param tagTournamentId Tag Tournament ID
      * @returns any Empty object indicating tag tournament was deleted
      * @throws ApiError
      */

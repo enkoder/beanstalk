@@ -26,7 +26,7 @@ export type Result = {
     user_id: number;
     user_name: string | null;
     format: Format;
-    count_for_tournament_type: number;
+    count_for_tournament_type?: number;
     is_valid: boolean;
 };
 

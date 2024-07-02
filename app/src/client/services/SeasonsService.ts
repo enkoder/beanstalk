@@ -25,7 +25,7 @@ export class SeasonsService {
 
     /**
      * Gets a list of all existing and past Seasons.
-     * @param seasonId
+     * @param seasonId Season ID
      * @returns Tournament list of Tournaments for the given season
      * @throws ApiError
      */

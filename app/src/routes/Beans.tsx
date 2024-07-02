@@ -282,10 +282,8 @@ export function Beans() {
             beans. For every player registered, this adds 1 bean to the
             potential pool for first place. For intercontinentals that don't
             have a season associated with it, they receive a flat{" "}
-            {
-              rankingConfig?.tournament_configs["intercontinental championship"]
-                .baseline_points
-            }{" "}
+            {rankingConfig?.tournament_configs["intercontinental championship"]
+              ?.baseline_points ?? 0}{" "}
             beans.
           </p>
         ),
