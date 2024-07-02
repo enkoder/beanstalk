@@ -214,10 +214,8 @@ export function Results() {
                   {!result.is_valid && rankingConfig ? (
                     <span>
                       Limit{" "}
-                      {
-                        rankingConfig.tournament_configs[result.tournament_type]
-                          .tournament_limit
-                      }{" "}
+                      {rankingConfig.tournament_configs[result.tournament_type]
+                        ?.tournament_limit ?? 0}{" "}
                       per {capStr(result.tournament_type)}
                     </span>
                   ) : (

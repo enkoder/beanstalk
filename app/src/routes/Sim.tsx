@@ -14,8 +14,9 @@ import { Sep } from "../components/Sep";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 
 export function Sim() {
-  const [selectedTournamentConfig, setSelectedTournamentConfig] =
-    useState<TournamentConfig | null>(null);
+  const [selectedTournamentConfig, setSelectedTournamentConfig] = useState<
+    TournamentConfig | null | undefined
+  >(null);
   const [numPlayers, setNumPlayers] = useState<number | undefined>(32);
   const [pointsDistributionResponse, setPointsDistributionResponse] =
     useState<GetPointDistributionResponse>();

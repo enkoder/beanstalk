@@ -100,8 +100,8 @@ export function ExpandedSection({
                   <span>
                     Limit{" "}
                     {
-                      rankingConfig.tournament_configs[result.tournament_type]
-                        .tournament_limit
+                      rankingConfig.tournament_configs?.[result.tournament_type]
+                        ?.tournament_limit
                     }{" "}
                     per {capStr(result.tournament_type)}
                   </span>
