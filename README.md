@@ -64,6 +64,19 @@ pnpm start-app
 pnpm spec
 ```
 
+### Database
+
+It's important to have real data to start developing locally. You can use Wrangler to export the db locally, but will
+likely have issues if you've already applied migrations. Delete the sqlite db from `api/.wrangler/state/**/*.sqlite` and import data with the given commands below. You may need to adjuste the order of when tables are getting created, i.e.
+move the users section to the top.
+
+```shell
+# export the backfile file from the remote
+pnpm --filter api exec  wrangler d1 export beanstalk-api --output backup.sql --remote
+# import the data locally
+pnpm --filter api exec wrangler d1 execute beanstalk-api --file backup.sql
+```
+
 ### PM2
 
 [PM2](https://pm2.keymetrics.io/) is an alternative to [supervisord](http://supervisord.org/) if you are familiar with that product. Based upon a [config file](./ecosystem.config.js) PM2 can orchestrate running these "apps" locally for you w/o needing to open N number of terminal windows. This means once you stand it all up, it will stay running. There's a few pnpm commands that abstract away the need to learn PM2 commands directly, but it's certainly recommended to read up on the product.

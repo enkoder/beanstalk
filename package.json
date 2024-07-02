@@ -38,15 +38,15 @@
     "@rspack/core": "0.3.10",
     "@types/jest": "^29.5.12",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "nodemon": "^3.1.0",
+    "lint-staged": "^15.2.7",
+    "nodemon": "^3.1.4",
     "openapi-typescript-codegen": "^0.25.0",
-    "pm2": "^5.3.1",
+    "pm2": "^5.4.1",
     "pre-commit": "^1.2.2",
-    "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.12",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3",
-    "wrangler": "^3.37.0"
+    "typescript": "^5.5.3",
+    "wrangler": "^3.62.0"
   }
 }

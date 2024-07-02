@@ -18,7 +18,6 @@ import { adminOnly, authMiddleware, authenticatedUser } from "./lib/auth.js";
 import { errorResponse } from "./lib/errors.js";
 import { trace } from "./lib/tracer.js";
 import {
-  ExportDB,
   IngestTournament,
   IngestTournaments,
   UpdateCards,
@@ -124,7 +123,6 @@ router
   // Admin endpoints
   .all("/admin/*", authenticatedUser, adminOnly)
   .get("/admin/updateNRDBNames", UpdateUsers)
-  .get("/admin/exportDB", ExportDB)
   .post("/admin/ingestTournament", IngestTournament)
   .post("/admin/ingestTournaments", IngestTournaments)
   .post("/admin/updateCards", UpdateCards)
