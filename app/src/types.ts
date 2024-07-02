@@ -1,3 +1,5 @@
+import type { Faction } from "./client/models/Faction";
+
 export type FactionCode =
   | "anarch"
   | "criminal"
@@ -11,14 +13,6 @@ export type FactionCode =
   | "apex"
   | "adam"
   | "sunny-lebeau";
-
-export type Faction = {
-  code: FactionCode;
-  color: string;
-  is_mini: boolean;
-  name: string;
-  side_code: "runner" | "corp";
-};
 
 export const Factions = {
   Anarch: {

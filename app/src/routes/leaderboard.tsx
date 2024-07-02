@@ -13,14 +13,11 @@ import {
   type User,
   type UserResultsResponse,
 } from "../client";
-import {
-  FilterSection,
-  getFilterValues,
-  getSearchParamsFromValues,
-} from "../components/FilterSection";
+import { FilterSection } from "../components/FilterSection";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
+import { getFilterValues, getSearchParamsFromValues } from "../filterUtils";
 import { capStr } from "../util";
 
 type ExpandedSectionProps = {
@@ -195,7 +192,7 @@ export function Leaderboard() {
           </h1>
         )}
       </PageHeading>
-      <FilterSection hasSearchBar={true} />
+      <FilterSection hasSearchBar={true} startSeason={2} />
       <table
         className={
           "w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"
