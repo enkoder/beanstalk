@@ -1,8 +1,4 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
-import {
-  type CreateBackupOptions,
-  createBackup,
-} from "@nora-soderlund/cloudflare-d1-backups";
 import { parseISO } from "date-fns";
 import { json } from "itty-router";
 import pLimit from "p-limit";
