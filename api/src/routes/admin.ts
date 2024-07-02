@@ -12,7 +12,6 @@ import { Seasons } from "../models/season.js";
 import { Tournaments } from "../models/tournament.js";
 import { Users } from "../models/user.js";
 import {
-  ExportDBSchema,
   IngestTournamentBody,
   IngestTournamentSchema,
   IngestTournamentsSchema,

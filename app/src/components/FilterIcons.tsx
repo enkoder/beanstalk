@@ -12,6 +12,7 @@ import NbnIcon from "../../assets/factions/NSG_NBN.svg";
 import ShaperIcon from "../../assets/factions/NSG_SHAPER.svg";
 import SunnyIcon from "../../assets/factions/NSG_SUNNY.svg";
 import WeylandIcon from "../../assets/factions/NSG_WEYLAND.svg";
+import type { Faction } from "../client";
 import { Factions } from "../types";
 
 const ICON_SIZE = "h-6 w-6";

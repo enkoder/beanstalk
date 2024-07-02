@@ -8,10 +8,11 @@ import {
   ResultsService,
   type UserResultsResponse,
 } from "../client";
-import { FilterSection, getFilterValues } from "../components/FilterSection";
+import { FilterSection } from "../components/FilterSection";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
+import { getFilterValues } from "../filterUtils";
 import { capStr } from "../util";
 
 type ResultsParams = {
@@ -125,7 +126,7 @@ export function Results() {
         )}
       </div>
 
-      <FilterSection hasSearchBar={false} />
+      <FilterSection hasSearchBar={false} startSeason={2} />
 
       <table
         className={

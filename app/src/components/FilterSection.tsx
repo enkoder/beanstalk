@@ -29,7 +29,7 @@ const EMPTY_SEASON: Season = {
   started_at: "",
 };
 const EMPTY_FACTION: Faction = {
-  code: "anarch",
+  code: "",
   color: "",
   is_mini: false,
   name: "Faction Filter...",
@@ -73,7 +73,7 @@ export function FilterSection({
   });
 
   useEffect(() => {
-    if (seasons && startSeason > -1) {
+    if (values.seasonId === undefined && seasons && startSeason > -1) {
       const initialSeason =
         seasons.find((s) => s.id === startSeason) || EMPTY_SEASON;
       handleFilterChange("seasonId", initialSeason.id);
@@ -89,7 +89,7 @@ export function FilterSection({
   };
 
   const renderFilters = () => (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 sm:grid-cols-2 xl:grid-cols-5">
+    <div className="z-1 grid grid-cols-1 gap-x-4 xl:flex sm:grid-cols-2 xl:grid-cols-none xl:flex-row">
       {hasSearchBar && (
         <Input
           width="w-full"
