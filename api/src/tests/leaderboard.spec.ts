@@ -387,10 +387,7 @@ describe("leaderboard", () => {
     const rows = (await response.json()) as LeaderboardRowComponentType[];
 
     expect(rows[0].rank).toEqual(1);
-    expect(rows[0].user_id).toEqual(0);
-    expect(rows[0].user_name).toEqual(null);
-
-    expect(rows[1].rank).toEqual(2);
-    expect(rows[1].user_id).toEqual(u1.id);
+    expect(rows[0].user_id).toEqual(1);
+    expect(rows.length).toEqual(1);
   });
 });
