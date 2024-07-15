@@ -667,13 +667,13 @@ export const RecalculateLeaderboardSchema = {
 
 export const UserResultsResponseComponent = z
   .object({
-    user_name: z.string(),
-    user_id: z.number(),
+    userName: z.string(),
+    userId: z.number(),
     rank: z.number(),
-    seasonId: z.number().optional(),
-    seasonName: z.string().optional(),
-    format: FormatComponent.optional(),
-    factionCode: z.string().optional(),
+    seasonId: z.number().optional().nullable(),
+    seasonName: z.string().optional().nullable(),
+    format: FormatComponent.optional().nullable(),
+    factionCode: z.string().optional().nullable(),
     results: z.array(ResultComponent),
   })
   .openapi("UserResultsResponse");

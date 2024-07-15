@@ -7,8 +7,8 @@ import type { Format } from './Format';
 import type { Result } from './Result';
 
 export type UserResultsResponse = {
-    user_name: string;
-    user_id: number;
+    userName: string;
+    userId: number;
     rank: number;
     seasonId?: number;
     seasonName?: string;
