@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.5 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -592,16 +592,8 @@ html {
   position: sticky;
 }
 
-.-inset-0 {
-  inset: -0px;
-}
-
 .-inset-0\.5 {
   inset: -0.125rem;
-}
-
-.-inset-1 {
-  inset: -0.25rem;
 }
 
 .-inset-1\.5 {
