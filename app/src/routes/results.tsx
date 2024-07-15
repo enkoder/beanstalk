@@ -110,7 +110,7 @@ export function Results() {
       <div className={"mb-4"}>
         {results && (
           <>
-            <PageHeading text={results.user_name} includeUnderline={true} />
+            <PageHeading text={results.userName} includeUnderline={true} />
             {results.results.length === 0 ? (
               <text className={"text-gray-400 text-lg"}>
                 No results found for search filters
@@ -159,7 +159,7 @@ export function Results() {
                 <TooltipTrigger asChild={true}>
                   <tr
                     className={"text-left even:bg-slate-950 odd:bg-slate-900"}
-                    key={`${results.user_id}/${result.tournament_id}`}
+                    key={`${results.userId}/${result.tournament_id}`}
                   >
                     <td className={"whitespace-pre-wrap py-2"}>
                       <span>

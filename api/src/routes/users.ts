@@ -138,7 +138,7 @@ export class GetUserResults extends OpenAPIRoute {
       UserResultsResponseComponent.parse({
         userId: user.id,
         userName: user.name,
-        seasonId: seasonId || null,
+        seasonId: seasonId === undefined ? null : seasonId,
         seasonName: seasonName,
         format: format,
         factionCode: faction?.code || null,
