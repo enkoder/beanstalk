@@ -106,11 +106,7 @@ describe("tournaments", () => {
     expect(data[0].rank_cut).toBe(1);
     expect(data[0].rank_swiss).toBe(1);
 
-    // Disabled user
-    expect(data[1].user_id).toBe(0);
-    expect(data[1].user_name).toBe(null);
-    expect(data[1].points_earned).toBe(50);
-    expect(data[1].rank_cut).toBe(2);
-    expect(data[1].rank_swiss).toBe(2);
+    // Disabled user should not be in this list
+    expect(data.length).toBe(1);
   });
 });

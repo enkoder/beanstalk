@@ -85,6 +85,8 @@ export class Results {
         "tournaments.players_count as players_count",
         "tournaments.format as format",
       ])
+      // Only fetch results for non-disabled users
+      .where("users.disabled", "=", 0)
       .select((eb) => [
         eb.fn
           .agg<number>("rank")
