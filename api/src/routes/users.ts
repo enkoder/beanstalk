@@ -17,6 +17,7 @@ import {
   ResultComponent,
   type UpdateUserComponentType,
   UserComponent,
+  UserResultsResponseComponent,
 } from "../openapi.js";
 import type { FactionCode, Format } from "../schema.js";
 import type { Env, RequestWithDB } from "../types.d.js";
@@ -133,15 +134,17 @@ export class GetUserResults extends OpenAPIRoute {
       }
     }
 
-    return json({
-      user_id: user.id,
-      user_name: user.name,
-      season_id: seasonId || null,
-      seasonName: seasonName,
-      format: format,
-      factionCode: faction?.code || null,
-      rank: currentRank,
-      results: results.map((result) => ResultComponent.parse(result)),
-    });
+    return json(
+      UserResultsResponseComponent.parse({
+        userId: user.id,
+        userName: user.name,
+        seasonId: seasonId === undefined ? null : seasonId,
+        seasonName: seasonName,
+        format: format,
+        factionCode: faction?.code || null,
+        rank: currentRank,
+        results: results.map((result) => ResultComponent.parse(result)),
+      }),
+    );
   }
 }

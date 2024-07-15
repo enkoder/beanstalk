@@ -49,7 +49,7 @@ export function ExpandedSection({
               <TooltipTrigger asChild={true}>
                 <tr
                   className={"text-left"}
-                  key={`${results.user_id}/${result.tournament_id}`}
+                  key={`${results.userId}/${result.tournament_id}`}
                 >
                   <td
                     className={clsx(

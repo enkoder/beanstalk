@@ -1,13 +1,12 @@
 {
   "extends": "../tsconfig.json",
   "include": [
-    "src/*",
-    "../node_modules/.pnpm/@nora-soderlund+cloudflare-d1-backups@1.2.0/node_modules/@nora-soderlund/cloudflare-d1-backups/example/global.d.ts"
+    "src/*"
   ],
   "compilerOptions": {
     "target": "ES6",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "removeComments": true,
     "inlineSourceMap": true,

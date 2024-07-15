@@ -73,15 +73,16 @@ export function FilterSection({
   });
 
   useEffect(() => {
-    if (
-      (values.seasonId === undefined || values.seasonId > -1) &&
-      seasons &&
-      startSeason > -1
-    ) {
-      const initialSeason =
-        seasons.find((s) => s.id === startSeason) || EMPTY_SEASON;
-      handleFilterChange("seasonId", initialSeason.id);
+    if (seasons === undefined) return;
+
+    let seasonId: number | null = null;
+    // No season selected, use default given
+    if (values.seasonId === undefined && startSeason > -1) {
+      seasonId = startSeason;
+    } else if (values.seasonId !== undefined && values.seasonId > -1) {
+      seasonId = values.seasonId;
     }
+    handleFilterChange("seasonId", seasonId);
   }, [seasons, startSeason]);
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
