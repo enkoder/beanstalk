@@ -17,8 +17,8 @@
     "@cloudflare/itty-router-openapi": "^1.1.1",
     "@microlabs/otel-cf-workers": "1.0.0-rc.15",
     "@opentelemetry/api": "1.4.0",
-    "@sentry/cli": "^2.32.2",
-    "@tsndr/cloudflare-worker-jwt": "^2.5.3",
+    "@sentry/cli": "^2.39.0",
+    "@tsndr/cloudflare-worker-jwt": "^2.5.4",
     "date-fns": "^2.30.0",
     "itty-router": "^4.2.2",
     "kysely-d1": "^0.3.0",
@@ -30,19 +30,19 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240712.0",
+    "@cloudflare/workers-types": "^4.20241112.0",
     "@jest/types": "^29.6.3",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.10",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.7",
     "@types/object-hash": "^3.0.6",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-import": "^2.31.0",
     "jest": "^29.7.0",
     "kysely": "^0.26.3",
-    "miniflare": "^3.20240701.0",
-    "ts-jest": "^29.2.2",
+    "miniflare": "^3.20241106.1",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
-    "wrangler": "^3.64.0"
+    "typescript": "^5.7.2",
+    "wrangler": "^3.90.0"
   }
 }
