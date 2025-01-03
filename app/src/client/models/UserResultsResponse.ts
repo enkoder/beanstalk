@@ -10,10 +10,10 @@ export type UserResultsResponse = {
     userName: string;
     userId: number;
     rank: number;
-    seasonId?: number;
-    seasonName?: string;
+    seasonId?: number | null;
+    seasonName?: string | null;
     format?: Format;
-    factionCode?: string;
+    factionCode?: string | null;
     results: Array<Result>;
 };
 

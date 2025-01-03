@@ -14,6 +14,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "circuit breaker": 100,
     "circuit breaker invitational": 100,
     "players circuit": 100,
+    "casual tournament kit": 100,
   };
 
 // Defines how many points are added per player registered to the tournament
@@ -27,6 +28,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "circuit breaker": 2,
   "circuit breaker invitational": 2,
   "players circuit": 2,
+  "casual tournament kit": 1,
 };
 
 // Flat points added to the total point pool that gets awarded to 1st place
@@ -40,6 +42,7 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
   "circuit breaker": 200,
   "circuit breaker invitational": 200,
   "players circuit": 25,
+  "casual tournament kit": 15,
 };
 
 // Sets a baseline number of players a tournament must have in order to distribute any points at all
@@ -54,6 +57,7 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
     "circuit breaker": 8,
     "circuit breaker invitational": 8,
     "players circuit": 8,
+    "casual tournament kit": 8,
   };
 
 // Defines the max number of tournaments a person can get points for
@@ -68,6 +72,7 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "circuit breaker": 1,
     "circuit breaker invitational": 1,
     "players circuit": 1,
+    "casual tournament kit": 5,
   };
 
 // Defines the bottom anchor point which means the last place player will receive less than the value provided
@@ -81,6 +86,7 @@ export const BOTTOM_THRESHOLD: Partial<Record<TournamentType, number>> = {
   "circuit breaker": 1,
   "circuit breaker invitational": 1,
   "players circuit": 1,
+  "casual tournament kit": 1,
 };
 
 export function calculatePointDistribution(

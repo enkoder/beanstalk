@@ -21,6 +21,7 @@ export const TournamentTypes = [
   "worlds championship",
   "regional championship",
   "players circuit",
+  "casual tournament kit",
 ] as const;
 
 // biome-ignore lint/complexity/noStaticOnlyClass:

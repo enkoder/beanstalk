@@ -25,7 +25,7 @@ export class ResultsService {
         user: string,
         season?: number | null,
         factionCode?: string,
-        format?: Format,
+        format?: (Format & string),
         tags?: (string | Array<string>),
     ): CancelablePromise<UserResultsResponse> {
         return __request(OpenAPI, {
