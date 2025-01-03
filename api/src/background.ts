@@ -198,6 +198,14 @@ async function ingestEntry(
     });
   }
 
+  // update name based upon their NRDB account if it has changed
+  if (user && user.name !== name) {
+    user = await Users.insert({
+      id: user.id,
+      name: name,
+    });
+  }
+
   if (!user) {
     return null;
   }
