@@ -11,6 +11,7 @@ export type RankingConfig = {
         'GNK / seasonal'?: TournamentConfig;
         'asynchronous tournament'?: TournamentConfig;
         'circuit breaker'?: TournamentConfig;
+        'circuit breaker invitational'?: TournamentConfig;
         'circuit opener'?: TournamentConfig;
         'community tournament'?: TournamentConfig;
         'continental championship'?: TournamentConfig;

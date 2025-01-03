@@ -8,6 +8,7 @@ export const TournamentTypes = [
   "GNK / seasonal",
   "asynchronous tournament",
   "circuit breaker",
+  "circuit breaker invitational",
   "circuit opener",
   "community tournament",
   "continental championship",

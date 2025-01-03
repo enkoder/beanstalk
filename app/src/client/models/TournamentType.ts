@@ -7,6 +7,7 @@ export enum TournamentType {
     GNK_SEASONAL = 'GNK / seasonal',
     ASYNCHRONOUS_TOURNAMENT = 'asynchronous tournament',
     CIRCUIT_BREAKER = 'circuit breaker',
+    CIRCUIT_BREAKER_INVITATIONAL = 'circuit breaker invitational',
     CIRCUIT_OPENER = 'circuit opener',
     COMMUNITY_TOURNAMENT = 'community tournament',
     CONTINENTAL_CHAMPIONSHIP = 'continental championship',

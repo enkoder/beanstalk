@@ -12,6 +12,7 @@ export const PERCENT_RECEIVING_POINTS: Partial<Record<TournamentType, number>> =
     "intercontinental championship": 100,
     "circuit opener": 100,
     "circuit breaker": 100,
+    "circuit breaker invitational": 100,
     "players circuit": 100,
   };
 
@@ -24,6 +25,7 @@ export const POINTS_PER_PLAYER: Partial<Record<TournamentType, number>> = {
   "intercontinental championship": 0,
   "circuit opener": 1,
   "circuit breaker": 2,
+  "circuit breaker invitational": 2,
   "players circuit": 2,
 };
 
@@ -36,6 +38,7 @@ export const BASELINE_POINTS: Partial<Record<TournamentType, number>> = {
   "intercontinental championship": 200,
   "circuit opener": 15,
   "circuit breaker": 200,
+  "circuit breaker invitational": 200,
   "players circuit": 25,
 };
 
@@ -49,6 +52,7 @@ export const MIN_PLAYERS_TO_BE_LEGAL: Partial<Record<TournamentType, number>> =
     "intercontinental championship": 8,
     "circuit opener": 8,
     "circuit breaker": 8,
+    "circuit breaker invitational": 8,
     "players circuit": 8,
   };
 
@@ -62,6 +66,7 @@ export const MAX_TOURNAMENTS_PER_TYPE: Partial<Record<TournamentType, number>> =
     "intercontinental championship": 1,
     "circuit opener": 5,
     "circuit breaker": 1,
+    "circuit breaker invitational": 1,
     "players circuit": 1,
   };
 
@@ -74,6 +79,7 @@ export const BOTTOM_THRESHOLD: Partial<Record<TournamentType, number>> = {
   "intercontinental championship": 20,
   "circuit opener": 1,
   "circuit breaker": 1,
+  "circuit breaker invitational": 1,
   "players circuit": 1,
 };
 
