@@ -27,7 +27,7 @@ export class LeaderboardService {
     public static getGetLeaderboard(
         seasonId?: number | null,
         factionCode?: string,
-        format?: Format,
+        format?: (Format & string),
         tags?: (string | Array<string>),
     ): CancelablePromise<Array<LeaderboardRow>> {
         return __request(OpenAPI, {
@@ -77,10 +77,10 @@ export class LeaderboardService {
 
     /**
      * Returns a list of supported Netrunner Formats
-     * @returns Format Returns an array supported Formats
+     * @returns any Returns an array supported Formats
      * @throws ApiError
      */
-    public static getGetFormats(): CancelablePromise<Array<Format>> {
+    public static getGetFormats(): CancelablePromise<Array<(Format & string)>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/formats',

@@ -20,4 +20,5 @@ export enum TournamentType {
     WORLDS_CHAMPIONSHIP = 'worlds championship',
     REGIONAL_CHAMPIONSHIP = 'regional championship',
     PLAYERS_CIRCUIT = 'players circuit',
+    CASUAL_TOURNAMENT_KIT = 'casual tournament kit',
 }

@@ -24,6 +24,7 @@ export type RankingConfig = {
         'worlds championship'?: TournamentConfig;
         'regional championship'?: TournamentConfig;
         'players circuit'?: TournamentConfig;
+        'casual tournament kit'?: TournamentConfig;
     };
 };
 

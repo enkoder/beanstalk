@@ -25,7 +25,7 @@ export type Result = {
     runner_deck_url?: string | null;
     user_id: number;
     user_name: string | null;
-    format: Format;
+    format: (Format & string);
     count_for_tournament_type?: number;
     is_valid: boolean;
 };

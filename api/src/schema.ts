@@ -25,7 +25,8 @@ export type TournamentType =
   | "team tournament"
   | "worlds championship"
   | "regional championship"
-  | "players circuit";
+  | "players circuit"
+  | "casual tournament kit";
 
 export const RankingConfig = {
   tournament_configs: {
@@ -116,6 +117,17 @@ export const RankingConfig = {
       baseline_points: BASELINE_POINTS["players circuit"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["players circuit"],
       bottom_threshold: BOTTOM_THRESHOLD["players circuit"],
+    } as TournamentConfigType,
+    "casual tournament kit": {
+      code: "casual tournament kit",
+      name: "Casual Tournament Kit",
+      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["casual tournament kit"],
+      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["casual tournament kit"],
+      points_per_player: POINTS_PER_PLAYER["casual tournament kit"],
+      baseline_points: BASELINE_POINTS["casual tournament kit"],
+      percent_receiving_points:
+        PERCENT_RECEIVING_POINTS["casual tournament kit"],
+      bottom_threshold: BOTTOM_THRESHOLD["casual tournament kit"],
     } as TournamentConfigType,
   },
 } as RankingConfigType;
