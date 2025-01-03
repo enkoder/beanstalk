@@ -13,6 +13,7 @@ export type TournamentType =
   | "GNK / seasonal"
   | "asynchronous tournament"
   | "circuit breaker"
+  | "circuit breaker invitational"
   | "circuit opener"
   | "community tournament"
   | "continental championship"
@@ -91,6 +92,18 @@ export const RankingConfig = {
       min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit breaker"],
       points_per_player: POINTS_PER_PLAYER["circuit breaker"],
       baseline_points: BASELINE_POINTS["circuit breaker"],
+      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
+      bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
+    } as TournamentConfigType,
+    "circuit breaker invitational": {
+      code: "circuit breaker invitational",
+      name: "Circuit Breaker Invitational",
+      tournament_limit:
+        MAX_TOURNAMENTS_PER_TYPE["circuit breaker invitational"],
+      min_players_to_be_legal:
+        MIN_PLAYERS_TO_BE_LEGAL["circuit breaker invitational"],
+      points_per_player: POINTS_PER_PLAYER["circuit breaker invitational"],
+      baseline_points: BASELINE_POINTS["circuit breaker invitational"],
       percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
       bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
     } as TournamentConfigType,
