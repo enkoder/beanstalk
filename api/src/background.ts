@@ -12,7 +12,7 @@ import {
   getTournamentsByUserId,
 } from "./lib/abr.js";
 import * as NRDB from "./lib/nrdb.js";
-import { calculatePointDistribution } from "./lib/ranking.js";
+import { calculatePointDistribution, getSeasonConfig } from "./lib/ranking.js";
 import { trace } from "./lib/tracer.js";
 import { Results } from "./models/results.js";
 import { Seasons } from "./models/season.js";
@@ -261,16 +261,22 @@ async function handleResultIngest(
     tournament.season_id !== 0 &&
     tournament.season_id !== null
   ) {
-    count = await Results.countUniqueAttendeesByType(
-      "continental championship",
-      tournament.season_id,
-    );
+    // We use the number of continental championships as the total number of players
+    count =
+      (await Results.countUniqueAttendeesByType(
+        "continental championship",
+        tournament.season_id,
+      )) *
+      getSeasonConfig(tournament.season_id).POINTS_PER_PLAYER[
+        "intercontinental championship"
+      ];
   }
 
   const { points } = calculatePointDistribution(
     tournament.players_count,
     tournament.type,
     count,
+    tournament.season_id,
   );
 
   const placementIndex = (abrEntry.rank_top || abrEntry.rank_swiss) - 1;

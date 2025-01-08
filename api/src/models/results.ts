@@ -1,5 +1,5 @@
 import { g } from "../g.js";
-import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking.js";
+import { DEFAULT_CONFIG } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import {
   type Faction,
@@ -135,7 +135,10 @@ export class Results {
     const results: ResultExpanded[] = [];
     const initialResults = await q.execute();
     for (let i = 0; i < initialResults.length; i++) {
-      const max = MAX_TOURNAMENTS_PER_TYPE[initialResults[i].tournament_type];
+      const max =
+        DEFAULT_CONFIG.MAX_TOURNAMENTS_PER_TYPE[
+          initialResults[i].tournament_type
+        ];
       results.push({
         ...initialResults[i],
         is_valid: includeLimits

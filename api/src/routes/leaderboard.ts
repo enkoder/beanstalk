@@ -4,6 +4,7 @@ import { calculatePointDistribution } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import { Factions, getFactionFromCode } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard.js";
+import { Seasons } from "../models/season.js";
 import { Formats } from "../models/tournament.js";
 import {
   FactionComponent,
@@ -24,7 +25,7 @@ import {
   RankingConfig,
   type TournamentType,
 } from "../schema.js";
-import type { RequestWithDB } from "../types.d.js";
+import type { RequestWithDB } from "../types.js";
 
 export class GetLeaderboard extends OpenAPIRoute {
   static schema = GetLeaderboardSchema;
@@ -70,10 +71,19 @@ export class GetPointDistribution extends OpenAPIRoute {
   @traceDeco("GetPointsDistribution") async handle(req: RequestWithDB) {
     const numPlayers = Number(req.query.numPlayers);
     const type = req.query.type as TournamentType;
+    const seasonId = req.query.seasonId
+      ? Number(req.query.seasonId)
+      : (await Seasons.getCurrentSeason())?.id;
+
+    if (!seasonId) {
+      throw new Error("No current season found");
+    }
 
     const { points, totalPoints } = calculatePointDistribution(
       numPlayers,
       type,
+      undefined,
+      seasonId,
     );
 
     const cumulative: number[] = [];

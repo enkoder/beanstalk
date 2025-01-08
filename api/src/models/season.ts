@@ -42,4 +42,15 @@ export class Seasons {
       .returningAll()
       .executeTakeFirst();
   }
+
+  @traceDeco("Season")
+  public static async getCurrentSeason(): Promise<Season> {
+    return await g()
+      .db.selectFrom("seasons")
+      .selectAll()
+      .where("started_at", "<=", new Date().toISOString())
+      .where("ended_at", "is", null) // Ended at is null if it's the current season and in flight
+      .orderBy("started_at", "desc")
+      .executeTakeFirst();
+  }
 }
