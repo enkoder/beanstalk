@@ -5,6 +5,12 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const postcssConfig = require("./postcss.config");
 
+const child_process = require('child_process');
+function git(command) {
+  return child_process.execSync(`git ${command}`, { encoding: 'utf8' }).trim();
+}
+
+
 module.exports = {
 	target: "web",
 	context: __dirname,
@@ -51,6 +57,10 @@ module.exports = {
 		new rspack.HtmlRspackPlugin({
 			template: "./public/index.html",
 			favicon: "./public/favicon.ico",
+		}),
+		new rspack.EnvironmentPlugin({
+			GIT_BRANCH: process.env.CF_PAGES_BRANCH || git("branch --show-current"),
+			GIT_COMMIT_HASH: git("describe --always"),
 		}),
 	],
 	mode: isProduction ? "production" : "development",

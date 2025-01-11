@@ -17,7 +17,6 @@
     "@cloudflare/itty-router-openapi": "^1.1.1",
     "@microlabs/otel-cf-workers": "1.0.0-rc.15",
     "@opentelemetry/api": "1.4.0",
-    "@sentry/cli": "^2.40.0",
     "@tsndr/cloudflare-worker-jwt": "^2.5.4",
     "date-fns": "^2.30.0",
     "itty-router": "^4.2.2",
@@ -30,6 +29,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@sentry/cli": "^2.40.0",
     "@cloudflare/workers-types": "^4.20241230.0",
     "@jest/types": "^29.6.3",
     "@types/jest": "^29.5.14",

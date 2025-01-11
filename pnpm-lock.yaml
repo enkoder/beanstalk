@@ -65,9 +65,6 @@ importers:
       '@opentelemetry/api':
         specifier: 1.4.0
         version: 1.4.0
-      '@sentry/cli':
-        specifier: ^2.40.0
-        version: 2.40.0
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.5.4
         version: 2.5.4
@@ -105,6 +102,9 @@ importers:
       '@jest/types':
         specifier: ^29.6.3
         version: 29.6.3
+      '@sentry/cli':
+        specifier: ^2.40.0
+        version: 2.40.0
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14

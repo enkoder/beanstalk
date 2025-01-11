@@ -5,13 +5,17 @@ logpush = true
 compatibility_flags = ["nodejs_compat"]
 
 kv_namespaces = [
-    { binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" }
+    { binding = "CARDS_KV", id = "6c729db14d8e4dd093522abc3ac96310" },
 ]
+
 
 [vars]
 SENTRY_RELEASE = ""
 IS_TEST = false
 ENVIRONMENT = "production"
+
+[observability.logs]
+enabled = true
 
 [triggers]
 # Every day at midnight
@@ -126,3 +130,70 @@ migrations_dir = "migrations"
 [[env.dev.r2_buckets]]
 binding = 'BACKUP_BUCKET'
 bucket_name = 'beanstalk-backup-bucket'
+
+[env.preview.observability.logs]
+enabled = true
+
+[env.preview.triggers]
+# Every day at midnight
+crons = ["0 0 * * *"]
+
+# Preview Environment
+[env.preview.vars]
+SENTRY_RELEASE = ""
+IS_TEST = false
+ENVIRONMENT = "preview"
+
+[[env.preview.kv_namespaces]]
+binding = "CARDS_KV"
+id = "ebc3c76a92bb40c3bfc5861fd458d101"
+
+[[env.preview.queues.producers]]
+queue = "ingest-tournament-preview"
+binding = "INGEST_TOURNAMENT_Q"
+
+[[env.preview.queues.consumers]]
+queue = "ingest-tournament-preview"
+dead_letter_queue = "ingest-tournament-preview-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.preview.queues.consumers]]
+queue = "ingest-tournament-dlq-preview"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.preview.queues.producers]]
+queue = "ingest-result-preview"
+binding = "INGEST_RESULT_Q"
+
+[[env.preview.queues.consumers]]
+queue = "ingest-result-preview"
+dead_letter_queue = "ingest-result-dlq"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.preview.queues.consumers]]
+queue = "ingest-result-dlq-preview"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.preview.queues.producers]]
+queue = "ingest-card-preview"
+binding = "INGEST_CARD_Q"
+
+[[env.preview.queues.consumers]]
+queue = "ingest-card-preview"
+max_batch_size = 5
+max_batch_timeout = 30
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "beanstalk-api-preview"
+database_id = "77d232b3-d0fc-4448-8e8e-10c3d80b4ebc"
+migrations_table = "migrations"
+migrations_dir = "migrations"
+
+[[env.preview.r2_buckets]]
+binding = 'BACKUP_BUCKET'
+bucket_name = 'beanstalk-backup-bucket-preview'

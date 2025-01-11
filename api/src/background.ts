@@ -33,10 +33,15 @@ const DISALLOW_TOURNAMENT_ID = [
 
 enum Queues {
   IngestTournament = "ingest-tournament",
+  IngestTournamentPreview = "ingest-tournament-preview",
   IngestTournamentDLQ = "ingest-tournament-dlq",
+  IngestTournamentDLQPreview = "ingest-tournament-dlq-preview",
   IngestResult = "ingest-result",
+  IngestResultPreview = "ingest-result-preview",
   IngestResultDLQ = "ingest-result-dlq",
+  IngestResultDLQPreview = "ingest-result-dlq-preview",
   IngestCard = "ingest-card",
+  IngestCardPreview = "ingest-card-preview",
 }
 
 const SUPPORTED_TOURNAMENT_TYPES: ABRTournamentTypeFilter[] = [
@@ -68,7 +73,8 @@ export async function processQueueBatch(
 ) {
   for (const message of batch.messages) {
     switch (batch.queue) {
-      case Queues.IngestTournament: {
+      case Queues.IngestTournament:
+      case Queues.IngestTournamentPreview: {
         const ingestTournamentMessage =
           message.body as IngestTournamentQueueMessage;
 
@@ -89,6 +95,7 @@ export async function processQueueBatch(
         break;
       }
       case Queues.IngestTournamentDLQ:
+      case Queues.IngestTournamentDLQPreview: {
         await trace(
           "handleTournamentIngestDLQ",
           () => handleTournamentIngestDLQ(message.body as ABRTournamentType),
@@ -97,7 +104,9 @@ export async function processQueueBatch(
           },
         );
         break;
-      case Queues.IngestResult: {
+      }
+      case Queues.IngestResult:
+      case Queues.IngestResultPreview: {
         const { tournament, entry } = message.body as IngestResultQueueMessage;
         await trace(
           "handleResultIngest",
@@ -113,7 +122,8 @@ export async function processQueueBatch(
         );
         break;
       }
-      case Queues.IngestResultDLQ: {
+      case Queues.IngestResultDLQ:
+      case Queues.IngestResultDLQPreview: {
         const { tournament, entry } = message.body as IngestResultQueueMessage;
         await trace(
           "handleResultIngestDLQ",
@@ -124,7 +134,8 @@ export async function processQueueBatch(
         );
         break;
       }
-      case Queues.IngestCard: {
+      case Queues.IngestCard:
+      case Queues.IngestCardPreview: {
         await trace(
           "handleCardIngest",
           () => handleCardIngest(env, message.body),

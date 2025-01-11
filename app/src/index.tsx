@@ -35,12 +35,26 @@ const getToken = async (): Promise<string> => {
   return access_token ? access_token : "";
 };
 
+const getAPIBase = () => {
+  const branch = process.env.GIT_BRANCH;
+  const env = process.env.NODE_ENV;
+  console.log("GIT_COMMIT_HASH", process.env.GIT_COMMIT_HASH);
+  console.log("GIT_BRANCH", process.env.GIT_BRANCH);
+
+  if (branch === "preview" && env !== "development") {
+    return "https://beanstalk-api-preview.enkoder.workers.dev";
+  }
+
+  if (env === "development") {
+    return "http://localhost:8787";
+  }
+
+  return "https://netrunner-beanstalk.net";
+};
+
 OpenAPI.TOKEN = getToken;
 OpenAPI.WITH_CREDENTIALS = true;
-OpenAPI.BASE =
-  process.env.NODE_ENV !== "development"
-    ? "https://netrunner-beanstalk.net"
-    : "http://localhost:8787";
+OpenAPI.BASE = getAPIBase();
 
 export function OAuth2Callback() {
   const { login } = useAuth();
