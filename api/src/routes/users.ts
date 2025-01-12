@@ -18,6 +18,8 @@ import {
   type UpdateUserComponentType,
   UserComponent,
   UserResultsResponseComponent,
+  type ViewBlogPostBodyType,
+  ViewBlogPostSchema,
 } from "../openapi.js";
 import type { FactionCode, Format } from "../schema.js";
 import type { Env, RequestWithDB } from "../types.d.js";
@@ -36,6 +38,33 @@ export class GetUser extends OpenAPIRoute {
   }
 }
 
+export class ViewBlogPost extends OpenAPIRoute {
+  static schema = ViewBlogPostSchema;
+
+  @traceDeco("ViewBlogPost")
+  async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext, data) {
+    const body = data.body as ViewBlogPostBodyType;
+    if (!body.blogDate) {
+      return errorResponse(400, "Blog date is required");
+    }
+
+    const user = await Users.getById(Number(req.user_id));
+    if (!user) {
+      return error(500, "No users in table??");
+    }
+
+    if (
+      !user.oldest_blog_post_date ||
+      user.oldest_blog_post_date < body.blogDate
+    ) {
+      await Users.update(user.id, {
+        oldest_blog_post_date: body.blogDate,
+      });
+    }
+
+    return json({});
+  }
+}
 export class GetUsers extends OpenAPIRoute {
   static schema = GetUsersSchema;
 

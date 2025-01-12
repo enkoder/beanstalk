@@ -19,6 +19,10 @@ export const UserComponent = z
     is_admin: z.coerce.boolean({
       description: "Flag indicating that the user is an Admin user",
     }),
+    oldest_blog_post_date: z
+      .string({ description: "Date of oldest viewed blog post page" })
+      .date()
+      .nullable(),
   })
   .openapi("User");
 export type UserComponentType = z.infer<typeof UserComponent>;
@@ -256,6 +260,24 @@ export const PatchMeSchema = {
     "200": {
       description: "Your updated user profile",
       schema: UserComponent,
+    },
+  },
+};
+
+export const ViewBlogPostBody = z.object({
+  blogDate: z.string(),
+});
+export type ViewBlogPostBodyType = z.infer<typeof ViewBlogPostBody>;
+
+export const ViewBlogPostSchema = {
+  tags: ["Blog"],
+  summary: "Views a blog post",
+  security: [{ bearerAuth: [] }],
+  requestBody: ViewBlogPostBody,
+  responses: {
+    "200": {
+      schema: z.object({}),
+      description: "Empty object indicates success on viewing blog post",
     },
   },
 };

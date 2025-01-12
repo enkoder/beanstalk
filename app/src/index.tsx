@@ -13,9 +13,7 @@ import { OpenAPI } from "./client";
 import { Navbar } from "./components/Navbar";
 import { PageHeading } from "./components/PageHeader";
 import { Stars } from "./components/Stars";
-import { Beans } from "./routes/Beans";
-import { Code } from "./routes/Code";
-import { Faq } from "./routes/Faq";
+import { BlogPage } from "./routes/Blog";
 import { Sim } from "./routes/Sim";
 import { TagsPage } from "./routes/TagsPage";
 import { TournamentPage } from "./routes/TournamentPage";
@@ -143,13 +141,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Leaderboard /> },
-      { path: "/faq", element: <Faq /> },
+      {
+        path: "/blog",
+        children: [
+          { index: true, element: <BlogPage /> },
+          { path: ":postId", element: <BlogPage /> },
+        ],
+      },
       { path: "/results/:user", element: <Results /> },
       { path: "/tournament/:tournament", element: <TournamentPage /> },
       { path: "/oauth/callback", element: <OAuth2Callback /> },
-      { path: "/beans", element: <Beans /> },
       { path: "/sim", element: <Sim /> },
-      { path: "/code", element: <Code /> },
       //{ path: "/seasons", element: <Seasons /> },
       { path: "/tags", element: <TagsPage /> },
       { path: "/@me", element: <Profile /> },

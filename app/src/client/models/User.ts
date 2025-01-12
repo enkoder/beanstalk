@@ -24,5 +24,9 @@ export type User = {
      * Flag indicating that the user is an Admin user
      */
     is_admin?: boolean | null;
+    /**
+     * Date of oldest viewed blog post page
+     */
+    oldest_blog_post_date: string | null;
 };
 
