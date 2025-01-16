@@ -91,7 +91,7 @@ function Blog({ post }: { post: BlogPost }) {
   }, [post.date, user?.id]);
 
   return (
-    <div className="flex min-h-screen max-w-7xl gap-8 pt-4">
+    <div className="flex max-w-7xl gap-8 pt-4">
       <div className="mb-8 grow text-gray-400">
         <PageHeading text={post.title} />
         <div className="mb-8 text-gray-400">
