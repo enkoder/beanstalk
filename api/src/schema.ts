@@ -214,6 +214,7 @@ export interface UsersTable {
   password: string | null;
   is_admin: number;
   disabled: number;
+  oldest_blog_post_date: string | null;
 }
 
 export type User = Selectable<UsersTable>;

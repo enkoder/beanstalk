@@ -11,6 +11,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import greenBeans from "../../assets/ai_beanstalk_royalties.jpeg";
 import { AuthService } from "../client";
 import useAuth from "../useAuth";
+import { BlogAlert } from "./BlogAlert";
 
 export type MenuItem = {
   name: string;
@@ -42,10 +43,8 @@ export function Navbar() {
     { name: "Leaderboard", to: "/", isCurrent: true },
     //{ name: "Seasons", to: "/seasons", isCurrent: false },
     { name: "Tags", to: "/tags", isCurrent: false },
-    { name: "Beans", to: "/beans", isCurrent: false },
-    { name: "Code", to: "/code", isCurrent: false },
     { name: "Sim", to: "/sim", isCurrent: false },
-    { name: "FAQ", to: "/faq", isCurrent: false },
+    { name: "Blog", to: "/blog", isCurrent: false },
   ];
 
   const menu: MenuItem[] = [
@@ -77,7 +76,11 @@ export function Navbar() {
 
   useEffect(() => {
     for (const nav of navigation) {
-      if (location.pathname === nav.to) {
+      if (location.pathname.startsWith(nav.to) && nav.to !== "/") {
+        setCurrent(nav.to);
+        return;
+      }
+      if (nav.to === "/" && location.pathname === "/") {
         setCurrent(nav.to);
       }
     }
@@ -138,17 +141,7 @@ export function Navbar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
-                {/* Bell icon, use this later once there is a blog
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-                */}
-
+                <BlogAlert />
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>

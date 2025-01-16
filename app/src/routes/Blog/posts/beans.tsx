@@ -1,35 +1,40 @@
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-// @ts-ignore
-import whitepaper from "../../assets/whitepaper.pdf";
-import { LeaderboardService, type RankingConfig } from "../client";
-import { Anchor } from "../components/Anchor";
-import { Link } from "../components/Link";
-import { PageHeading } from "../components/PageHeader";
-import { Sep } from "../components/Sep";
-import { capStr } from "../util";
+import { LeaderboardService, type RankingConfig } from "../../../client";
+import { Link } from "../../../components/Link";
+import { Sep } from "../../../components/Sep";
+import { capStr } from "../../../util";
+import { BlogContent, Section } from "../components/BlogSections";
+import type { BlogPost } from "../types";
 
-type Section = {
-  title: string;
-  id: string;
-  content: JSX.Element;
-};
+export const Beans: BlogPost = {
+  id: "beans",
+  title: "Beans: The Beanstalk Scoring System",
+  date: "2024-01-01",
+  showTOS: true,
+  showInList: false,
+  component: ({ onSectionsChange }) => {
+    const { data: rankingConfig } = useQuery<RankingConfig>({
+      queryKey: ["rankingConfig"],
+      queryFn: () => LeaderboardService.getGetRankingConfig(),
+    });
 
-export function Beans() {
-  const [sections, setSections] = useState<Section[]>([]);
-  const { data: rankingConfig } = useQuery<RankingConfig>({
-    queryKey: ["rankingConfig"],
-    queryFn: () => LeaderboardService.getGetRankingConfig(),
-  });
+    const tournamentConfigs = Object.values(
+      rankingConfig?.tournament_configs || {},
+    );
 
-  useEffect(() => {
-    setSections([
-      {
-        title: "Decaying distribution",
-        id: "distribution-function",
-        content: (
+    return (
+      <BlogContent onSectionsChange={onSectionsChange}>
+        <Section title="Introduction">
+          <p>
+            The goal of this guide is to share the thought process behind the
+            Beanstalk scoring system. Our goal is to be as transparent as
+            possible and equip everyone with an equitable level of context and
+            information. We are always looking for feedback to make the
+            Beanstalk better.
+          </p>
+        </Section>
+
+        <Section title="Decaying Distribution">
           <p>
             The{" "}
             <Link to={"https://en.wikipedia.org/wiki/Pareto_principle"}>
@@ -46,21 +51,18 @@ export function Beans() {
             appropriate rate of decay based upon those constraints. This was
             mostly working, but I wanted to find a simpler solution that players
             could reason about.
-            <Sep className={"mb-4"} />
+            <Sep className={"mb-2"} />
             The current algorithm is much simpler, but still follows a
             non-linear decaying distribution. We set a bean value for first
             place and then look for a rate of decay so that a certain percentage
             of players receive points.
-            <Sep className={"mb-4"} />
+            <Sep className={"mb-2"} />
             You can find more details and a well documented and tested algorithm
             over at the <Link to={"/code"}>Code</Link> page.
           </p>
-        ),
-      },
-      {
-        title: "Tournament Tiers",
-        id: "tiers",
-        content: (
+        </Section>
+
+        <Section title="Tournament Tiers">
           <p className={"pl-2"}>
             The Netrunner tournament season follows a natural tiered progression
             with COs, Nationals, Continentals, and then Worlds. The bean value
@@ -94,12 +96,9 @@ export function Beans() {
             </Link>
             .
           </p>
-        ),
-      },
-      {
-        title: "Scaling Beans on Tournament Size",
-        id: "tournament-size",
-        content: (
+        </Section>
+
+        <Section title="Scaling Beans on Tournament Size" id="scaling-beans">
           <p className={"pl-2"}>
             Winning a large Nationals tournament with 100 players should award
             more beans than a 16-person Nationals. The difference in bean totals
@@ -129,20 +128,17 @@ export function Beans() {
             to take a look at how the bean values change as you add more
             players.
           </p>
-        ),
-      },
-      {
-        title: "Beans for Top of Swiss",
-        id: "first-place",
-        content: (
+        </Section>
+
+        <Section title="Beans for Top of Swiss">
           <p className={"pl-2"}>
             Setting a well-known bean value for first place makes it easy to
             reason about the system. Based upon the inputs discussed above, we
             calculate the awarded beans for first place as follows
-            <Sep className={"mt-4"} />
+            <Sep className={"my-2"} />
             First Place Points = Baseline Points + (Beans Per Players * Num
             Players)
-            <Sep className={"mt-4"} />
+            <Sep className={"my-2"} />
             The following bean values are for 50 person tournaments of each
             type.
             <ul className={"list-disc px-8"}>
@@ -164,12 +160,9 @@ export function Beans() {
               ))}
             </ul>
           </p>
-        ),
-      },
-      {
-        title: "Beans for top cut vs swiss",
-        id: "cut-vs-swiss",
-        content: (
+        </Section>
+
+        <Section title="Beans for top cut vs swiss" id="cut-beans">
           <p className={"pl-2"}>
             In Netrunner tournaments, there is a swiss placement and a cut
             placement. We experimented with separate beans for cut and swiss
@@ -181,7 +174,7 @@ export function Beans() {
             important feature and seeing top cut bean payouts jump all over the
             place, didn't feel right. So we rolled it back to keep it simple and
             easy to reason about.
-            <Sep className={"mt-4"} />
+            <Sep className={"my-2"} />
             Additionally, after thinking about it more, your award for placing
             high in swiss means you get a better chance at making a higher
             placement in the cut. You get to pick your first matchup and have
@@ -189,51 +182,13 @@ export function Beans() {
             beans in the cut, so we feel this is award enough for making top of
             swiss.
           </p>
-        ),
-      },
-      {
-        title: "Top % Winners",
-        id: "top-half-winners",
-        content: (
-          <p className={"pl-2"}>
-            Making the cut is such a rewarding experience. Of course, everyone
-            wants to get 1st, but making the cut feels great and gives you
-            another goal to shoot for. To recreate this feeling, we have
-            implemented a configurable top-% cutoff where you need to hit a
-            threshold in order to receive any beans. For major tournaments, this
-            value is set to 50%. This should create exciting experiences for
-            people who don't make the cut but perform well enough to make the
-            top half. For large tournaments, the beans acquired by making top
-            half is still significant! This mechanic also creates a better
-            concentration of beans for the top winners rewarding consistently
-            solid play.
-            <Sep className={"mt-4"} />
-            <ul className={"list-disc px-8"}>
-              {tournamentConfigs.map((tc) => (
-                <li>
-                  <div className={"flex w-full flex-row"}>
-                    <span className={"w-5/6 lg:w-2/6 sm:w-4/6"}>
-                      {capStr(tc.code)}
-                    </span>
-                    <span className={"w-1/6"}>
-                      {tc.percent_receiving_points}%
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </p>
-        ),
-      },
-      {
-        title: "Minimum Players",
-        id: "minimum-players",
-        content: (
+        </Section>
+
+        <Section title="Minimum Players">
           <p className={"pl-2"}>
             Circuit Openers and Nationals can be as small as 8 players and get
             up to 100. In order to keep things balanced we've set minimum player
             limits.
-            <Sep className={"mt-4"} />
             <ul className={"list-disc px-8"}>
               {tournamentConfigs.map((tc) => (
                 <>
@@ -254,12 +209,9 @@ export function Beans() {
               ))}
             </ul>
           </p>
-        ),
-      },
-      {
-        title: "Intercontinental Championships",
-        id: "interconts",
-        content: (
+        </Section>
+
+        <Section title="Intercontinental Championships" id="interconts">
           <p className={"pl-2"}>
             Interconts has been a difficult tournament to appropriately weight.
             Each contestant was required to place top 4 of a continental which
@@ -272,7 +224,7 @@ export function Beans() {
             is taking the top 4 from all continentals and letting them duke it
             out. How we approach this is highly subjective. Some believe it
             should be weighted heavy and others, not as much.
-            <Sep className={"mt-4"} />
+            <Sep className={"my-2"} />
             We've landed on a pretty interesting balancing mechanic. Since
             Intercontinentals is a culmination of three continental tournaments
             with hundreds of players, we thought it could be interesting to
@@ -286,12 +238,9 @@ export function Beans() {
               ?.baseline_points ?? 0}{" "}
             beans.
           </p>
-        ),
-      },
-      {
-        title: "Limits Per Tournament Type",
-        id: "tournament-limit",
-        content: (
+        </Section>
+
+        <Section title="Limits Per Tournament Type" id="tournament-limits">
           <p className={"pl-2"}>
             We don't want the Beanstalk to be "pay-to-win". For those that are
             fortunate enough to be able to travel to every Continental and
@@ -300,7 +249,7 @@ export function Beans() {
             make things more equitable across a season, we've implemented a
             limit per tournament type. A player can attend as many tournaments
             as they like, and we will take the top N tournaments for that type.
-            <Sep className={"my-4"} />
+            <Sep className={"my-2"} />
             The following limits are
             <ul className={"list-disc px-8"}>
               {tournamentConfigs.map((tc) => (
@@ -315,48 +264,8 @@ export function Beans() {
               ))}
             </ul>
           </p>
-        ),
-      },
-    ]);
-  }, [rankingConfig]);
-
-  const tournamentConfigs = Object.values(
-    rankingConfig?.tournament_configs || {},
-  );
-
-  return (
-    <>
-      <PageHeading text={"Beans"} includeUnderline={true} />
-      <div className={"overflow-auto pt-4 text-gray-400"}>
-        <text className={"text-gray-400"}>
-          The goal of this page is to share the thought process behind the
-          tournament scoring system. Our goal is to be as transparent as
-          possible and equip everyone with an equitable level of context and
-          information. We are always looking for feedback to make the Beanstalk
-          better, if you have questions, please reach out to the dev team.
-        </text>
-
-        {sections.map((s) => (
-          <>
-            <Anchor id={s.id} className={"mt-4 mb-2"}>
-              {" "}
-              {s.title}
-            </Anchor>
-            {s.content}
-            <Sep className={"my-4"} showLine={true} />
-          </>
-        ))}
-        <div className={"my-32 flex flex-row justify-center"}>
-          <span className={"text-lg"}>
-            Made with{" "}
-            <FontAwesomeIcon
-              className={"text-red-700 text-xl"}
-              icon={faHeart}
-            />{" "}
-            by <Link to={"https://github.com/enkoder/beanstalk"}>enkoder</Link>
-          </span>
-        </div>
-      </div>
-    </>
-  );
-}
+        </Section>
+      </BlogContent>
+    );
+  },
+};

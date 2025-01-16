@@ -1,38 +1,33 @@
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 // @ts-ignore
-import aiBeanstalk from "../../assets/ai_beanstalk_royalties.jpeg";
+import aiBeanstalk from "../../../../assets/ai_beanstalk_royalties.jpeg";
 // @ts-ignore
-import doggo from "../../assets/doggo.png";
-import { type Season, SeasonsService } from "../client";
-import { Anchor } from "../components/Anchor";
-import { Link } from "../components/Link";
-import { PageHeading } from "../components/PageHeader";
-import { Sep } from "../components/Sep";
+import doggo from "../../../../assets/doggo.png";
+import { type Season, SeasonsService } from "../../../client";
+import { Link } from "../../../components/Link";
+import { Sep } from "../../../components/Sep";
+import { BlogContent, Section } from "../components/BlogSections";
+import type { BlogPost } from "../types";
 
 const DT_FORMAT = "MMMM DD YYYY";
 
-type Question = {
-  title: string;
-  id: string;
-  content: JSX.Element;
-};
+export const FAQ: BlogPost = {
+  id: "faq",
+  title: "FAQ",
+  date: "2024-01-01",
+  showTOS: true,
+  showInList: false,
+  component: ({ onSectionsChange }) => {
+    const { data: seasons } = useQuery<Season[]>({
+      staleTime: 0,
+      queryKey: ["seasons"],
+      queryFn: () => SeasonsService.getGetSeasons(),
+    });
 
-export function Faq() {
-  const { data: seasons } = useQuery<Season[]>({
-    staleTime: 0,
-    queryKey: ["seasons"],
-    queryFn: () => SeasonsService.getGetSeasons(),
-  });
-
-  const QUESTIONS: Question[] = [
-    {
-      title: "What is the Beanstalk",
-      id: "beanstalk",
-      content: (
-        <p>
+    return (
+      <BlogContent onSectionsChange={onSectionsChange}>
+        <Section title="What is the Beanstalk?" id="what-is-beanstalk">
           In the Android universe, the{" "}
           <Link to={"https://android-universe-fan.fandom.com/wiki/Beanstalk"}>
             Beanstalk
@@ -50,14 +45,8 @@ export function Faq() {
               alt={"Beanstalk"}
             />
           </div>
-        </p>
-      ),
-    },
-    {
-      title: "Beans? What are beans?",
-      id: "what-are-beans",
-      content: (
-        <p>
+        </Section>
+        <Section title="Beans? What are beans?" id="beans">
           Beans are points, the unit of measurement we use here at the
           Beanstalk. In some circles, primarily close to{" "}
           <Link to={"https://netrunnerdb.com/en/profile/6502/ctz"}>CTZ</Link>,
@@ -67,14 +56,12 @@ export function Faq() {
           </Link>{" "}
           "green beans". Count up those beans, because you're going to need them
           in order to climb the rankings to the top of the Beanstalk.
-        </p>
-      ),
-    },
-    {
-      title: "How are Beans calculated?",
-      id: "how-are-beans-calculated",
-      content: (
-        <p>
+        </Section>
+
+        <Section
+          title="How are Beans calculated?"
+          id="how-are-beans-calculated"
+        >
           There are a few pages dedicated to transparency around how beans are
           calculated, including a view into the full algorithm. There's also a
           page where you can simulate a tournament and see the point
@@ -92,14 +79,12 @@ export function Faq() {
               https://netrunner-beanstalk.net/code
             </Link>
           </div>
-        </p>
-      ),
-    },
-    {
-      title: "Is the bean distribution algorithm locked?",
-      id: "is-algo-locked",
-      content: (
-        <p>
+        </Section>
+
+        <Section
+          title="Is the bean distribution algorithm locked?"
+          id="bean-distribution-algorithm"
+        >
           The ranking algorithm is very likely going to change over time. Based
           upon feedback from the community, I believe we can continue to improve
           the fairness, transparency, and best representation of bean payout
@@ -110,14 +95,9 @@ export function Faq() {
           If, and when, the bean algorithm changes, there will be very clear
           communication about what changed and why. If you have ideas on how to
           improve things, don't hesitate to reach out!
-        </p>
-      ),
-    },
-    {
-      title: "Where is the data coming from?",
-      id: "data",
-      content: (
-        <p>
+        </Section>
+
+        <Section title="Where is the data coming from?" id="data-source">
           This website is entirely powered by{" "}
           <Link to={"https://alwaysberunning.net"}>alwaysberunning.net</Link>.
           Every night, the Beanstalk will re-ingest all supported tournaments,
@@ -135,14 +115,9 @@ export function Faq() {
           This ends up working out pretty well as most people who do well in
           tournaments will claim their decks. I recommend going back and running
           the ABR archives! You might be able to scrounge up some more beans.
-        </p>
-      ),
-    },
-    {
-      title: "What are seasons?",
-      id: "seasons",
-      content: (
-        <p>
+        </Section>
+
+        <Section title="What are seasons?" id="seasons">
           Beanstalk has a seasonal leaderboard mechanic. Each full competitive
           tournament cycle will have a season associated with it. At the start
           of the season, everyone's beans resets keeping the leaderboard fresh
@@ -170,14 +145,12 @@ export function Faq() {
               </li>
             ))}
           </ul>
-        </p>
-      ),
-    },
-    {
-      title: "How can I create custom leaderboards?",
-      id: "tags",
-      content: (
-        <p>
+        </Section>
+
+        <Section
+          title="How can I create custom leaderboards?"
+          id="custom-leaderboards"
+        >
           Beanstalk has a <Link to={"/tags"}>Tag</Link> feature that enables
           users to create custom leaderboards. An example could be a tag for
           your local or regional tournaments to create a leaderboard amongst
@@ -216,14 +189,9 @@ export function Faq() {
               that tag.
             </li>
           </ul>
-        </p>
-      ),
-    },
-    {
-      title: "How do I opt-in?",
-      id: "opt-in",
-      content: (
-        <p>
+        </Section>
+
+        <Section title="How do I opt-in?" id="opt-in">
           By default, every user created and stored in The Beanstalk database
           will be disabled. Usernames and IDs will not be displayed and set to
           null and 0. This is to ensure that everyone who shows up on the
@@ -237,14 +205,12 @@ export function Faq() {
           browser and double check to see that your name now appears on the
           leaderboard. If you change your mind, you can opt-out at anytime by
           flipping the toggle and submitting the changes again.
-        </p>
-      ),
-    },
-    {
-      title: "Why are NetrunnerDB's OAuth permissions so broad?",
-      id: "oauth-scopes",
-      content: (
-        <p>
+        </Section>
+
+        <Section
+          title="Why are NetrunnerDB's OAuth permissions so broad?"
+          id="oauth-permissions"
+        >
           During the login flow, NetrunnerDB's only OAuth scope grants too much
           permission. The auth screen will require you to grant The Beanstalk
           permission to read and modify your decks, but the website will only
@@ -254,14 +220,9 @@ export function Faq() {
           that comes from this is completely understandable. Once we can just
           read the minimal data from NRDB, Beanstalk will update the OAuth
           scopes to only request the necessary permissions.
-        </p>
-      ),
-    },
-    {
-      title: "What's the origin story of Beanstalk",
-      id: "origin-story",
-      content: (
-        <p>
+        </Section>
+
+        <Section title="What's the origin story of Beanstalk" id="origin-story">
           During discussions about starting a pro-circuit for Netrunner, my{" "}
           <Link to={"https://netrunnerdb.com/en/card/34008"}>wheels</Link> got
           turning. The idea of building a global leaderboard complete with
@@ -270,14 +231,9 @@ export function Faq() {
           but I totally got nerd sniped by this project resulting in me jamming
           on this during nights and weekends. I had a lot of fun building the
           website, and I hope the community enjoys it as well!
-        </p>
-      ),
-    },
-    {
-      title: "What's next for the project?",
-      id: "what-is-next",
-      content: (
-        <p>
+        </Section>
+
+        <Section title="What's next for the project?" id="whats-next">
           My long term vision for the Beanstalk is to deliver a comprehensive
           seasonal ranking leaderboard for all online games played on{" "}
           <Link to={"https//jinteki.net"}>jinteki.net</Link>. The ranking system
@@ -293,14 +249,12 @@ export function Faq() {
           to keep folks engaged and coming back for more.
           <br />
           Can you climb the Beanstalk and reach #1 next season?!
-        </p>
-      ),
-    },
-    {
-      title: "Leaderboards and toxic communities",
-      id: "toxicity",
-      content: (
-        <p>
+        </Section>
+
+        <Section
+          title="Leaderboards and toxic communities"
+          id="toxic-communities"
+        >
           It's true that for some games, leaderboards can contribute to a more
           toxic gaming experience. I totally understand and acknowledge this.
           However, I believe that Netrunner is a very special community that
@@ -312,90 +266,58 @@ export function Faq() {
           Please don't hesitate to share your concerns and feedback about the
           Beanstalk and how you see it shaping the competitive scene. This is
           our game, and we all want to make it the best we can.
-        </p>
-      ),
-    },
-    {
-      title: "OMG this is amazing, how can I help??",
-      id: "help-needed",
-      content: (
-        <>
-          <p>
-            PLEASE DO! This is an actual picture taken of me during active
-            development lol
-            <img
-              className={"mt-4 mb-8"}
-              src={doggo}
-              alt={"I have no idea what I'm doing"}
-            />
-            This is the first website I have ever made. While it's been a
-            project of passion and I've learned a ton, it's still my first, so
-            no doubt many things can be improved. I would love to learn from
-            you!!
-            <br />
-          </p>
-          <div className={"mt-4 mb-8"}>
-            <text>Here are some ways you can help</text>
-            <ul className={"my-2 ml-4 list-inside list-disc"}>
-              <li>
-                Design - a11y, better mobile, colors, typography, etc. Let's go
-                nuts on an improved design system.
-              </li>
-              <li>
-                Copy - Writing can always be improved, if you see some things
-                that should be tweaked, please feel empowered to do so.
-              </li>
-              <li>
-                Features - I have a ton of ideas and would really like
-                co-authors on the project.
-              </li>
-              <li>
-                Testing - I don't have many automated tests yet, so I still rely
-                on manual tests when rolling out large changes. It would be
-                great if I could get help on testing product changes.
-              </li>
-              <li>
-                Promotion - Share the hype and excitement over the Beanstalk!
-              </li>
-            </ul>
-          </div>
-          All of the code is open source and available at the
-          <Link to={"https://github.com/enkoder/beanstalk"}>
-            {" "}
-            Beanstalk Github{" "}
-          </Link>
-          page.
-        </>
-      ),
-    },
-  ];
-  return (
-    <>
-      <PageHeading
-        includeUnderline={true}
-        text={"Frequently Asked Questions"}
-      />
-      <div className={"overflow-auto pt-4 text-gray-400"}>
-        {QUESTIONS.map((question) => (
+        </Section>
+
+        <Section title="OMG this is amazing, how can I help??" id="help-needed">
           <>
-            <Anchor id={question.id} className={"mt-4 mb-2"}>
-              {question.title}
-            </Anchor>
-            <p className={"pl-2 text-gray-400"}> {question.content}</p>
-            <Sep showLine={true} className={"my-4"} />
+            <p>
+              PLEASE DO! This is an actual picture taken of me during active
+              development lol
+              <img
+                className={"mt-4 mb-8"}
+                src={doggo}
+                alt={"I have no idea what I'm doing"}
+              />
+              This is the first website I have ever made. While it's been a
+              project of passion and I've learned a ton, it's still my first, so
+              no doubt many things can be improved. I would love to learn from
+              you!!
+              <br />
+            </p>
+            <div className={"mt-4 mb-8"}>
+              <text>Here are some ways you can help</text>
+              <ul className={"my-2 ml-4 list-inside list-disc"}>
+                <li>
+                  Design - a11y, better mobile, colors, typography, etc. Let's
+                  go nuts on an improved design system.
+                </li>
+                <li>
+                  Copy - Writing can always be improved, if you see some things
+                  that should be tweaked, please feel empowered to do so.
+                </li>
+                <li>
+                  Features - I have a ton of ideas and would really like
+                  co-authors on the project.
+                </li>
+                <li>
+                  Testing - I don't have many automated tests yet, so I still
+                  rely on manual tests when rolling out large changes. It would
+                  be great if I could get help on testing product changes.
+                </li>
+                <li>
+                  Promotion - Share the hype and excitement over the Beanstalk!
+                </li>
+              </ul>
+            </div>
+            All of the code is open source and available at the
+            <Link to={"https://github.com/enkoder/beanstalk"}>
+              {" "}
+              Beanstalk Github{" "}
+            </Link>
+            page.
           </>
-        ))}
-        <div className={"my-32 flex flex-row justify-center"}>
-          <span className={"text-lg"}>
-            Made with{" "}
-            <FontAwesomeIcon
-              className={"text-red-700 text-xl"}
-              icon={faHeart}
-            />{" "}
-            by <Link to={"https://github.com/enkoder/beanstalk"}>enkoder</Link>
-          </span>
-        </div>
-      </div>
-    </>
-  );
-}
+        </Section>
+      </BlogContent>
+    );
+  },
+};

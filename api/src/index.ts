@@ -54,6 +54,7 @@ import {
   GetUsers,
   Me,
   PatchMe,
+  ViewBlogPost,
 } from "./routes/users.js";
 import type { Database } from "./schema.js";
 import type { Env } from "./types.js";
@@ -88,6 +89,7 @@ router
 
   .get("/users/@me", authenticatedUser, Me)
   .patch("/users/@me", authenticatedUser, PatchMe)
+  .post("/users/@me/view-blog", ViewBlogPost)
   .get("/users", GetUsers)
   .get("/users/:userID", GetUser)
   .get("/users/:user/results", GetUserResults)
