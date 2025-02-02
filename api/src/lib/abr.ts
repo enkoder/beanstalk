@@ -61,6 +61,7 @@ export const ABRTournament = z.object({
   matchdata: z.boolean(),
   winner_runner_identity: z.string().optional(),
   winner_corp_identity: z.string().optional(),
+  multi_swiss: z.number().optional(),
 });
 
 export function abrToTournament(
@@ -80,6 +81,7 @@ export function abrToTournament(
     date: abr.date.toString(),
     fingerprint: "",
     cutTo: cutTo,
+    multi_swiss: 0,
   };
 }
 
