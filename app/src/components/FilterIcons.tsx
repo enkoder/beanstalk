@@ -1,5 +1,4 @@
 import { clsx } from "clsx";
-import * as React from "react";
 import type { ReactNode } from "react";
 import AdamIcon from "../../assets/factions/NSG_ADAM.svg";
 import NeutralCorpIcon from "../../assets/factions/NSG_AGENDA.svg";

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import {
   CartesianGrid,
   Line,
@@ -17,13 +17,14 @@ interface ChartDataPoint {
 
 interface Series<T> {
   key: keyof T;
-  data: ChartDataPoint[];
+  data?: ChartDataPoint[];
   label: string;
   color?: string;
   countKey?: keyof T;
 }
 
 interface LineChartProps<T extends ChartDataPoint> {
+  data: T[];
   width: number | string;
   height: number | string;
   dateKey: keyof T;
@@ -55,7 +56,7 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
     date.toLocaleDateString(undefined, { month: "short" }),
 }: LineChartProps<T>) => {
   const chartData = useMemo(() => {
-    return data.map((item) => ({
+    return data.map((item: T) => ({
       ...item,
       [dateKey]:
         typeof item[dateKey] === "string"
@@ -108,9 +109,9 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
 
                           const tournamentCount = seriesItem.countKey
                             ? Number(
-                                chartData.find((d) => d[dateKey] === label)?.[
-                                  seriesItem.countKey
-                                ] ?? 0,
+                                chartData.find(
+                                  (d: T) => d[dateKey] === label,
+                                )?.[seriesItem.countKey as keyof T] ?? 0,
                               )
                             : undefined;
 

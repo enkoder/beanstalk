@@ -804,7 +804,7 @@ export const GetIdentityTrendsSchema = {
   parameters: {
     side: Query(z.enum(["runner", "corp"]).describe("Filter by side")),
     faction: Query(z.string().optional().describe("Filter by faction")),
-    seasonId: Query(z.number().optional().describe("Season ID")),
+    seasonId: Query(z.string().optional().describe("Season ID")),
     topN: Query(z.string().optional().describe("Top N identities to show")),
   },
   responses: {
@@ -835,7 +835,7 @@ export const GetTournamentTypeTrendsSchema = {
   tags: ["Analytics"],
   summary: "Get monthly tournament type points distribution trends",
   parameters: {
-    seasonId: Query(z.number().optional().describe("Season ID")),
+    seasonId: Query(z.string().optional().describe("Season ID")),
   },
   responses: {
     "200": {

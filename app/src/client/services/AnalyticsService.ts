@@ -23,7 +23,7 @@ export class AnalyticsService {
     public static getGetIdentityTrends(
         side: 'runner' | 'corp',
         faction?: string,
-        seasonId?: number,
+        seasonId?: string,
         topN?: string,
     ): CancelablePromise<Array<IdentityTrend>> {
         return __request(OpenAPI, {
@@ -45,7 +45,7 @@ export class AnalyticsService {
      * @throws ApiError
      */
     public static getGetTournamentTypeTrends(
-        seasonId?: number,
+        seasonId?: string,
     ): CancelablePromise<Array<TournamentTypeTrend>> {
         return __request(OpenAPI, {
             method: 'GET',

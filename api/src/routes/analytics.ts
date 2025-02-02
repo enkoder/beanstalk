@@ -3,6 +3,7 @@ import type { ExecutionContext } from "@cloudflare/workers-types/experimental";
 import { json } from "itty-router";
 import { sql } from "kysely";
 import { g } from "../g.js";
+import { Seasons } from "../models/season.js";
 import {
   GetIdentityTrendsSchema,
   GetTournamentTypeTrendsSchema,
@@ -17,12 +18,10 @@ export class GetIdentityTrends extends OpenAPIRoute {
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext) {
     const side = req.query.side;
     const faction = req.query.faction;
-    const seasonId = Number(req.query.seasonId || 2);
+    const seasonId = Number(
+      req.query.seasonId || (await Seasons.getCurrentSeason()).id,
+    );
     const topN = Number(req.query.topN || 5);
-
-    if (seasonId === 0) {
-      // TODO: Get current season
-    }
 
     // Define base fields based on side
     const baseFields =
@@ -123,11 +122,9 @@ export class GetTournamentTypeTrends extends OpenAPIRoute {
   static schema = GetTournamentTypeTrendsSchema;
 
   async handle(req: RequestWithDB, env: Env, ctx: ExecutionContext) {
-    const seasonId = Number(req.query.seasonId || 1);
-
-    if (seasonId === 0) {
-      // TODO: Get current season
-    }
+    const seasonId = Number(
+      req.query.seasonId || (await Seasons.getCurrentSeason()).id,
+    );
 
     // Build the query
     const query = g()
