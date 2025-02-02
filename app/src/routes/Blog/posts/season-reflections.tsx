@@ -250,6 +250,11 @@ export const SeasonReflectionsPost: BlogPost = {
           leaderboard, I've created a preview environment that is using the
           season 3 config, but for season 2 results. Go check them out now and
           let me know how it all feels!
+          <div className="mt-4 flex justify-center">
+            <Link to="https://preview.beanstalk.pages.dev/?season=2&formatCode=standard">
+              Preview Leaderboard Here
+            </Link>
+          </div>
         </Section>
         <Section title="Lima Beans">
           Last and certainly now least -- I am happy to announce that the new
