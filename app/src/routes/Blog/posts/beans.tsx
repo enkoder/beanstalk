@@ -10,7 +10,7 @@ export const Beans: BlogPost = {
   id: "beans",
   title: "Beans: The Beanstalk Scoring System",
   date: "2024-01-01",
-  showTOS: true,
+  showTOC: true,
   showInList: false,
   component: ({ onSectionsChange }) => {
     const { data: rankingConfig } = useQuery<RankingConfig>({

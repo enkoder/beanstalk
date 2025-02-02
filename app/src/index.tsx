@@ -26,6 +26,7 @@ import "@fontsource/jetbrains-mono/400.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./output.css";
 import { Profile } from "./routes/Profile";
+import Stats from "./routes/Stats";
 
 // biome-ignore lint/nursery/useAwait: needs to be async
 const getToken = async (): Promise<string> => {
@@ -152,6 +153,7 @@ const router = createBrowserRouter([
       { path: "/tournament/:tournament", element: <TournamentPage /> },
       { path: "/oauth/callback", element: <OAuth2Callback /> },
       { path: "/sim", element: <Sim /> },
+      { path: "/stats", element: <Stats /> },
       //{ path: "/seasons", element: <Seasons /> },
       { path: "/tags", element: <TagsPage /> },
       { path: "/@me", element: <Profile /> },

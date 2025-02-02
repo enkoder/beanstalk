@@ -776,3 +776,71 @@ export const GetIdImgSchema = {
     },
   },
 };
+
+//const side = req.query.side;
+//const faction = req.query.faction;
+//const startDate = req.query.startDate || "2024-01-01"; // Default to start of 2024
+//const endDate = req.query.endDate || new Date().toISOString().split("T")[0];
+//const groupBy = req.query.groupBy || "month";
+
+export const IdentityTrendComponent = z
+  .object({
+    month: z.string({ description: "Month in YYYY-MM format" }),
+    identity_name: z.string({ description: "Name of the identity" }),
+    identity_id: z.number({ description: "ID of the identity" }),
+    faction: z.string({ description: "Faction of the identity" }),
+    side: z.enum(["runner", "corp"]),
+    count: z.number({ description: "Number of times the identity was played" }),
+    percentage: z.number({
+      description: "Percentage of total decks for that month",
+    }),
+  })
+  .openapi("IdentityTrend");
+export type IdentityTrendComponentType = z.infer<typeof IdentityTrendComponent>;
+
+export const GetIdentityTrendsSchema = {
+  tags: ["Analytics"],
+  summary: "Get monthly identity popularity trends",
+  parameters: {
+    side: Query(z.enum(["runner", "corp"]).describe("Filter by side")),
+    faction: Query(z.string().optional().describe("Filter by faction")),
+    seasonId: Query(z.number().optional().describe("Season ID")),
+    topN: Query(z.string().optional().describe("Top N identities to show")),
+  },
+  responses: {
+    "200": {
+      description: "Returns monthly identity trends",
+      schema: z.array(IdentityTrendComponent),
+    },
+  },
+};
+
+export const TournamentTypeTrendComponent = z
+  .object({
+    month: z.string({ description: "Month in YYYY-MM format" }),
+    tournament_type: TournamentTypeComponent,
+    total_points: z.number({
+      description: "Total points awarded for this tournament type",
+    }),
+    tournament_count: z.number({
+      description: "Number of tournaments of this type",
+    }),
+  })
+  .openapi("TournamentTypeTrend");
+export type TournamentTypeTrendComponentType = z.infer<
+  typeof TournamentTypeTrendComponent
+>;
+
+export const GetTournamentTypeTrendsSchema = {
+  tags: ["Analytics"],
+  summary: "Get monthly tournament type points distribution trends",
+  parameters: {
+    seasonId: Query(z.number().optional().describe("Season ID")),
+  },
+  responses: {
+    "200": {
+      description: "Returns monthly tournament type trends",
+      schema: z.array(TournamentTypeTrendComponent),
+    },
+  },
+};

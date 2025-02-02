@@ -43,6 +43,7 @@ export function Navbar() {
     { name: "Leaderboard", to: "/", isCurrent: true },
     //{ name: "Seasons", to: "/seasons", isCurrent: false },
     { name: "Tags", to: "/tags", isCurrent: false },
+    //{ name: "Stats", to: "/stats", isCurrent: false },
     { name: "Sim", to: "/sim", isCurrent: false },
     { name: "Blog", to: "/blog", isCurrent: false },
   ];

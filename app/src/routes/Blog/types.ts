@@ -2,7 +2,7 @@ export type BlogPost = {
   id: string;
   title: string;
   date: string; // ISO string format
-  showTOS?: boolean;
+  showTOC?: boolean;
   showInList?: boolean;
   component: (props: {
     onSectionsChange: (sections: Section[]) => void;

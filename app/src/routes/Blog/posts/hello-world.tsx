@@ -7,7 +7,7 @@ export const HelloWorld: BlogPost = {
   id: "hello-world",
   title: "Hello World",
   date: "2024-01-13",
-  showTOS: true,
+  showTOC: true,
   showInList: true,
   component: ({ onSectionsChange }) => {
     return (
