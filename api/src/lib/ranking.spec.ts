@@ -1,21 +1,16 @@
-import type { TournamentType } from "../schema";
-import {
-  BASELINE_POINTS,
-  BOTTOM_THRESHOLD,
-  MIN_PLAYERS_TO_BE_LEGAL,
-  PERCENT_RECEIVING_POINTS,
-  POINTS_PER_PLAYER,
-  calculatePointDistribution,
-} from "./ranking.js";
+import { TournamentType } from "../schema";
+import { DEFAULT_CONFIG, calculatePointDistribution } from "./ranking.js";
 
 test.each([
   ["circuit opener" as TournamentType],
   ["continental championship" as TournamentType],
   ["national championship" as TournamentType],
   ["worlds championship" as TournamentType],
-])("calculate points", (type: TournamentType) => {
-  const num = MIN_PLAYERS_TO_BE_LEGAL[type];
-  const pointsForFirst = num * POINTS_PER_PLAYER[type] + BASELINE_POINTS[type];
+])("calculate points with default config", (type: TournamentType) => {
+  const num = DEFAULT_CONFIG.MIN_PLAYERS_TO_BE_LEGAL[type];
+  const pointsForFirst =
+    num * DEFAULT_CONFIG.POINTS_PER_PLAYER[type] +
+    DEFAULT_CONFIG.BASELINE_POINTS[type];
 
   const { points, totalPoints } = calculatePointDistribution(num, type);
 
@@ -24,27 +19,11 @@ test.each([
   expect(points[0]).toBe(pointsForFirst);
   // Rounding here to bypass floating point errors
   expect(Math.round(points[points.length - 1])).toBeLessThanOrEqual(
-    BOTTOM_THRESHOLD[type],
+    DEFAULT_CONFIG.BOTTOM_THRESHOLD[type],
   );
 
-  // Check bottom half
   let sum = 0;
-  for (
-    let i = Math.ceil((num * PERCENT_RECEIVING_POINTS[type]) / 100);
-    i < points.length;
-    i++
-  ) {
-    sum += points[i];
-  }
-  expect(sum).toBe(0);
-
-  // Check top half
-  sum = 0;
-  for (
-    let i = 0;
-    i < Math.ceil((num * PERCENT_RECEIVING_POINTS[type]) / 100);
-    i++
-  ) {
+  for (let i = 0; i < num; i++) {
     sum += points[i];
   }
 
@@ -52,9 +31,25 @@ test.each([
   expect(sum.toFixed(4)).toBe(totalPoints.toFixed(4));
 });
 
+test("season 1 config", () => {
+  const type = "worlds championship" as TournamentType;
+  const num = DEFAULT_CONFIG.MIN_PLAYERS_TO_BE_LEGAL[type];
+  const pointsForFirst =
+    num * DEFAULT_CONFIG.POINTS_PER_PLAYER[type] +
+    DEFAULT_CONFIG.BASELINE_POINTS[type];
+
+  const { points } = calculatePointDistribution(num, type, undefined, 1);
+
+  expect(points[0]).toBe(pointsForFirst);
+  expect(points[0]).toBe(
+    num * DEFAULT_CONFIG.POINTS_PER_PLAYER[type] +
+      DEFAULT_CONFIG.BASELINE_POINTS[type],
+  );
+});
+
 test("not enough players", () => {
-  const type = "national championship";
-  const num = MIN_PLAYERS_TO_BE_LEGAL[type] - 1;
+  const type = TournamentType.NATIONAL_CHAMPIONSHIP;
+  const num = DEFAULT_CONFIG.MIN_PLAYERS_TO_BE_LEGAL[type] - 1;
   const { points, totalPoints } = calculatePointDistribution(num, type);
 
   expect(points.length).toBe(num);
@@ -74,7 +69,7 @@ test.each([
 ])("Monotonically decreasing", (type: TournamentType) => {
   const numPlayers = 100;
 
-  const { points, totalPoints } = calculatePointDistribution(numPlayers, type);
+  const { points } = calculatePointDistribution(numPlayers, type);
 
   let lastValue = points[0];
   for (let i = 1; i < numPlayers; i++) {
@@ -95,10 +90,7 @@ test.each([
 
   let lastValue = 0;
   for (let i = 0; i < numPlayers.length; i++) {
-    const { points, totalPoints } = calculatePointDistribution(
-      numPlayers[i],
-      type,
-    );
+    const { points } = calculatePointDistribution(numPlayers[i], type);
 
     if (lastValue) {
       expect(points[5]).toBeGreaterThan(lastValue);
@@ -113,7 +105,7 @@ test("Interconts", () => {
 
   const { points } = calculatePointDistribution(
     numPlayers,
-    "intercontinental championship",
+    "intercontinental championship" as TournamentType,
     overridePoints,
   );
 

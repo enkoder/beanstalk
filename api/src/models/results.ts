@@ -1,15 +1,14 @@
 import { g } from "../g.js";
-import { MAX_TOURNAMENTS_PER_TYPE } from "../lib/ranking.js";
+import { DEFAULT_CONFIG } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
-import {
-  type Faction,
-  type Format,
-  RankingConfig,
-  type ResultsTable,
-  type Tag,
-  type TournamentType,
-  type UpdateResult,
+import type {
+  Faction,
+  Format,
+  ResultsTable,
+  Tag,
+  UpdateResult,
 } from "../schema.js";
+import { TournamentType } from "../schema.js";
 import { Tags } from "./tags.js";
 
 export type ResultExpanded = ResultsTable & {
@@ -135,7 +134,10 @@ export class Results {
     const results: ResultExpanded[] = [];
     const initialResults = await q.execute();
     for (let i = 0; i < initialResults.length; i++) {
-      const max = MAX_TOURNAMENTS_PER_TYPE[initialResults[i].tournament_type];
+      const max =
+        DEFAULT_CONFIG.MAX_TOURNAMENTS_PER_TYPE[
+          initialResults[i].tournament_type
+        ];
       results.push({
         ...initialResults[i],
         is_valid: includeLimits
@@ -145,7 +147,7 @@ export class Results {
     }
 
     const sortedResults: ResultExpanded[] = [];
-    for (const t in RankingConfig.tournament_configs) {
+    for (const t of Object.values(TournamentType)) {
       for (const r of results) {
         if (r.tournament_type === t) {
           sortedResults.push(r);

@@ -1,136 +1,24 @@
 import type { Generated, Insertable, Selectable, Updateable } from "kysely";
-import {
-  BASELINE_POINTS,
-  BOTTOM_THRESHOLD,
-  MAX_TOURNAMENTS_PER_TYPE,
-  MIN_PLAYERS_TO_BE_LEGAL,
-  PERCENT_RECEIVING_POINTS,
-  POINTS_PER_PLAYER,
-} from "./lib/ranking.js";
-import type { RankingConfigType, TournamentConfigType } from "./openapi.js";
 
-export type TournamentType =
-  | "GNK / seasonal"
-  | "asynchronous tournament"
-  | "circuit breaker"
-  | "circuit breaker invitational"
-  | "circuit opener"
-  | "community tournament"
-  | "continental championship"
-  | "infinite recursion"
-  | "intercontinental championship"
-  | "national championship"
-  | "online event"
-  | "store championship"
-  | "team tournament"
-  | "worlds championship"
-  | "regional championship"
-  | "players circuit"
-  | "casual tournament kit";
-
-export const RankingConfig = {
-  tournament_configs: {
-    "worlds championship": {
-      code: "worlds championship",
-      name: "Worlds",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["worlds championship"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["worlds championship"],
-      points_per_player: POINTS_PER_PLAYER["worlds championship"],
-      baseline_points: BASELINE_POINTS["worlds championship"],
-      percent_receiving_points: PERCENT_RECEIVING_POINTS["worlds championship"],
-      bottom_threshold: BOTTOM_THRESHOLD["worlds championship"],
-    } as TournamentConfigType,
-    "continental championship": {
-      code: "continental championship",
-      name: "Continentals",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["continental championship"],
-      min_players_to_be_legal:
-        MIN_PLAYERS_TO_BE_LEGAL["continental championship"],
-      points_per_player: POINTS_PER_PLAYER["continental championship"],
-      baseline_points: BASELINE_POINTS["continental championship"],
-      percent_receiving_points:
-        PERCENT_RECEIVING_POINTS["continental championship"],
-      bottom_threshold: BOTTOM_THRESHOLD["continental championship"],
-    } as TournamentConfigType,
-    "national championship": {
-      code: "national championship",
-      name: "Nationals",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["national championship"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["national championship"],
-      points_per_player: POINTS_PER_PLAYER["national championship"],
-      baseline_points: BASELINE_POINTS["national championship"],
-      percent_receiving_points:
-        PERCENT_RECEIVING_POINTS["national championship"],
-      bottom_threshold: BOTTOM_THRESHOLD["national championship"],
-    } as TournamentConfigType,
-    "intercontinental championship": {
-      code: "intercontinental championship",
-      name: "Interconts",
-      tournament_limit:
-        MAX_TOURNAMENTS_PER_TYPE["intercontinental championship"],
-      min_players_to_be_legal:
-        MIN_PLAYERS_TO_BE_LEGAL["intercontinental championship"],
-      points_per_player: POINTS_PER_PLAYER["intercontinental championship"],
-      baseline_points: BASELINE_POINTS["intercontinental championship"],
-      percent_receiving_points:
-        PERCENT_RECEIVING_POINTS["intercontinental championship"],
-      bottom_threshold: BOTTOM_THRESHOLD["intercontinental championship"],
-    } as TournamentConfigType,
-    "circuit opener": {
-      code: "circuit opener",
-      name: "Circuit Opener",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit opener"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit opener"],
-      points_per_player: POINTS_PER_PLAYER["circuit opener"],
-      baseline_points: BASELINE_POINTS["circuit opener"],
-      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit opener"],
-      bottom_threshold: BOTTOM_THRESHOLD["circuit opener"],
-    } as TournamentConfigType,
-    "circuit breaker": {
-      code: "circuit breaker",
-      name: "Circuit Breaker",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["circuit breaker"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["circuit breaker"],
-      points_per_player: POINTS_PER_PLAYER["circuit breaker"],
-      baseline_points: BASELINE_POINTS["circuit breaker"],
-      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
-      bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
-    } as TournamentConfigType,
-    "circuit breaker invitational": {
-      code: "circuit breaker invitational",
-      name: "Circuit Breaker Invitational",
-      tournament_limit:
-        MAX_TOURNAMENTS_PER_TYPE["circuit breaker invitational"],
-      min_players_to_be_legal:
-        MIN_PLAYERS_TO_BE_LEGAL["circuit breaker invitational"],
-      points_per_player: POINTS_PER_PLAYER["circuit breaker invitational"],
-      baseline_points: BASELINE_POINTS["circuit breaker invitational"],
-      percent_receiving_points: PERCENT_RECEIVING_POINTS["circuit breaker"],
-      bottom_threshold: BOTTOM_THRESHOLD["circuit breaker"],
-    } as TournamentConfigType,
-    "players circuit": {
-      code: "players circuit",
-      name: "Players Circuit",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["players circuit"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["players circuit"],
-      points_per_player: POINTS_PER_PLAYER["players circuit"],
-      baseline_points: BASELINE_POINTS["players circuit"],
-      percent_receiving_points: PERCENT_RECEIVING_POINTS["players circuit"],
-      bottom_threshold: BOTTOM_THRESHOLD["players circuit"],
-    } as TournamentConfigType,
-    "casual tournament kit": {
-      code: "casual tournament kit",
-      name: "Casual Tournament Kit",
-      tournament_limit: MAX_TOURNAMENTS_PER_TYPE["casual tournament kit"],
-      min_players_to_be_legal: MIN_PLAYERS_TO_BE_LEGAL["casual tournament kit"],
-      points_per_player: POINTS_PER_PLAYER["casual tournament kit"],
-      baseline_points: BASELINE_POINTS["casual tournament kit"],
-      percent_receiving_points:
-        PERCENT_RECEIVING_POINTS["casual tournament kit"],
-      bottom_threshold: BOTTOM_THRESHOLD["casual tournament kit"],
-    } as TournamentConfigType,
-  },
-} as RankingConfigType;
+export enum TournamentType {
+  GNK_SEASONAL = "GNK / seasonal",
+  ASYNCHRONOUS_TOURNAMENT = "asynchronous tournament",
+  CIRCUIT_BREAKER = "circuit breaker",
+  CIRCUIT_BREAKER_INVITATIONAL = "circuit breaker invitational",
+  CIRCUIT_OPENER = "circuit opener",
+  COMMUNITY_TOURNAMENT = "community tournament",
+  CONTINENTAL_CHAMPIONSHIP = "continental championship",
+  INFINITE_RECURSION = "infinite recursion",
+  INTERCONTINENTAL_CHAMPIONSHIP = "intercontinental championship",
+  NATIONAL_CHAMPIONSHIP = "national championship",
+  ONLINE_EVENT = "online event",
+  STORE_CHAMPIONSHIP = "store championship",
+  TEAM_TOURNAMENT = "team tournament",
+  WORLDS_CHAMPIONSHIP = "worlds championship",
+  REGIONAL_CHAMPIONSHIP = "regional championship",
+  PLAYERS_CIRCUIT = "players circuit",
+  CASUAL_TOURNAMENT_KIT = "casual tournament kit",
+}
 
 export type Format = "standard" | "startup" | "eternal" | "other";
 

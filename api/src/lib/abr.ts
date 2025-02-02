@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { g } from "../g.js";
-import { TournamentTypes } from "../models/tournament.js";
-import type { Format, Result, Tournament } from "../schema.js";
+import {
+  type Format,
+  type Result,
+  type Tournament,
+  TournamentType,
+} from "../schema.js";
 
 async function gatherResponse(response) {
   const { headers } = response;
@@ -49,7 +53,7 @@ export const ABRTournament = z.object({
   // TODO: parse
   date: z.coerce.date(),
   // TODO: check enum
-  type: z.enum(TournamentTypes),
+  type: z.nativeEnum(TournamentType),
   // TODO: check enum
   format: z.string(),
   mwl: z.string(),

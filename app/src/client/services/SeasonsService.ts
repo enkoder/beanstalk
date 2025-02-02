@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Season } from '../models/Season';
+import type { GetSeasonsResponse } from '../models/GetSeasonsResponse';
 import type { Tournament } from '../models/Tournament';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -13,10 +13,10 @@ export class SeasonsService {
 
     /**
      * Gets a list of all existing and past Seasons.
-     * @returns Season list of Seasons
+     * @returns GetSeasonsResponse list of Seasons
      * @throws ApiError
      */
-    public static getGetSeasons(): CancelablePromise<Array<Season>> {
+    public static getGetSeasons(): CancelablePromise<GetSeasonsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/seasons',

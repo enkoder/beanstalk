@@ -5,6 +5,7 @@ import { Seasons } from "../models/season.js";
 import { Tournaments } from "../models/tournament.js";
 import {
   GetSeasonTournamentsSchema,
+  GetSeasonsComponent,
   GetSeasonsSchema,
   SeasonComponent,
   TournamentComponent,
@@ -16,8 +17,17 @@ export class GetSeasons extends OpenAPIRoute {
 
   @traceDeco("GetSeasons")
   async handle(_: RequestWithDB) {
+    const currentSeason = await Seasons.getCurrentSeason();
     const seasons = await Seasons.getAll();
-    return json(seasons.map((season) => SeasonComponent.parse(season)));
+
+    return json(
+      GetSeasonsComponent.parse({
+        current_season: currentSeason
+          ? SeasonComponent.parse(currentSeason)
+          : null,
+        seasons: seasons.map((season) => SeasonComponent.parse(season)),
+      }),
+    );
   }
 }
 

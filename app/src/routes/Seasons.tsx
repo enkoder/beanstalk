@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
-import { type Season, SeasonsService } from "../client";
+import * as React from "react";
+import { type GetSeasonsResponse, SeasonsService } from "../client";
 import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 
 const DT_FORMAT = "MMMM DD YYYY";
 
 export function Seasons() {
-  const { data: seasons } = useQuery<Season[]>({
+  const { data: seasons } = useQuery<GetSeasonsResponse>({
     staleTime: 0,
     queryKey: ["seasons"],
     queryFn: () => SeasonsService.getGetSeasons(),
@@ -56,7 +57,7 @@ export function Seasons() {
         </thead>
 
         <tbody>
-          {seasons?.map((season) => (
+          {seasons?.seasons.map((season) => (
             <tr
               className={
                 "text-center align-middle even:bg-slate-950 odd:bg-slate-900"

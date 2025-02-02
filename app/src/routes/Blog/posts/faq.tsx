@@ -4,7 +4,7 @@ import moment from "moment";
 import aiBeanstalk from "../../../../assets/ai_beanstalk_royalties.jpeg";
 // @ts-ignore
 import doggo from "../../../../assets/doggo.png";
-import { type Season, SeasonsService } from "../../../client";
+import { type GetSeasonsResponse, SeasonsService } from "../../../client";
 import { Link } from "../../../components/Link";
 import { Sep } from "../../../components/Sep";
 import { BlogContent, Section } from "../components/BlogSections";
@@ -19,7 +19,7 @@ export const FAQ: BlogPost = {
   showTOS: true,
   showInList: false,
   component: ({ onSectionsChange }) => {
-    const { data: seasons } = useQuery<Season[]>({
+    const { data: seasons } = useQuery<GetSeasonsResponse>({
       staleTime: 0,
       queryKey: ["seasons"],
       queryFn: () => SeasonsService.getGetSeasons(),
@@ -135,11 +135,11 @@ export const FAQ: BlogPost = {
           <Sep className={"mt-4"} />
           Seasons
           <ul className={"my-2 ml-4 list-inside list-disc"}>
-            {(seasons || []).map((s) => (
-              <li>
+            {(seasons?.seasons || []).map((s) => (
+              <li key={s.id}>
                 <Link to={`/?season=${s.id}`}>{s.name}</Link> - Started{" "}
                 {moment(s.started_at).format(DT_FORMAT)}{" "}
-                {s.ended_at
+                {seasons?.current_season?.id !== s.id
                   ? `and ended at ${moment(s.ended_at).format(DT_FORMAT)}`
                   : "and is the current season."}
               </li>

@@ -4,26 +4,6 @@ import type { Tournament, UpdateTournament } from "../schema.js";
 
 export const Formats = ["standard", "startup", "eternal", "other"] as const;
 
-export const TournamentTypes = [
-  "GNK / seasonal",
-  "asynchronous tournament",
-  "circuit breaker",
-  "circuit breaker invitational",
-  "circuit opener",
-  "community tournament",
-  "continental championship",
-  "infinite recursion",
-  "intercontinental championship",
-  "national championship",
-  "online event",
-  "store championship",
-  "team tournament",
-  "worlds championship",
-  "regional championship",
-  "players circuit",
-  "casual tournament kit",
-] as const;
-
 // biome-ignore lint/complexity/noStaticOnlyClass:
 export class Tournaments {
   @traceDeco("Tournaments")
