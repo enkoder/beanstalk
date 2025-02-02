@@ -99,7 +99,7 @@ function Blog({ post }: { post: BlogPost }) {
         </div>
         <PostComponent onSectionsChange={setSections} />
       </div>
-      {post.showTOS && <TableOfContents sections={sections} />}
+      {post.showTOC && <TableOfContents sections={sections} />}
     </div>
   );
 }

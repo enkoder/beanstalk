@@ -24,6 +24,10 @@ import {
   UpdateTournamentSeasons,
   UpdateUsers,
 } from "./routes/admin.js";
+import {
+  GetIdentityTrends,
+  GetTournamentTypeTrends,
+} from "./routes/analytics.js";
 import { GetIdImg } from "./routes/assets.js";
 import { GetLoginUrl, GetTokenFromCode, RefreshToken } from "./routes/auth.js";
 import {
@@ -129,6 +133,10 @@ router
   .post("/admin/ingestTournaments", IngestTournaments)
   .post("/admin/updateCards", UpdateCards)
   .post("/admin/updateTournamentsSeason", UpdateTournamentSeasons)
+
+  // Analytics
+  .get("/analytics/identities", GetIdentityTrends)
+  .get("/analytics/tournament-types", GetTournamentTypeTrends)
 
   // fallthrough
   .all("*", () => errorResponse(404, "url route invalid"));

@@ -192,7 +192,7 @@ export function Leaderboard() {
           </h1>
         )}
       </PageHeading>
-      <FilterSection hasSearchBar={true} startSeason={2} />
+      <FilterSection hasSearchBar={true} startSeason={3} />
       <table
         className={
           "w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"

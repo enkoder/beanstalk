@@ -11,7 +11,7 @@ export const Code: BlogPost = {
   id: "code",
   title: "Code: The Beanstalk Algorithm",
   date: "2024-01-01",
-  showTOS: false,
+  showTOC: false,
   showInList: false,
   component: ({ onSectionsChange }) => {
     const [loading, setLoading] = useState<boolean>(true);

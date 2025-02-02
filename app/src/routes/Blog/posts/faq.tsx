@@ -16,7 +16,7 @@ export const FAQ: BlogPost = {
   id: "faq",
   title: "FAQ",
   date: "2024-01-01",
-  showTOS: true,
+  showTOC: true,
   showInList: false,
   component: ({ onSectionsChange }) => {
     const { data: seasons } = useQuery<GetSeasonsResponse>({
