@@ -108,13 +108,7 @@ export async function getTournamentStandings(
 
     const data = (await response.json()) as TournamentStandings;
     // Validate and parse the response data
-    const result = tournamentStandingsSchema.safeParse(data);
-    if (!result.success) {
-      console.error(result.error.issues);
-      console.error(result.error.format().sizes?.[0]);
-      throw result.error;
-    }
-    return result.data;
+    return tournamentStandingsSchema.parse(data);
   });
 }
 

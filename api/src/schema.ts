@@ -89,6 +89,7 @@ export interface TournamentsTable {
   date: string | null;
   fingerprint: string | null;
   cutTo: number | null;
+  multi_swiss: number | null;
 }
 
 export type Tournament = Selectable<TournamentsTable>;
