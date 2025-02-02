@@ -1,6 +1,10 @@
 import { OpenAPIRoute } from "@cloudflare/itty-router-openapi";
 import { json } from "itty-router";
-import { calculatePointDistribution } from "../lib/ranking.js";
+import {
+  Tournament,
+  calculatePointDistribution,
+  getSeasonConfig,
+} from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import { Factions, getFactionFromCode } from "../models/factions.js";
 import { Leaderboard } from "../models/leaderboard.js";
@@ -18,13 +22,10 @@ import {
   GetRankingConfigSchema,
   LeaderboardRowComponent,
   type LeaderboardRowComponentType,
+  RankingConfigComponent,
+  TournamentConfigType,
 } from "../openapi.js";
-import {
-  type FactionCode,
-  type Format,
-  RankingConfig,
-  type TournamentType,
-} from "../schema.js";
+import type { FactionCode, Format, TournamentType } from "../schema.js";
 import type { RequestWithDB } from "../types.js";
 
 export class GetLeaderboard extends OpenAPIRoute {
@@ -113,8 +114,38 @@ export class GetRankingConfig extends OpenAPIRoute {
   static schema = GetRankingConfigSchema;
 
   @traceDeco("GetRankingConfig")
-  handle() {
-    return json(RankingConfig);
+  handle(req: RequestWithDB) {
+    const seasonId = req.query.seasonId
+      ? Number(req.query.seasonId)
+      : undefined;
+
+    const config = getSeasonConfig(seasonId);
+
+    const tournamentConfigValues = Object.fromEntries(
+      Object.values(Tournament).map((type: Tournament) => [
+        type,
+        {
+          code: type,
+          name: type
+            .split("_")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" "),
+          tournament_limit: config.MAX_TOURNAMENTS_PER_TYPE[type],
+          min_players_to_be_legal: config.MIN_PLAYERS_TO_BE_LEGAL[type],
+          baseline_points: config.BASELINE_POINTS[type],
+          points_per_player: config.POINTS_PER_PLAYER[type],
+          additional_top_cut_percentage: 0,
+        },
+      ]),
+    );
+
+    return json(
+      RankingConfigComponent.parse({
+        tournament_configs: tournamentConfigValues,
+        bottom_threshold:
+          config.BOTTOM_THRESHOLD[Object.keys(config.BOTTOM_THRESHOLD)[0]], // Use first tournament type's threshold
+      }),
+    );
   }
 }
 

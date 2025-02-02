@@ -18,7 +18,12 @@ import { Results } from "./models/results.js";
 import { Seasons } from "./models/season.js";
 import { Tournaments } from "./models/tournament.js";
 import { Users } from "./models/user.js";
-import type { Result, Tournament, User } from "./schema.js";
+import {
+  type Result,
+  type Tournament,
+  TournamentType,
+  type User,
+} from "./schema.js";
 import type {
   Env,
   IngestResultQueueMessage,
@@ -257,18 +262,18 @@ async function handleResultIngest(
 ) {
   let count = 0;
   if (
-    tournament.type === "intercontinental championship" &&
+    tournament.type === TournamentType.INTERCONTINENTAL_CHAMPIONSHIP &&
     tournament.season_id !== 0 &&
     tournament.season_id !== null
   ) {
     // We use the number of continental championships as the total number of players
     count =
       (await Results.countUniqueAttendeesByType(
-        "continental championship",
+        TournamentType.CONTINENTAL_CHAMPIONSHIP,
         tournament.season_id,
       )) *
       getSeasonConfig(tournament.season_id).POINTS_PER_PLAYER[
-        "intercontinental championship"
+        TournamentType.INTERCONTINENTAL_CHAMPIONSHIP
       ];
   }
 

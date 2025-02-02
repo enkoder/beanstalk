@@ -10,6 +10,7 @@ import {
   LeaderboardRowComponent,
   type LeaderboardRowComponentType,
 } from "../openapi.js";
+import { TournamentType } from "../schema";
 import * as Factories from "./factories.js";
 import { applyMigrations, initG, wipeDB } from "./setup";
 
@@ -205,14 +206,14 @@ describe("leaderboard", () => {
       Factories.tournament({
         id: 0,
         season: s0,
-        type: "intercontinental championship",
+        type: TournamentType.INTERCONTINENTAL_CHAMPIONSHIP,
       }),
     );
     const t1 = await Tournaments.insert(
       Factories.tournament({
         id: 1,
         season: s0,
-        type: "intercontinental championship",
+        type: TournamentType.INTERCONTINENTAL_CHAMPIONSHIP,
       }),
     );
 
@@ -313,14 +314,14 @@ describe("leaderboard", () => {
         Factories.tournament({
           id: 0,
           season: s0,
-          type: "worlds championship",
+          type: TournamentType.WORLDS_CHAMPIONSHIP,
         }),
       );
       const t1 = await Tournaments.insert(
         Factories.tournament({
           id: 1,
           season: s0,
-          type: "worlds championship",
+          type: TournamentType.WORLDS_CHAMPIONSHIP,
         }),
       );
 

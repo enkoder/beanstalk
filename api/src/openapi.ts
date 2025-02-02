@@ -1,11 +1,12 @@
 import { Int, Path, Query, Str } from "@cloudflare/itty-router-openapi";
 import { z } from "zod";
 import { ABRTournamentTypeFilter } from "./lib/abr.js";
-import { Formats, TournamentTypes } from "./models/tournament.js";
+import { Formats } from "./models/tournament.js";
+import { TournamentType } from "./schema.js";
 
 export const FormatComponent = z.enum(Formats).openapi("Format");
 export const TournamentTypeComponent = z
-  .enum(TournamentTypes)
+  .nativeEnum(TournamentType)
   .openapi("TournamentType");
 
 export const UserComponent = z
@@ -365,12 +366,20 @@ export const AuthLoginSchema = {
   },
 };
 
+export const GetSeasonsComponent = z
+  .object({
+    current_season: SeasonComponent,
+    seasons: z.array(SeasonComponent),
+  })
+  .openapi("GetSeasonsResponse");
+export type GetSeasonsComponentType = z.infer<typeof GetSeasonsComponent>;
+
 export const GetSeasonsSchema = {
   tags: ["Seasons"],
   summary: "Gets a list of all existing and past Seasons.",
   responses: {
     "200": {
-      schema: z.array(SeasonComponent),
+      schema: GetSeasonsComponent,
       description: "list of Seasons",
     },
   },
@@ -540,11 +549,14 @@ export const DeleteTagTournamentsSchema = {
 export const GetRankingConfigSchema = {
   tags: ["Leaderboard"],
   summary:
-    "Returns an object containing configuration data for determining the leaderboard",
+    "Returns configuration data for determining the leaderboard for a given season",
+  parameters: {
+    seasonId: Query(z.coerce.number().optional()),
+  },
   responses: {
     "200": {
       schema: RankingConfigComponent,
-      description: "Returns a RankingConfig object",
+      description: "Returns a RankingConfig object for the specified season",
     },
   },
 };
@@ -577,6 +589,7 @@ export const GetPointDistributionSchema = {
   parameters: {
     numPlayers: Query(z.coerce.number()),
     type: Query(TournamentTypeComponent.optional()),
+    seasonId: Query(z.coerce.number().optional()),
   },
   responses: {
     "200": {

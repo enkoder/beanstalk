@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 
 import {
   type Faction,
+  type GetSeasonsResponse,
   type GetTagsResponse,
   LeaderboardService,
   type Season,
@@ -52,7 +53,7 @@ export function FilterSection({
     getFilterValues(searchParams),
   );
 
-  const { data: seasons } = useQuery<Season[]>({
+  const { data: seasons } = useQuery<GetSeasonsResponse>({
     queryKey: ["seasons"],
     queryFn: () => SeasonsService.getGetSeasons(),
   });
@@ -120,12 +121,12 @@ export function FilterSection({
       <Select
         width="w-full"
         label="Seasons"
-        items={[EMPTY_SEASON, ...(seasons || [])]}
+        items={[EMPTY_SEASON, ...(seasons?.seasons || [])]}
         renderItem={(s) =>
           s !== undefined && s.id >= 0 ? `S${s.id} - ${s.name}` : s?.name
         }
         selected={
-          seasons?.find((s) => s.id === values.seasonId) || EMPTY_SEASON
+          seasons?.seasons.find((s) => s.id === values.seasonId) || EMPTY_SEASON
         }
         onChange={(s) => handleFilterChange("seasonId", s?.id)}
       />

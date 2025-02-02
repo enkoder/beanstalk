@@ -46,12 +46,14 @@ export class LeaderboardService {
      * Tool to show distribution of points from various given parameters
      * @param numPlayers
      * @param type
+     * @param seasonId
      * @returns GetPointDistributionResponse Returns a array of numbers representing the point distribution of the simulated tournament
      * @throws ApiError
      */
     public static getGetPointDistribution(
         numPlayers?: number | null,
         type?: TournamentType,
+        seasonId?: number | null,
     ): CancelablePromise<GetPointDistributionResponse> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -59,6 +61,7 @@ export class LeaderboardService {
             query: {
                 'numPlayers': numPlayers,
                 'type': type,
+                'seasonId': seasonId,
             },
         });
     }
@@ -88,14 +91,20 @@ export class LeaderboardService {
     }
 
     /**
-     * Returns an object containing configuration data for determining the leaderboard
-     * @returns RankingConfig Returns a RankingConfig object
+     * Returns configuration data for determining the leaderboard for a given season
+     * @param seasonId
+     * @returns RankingConfig Returns a RankingConfig object for the specified season
      * @throws ApiError
      */
-    public static getGetRankingConfig(): CancelablePromise<RankingConfig> {
+    public static getGetRankingConfig(
+        seasonId?: number | null,
+    ): CancelablePromise<RankingConfig> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/tournaments/config',
+            query: {
+                'seasonId': seasonId,
+            },
         });
     }
 

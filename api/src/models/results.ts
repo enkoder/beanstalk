@@ -1,15 +1,14 @@
 import { g } from "../g.js";
 import { DEFAULT_CONFIG } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
-import {
-  type Faction,
-  type Format,
-  RankingConfig,
-  type ResultsTable,
-  type Tag,
-  type TournamentType,
-  type UpdateResult,
+import type {
+  Faction,
+  Format,
+  ResultsTable,
+  Tag,
+  UpdateResult,
 } from "../schema.js";
+import { TournamentType } from "../schema.js";
 import { Tags } from "./tags.js";
 
 export type ResultExpanded = ResultsTable & {
@@ -148,7 +147,7 @@ export class Results {
     }
 
     const sortedResults: ResultExpanded[] = [];
-    for (const t in RankingConfig.tournament_configs) {
+    for (const t of Object.values(TournamentType)) {
       for (const r of results) {
         if (r.tournament_type === t) {
           sortedResults.push(r);

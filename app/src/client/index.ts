@@ -10,6 +10,7 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { Faction } from './models/Faction';
 export { Format } from './models/Format';
 export type { GetPointDistributionResponse } from './models/GetPointDistributionResponse';
+export type { GetSeasonsResponse } from './models/GetSeasonsResponse';
 export type { GetTagsResponse } from './models/GetTagsResponse';
 export type { LeaderboardRow } from './models/LeaderboardRow';
 export type { RankingConfig } from './models/RankingConfig';

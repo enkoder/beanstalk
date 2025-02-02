@@ -1,4 +1,4 @@
-import type { TournamentType } from "../schema";
+import { TournamentType } from "../schema";
 import { DEFAULT_CONFIG, calculatePointDistribution } from "./ranking.js";
 
 test.each([
@@ -48,7 +48,7 @@ test("season 1 config", () => {
 });
 
 test("not enough players", () => {
-  const type = "national championship";
+  const type = TournamentType.NATIONAL_CHAMPIONSHIP;
   const num = DEFAULT_CONFIG.MIN_PLAYERS_TO_BE_LEGAL[type] - 1;
   const { points, totalPoints } = calculatePointDistribution(num, type);
 
@@ -105,7 +105,7 @@ test("Interconts", () => {
 
   const { points } = calculatePointDistribution(
     numPlayers,
-    "intercontinental championship",
+    "intercontinental championship" as TournamentType,
     overridePoints,
   );
 
