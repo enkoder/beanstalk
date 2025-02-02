@@ -1,0 +1,1 @@
+ALTER TABLE tournaments ADD COLUMN multi_swiss INTEGER NOT NULL DEFAULT 0; 
