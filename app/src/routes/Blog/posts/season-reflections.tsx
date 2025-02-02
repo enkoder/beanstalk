@@ -33,9 +33,9 @@ export const SeasonReflectionsPost: BlogPost = {
           players and with 200 baseline points and 2 points per player, it was
           going to pay out some Big Beans :tm:. Going into CBI, the top were all
           quite close with Sokka in the lead by over 100 beans. However Sokka
-          not attending CBI and AugustusCaesar's strong performance securiing
-          him 279 beans, puts AugustusCaesar in first place for the 2024 Green
-          Beans season!
+          not attending CBI and AugustusCaesar's strong performance securing
+          himself 279 beans, puts AugustusCaesar in first place for the 2024
+          Green Beans season!
           <Sep className="mt-4" />
           <div className="flex w-full justify-center">
             <Link to="/results/AugustusCaesar?season=2&formatCode=standard">
@@ -68,17 +68,17 @@ export const SeasonReflectionsPost: BlogPost = {
           I'm glad to say that the Beanstalk has done just that. People have
           shared with me that they are going to more tournaments and also
           staying in tournaments longer without dropping. You can't drop once
-          you're out of the cut, there are bean on the line!! It's been so fun
+          you're out of the cut, there are beans on the line!! It's been so fun
           and rewarding to hear all the great feedback and kind words from the
           community. It's been super fun, and I'm stoked to say that it's not
           going anywhere. I'm going to continue to invest in and improve the
           Beanstalk. It's a labor of love at this point and the general positive
           reaction has been overwhelmingly positive.
           <Sep className="mt-4" />
-          2024 marks the first full year, and I said in the FAQ, this first
-          season was really just a trial. When I created the initla rankings
-          system,I had no clue if I nailed it or not. After watching how this
-          past season when down, I'm quite happy with most of it. That being
+          2024 marks the first full year, and as I said in the FAQ, this first
+          season was really just a trial. When I created the initial rankings
+          system, I had no clue if I nailed it or not. After watching how this
+          past season went down, I'm quite happy with most of it. That being
           said, there's some things that I didn't like and some things I'd like
           to change. In this post, I'm going to reflect on the season and share
           some observations and changes I'm making for the next season. Let's
@@ -97,8 +97,8 @@ export const SeasonReflectionsPost: BlogPost = {
           <SubHeader>Participation</SubHeader>
           <p>
             While the system has been well-received, we've only seen about 230
-            players opt in to into the leaderboard. There are 834 users who have
-            a tournament result, which means 834 users have claimed a tournament
+            players opt in to the leaderboard. There are 834 users who have a
+            tournament result, which means 834 users have claimed a tournament
             result on ABR in the 2024 season. This is an opt-in rate of only
             27.5% and something I would like to improve next year. If we look at
             players with 4 or more claims, we see an opt-in rate of 57.6%. So
@@ -109,14 +109,14 @@ export const SeasonReflectionsPost: BlogPost = {
             of getting the word out there and lowering the barrier to entry. I
             think the regional tagging feature could help with this where you
             can make small local leaderboards and create more excitement and
-            competition amoungst your local meta. This would drive more players
+            competition amongst your local meta. This would drive more players
             to opt in and participate, but not care about being on the global
             leaderboard. However, basically no one actually uses this feature. I
             have some ideas for how to make this system approachable for more
             players, but would love to hear your thoughts on this as well.
             <Sep className="mt-4" />I understand that for many, being on a
             leaderboard isn't for them. They just want to play and not be
-            evaluated by their performance.I completely respect that decision
+            evaluated by their performance. I completely respect that decision
             and no one should ever feel pressured to participate!
           </p>
           <SubHeader>Tournament Limits</SubHeader>
@@ -130,7 +130,7 @@ export const SeasonReflectionsPost: BlogPost = {
           </p>
           <SubHeader>Website</SubHeader>
           <p>
-            I've been pretty happy wiht the website overall. The design is good,
+            I've been pretty happy with the website overall. The design is good,
             not great. It works on mobile and desktop. It's fast enough and from
             a reliability perspective, I have done very little in terms of
             debugging issues once they land on prod. I've had a lot of fun
@@ -212,15 +212,25 @@ export const SeasonReflectionsPost: BlogPost = {
             the 2025 beans per player multiplier for each tournament type:
           </p>
           {rankingConfig && (
-            <ul className="mt-4 list-inside list-disc">
-              {Object.entries(rankingConfig.tournament_configs).map(
-                ([key, value]) => (
-                  <li key={key}>
-                    {key}: {value.points_per_player}
-                  </li>
-                ),
-              )}
-            </ul>
+            <>
+              <ul className="my-4 list-inside list-disc">
+                {Object.entries(rankingConfig.tournament_configs).map(
+                  ([key, value]) => (
+                    <li key={key}>
+                      {key}: {value.points_per_player}
+                    </li>
+                  ),
+                )}
+              </ul>
+              <p>
+                The detail oriented reader will notice that the beans per player
+                for Worlds is less than continentals. The reason for this is
+                that Worlds typically draws about 200 people and if we have a
+                higher or equal beans per player, then Worlds will reward too
+                many beans. Resulting in the same issue observed in 2024 where
+                Worlds hands out too many beans.
+              </p>
+            </>
           )}
         </Section>
 
@@ -257,8 +267,8 @@ export const SeasonReflectionsPost: BlogPost = {
           </div>
         </Section>
         <Section title="Lima Beans">
-          Last and certainly now least -- I am happy to announce that the new
-          season is live! Introducing the name for the 2025 season
+          Last and certainly not least -- I am happy to announce that the new
+          season is live! Introducing the name for the 2025 season...
           <div className="flex justify-center">Lima</div>
         </Section>
       </BlogContent>
