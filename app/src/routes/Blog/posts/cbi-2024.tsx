@@ -61,7 +61,7 @@ export const CBI2024Post: BlogPost = {
           in and you can find the final tournament results for CBI here
           <Sep className="mt-4" />
           <div className="flex w-full justify-center">
-            <Link to="/results/4689">CBI 2024 Results</Link>
+            <Link to="/tournament/4689">CBI 2024 Results</Link>
           </div>
         </Section>
       </BlogContent>
