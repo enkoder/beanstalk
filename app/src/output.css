@@ -735,10 +735,6 @@ html {
   margin-top: 1rem;
 }
 
-.mt-6 {
-  margin-top: 1.5rem;
-}
-
 .mt-auto {
   margin-top: auto;
 }
@@ -925,15 +921,6 @@ html {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-fit {
-  width: -webkit-fit-content;
-  width: fit-content;
-}
-
-.min-w-\[8rem\] {
-  min-width: 8rem;
 }
 
 .max-w-7xl {
@@ -1366,11 +1353,6 @@ html {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 }
 
 .pb-1 {
@@ -1983,14 +1965,6 @@ html {
 
   .lg\:w-2\/6 {
     width: 33.333333%;
-  }
-
-  .lg\:w-32 {
-    width: 8rem;
-  }
-
-  .lg\:w-64 {
-    width: 16rem;
   }
 
   .lg\:flex-row {
