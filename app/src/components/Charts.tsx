@@ -73,7 +73,12 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
       <ResponsiveContainer>
         <LineChart
           data={chartData}
-          margin={{ top: 40, right: 120, bottom: 60, left: 80 }}
+          margin={{
+            top: 20,
+            right: 30,
+            bottom: 20,
+            left: 30,
+          }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke={colors.gray[700]} />
           <XAxis
@@ -81,21 +86,23 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
             tickFormatter={(date: Date) => dateFormatter(date)}
             stroke={colors.gray[400]}
             tick={{ fill: colors.gray[300] }}
+            interval="preserveStartEnd"
           />
           <YAxis
             tickFormatter={yAxisFormatter}
             stroke={colors.gray[400]}
             tick={{ fill: colors.gray[300] }}
+            width={35}
           />
           <Tooltip
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 return (
-                  <div className="rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-lg">
-                    <div className="mb-2 font-medium text-base text-gray-200">
+                  <div className="max-w-[250px] rounded-lg border border-gray-700 bg-gray-800 p-2 shadow-lg sm:max-w-none sm:p-4">
+                    <div className="mb-1 font-medium text-gray-200 text-sm sm:mb-2 sm:text-base">
                       {dateFormatter(label as Date)}
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1 sm:space-y-2">
                       {payload
                         .filter((entry) => entry.value !== 0)
                         .sort(
@@ -121,12 +128,12 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
                               className="flex items-center justify-between"
                             >
                               <span
-                                className="pr-4 font-medium text-sm"
+                                className="pr-2 font-medium text-xs sm:pr-4 sm:text-sm"
                                 style={{ color: entry.color }}
                               >
                                 {seriesItem.label}
                               </span>
-                              <div className="flex items-center gap-2 text-sm">
+                              <div className="flex items-center gap-1 text-xs sm:gap-2 sm:text-sm">
                                 <span className="font-semibold text-gray-200">
                                   {typeof entry.value === "number"
                                     ? yAxisFormatter(entry.value)
@@ -134,7 +141,7 @@ export const StackedAreaChart = <T extends ChartDataPoint>({
                                 </span>
                                 {tournamentCount !== undefined &&
                                   tournamentCount > 0 && (
-                                    <span className="text-gray-400">
+                                    <span className="hidden text-gray-400 sm:inline">
                                       ({tournamentCount} tournament
                                       {tournamentCount !== 1 ? "s" : ""})
                                     </span>

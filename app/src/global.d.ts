@@ -15,3 +15,9 @@ declare module "*.svg" {
   const value: any;
   export = value;
 }
+
+declare module "*.webp" {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const value: any;
+  export = value;
+}

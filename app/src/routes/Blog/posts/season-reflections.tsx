@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import LimaBeans from "../../../../assets/lima.webp";
 import type { RankingConfig } from "../../../client";
 import { LeaderboardService } from "../../../client/services/LeaderboardService";
 import { Link } from "../../../components/Link";
@@ -230,6 +231,19 @@ export const SeasonReflectionsPost: BlogPost = {
                 many beans. Resulting in the same issue observed in 2024 where
                 Worlds hands out too many beans.
               </p>
+              <Sep className="mt-4" />
+              <p>
+                If you look at the{" "}
+                <Link to="https://preview.beanstalk.pages.dev/blog/2024-season-reflections">
+                  preview environment chart
+                </Link>
+                , the shape of the chart (shown above) looks roughtly the same,
+                but the peaks are significantly lower. Notice the Y-axis scale
+                max is about 1/2 the amount of beans as the 2024 season. This
+                should give a better spread of beans across the season and
+                reduce the spikes in points. Expect each bean to matter even
+                more than last year.
+              </p>
             </>
           )}
         </Section>
@@ -269,7 +283,14 @@ export const SeasonReflectionsPost: BlogPost = {
         <Section title="Lima Beans">
           Last and certainly not least -- I am happy to announce that the new
           season is live! Introducing the name for the 2025 season...
-          <div className="flex justify-center">Lima</div>
+          <div className="my-4 flex justify-center">
+            <Link to="/?season=3&formatCode=standard" className="text-2xl">
+              Lima Beans
+            </Link>
+          </div>
+          <div className="my-4 flex w-full justify-center">
+            <img src={LimaBeans} alt="Lima Beans" className="h-64 w-64" />
+          </div>
         </Section>
       </BlogContent>
     );
