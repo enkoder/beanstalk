@@ -6,6 +6,7 @@ export enum Tournament {
   Worlds = "worlds championship",
   Continental = "continental championship",
   DistrictChampionship = "district championship",
+  MegaCityChampionship = "megacity championship",
   CircuitOpener = "circuit opener",
   CircuitBreaker = "circuit breaker",
   CasualTournamentKit = "casual tournament kit",
@@ -29,7 +30,8 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 2,
     [Tournament.PlayersCircuit]: 2,
     [Tournament.CasualTournamentKit]: 1,
-    [Tournament.DistrictChampionship]: 2,
+    [Tournament.DistrictChampionship]: 1.2,
+    [Tournament.MegaCityChampionship]: 1.5,
   },
   // Flat points added to the total point pool that gets awarded to 1st place
   // Each tournament gets a different point total to reflect the tournament prestige
@@ -58,6 +60,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.PlayersCircuit]: 8,
     [Tournament.CasualTournamentKit]: 8,
     [Tournament.DistrictChampionship]: 8,
+    [Tournament.MegaCityChampionship]: 8,
   },
   // Defines the max number of tournaments a person can get points for
   // We take the top values if a person attends more than the defined max
@@ -72,6 +75,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 5,
     [Tournament.DistrictChampionship]: 3,
+    [Tournament.MegaCityChampionship]: 2,
   },
   // Defines the bottom anchor point which means the last place player will receive less than the value provided
   // This is used to help set the rate of decay and the payout slope. A higher number indicates a more gradual slope
@@ -86,6 +90,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
     [Tournament.DistrictChampionship]: 1,
+    [Tournament.MegaCityChampionship]: 1,
   },
 };
 
@@ -104,6 +109,7 @@ export const SEASON_3_CONFIG = {
     [Tournament.PlayersCircuit]: 0,
     [Tournament.CasualTournamentKit]: 0,
     [Tournament.DistrictChampionship]: 0,
+    [Tournament.MegaCityChampionship]: 0,
   },
   POINTS_PER_PLAYER: {
     ...DEFAULT_CONFIG.POINTS_PER_PLAYER,
@@ -117,7 +123,8 @@ export const SEASON_3_CONFIG = {
     [Tournament.CircuitBreakerInvitational]: 1,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
-    [Tournament.DistrictChampionship]: 1.5,
+    [Tournament.DistrictChampionship]: 1.1,
+    [Tournament.MegaCityChampionship]: 1.25,
   },
 };
 

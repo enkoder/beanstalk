@@ -26,6 +26,7 @@ export type RankingConfig = {
         'players circuit'?: TournamentConfig;
         'casual tournament kit'?: TournamentConfig;
         'district championship'?: TournamentConfig;
+        'megacity championship'?: TournamentConfig;
     };
 };
 
