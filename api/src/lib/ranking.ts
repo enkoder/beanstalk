@@ -46,6 +46,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.PlayersCircuit]: 25,
     [Tournament.CasualTournamentKit]: 15,
     [Tournament.DistrictChampionship]: 0,
+    [Tournament.MegaCityChampionship]: 0,
   },
   // Sets a baseline number of players a tournament must have in order to distribute any points at all
   // This means that small tournaments are not eligible for payouts
