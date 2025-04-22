@@ -9,6 +9,16 @@ export const TournamentTypeComponent = z
   .nativeEnum(TournamentType)
   .openapi("TournamentType");
 
+export const GetUserResponseComponent = z
+  .object({
+    id: z.number({ description: "User ID" }),
+    name: z.string({ description: "User name" }).nullable(),
+  })
+  .openapi("GetUsersResponse");
+export type GetUserResponseComponentType = z.infer<
+  typeof GetUserResponseComponent
+>;
+
 export const UserComponent = z
   .object({
     id: z.number({ description: "User ID" }),
@@ -223,7 +233,7 @@ export const GetUserSchema = {
   responses: {
     "200": {
       description: "User Object",
-      schema: UserComponent,
+      schema: GetUserResponseComponent,
     },
   },
 };
@@ -234,7 +244,7 @@ export const GetUsersSchema = {
   responses: {
     "200": {
       description: "List of all users",
-      schema: z.array(UserComponent),
+      schema: z.array(GetUserResponseComponent),
     },
   },
 };

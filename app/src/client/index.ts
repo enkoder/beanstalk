@@ -12,6 +12,7 @@ export { Format } from './models/Format';
 export type { GetPointDistributionResponse } from './models/GetPointDistributionResponse';
 export type { GetSeasonsResponse } from './models/GetSeasonsResponse';
 export type { GetTagsResponse } from './models/GetTagsResponse';
+export type { GetUsersResponse } from './models/GetUsersResponse';
 export { IdentityTrend } from './models/IdentityTrend';
 export type { LeaderboardRow } from './models/LeaderboardRow';
 export type { RankingConfig } from './models/RankingConfig';

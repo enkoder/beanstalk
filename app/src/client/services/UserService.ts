@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { GetUsersResponse } from '../models/GetUsersResponse';
 import type { UpdateUser } from '../models/UpdateUser';
 import type { User } from '../models/User';
 
@@ -42,10 +43,10 @@ export class UserService {
 
     /**
      * Gets a list of all users.
-     * @returns User List of all users
+     * @returns GetUsersResponse List of all users
      * @throws ApiError
      */
-    public static getGetUsers(): CancelablePromise<Array<User>> {
+    public static getGetUsers(): CancelablePromise<Array<GetUsersResponse>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users',
@@ -55,12 +56,12 @@ export class UserService {
     /**
      * Gets a single user
      * @param userId User ID (integer)
-     * @returns User User Object
+     * @returns GetUsersResponse User Object
      * @throws ApiError
      */
     public static getGetUser(
         userId: number,
-    ): CancelablePromise<User> {
+    ): CancelablePromise<GetUsersResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/{userID}',

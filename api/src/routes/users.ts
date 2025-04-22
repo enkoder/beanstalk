@@ -9,6 +9,7 @@ import { Results } from "../models/results.js";
 import { Seasons } from "../models/season.js";
 import { Users } from "../models/user.js";
 import {
+  GetUserResponseComponent,
   GetUserResultsSchema,
   GetUserSchema,
   GetUsersSchema,
@@ -34,7 +35,7 @@ export class GetUser extends OpenAPIRoute {
     if (!user || user.disabled) {
       return errorResponse(400, "User does not exist");
     }
-    return json(UserComponent.parse(user));
+    return json(GetUserResponseComponent.parse(user));
   }
 }
 
@@ -77,7 +78,9 @@ export class GetUsers extends OpenAPIRoute {
     }
 
     return json(
-      users.filter((u) => !u.disabled).map((user) => UserComponent.parse(user)),
+      users
+        .filter((u) => !u.disabled)
+        .map((user) => GetUserResponseComponent.parse(user)),
     );
   }
 }
