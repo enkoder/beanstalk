@@ -5,13 +5,14 @@ import type { TournamentType } from "../schema.js";
 export enum Tournament {
   Worlds = "worlds championship",
   Continental = "continental championship",
-  National = "national championship",
-  Intercontinental = "intercontinental championship",
+  DistrictChampionship = "district championship",
   CircuitOpener = "circuit opener",
   CircuitBreaker = "circuit breaker",
+  CasualTournamentKit = "casual tournament kit",
+  National = "national championship",
   CircuitBreakerInvitational = "circuit breaker invitational",
   PlayersCircuit = "players circuit",
-  CasualTournamentKit = "casual tournament kit",
+  Intercontinental = "intercontinental championship",
 }
 
 // Default configuration (Season 0)
@@ -28,6 +29,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 2,
     [Tournament.PlayersCircuit]: 2,
     [Tournament.CasualTournamentKit]: 1,
+    [Tournament.DistrictChampionship]: 2,
   },
   // Flat points added to the total point pool that gets awarded to 1st place
   // Each tournament gets a different point total to reflect the tournament prestige
@@ -41,6 +43,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 200,
     [Tournament.PlayersCircuit]: 25,
     [Tournament.CasualTournamentKit]: 15,
+    [Tournament.DistrictChampionship]: 0,
   },
   // Sets a baseline number of players a tournament must have in order to distribute any points at all
   // This means that small tournaments are not eligible for payouts
@@ -54,6 +57,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 8,
     [Tournament.PlayersCircuit]: 8,
     [Tournament.CasualTournamentKit]: 8,
+    [Tournament.DistrictChampionship]: 8,
   },
   // Defines the max number of tournaments a person can get points for
   // We take the top values if a person attends more than the defined max
@@ -67,6 +71,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 1,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 5,
+    [Tournament.DistrictChampionship]: 3,
   },
   // Defines the bottom anchor point which means the last place player will receive less than the value provided
   // This is used to help set the rate of decay and the payout slope. A higher number indicates a more gradual slope
@@ -80,6 +85,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CircuitBreakerInvitational]: 1,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
+    [Tournament.DistrictChampionship]: 1,
   },
 };
 
@@ -97,6 +103,7 @@ export const SEASON_3_CONFIG = {
     [Tournament.CircuitBreakerInvitational]: 0,
     [Tournament.PlayersCircuit]: 0,
     [Tournament.CasualTournamentKit]: 0,
+    [Tournament.DistrictChampionship]: 0,
   },
   POINTS_PER_PLAYER: {
     ...DEFAULT_CONFIG.POINTS_PER_PLAYER,
@@ -110,6 +117,7 @@ export const SEASON_3_CONFIG = {
     [Tournament.CircuitBreakerInvitational]: 1,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
+    [Tournament.DistrictChampionship]: 1.5,
   },
 };
 
