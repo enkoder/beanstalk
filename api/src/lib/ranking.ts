@@ -124,7 +124,7 @@ export const SEASON_3_CONFIG = {
     [Tournament.CircuitBreakerInvitational]: 1,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
-    [Tournament.DistrictChampionship]: 1.1,
+    [Tournament.DistrictChampionship]: 1.2,
     [Tournament.MegaCityChampionship]: 1.25,
   },
 };
