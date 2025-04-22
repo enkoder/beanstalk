@@ -32,6 +32,8 @@ export enum ABRTournamentTypeFilter {
   CircuitBreaker = 13,
   IntercontinentalChampionship = 14,
   PlayersCircuit = 15,
+  DistrictChampionship = 16,
+  MegaCityChampionship = 17,
 }
 
 export const ABRTournament = z.object({

@@ -25,6 +25,8 @@ export type RankingConfig = {
         'regional championship'?: TournamentConfig;
         'players circuit'?: TournamentConfig;
         'casual tournament kit'?: TournamentConfig;
+        'district championship'?: TournamentConfig;
+        'megacity championship'?: TournamentConfig;
     };
 };
 

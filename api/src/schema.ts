@@ -18,6 +18,8 @@ export enum TournamentType {
   REGIONAL_CHAMPIONSHIP = "regional championship",
   PLAYERS_CIRCUIT = "players circuit",
   CASUAL_TOURNAMENT_KIT = "casual tournament kit",
+  DISTRICT_CHAMPIONSHIP = "district championship",
+  MEGA_CITY_CHAMPIONSHIP = "megacity championship",
 }
 
 export type Format = "standard" | "startup" | "eternal" | "other";
