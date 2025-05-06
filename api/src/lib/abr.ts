@@ -27,7 +27,7 @@ export enum ABRTournamentTypeFilter {
   NonTournamentEvent = 8,
   ContinentalChampionship = 9,
   TeamTournament = 10,
-  CircuitOpener = 11,
+  CasualTournamentKit = 11,
   Asynchronous = 12,
   CircuitBreaker = 13,
   IntercontinentalChampionship = 14,

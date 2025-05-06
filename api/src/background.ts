@@ -53,7 +53,7 @@ enum Queues {
 }
 
 const SUPPORTED_TOURNAMENT_TYPES: ABRTournamentTypeFilter[] = [
-  ABRTournamentTypeFilter.CircuitOpener,
+  ABRTournamentTypeFilter.CasualTournamentKit,
   ABRTournamentTypeFilter.CircuitBreaker,
   ABRTournamentTypeFilter.WorldsChampionship,
   ABRTournamentTypeFilter.NationalChampionship,
