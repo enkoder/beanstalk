@@ -49,7 +49,7 @@ export const ABRTournament = z.object({
   location_state: z.string().nullable(),
   approved: z.number().nullable(),
   players_count: z.number(),
-  url: z.string().url(),
+  url: z.string(),
   // TODO: check enum
   cardpool: z.string(),
   // TODO: parse
