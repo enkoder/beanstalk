@@ -118,6 +118,7 @@ export interface TagsTable {
   normalized: string;
   owner_id: number;
   use_tournament_limits: number;
+  normalized_tournament_type: string | null;
 }
 
 export type Tag = Selectable<TagsTable>;

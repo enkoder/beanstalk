@@ -28,5 +28,6 @@ export type Result = {
     format: (Format & string);
     count_for_tournament_type?: number;
     is_valid: boolean;
+    normalized_tournament_type_used?: (TournamentType & string | null);
 };
 

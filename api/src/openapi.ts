@@ -73,6 +73,8 @@ export const ResultComponent = z
     format: FormatComponent,
     count_for_tournament_type: z.number().default(0),
     is_valid: z.boolean(),
+    normalized_tournament_type_used:
+      TournamentTypeComponent.nullable().optional(),
   })
   .openapi("Result");
 export type ResultComponentType = z.infer<typeof ResultComponent>;
@@ -205,6 +207,7 @@ export const GetTagsResponseComponent = z
     owner_name: z.string(),
     count: z.number(),
     use_tournament_limits: z.coerce.boolean(),
+    normalized_tournament_type: z.string().nullable().optional(),
   })
   .openapi("GetTagsResponse");
 export type GetTagsResponseComponentType = z.infer<
@@ -218,6 +221,7 @@ export const TagComponent = z
     normalized: z.string(),
     owner_id: z.number(),
     use_tournament_limits: z.coerce.boolean(),
+    normalized_tournament_type: z.string().nullable().optional(),
   })
   .openapi("Tag");
 export type TagComponentType = z.infer<typeof TagComponent>;
@@ -485,6 +489,7 @@ export const InsertTagSchema = {
 
 export const UpdateTagBody = z.object({
   use_tournament_limits: z.boolean(),
+  normalized_tournament_type: z.string().nullable().optional(),
 });
 
 export type UpdateTagBodyType = z.infer<typeof UpdateTagBody>;

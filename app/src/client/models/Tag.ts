@@ -9,5 +9,6 @@ export type Tag = {
     normalized: string;
     owner_id: number;
     use_tournament_limits?: boolean | null;
+    normalized_tournament_type?: string | null;
 };
 

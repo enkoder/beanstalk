@@ -11,5 +11,6 @@ export type GetTagsResponse = {
     owner_name: string;
     count: number;
     use_tournament_limits?: boolean | null;
+    normalized_tournament_type?: string | null;
 };
 

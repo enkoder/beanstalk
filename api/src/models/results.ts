@@ -1,5 +1,5 @@
 import { g } from "../g.js";
-import { DEFAULT_CONFIG } from "../lib/ranking.js";
+import { DEFAULT_CONFIG, calculatePointDistribution } from "../lib/ranking.js";
 import { traceDeco } from "../lib/tracer.js";
 import type {
   Faction,
@@ -18,8 +18,10 @@ export type ResultExpanded = ResultsTable & {
   disabled: number;
   format: Format;
   tournament_type: TournamentType;
+  season_id: number | null;
   count_for_tournament_type: number;
   is_valid: boolean;
+  normalized_tournament_type_used?: TournamentType | null;
 };
 
 type GetExpandedOptions = {
@@ -83,6 +85,7 @@ export class Results {
         "tournaments.name as tournament_name",
         "tournaments.players_count as players_count",
         "tournaments.format as format",
+        "tournaments.season_id as season_id",
       ])
       // Only fetch results for non-disabled users
       .where("users.disabled", "=", 0)
@@ -130,6 +133,11 @@ export class Results {
       includeLimits = true;
     }
 
+    // Check if any tag has a normalized tournament type
+    const normalizedType = tagModels.find(
+      (tag) => tag.normalized_tournament_type != null,
+    )?.normalized_tournament_type;
+
     // TODO: yes we could do this in sql, but this is so much easier
     const results: ResultExpanded[] = [];
     const initialResults = await q.execute();
@@ -138,12 +146,36 @@ export class Results {
         DEFAULT_CONFIG.MAX_TOURNAMENTS_PER_TYPE[
           initialResults[i].tournament_type
         ];
-      results.push({
+
+      const resultToAdd: ResultExpanded = {
         ...initialResults[i],
         is_valid: includeLimits
           ? initialResults[i].count_for_tournament_type <= max
           : true,
-      });
+        normalized_tournament_type_used: normalizedType
+          ? (normalizedType as TournamentType)
+          : null,
+      };
+
+      // Recalculate points if a normalized tournament type is set
+      if (normalizedType) {
+        const { points } = calculatePointDistribution(
+          initialResults[i].players_count,
+          normalizedType as TournamentType,
+          undefined,
+          initialResults[i].season_id ?? undefined,
+        );
+
+        // Determine placement index (same logic as ingestion)
+        const placementIndex =
+          (initialResults[i].rank_cut || initialResults[i].rank_swiss) - 1;
+
+        if (placementIndex >= 0 && placementIndex < points.length) {
+          resultToAdd.points_earned = points[placementIndex];
+        }
+      }
+
+      results.push(resultToAdd);
     }
 
     const sortedResults: ResultExpanded[] = [];

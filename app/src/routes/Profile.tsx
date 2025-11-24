@@ -10,6 +10,7 @@ import {
   TagsService,
   type Tournament,
   TournamentService,
+  TournamentType,
   type User,
   UserService,
 } from "../client";
@@ -247,6 +248,18 @@ export function Profile() {
   const handleTagSwitchChange = async (tag: GetTagsResponse) => {
     await TagsService.postUpdateTag(tag.id, {
       use_tournament_limits: !tag.use_tournament_limits,
+      normalized_tournament_type: tag.normalized_tournament_type,
+    });
+    await refetch();
+  };
+
+  const handleNormalizedTypeChange = async (
+    tag: GetTagsResponse,
+    newType: string | null,
+  ) => {
+    await TagsService.postUpdateTag(tag.id, {
+      use_tournament_limits: tag.use_tournament_limits || false,
+      normalized_tournament_type: newType,
     });
     await refetch();
   };
@@ -370,6 +383,12 @@ export function Profile() {
               scope="col"
               className={"border-gray-300 border-b-2 border-solid"}
             >
+              Normalize Type
+            </th>
+            <th
+              scope="col"
+              className={"border-gray-300 border-b-2 border-solid"}
+            >
               Tournament Count
             </th>
             <th
@@ -420,6 +439,28 @@ export function Profile() {
                     />
                   </Switch>
                 </div>
+              </td>
+              <td className={"px-2 py-2"}>
+                <select
+                  className={
+                    "w-full rounded-lg border border-gray-600 bg-gray-900 px-2 py-1 text-gray-300 text-xs"
+                  }
+                  value={tag.normalized_tournament_type || ""}
+                  onChange={(e) =>
+                    handleNormalizedTypeChange(
+                      tag,
+                      e.target.value === "" ? null : e.target.value,
+                    )
+                  }
+                  disabled={user === null}
+                >
+                  <option value="">None</option>
+                  {Object.values(TournamentType).map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
               </td>
               <td className={"px-4 py-2"}>{tag.count}</td>
               <td className={"w-6"}>
