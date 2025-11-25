@@ -50,6 +50,16 @@ export class GetLeaderboard extends OpenAPIRoute {
         ? [req.query.tags]
         : null;
 
+    // Security check: only admins can include disabled users
+    if (req.query.includeDisabled === "true" && !req.is_admin) {
+      return new Response("Forbidden: Only admins can view disabled users", {
+        status: 403,
+      });
+    }
+
+    const includeDisabled =
+      req.is_admin && req.query.includeDisabled === "true";
+
     const rows: LeaderboardRowComponentType[] = [];
     const results = await Leaderboard.getExpanded({
       seasonId,
@@ -57,6 +67,7 @@ export class GetLeaderboard extends OpenAPIRoute {
       format,
       tags,
       isAdmin: req.is_admin,
+      includeDisabled,
     });
     for (const result of results) {
       rows.push(LeaderboardRowComponent.parse(result));

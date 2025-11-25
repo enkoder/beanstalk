@@ -1638,10 +1638,6 @@ html {
   opacity: 1;
 }
 
-.opacity-30 {
-  opacity: 0.3;
-}
-
 .opacity-95 {
   opacity: 0.95;
 }
@@ -1895,6 +1891,11 @@ html {
 
 .focus\:ring-inset:focus {
   --tw-ring-inset: inset;
+}
+
+.focus\:ring-cyan-500:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(6 182 212 / var(--tw-ring-opacity, 1));
 }
 
 .focus\:ring-cyan-600:focus {
