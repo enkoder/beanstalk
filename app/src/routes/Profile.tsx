@@ -10,6 +10,7 @@ import {
   TagsService,
   type Tournament,
   TournamentService,
+  TournamentType,
   type User,
   UserService,
 } from "../client";
@@ -247,6 +248,18 @@ export function Profile() {
   const handleTagSwitchChange = async (tag: GetTagsResponse) => {
     await TagsService.postUpdateTag(tag.id, {
       use_tournament_limits: !tag.use_tournament_limits,
+      normalized_tournament_type: tag.normalized_tournament_type,
+    });
+    await refetch();
+  };
+
+  const handleNormalizedTypeChange = async (
+    tag: GetTagsResponse,
+    newType: string | null,
+  ) => {
+    await TagsService.postUpdateTag(tag.id, {
+      use_tournament_limits: tag.use_tournament_limits || false,
+      normalized_tournament_type: newType,
     });
     await refetch();
   };
@@ -324,7 +337,7 @@ export function Profile() {
         className={"my-4"}
       />
 
-      <div className={"mt-4 flex flex-row gap-4"}>
+      <div className={"m-4 flex flex-row gap-4"}>
         <Input
           width={"w-full"}
           className={"h-12 rounded-lg"}
@@ -347,9 +360,132 @@ export function Profile() {
         </button>
       </div>
 
+      {/* Mobile view - Cards */}
+      <div className={"mb-1 flex flex-col gap-4 md:hidden"}>
+        {tags?.map((tag) => (
+          <div
+            key={tag.id}
+            className={"rounded-lg border border-gray-600 bg-slate-900 p-4"}
+          >
+            {/* Header Row */}
+            <div className={"mb-4 flex items-center justify-between gap-3"}>
+              <button
+                className={
+                  "rounded-lg bg-cyan-600 px-4 py-2 font-medium text-gray-950"
+                }
+                type={"button"}
+                onClick={() => setClickedTag(tag)}
+              >
+                {tag.name}
+              </button>
+              <span className={"whitespace-nowrap text-sm text-gray-400"}>
+                {tag.count} tournament{tag.count !== 1 ? "s" : ""}
+              </span>
+            </div>
+
+            {/* Two Column Grid */}
+            <div className={"mb-4 grid grid-cols-2 gap-4"}>
+              {/* Left Column - Tournament Limits */}
+              <div className={"flex flex-col gap-2"}>
+                <label className={"text-sm font-medium text-gray-400"}>
+                  Tournament Limits
+                </label>
+                <div className={"flex items-center"}>
+                  <Switch
+                    checked={tag.use_tournament_limits || false}
+                    onChange={() => handleTagSwitchChange(tag)}
+                    className={
+                      "relative inline-flex h-6 w-12 items-center rounded-full border-2 border-gray-600 bg-gray-900"
+                    }
+                    disabled={user === null}
+                  >
+                    <span
+                      className={clsx(
+                        tag.use_tournament_limits
+                          ? "translate-x-6 bg-cyan-500"
+                          : "translate-x-1 bg-gray-400",
+                        "inline-block h-4 w-4 transform rounded-full transition",
+                      )}
+                    />
+                  </Switch>
+                </div>
+              </div>
+
+              {/* Right Column - Normalize Type */}
+              <div className={"flex flex-col gap-2"}>
+                <label className={"text-sm font-medium text-gray-400"}>
+                  Normalize Type
+                </label>
+                <select
+                  className={
+                    "w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-300"
+                  }
+                  value={tag.normalized_tournament_type || ""}
+                  onChange={(e) =>
+                    handleNormalizedTypeChange(
+                      tag,
+                      e.target.value === "" ? null : e.target.value,
+                    )
+                  }
+                  disabled={user === null}
+                >
+                  <option value="">None</option>
+                  {Object.values(TournamentType).map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Footer Row - Delete Button */}
+            <div className={"flex justify-end border-t border-gray-700 pt-3"}>
+              <Tooltip placement={"bottom"}>
+                <TooltipTrigger>
+                  <button
+                    type={"button"}
+                    className={clsx(
+                      "rounded-lg p-2 transition-colors",
+                      tag.count === 0 ? "hover:bg-red-900/20" : "",
+                    )}
+                    onClick={
+                      tag.count === 0
+                        ? async () => await handleDeleteTag(tag.id)
+                        : undefined
+                    }
+                    disabled={tag.count !== 0}
+                  >
+                    <TrashIcon
+                      className={clsx(
+                        tag.count === 0 ? "text-red-600" : "text-gray-600",
+                        "h-6 w-6",
+                      )}
+                    />
+                  </button>
+                </TooltipTrigger>
+                {tag.count !== 0 && (
+                  <TooltipContent
+                    className={
+                      "rounded-lg border border-gray-600 bg-gray-950 p-2 text-cyan-500 text-sm shadow-lg"
+                    }
+                    arrowClassName={
+                      "fill-gray-950 [&>path:first-of-type]:stroke-gray-600"
+                    }
+                  >
+                    Cannot delete a tag that has tournaments
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop view - Table */}
       <table
         className={
-          "mb-1 table w-full table-fixed border-separate border-spacing-0 text-gray-300"
+          "mb-1 hidden w-full table-fixed border-separate border-spacing-0 text-gray-300 md:table"
         }
       >
         <thead className={"sticky top-0 h-10 bg-slate-950 text-center text-lg"}>
@@ -370,6 +506,12 @@ export function Profile() {
               scope="col"
               className={"border-gray-300 border-b-2 border-solid"}
             >
+              Normalize Type
+            </th>
+            <th
+              scope="col"
+              className={"border-gray-300 border-b-2 border-solid"}
+            >
               Tournament Count
             </th>
             <th
@@ -382,6 +524,7 @@ export function Profile() {
         <tbody>
           {tags?.map((tag) => (
             <tr
+              key={tag.id}
               className={
                 "text-center align-middle even:bg-slate-950 odd:bg-slate-900"
               }
@@ -420,6 +563,28 @@ export function Profile() {
                     />
                   </Switch>
                 </div>
+              </td>
+              <td className={"px-2 py-2"}>
+                <select
+                  className={
+                    "w-full rounded-lg border border-gray-600 bg-gray-900 px-2 py-1 text-gray-300 text-xs"
+                  }
+                  value={tag.normalized_tournament_type || ""}
+                  onChange={(e) =>
+                    handleNormalizedTypeChange(
+                      tag,
+                      e.target.value === "" ? null : e.target.value,
+                    )
+                  }
+                  disabled={user === null}
+                >
+                  <option value="">None</option>
+                  {Object.values(TournamentType).map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
               </td>
               <td className={"px-4 py-2"}>{tag.count}</td>
               <td className={"w-6"}>

@@ -105,6 +105,15 @@ export function ExpandedSection({
                     }{" "}
                     per {capStr(result.tournament_type)}
                   </span>
+                ) : result.normalized_tournament_type_used ? (
+                  <span>
+                    {capStr(result.tournament_type)}
+                    <br />
+                    <span className="text-yellow-400">
+                      (normalized as{" "}
+                      {capStr(result.normalized_tournament_type_used)})
+                    </span>
+                  </span>
                 ) : (
                   <span>{capStr(result.tournament_type)}</span>
                 )}

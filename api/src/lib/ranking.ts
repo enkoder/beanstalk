@@ -14,6 +14,7 @@ export enum Tournament {
   CircuitBreakerInvitational = "circuit breaker invitational",
   PlayersCircuit = "players circuit",
   Intercontinental = "intercontinental championship",
+  CommunityTournament = "community tournament",
 }
 
 // Default configuration (Season 0)
@@ -32,6 +33,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CasualTournamentKit]: 1,
     [Tournament.DistrictChampionship]: 1.2,
     [Tournament.MegaCityChampionship]: 1.5,
+    [Tournament.CommunityTournament]: 1,
   },
   // Flat points added to the total point pool that gets awarded to 1st place
   // Each tournament gets a different point total to reflect the tournament prestige
@@ -47,6 +49,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CasualTournamentKit]: 15,
     [Tournament.DistrictChampionship]: 0,
     [Tournament.MegaCityChampionship]: 0,
+    [Tournament.CommunityTournament]: 0,
   },
   // Sets a baseline number of players a tournament must have in order to distribute any points at all
   // This means that small tournaments are not eligible for payouts
@@ -62,6 +65,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CasualTournamentKit]: 8,
     [Tournament.DistrictChampionship]: 8,
     [Tournament.MegaCityChampionship]: 8,
+    [Tournament.CommunityTournament]: 8,
   },
   // Defines the max number of tournaments a person can get points for
   // We take the top values if a person attends more than the defined max
@@ -77,6 +81,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CasualTournamentKit]: 5,
     [Tournament.DistrictChampionship]: 3,
     [Tournament.MegaCityChampionship]: 2,
+    [Tournament.CommunityTournament]: 1,
   },
   // Defines the bottom anchor point which means the last place player will receive less than the value provided
   // This is used to help set the rate of decay and the payout slope. A higher number indicates a more gradual slope
@@ -92,6 +97,7 @@ export const DEFAULT_CONFIG: Record<string, Record<Tournament, number>> = {
     [Tournament.CasualTournamentKit]: 1,
     [Tournament.DistrictChampionship]: 1,
     [Tournament.MegaCityChampionship]: 1,
+    [Tournament.CommunityTournament]: 1,
   },
 };
 

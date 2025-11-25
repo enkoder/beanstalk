@@ -78,6 +78,7 @@ export class TagsService {
         tagId: number,
         requestBody?: {
             use_tournament_limits: boolean;
+            normalized_tournament_type?: string | null;
         },
     ): CancelablePromise<any> {
         return __request(OpenAPI, {

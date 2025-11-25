@@ -119,6 +119,11 @@ export class UpdateTag extends OpenAPIRoute {
     }
     tag.use_tournament_limits = body.use_tournament_limits ? 1 : 0;
 
+    // Update normalized_tournament_type if provided in the body
+    if (body.normalized_tournament_type !== undefined) {
+      tag.normalized_tournament_type = body.normalized_tournament_type;
+    }
+
     try {
       const updatedTag = await Tags.update(tag);
       return json(TagComponent.parse(updatedTag));
