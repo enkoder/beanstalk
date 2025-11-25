@@ -20,18 +20,21 @@ export class Leaderboard {
     format,
     tags,
     isAdmin,
+    includeDisabled,
   }: {
     seasonId?: number;
     faction?: Faction;
     format?: Format;
     tags?: string[];
     isAdmin?: boolean;
+    includeDisabled?: boolean;
   }): Promise<LeaderboardRow[]> {
     const results = await Results.getExpanded({
       seasonId,
       faction,
       format,
       tags,
+      includeDisabled,
     });
 
     const rows: Record<number, LeaderboardRow> = {};

@@ -31,6 +31,7 @@ type GetExpandedOptions = {
   faction?: Faction | null;
   format?: Format | null;
   tags?: string[] | null;
+  includeDisabled?: boolean;
 };
 
 export async function get(user_id: number, tournament_id: number) {
@@ -56,6 +57,7 @@ export class Results {
     faction = null,
     format = null,
     tags = null,
+    includeDisabled = false,
   }: GetExpandedOptions): Promise<ResultExpanded[]> {
     let tagModels: Tag[] = [];
     if (tags) {
@@ -87,8 +89,8 @@ export class Results {
         "tournaments.format as format",
         "tournaments.season_id as season_id",
       ])
-      // Only fetch results for non-disabled users
-      .where("users.disabled", "=", 0)
+      // Only fetch results for non-disabled users unless includeDisabled is true
+      .$if(!includeDisabled, (qb) => qb.where("users.disabled", "=", 0))
       .select((eb) => [
         eb.fn
           .agg<number>("rank")

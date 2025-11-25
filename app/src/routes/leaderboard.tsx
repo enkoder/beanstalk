@@ -18,6 +18,7 @@ import { Link } from "../components/Link";
 import { PageHeading } from "../components/PageHeader";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/Tooltip";
 import { getFilterValues, getSearchParamsFromValues } from "../filterUtils";
+import useAuth from "../useAuth";
 import { capStr } from "../util";
 
 type ExpandedSectionProps = {
@@ -130,6 +131,8 @@ export function Leaderboard() {
   const [searchParams] = useSearchParams();
   const values = getFilterValues(searchParams);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [includeDisabled, setIncludeDisabled] = useState(false);
+  const { user } = useAuth();
 
   const { data: leaderboardRows } = useQuery<LeaderboardRow[]>({
     queryKey: [
@@ -138,6 +141,7 @@ export function Leaderboard() {
       values.faction,
       values.format,
       values.tags,
+      includeDisabled,
     ],
     queryFn: () =>
       LeaderboardService.getGetLeaderboard(
@@ -145,6 +149,7 @@ export function Leaderboard() {
         values.faction,
         values.format,
         values.tags,
+        includeDisabled,
       ),
   });
 
@@ -201,6 +206,25 @@ export function Leaderboard() {
           </h1>
         )}
       </PageHeading>
+      {user?.is_admin && (
+        <div className={"mb-4 flex items-center gap-2 px-4"}>
+          <input
+            type="checkbox"
+            id="includeDisabled"
+            checked={includeDisabled}
+            onChange={(e) => setIncludeDisabled(e.target.checked)}
+            className={
+              "h-4 w-4 cursor-pointer rounded border-gray-600 bg-gray-900 text-cyan-500 focus:ring-2 focus:ring-cyan-500"
+            }
+          />
+          <label
+            htmlFor="includeDisabled"
+            className={"cursor-pointer text-gray-300 text-sm"}
+          >
+            Show all users (including disabled accounts)
+          </label>
+        </div>
+      )}
       <FilterSection hasSearchBar={true} startSeason={3} />
       <table
         className={
@@ -277,9 +301,7 @@ export function Leaderboard() {
                     )}
                   >
                     {row.disabled ? (
-                      <text className="text-gray-500 opacity-30">
-                        {row.user_name}
-                      </text>
+                      <text className="text-gray-500">{row.user_name}</text>
                     ) : (
                       <Link to={getLinkToUserSearchParams(row)}>
                         {row.user_name}

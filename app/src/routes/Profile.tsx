@@ -378,7 +378,7 @@ export function Profile() {
               >
                 {tag.name}
               </button>
-              <span className={"whitespace-nowrap text-sm text-gray-400"}>
+              <span className={"whitespace-nowrap text-gray-400 text-sm"}>
                 {tag.count} tournament{tag.count !== 1 ? "s" : ""}
               </span>
             </div>
@@ -387,7 +387,7 @@ export function Profile() {
             <div className={"mb-4 grid grid-cols-2 gap-4"}>
               {/* Left Column - Tournament Limits */}
               <div className={"flex flex-col gap-2"}>
-                <label className={"text-sm font-medium text-gray-400"}>
+                <label className={"font-medium text-gray-400 text-sm"}>
                   Tournament Limits
                 </label>
                 <div className={"flex items-center"}>
@@ -413,12 +413,12 @@ export function Profile() {
 
               {/* Right Column - Normalize Type */}
               <div className={"flex flex-col gap-2"}>
-                <label className={"text-sm font-medium text-gray-400"}>
+                <label className={"font-medium text-gray-400 text-sm"}>
                   Normalize Type
                 </label>
                 <select
                   className={
-                    "w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-300"
+                    "w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-gray-300 text-sm"
                   }
                   value={tag.normalized_tournament_type || ""}
                   onChange={(e) =>
@@ -440,7 +440,7 @@ export function Profile() {
             </div>
 
             {/* Footer Row - Delete Button */}
-            <div className={"flex justify-end border-t border-gray-700 pt-3"}>
+            <div className={"flex justify-end border-gray-700 border-t pt-3"}>
               <Tooltip placement={"bottom"}>
                 <TooltipTrigger>
                   <button

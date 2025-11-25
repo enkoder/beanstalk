@@ -419,6 +419,7 @@ export const GetLeaderboardSchema = {
     factionCode: Query(z.string().optional()),
     format: Query(FormatComponent.optional()),
     tags: Query(z.string().or(z.array(z.string())).optional()),
+    includeDisabled: Query(z.coerce.boolean().optional()),
   },
   responses: {
     "200": {
