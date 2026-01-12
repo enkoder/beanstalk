@@ -127,7 +127,7 @@ export const SEASON_3_CONFIG = {
     [Tournament.Intercontinental]: 0.25,
     [Tournament.CircuitOpener]: 1,
     [Tournament.CircuitBreaker]: 1,
-    [Tournament.CircuitBreakerInvitational]: 1,
+    [Tournament.CircuitBreakerInvitational]: 2,
     [Tournament.PlayersCircuit]: 1,
     [Tournament.CasualTournamentKit]: 1,
     [Tournament.DistrictChampionship]: 1.2,
