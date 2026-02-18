@@ -11,7 +11,7 @@ import {
   getTournamentsByType,
   getTournamentsByUserId,
 } from "./lib/abr.js";
-import { CBI_2024, handleMultiPodTournament } from "./lib/cbi.js";
+import { tryHandleMultiPodTournament } from "./lib/cbi.js";
 import * as NRDB from "./lib/nrdb.js";
 import { calculatePointDistribution, getSeasonConfig } from "./lib/ranking.js";
 import { trace } from "./lib/tracer.js";
@@ -362,12 +362,13 @@ async function handleTournamentIngest(
   let tournamentBlob: Tournament;
   let cutTo: number;
 
-  // If we found the top cut for a multi-pod tournament - artisially hand craft the data
-  if (abrTournament.id === CBI_2024.top_cut.abr_tournament_id) {
-    ({ entries, cutTo, tournamentBlob } = await handleMultiPodTournament(
-      seasonId,
-      abrTournament,
-    ));
+  const multiPodResult = await tryHandleMultiPodTournament(
+    seasonId,
+    abrTournament,
+  );
+
+  if (multiPodResult) {
+    ({ entries, cutTo, tournamentBlob } = multiPodResult);
   } else {
     entries = await getEntries(abrTournament.id);
     cutTo = entries.filter((e) => e.rank_top !== null).length;
