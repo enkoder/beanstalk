@@ -121,7 +121,32 @@ export function abrToResult(abr: ABREntryType, { ...args }): Partial<Result> {
   };
 }
 
+// Tjson schemas for the /tjsons/{id}.json endpoint
+export const ABRTjsonPlayer = z.object({
+  id: z.number(),
+  name: z.string(),
+  rank: z.number(),
+  corpIdentity: z.string(),
+  runnerIdentity: z.string(),
+  matchPoints: z.number(),
+  strengthOfSchedule: z.string(),
+  extendedStrengthOfSchedule: z.string(),
+});
+export type ABRTjsonPlayerType = z.infer<typeof ABRTjsonPlayer>;
+
+export const ABRTjson = z.object({
+  name: z.string(),
+  date: z.string(),
+  cutToTop: z.number(),
+  preliminaryRounds: z.number(),
+  players: z.array(ABRTjsonPlayer),
+  eliminationPlayers: z.array(ABRTjsonPlayer),
+  uploadedFrom: z.string(),
+});
+export type ABRTjsonType = z.infer<typeof ABRTjson>;
+
 const ABR_BASE_URL = "https://alwaysberunning.net/api";
+const ABR_TJSON_BASE_URL = "https://alwaysberunning.net/tjsons";
 
 async function _getTournaments(url: URL): Promise<ABRTournamentType[]> {
   const retArr: ABRTournamentType[] = [];
@@ -197,4 +222,16 @@ export async function getEntries(
     }
   }
   return retArr;
+}
+
+export async function getTournamentJson(
+  tournamentId: number,
+): Promise<ABRTjsonType> {
+  const url = `${ABR_TJSON_BASE_URL}/${tournamentId}.json`;
+  const resp = await fetch(url);
+  if (!resp.ok) {
+    throw new Error(`Error (${resp.status}): ${await resp.text()}`);
+  }
+  const body = await resp.json();
+  return ABRTjson.parse(body);
 }
