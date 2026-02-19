@@ -225,7 +225,7 @@ export function Leaderboard() {
           </label>
         </div>
       )}
-      <FilterSection hasSearchBar={true} startSeason={3} />
+      <FilterSection hasSearchBar={true} startSeason={4} />
       <table
         className={
           "w-full table-auto border-separate border-spacing-0 text-gray-300 text-xs md:text-lg sm:text-base xl:text-xl"

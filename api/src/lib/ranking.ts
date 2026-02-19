@@ -141,6 +141,7 @@ export const SEASON_CONFIGS = {
   1: DEFAULT_CONFIG,
   2: DEFAULT_CONFIG,
   3: SEASON_3_CONFIG,
+  4: SEASON_3_CONFIG,
 };
 
 export function getSeasonConfig(seasonId?: number) {

@@ -2,7 +2,7 @@ import type { LeaderboardRow } from "../client";
 import {
   type FilterSectionValues,
   getSearchParamsFromValues,
-} from "./FilterSection";
+} from "../filterUtils";
 import { Link } from "./Link";
 
 type LeaderboardProps = {

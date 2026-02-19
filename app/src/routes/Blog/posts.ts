@@ -3,6 +3,7 @@ import { CBI2024Post } from "./posts/cbi-2024";
 import { Code } from "./posts/code";
 import { FAQ } from "./posts/faq";
 import { HelloWorld } from "./posts/hello-world";
+import { LimaBeanTop16Post } from "./posts/lima-bean-top-16";
 import { SeasonReflectionsPost } from "./posts/season-reflections";
 import type { BlogPost } from "./types";
 
@@ -13,4 +14,5 @@ export const posts: BlogPost[] = [
   Code,
   SeasonReflectionsPost,
   CBI2024Post,
+  LimaBeanTop16Post,
 ];

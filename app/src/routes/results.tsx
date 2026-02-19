@@ -126,7 +126,7 @@ export function Results() {
         )}
       </div>
 
-      <FilterSection hasSearchBar={false} startSeason={2} />
+      <FilterSection hasSearchBar={false} startSeason={4} />
 
       <table
         className={
