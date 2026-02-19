@@ -14,7 +14,7 @@ export function LeaderboardTable({ leaderboard, values }: LeaderboardProps) {
   const getLinkToUserSearchParams = (row: LeaderboardRow) => {
     const userName = encodeURI(row.user_name || "");
     const searchParams = getSearchParamsFromValues(values);
-    return `results/${userName}?${searchParams.toString()}`;
+    return `/results/${userName}?${searchParams.toString()}`;
   };
 
   return (
